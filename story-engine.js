@@ -2,6 +2,8 @@
   'use strict';
   // Story-to-scent associations are editorial metaphors, not effects on mood.
   const themes=[
+    {id:'elegance',label:'우아함 · 여성스러움',group:'마음',words:['우아','여성스러','여성적인','페미닌'],title:'나답게 피어나는 우아함',meaning:'우아하고 여성스러운 분위기를 부드러운 꽃과 과일의 이미지로 연결했어요.',notes:['플로럴','프루티','로즈','피오니'],support:['머스크','파우더리'],singles:['single-middle-1','single-base-5'],pairing:'로즈와 화이트 머스크로 화사한 꽃과 부드러운 여운을 더했어요.'},
+    {id:'confidence',label:'자신감 · 당당함',group:'마음',words:['자신감','당당','리더','성취','나폴레옹','승리','목표'],title:'내 이야기를 이끄는 자신감',meaning:'도전과 자신감의 이야기를 선명한 과일과 깊이 있는 나무의 이미지로 담았어요.',notes:['우디','스모키','레더','스파이시'],support:['파인애플','베르가못'],singles:['single-top-1','single-base-4'],pairing:'베르가못과 시더우드로 밝은 시작과 단단한 여운을 연결했어요.'},
     {id:'love',label:'사랑',group:'마음',words:['사랑','연인','커플','데이트','기념일','고백','로맨스','장미'],title:'마음을 전하는 꽃 한 송이',meaning:'마음을 전하고 가까워지고 싶은 이야기를 장미의 이미지로 담았어요.',notes:['장미','로즈'],support:['피오니','자스민','프리지아','머스크'],singles:['single-middle-1','single-base-5'],pairing:'로즈는 사랑을 전하는 꽃의 이미지로, 화이트 머스크는 다정한 여운의 이미지로 더했어요.'},
     {id:'energy',label:'활기',group:'마음',words:['활기','에너지','기운','상쾌','운동','달리','활발','생동','힘차'],title:'가볍게 뛰어오르는 하루',meaning:'힘차게 움직이는 하루를 밝고 톡 쏘는 시트러스의 이미지로 연결했어요.',notes:['시트러스','자몽','레몬','유자','베르가못','만다린'],support:['민트','마린','그린'],singles:['single-top-2','single-middle-5'],pairing:'자몽의 선명한 첫인상과 마린의 시원한 이미지를 포인트로 골랐어요.'},
     {id:'happiness',label:'행복',group:'마음',words:['행복','행운','기쁨','기쁜','기쁘','감사','축하','생일','합격','성공','축복'],title:'오래 기억하고 싶은 좋은 순간',meaning:'소중한 기쁨을 잘 익은 과일과 화사한 꽃의 이미지로 담았어요.',notes:['복숭아','넥타린','만다린','오렌지','프루티'],support:['프리지아','피오니','꽃','바닐라'],singles:['single-top-6','single-middle-6'],pairing:'만다린의 밝은 인상에 아카시아의 꽃 이미지를 더해 좋은 순간을 표현했어요.'},
@@ -83,7 +85,9 @@
       }
       score+=seasons.reduce((sum,t)=>sum+seasonFit(s,t.id),0);
       if(!matched.some(m=>m.primary.length))return null;
-      score+=matched.length*2;if(!score)return null;
+      score+=matched.length*2;
+      score+=themesSelected.reduce((sum,t)=>sum+(s.highlight?.storyBoosts?.[t.id]||0),0);
+      if(!score)return null;
       return {main:s,score,matched};
     }).filter(Boolean).sort((a,b)=>b.score-a.score||Number(a.main.number)-Number(b.main.number));
     const selected=[];const identities=new Set();

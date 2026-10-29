@@ -1707,7 +1707,22 @@
       },
       "noteStatus": "key_notes",
       "shortDescription": "장미 · 블랙커런트 버드 · 페티그레인 중심의 그린 · 로즈 계열입니다.",
-      "originalDescription": "#축축한 장미\n#비오는 날 어울리는 향"
+      "originalDescription": "#축축한 장미\n#비오는 날 어울리는 향",
+      "highlight": {
+        "summary": "비 오는 날, 젖은 잎사귀와 장미가 떠오르는 정원의 향.",
+        "tags": [
+          "비 오는 날",
+          "초록 정원",
+          "장미"
+        ],
+        "storyBoosts": {
+          "rainy": 14
+        },
+        "profileStyles": {
+          "natural": 1
+        },
+        "source": "owner_curation"
+      }
     },
     {
       "id": "main-36",
@@ -1920,7 +1935,25 @@
       },
       "noteStatus": "pyramid",
       "shortDescription": "베르가못 · 블랙커런트의 첫인상에 파인애플 · 패츌리이 이어지고, 버치 · 머스크이 여운을 남깁니다.",
-      "originalDescription": "#나폴레옹\n#왕족의향기"
+      "originalDescription": "#나폴레옹\n#왕족의향기",
+      "highlight": {
+        "summary": "나폴레옹의 삶을 모티브로 한 원향의 이야기. 자신감과 도전을 떠올리는 향.",
+        "tags": [
+          "나폴레옹 모티브",
+          "자신감",
+          "도전"
+        ],
+        "storyBoosts": {
+          "confidence": 12,
+          "beginning": 5
+        },
+        "profileStyles": {
+          "classic": 1,
+          "chic": 1
+        },
+        "source": "reference_story",
+        "sourceUrl": "https://www.napoleon.org/en/magazine/press-review/new-perfurme-inspired-by-napoleon-bonaparte"
+      }
     },
     {
       "id": "main-40",
@@ -2440,7 +2473,24 @@
       },
       "noteStatus": "pyramid",
       "shortDescription": "모과 · 자몽의 첫인상에 히아신스 · 자스민이 이어지고, 머스크 · 아이리스이 여운을 남깁니다.",
-      "originalDescription": "살짝 달달한듯, 결국 은은한 꽃향"
+      "originalDescription": "살짝 달달한듯, 결국 은은한 꽃향",
+      "highlight": {
+        "summary": "공방에서 여성 고객에게 인기 있는, 우아하고 여성스러운 꽃과 과일의 향.",
+        "tags": [
+          "공방 여성 인기",
+          "우아함",
+          "여성스러움"
+        ],
+        "storyBoosts": {
+          "elegance": 10
+        },
+        "profileStyles": {
+          "romantic": 2,
+          "classic": 1
+        },
+        "presentation": "female",
+        "source": "owner_curation"
+      }
     },
     {
       "id": "main-50",
@@ -3478,7 +3528,25 @@
       },
       "noteStatus": "pyramid",
       "shortDescription": "퍼플 패션프루트의 첫인상에 샹그릴라 피오니이 이어지고, 바닐라 오키드 · 이탈리안 파인이 여운을 남깁니다.",
-      "originalDescription": "#파인애플\n#피오니\n#소나무"
+      "originalDescription": "#파인애플\n#피오니\n#소나무",
+      "highlight": {
+        "summary": "공방에서 여성 고객에게 인기 있는, 밝고 화사한 여성스러움이 돋보이는 향.",
+        "tags": [
+          "공방 여성 인기",
+          "화사함",
+          "여성스러움"
+        ],
+        "storyBoosts": {
+          "elegance": 9,
+          "joy": 2
+        },
+        "profileStyles": {
+          "romantic": 2,
+          "casual": 1
+        },
+        "presentation": "female",
+        "source": "owner_curation"
+      }
     },
     {
       "id": "main-71",

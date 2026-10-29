@@ -25,3 +25,9 @@ const fruit={mainScents:[{id:'test',number:'1',noteSource:{},notes:{key:['프루
 assert.equal(engine.buildRecommendations(fruit,engine.analyze('',['calm'])).length,0);
 assert.equal(engine.buildRecommendations(fruit,engine.analyze('',['winter'])).length,0);
 console.log('Season/story recommendation checks passed.');
+
+assert.equal(engine.buildRecommendations(catalog,engine.analyze('',['rainy']))[0].main.id,'main-35');
+const elegant=engine.buildRecommendations(catalog,engine.analyze('',['elegance']));
+assert.ok(elegant.some(r=>r.main.id==='main-49'));
+assert.ok(elegant.some(r=>r.main.id==='main-70'));
+assert.equal(engine.buildRecommendations(catalog,engine.analyze('',['confidence']))[0].main.id,'main-39');

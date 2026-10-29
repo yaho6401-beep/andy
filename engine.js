@@ -56,10 +56,14 @@
     for(const kind of ['gender','age','hair'])for(const [id,v] of Object.entries(profileOptions[kind][profile[kind]]||{}))target[id]+=v;
     if(!Object.values(target).some(v=>v>0))return [];
     return scents.map(s=>{
-      const scores=mainScores(s),sum=Object.values(scores).reduce((a,b)=>a+b,0);
+      const scores=mainScores(s);
+      for(const [id,v] of Object.entries(s.highlight?.profileStyles||{}))if(id in scores)scores[id]+=v;
+      const sum=Object.values(scores).reduce((a,b)=>a+b,0);
       const score=sum?Object.entries(scores).reduce((total,[id,v])=>total+v*target[id],0)/sum:0;
       const matchedStyles=styles.filter(st=>scores[st.id]>0&&target[st.id]>0).sort((a,b)=>scores[b.id]*target[b.id]-scores[a.id]*target[a.id]).slice(0,2);
-      return {scent:s,score,matchedStyles};
+      const ownerMatch=(profile.styles||[]).reduce((total,id)=>total+(s.highlight?.profileStyles?.[id]||0),0);
+      const audienceMatch=profile.gender==='female'&&s.highlight?.presentation==='female'?1:0;
+      return {scent:s,score:score+ownerMatch*.5+audienceMatch,matchedStyles};
     }).filter(s=>s.score>0).sort((a,b)=>b.score-a.score||Number(a.scent.number)-Number(b.scent.number)).slice(0,6);
   }
   function describeBlend(main,singles){
