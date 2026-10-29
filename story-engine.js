@@ -12,10 +12,12 @@
     {id:'beginning',label:'새로운 시작',group:'이야기',words:['시작','새로운','새출발','새 출발','도전','입학','입사','이직','졸업','용기','내일','첫날','첫 날'],title:'새로운 페이지의 첫 문장',meaning:'한 걸음을 내딛는 이야기를 맑은 시트러스와 싱그러운 잎의 이미지로 연결했어요.',notes:['베르가못','유자','시트러스','그린'],support:['프리지아','머스크','바질'],singles:['single-top-1','single-middle-10'],pairing:'베르가못과 바이올렛 리프로 새 종이를 펼치듯 맑고 푸른 인상을 골랐어요.'},
     {id:'freedom',label:'여행 · 자유',group:'이야기',words:['여행','자유','바다','휴가','떠나','떠났','공항','해변','모험','바람'],title:'낯선 풍경으로 떠나는 마음',meaning:'열린 풍경과 자유로운 걸음을 바다와 열대 과일의 이미지로 표현했어요.',notes:['마린','아쿠아틱','코코넛','라임','트로피컬'],support:['레몬','민트','시트러스'],singles:['single-top-5','single-middle-5'],pairing:'레몬과 마린으로 햇빛이 반짝이는 바다의 장면을 담았어요.'},
     {id:'memory',label:'추억 · 소중함',group:'이야기',words:['추억','기억','그리움','그리운','소중','가족','엄마','아빠','선물','오래'],title:'기억 속에 남겨두고 싶은 향',meaning:'소중한 사람과 시간을 꽃과 부드러운 나무의 여운으로 연결했어요.',notes:['장미','로즈','머스크','샌달우드'],support:['아이리스','파우더','앰버'],singles:['single-middle-1','single-base-3'],pairing:'로즈와 샌달우드로 소중한 장면의 부드러움과 깊이를 표현했어요.'},
-    {id:'sunny',label:'맑은 날 · 햇살',group:'날씨',words:['맑은','맑고','화창','햇살','햇빛','쨍쨍','푸른 하늘','파란 하늘','여름'],title:'햇살을 닮은 밝은 한 방울',meaning:'햇살이 비치는 장면을 선명한 시트러스와 밝은 과일의 이미지로 담았어요.',notes:['시트러스','레몬','만다린','유자','프루티'],support:['마린','그린'],singles:['single-top-5','single-middle-6'],pairing:'레몬의 선명함과 아카시아의 화사한 이미지를 더했어요.'},
+    {id:'sunny',label:'맑은 날 · 햇살',group:'날씨',words:['맑은','맑고','화창','햇살','햇빛','쨍쨍','푸른 하늘','파란 하늘'],title:'햇살을 닮은 밝은 한 방울',meaning:'햇살이 비치는 장면을 선명한 시트러스와 밝은 과일의 이미지로 담았어요.',notes:['시트러스','레몬','만다린','유자','프루티'],support:['마린','그린'],singles:['single-top-5','single-middle-6'],pairing:'레몬의 선명함과 아카시아의 화사한 이미지를 더했어요.'},
     {id:'rainy',label:'비 오는 날',group:'날씨',words:['비 오는','비오는','빗소리','빗방울','장마','우산','촉촉','비가','비 내리','비내리','흐린'],title:'빗소리 사이로 피어나는 이야기',meaning:'비 오는 풍경을 젖은 잎과 꽃, 부드러운 나무의 이미지로 표현했어요.',notes:['그린','장미','로즈','모스','우디','아쿠아틱','레인'],support:['바이올렛','머스크'],singles:['single-middle-10','single-base-1'],pairing:'바이올렛 리프와 모스로 빗방울이 맺힌 정원의 이미지를 담았어요.'},
     {id:'spring',label:'봄 · 꽃바람',group:'날씨',words:['봄','벚꽃','꽃바람','꽃길','피어나','꽃이'],title:'다시 피어나는 나의 계절',meaning:'새 계절의 이야기를 가볍고 화사한 꽃과 싱그러운 잎의 이미지로 연결했어요.',notes:['프리지아','피오니','튤립','플로럴'],support:['그린','배','자스민'],singles:['single-middle-2','single-top-7'],pairing:'라일락과 청포도로 봄날의 꽃과 생기 있는 과일 이미지를 더했어요.'},
-    {id:'winter',label:'눈 오는 날 · 겨울',group:'날씨',words:['눈 오는','눈오는','눈이','겨울','추운','쌀쌀','찬바람','가을','낙엽'],title:'차가운 계절에 남기는 따뜻함',meaning:'서늘한 날의 이야기를 니트 같은 포근함과 나무의 이미지로 풀었어요.',notes:['바닐라','샌달우드','앰버','파우더','우디'],support:['머스크','시더우드'],singles:['single-base-7','single-middle-7'],pairing:'바닐라와 라벤더로 따뜻한 색감과 부드러운 여운의 이미지를 골랐어요.'}
+    {id:'summer',label:'여름 · 시원한 날',group:'날씨',words:['여름','더운','더위','무더운','한여름'],title:'더운 날의 산뜻한 한 장면',meaning:'더운 계절의 이야기를 시트러스와 맑은 물, 싱그러운 잎의 이미지로 담았어요.',notes:['시트러스','아쿠아틱','마린','그린','트로피컬'],support:['레몬','베르가못','민트'],singles:['single-top-5','single-middle-5'],pairing:'레몬과 마린으로 시원하고 산뜻한 여름의 이미지를 골랐어요.'},
+    {id:'autumn',label:'가을 · 깊은 여운',group:'날씨',words:['가을','낙엽','늦가을'],title:'깊어진 계절의 한 페이지',meaning:'가을의 이야기를 나무와 차, 부드러운 스파이스의 이미지로 담았어요.',notes:['우디','샌달우드','티','스파이시','앰버'],support:['시더우드','패츌리','바닐라'],singles:['single-top-3','single-base-3'],pairing:'그린티와 샌달우드로 차 한 잔과 나무의 차분한 여운을 더했어요.'},
+    {id:'winter',label:'눈 오는 날 · 겨울',group:'날씨',words:['눈 오는','눈오는','눈이','겨울','추운','쌀쌀','찬바람'],title:'차가운 계절에 남기는 따뜻함',meaning:'서늘한 날의 이야기를 니트 같은 포근함과 나무의 이미지로 풀었어요.',notes:['바닐라','샌달우드','앰버','파우더','우디'],support:['머스크','시더우드'],singles:['single-base-7','single-middle-7'],pairing:'바닐라와 라벤더로 따뜻한 색감과 부드러운 여운의 이미지를 골랐어요.'}
   ];
   const compact=s=>String(s||'').normalize('NFKC').toLowerCase().replace(/\s+/g,'');
   function analyze(text,explicit=[]){
@@ -26,17 +28,61 @@
     for(const theme of themes){const matches=theme.words.filter(word=>clean.includes(compact(word)));if(matches.length&&!negatives[theme.id]?.test(clean))detected.push({theme,matches:[...new Set(matches)]});}
     return themes.filter(t=>selected.has(t.id)||detected.some(d=>d.theme.id===t.id)).map(theme=>({theme,explicit:selected.has(theme.id),matches:detected.find(d=>d.theme.id===theme.id)?.matches||[]}));
   }
-  function matchesNote(note,keywords){const clean=compact(note);return keywords.some(k=>!(k==='로즈'&&clean.includes('로즈마리'))&&clean.includes(compact(k)));}
+  function matchesNote(note,keywords){
+    const clean=compact(note);
+    return keywords.some(k=>{
+      if(k==='로즈'&&clean.includes('로즈마리'))return false;
+      if(k==='앰버'&&/앰버그리스|앰브레트/.test(clean))return false;
+      if(k==='티')return /^(티|차|블랙티|그린티|홍차|우롱티|화이트티|티어코드)$/.test(clean);
+      if(k==='배')return /^(배|서양배|페어|배향)$/.test(clean);
+      return clean.includes(compact(k));
+    });
+  }
+  // Season suitability is an editorial filter on the overall accords, not a count of base notes.
+  function seasonFit(s,season){
+    const a=(s.accords||[]).slice(0,3),leading=a.slice(0,2);
+    const fresh=['시트러스','아쿠아틱','마린','트로피컬','그린'];
+    const rich=['앰버','바닐라','레더','타바코','커피','스모키','샌달우드'];
+    const freshLead=fresh.includes(a[0]);
+    const richLead=leading.some(x=>rich.includes(x));
+    // Owner correction: Artisan's citrus character is for spring/summer recommendations.
+    if(s.id==='main-20'&&['winter','autumn'].includes(season))return 0;
+    if(season==='winter'){
+      if(freshLead&&!richLead)return 0;
+      if(!leading.some(x=>[...rich,'우디','스파이시','파우더리'].includes(x)))return 0;
+      return a.reduce((sum,x,i)=>sum+([...rich,'스파이시'].includes(x)?[6,4,2][i]:['우디','파우더리'].includes(x)?[4,3,1][i]:0),0);
+    }
+    if(season==='summer'){
+      if(richLead)return 0;
+      if(!leading.some(x=>fresh.includes(x)))return 0;
+      return a.reduce((sum,x,i)=>sum+(fresh.includes(x)?[6,4,2][i]:0),0);
+    }
+    if(season==='autumn'){
+      if(freshLead&&!richLead)return 0;
+      if(!leading.some(x=>[...rich,'우디','스파이시','티','패츌리','시프레'].includes(x)))return 0;
+      return 5;
+    }
+    if(season==='spring')return richLead&&!leading.includes('플로럴')&&!leading.includes('화이트 플로럴')?0:3;
+    return 0;
+  }
   function buildRecommendations(catalog,points){
     if(!points.length)return [];
     const themesSelected=points.map(p=>p.theme);
+    if(themesSelected.some(t=>t.id==='winter')&&themesSelected.some(t=>t.id==='summer'))return [];
     const love=themesSelected.some(t=>t.id==='love');
+    const seasons=themesSelected.filter(t=>['winter','summer','spring','autumn'].includes(t.id));
     const candidates=catalog.mainScents.filter(s=>s.noteSource).map(s=>{
-      const notes=Object.values(s.notes||{}).flat();const matchText=[...notes,...(s.accords||[])];
+      if(seasons.some(t=>!seasonFit(s,t.id)))return null;
+      const notes=[...new Set(Object.values(s.notes||{}).flat())];const matchText=[...new Set([...notes,...(s.accords||[])])];
       const matched=themesSelected.map(theme=>({theme,primary:matchText.filter(n=>matchesNote(n,theme.notes)),support:matchText.filter(n=>matchesNote(n,theme.support))})).filter(m=>m.primary.length||m.support.length);
       // When love is explicitly present, guarantee a rose-bearing reference.
       if(love&&!notes.some(n=>/장미|로즈/.test(n)&&!n.includes('로즈마리')))return null;
-      let score=0;for(const m of matched)score+=Math.min(m.primary.length,3)*3+Math.min(m.support.length,2);
+      let score=0;for(const m of matched){
+        const accordScore=(s.accords||[]).reduce((sum,a,i)=>sum+(matchesNote(a,m.theme.notes)?[6,4,2][i]||1:matchesNote(a,m.theme.support)?1:0),0);
+        score+=accordScore+Math.min(m.primary.length,3)*.5+Math.min(m.support.length,2)*.25;
+      }
+      score+=seasons.reduce((sum,t)=>sum+seasonFit(s,t.id),0);
+      if(!matched.some(m=>m.primary.length))return null;
       score+=matched.length*2;if(!score)return null;
       return {main:s,score,matched};
     }).filter(Boolean).sort((a,b)=>b.score-a.score||Number(a.main.number)-Number(b.main.number));
@@ -47,9 +93,9 @@
       const theme=c.matched[i%c.matched.length]?.theme||themesSelected[0];
       const ids=[...new Set(theme.singles)].filter(id=>catalog.singleScents.some(s=>s.id===id));
       const singles=ids.map(id=>catalog.singleScents.find(s=>s.id===id));
-      const reasons=c.matched.slice(0,3).map(m=>({point:m.theme.label,notes:[...new Set(m.primary.length?m.primary:m.support)].slice(0,3),meaning:m.theme.meaning}));
+      const reasons=c.matched.slice(0,3).map(m=>({point:m.theme.label,notes:[...new Set([...(c.main.accords||[]).filter(a=>matchesNote(a,m.theme.notes)),...(m.primary.length?m.primary:m.support)])].slice(0,3),meaning:m.theme.meaning}));
       return {main:c.main,singles,title:theme.title,pairing:theme.pairing,reasons,points:themesSelected.map(t=>t.label)};
     });
   }
-  root.StoryScent={themes,analyze,buildRecommendations};
+  root.StoryScent={themes,analyze,buildRecommendations,seasonFit};
 })(globalThis);
