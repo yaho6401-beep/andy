@@ -1,5 +1,7 @@
 'use strict';
 let catalog,selectedMain=null,selectedSingles=new Set(),lastResult=null;
+let chosenStyle=null,stylingGender=null;
+const hiddenAccessories=new Set();
 const $=id=>document.getElementById(id);
 const escapeHtml=text=>String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function cleanName(s){return s.name;}
@@ -67,7 +69,7 @@ function updateSummary(){
   $('status').textContent='';
 }
 function outfitPresentation(style,main){
-  const preference=$('profile-gender').value;
+  const preference=stylingGender||$('profile-gender').value;
   const feminine=preference==='female';
   const masculine=preference==='male';
   let kind=({minimal:'shirt',romantic:'dress',natural:'linen',classic:'suit',casual:'casual',sporty:'sport',chic:'jumpsuit',cozy:'cardigan'})[style.id]||'shirt';
@@ -94,19 +96,35 @@ function outfitSvg(style,kind){
  const shirt=pants+'<path d="M35 14 44 9 50 16 56 9 65 14 78 47 66 53 60 32 62 69H38L40 32 34 53 22 47Z" fill="'+a+'"/><path d="m44 10 6 12 6-12M50 23v44"/>';
  return '<svg class="outfit outfit-'+kind+'" viewBox="0 0 100 120" fill="none" stroke="#6a6b60" stroke-width=".8" stroke-linejoin="round" role="img" aria-label="'+escapeHtml(({dress:'우아한 원피스',suit:'테일러드 정장','tailored-dress':'테일러드 원피스','evening-dress':'새틴 롱 원피스',jumpsuit:'시크한 점프수트',casual:'티셔츠와 데님',sport:'바람막이와 조거',cardigan:'니트 카디건',linen:'리넨 셔츠'})[kind]||'셔츠와 팬츠')+' 스타일 일러스트">'+(paths[kind]||shirt)+'</svg>';
 }
+function renderStylingBoard(){
+ const main=catalog.mainScents.find(s=>s.id===selectedMain);if(!main)return;
+ const style=ScentStyle.styles.find(s=>s.id===chosenStyle)||lastResult?.ranked[0]||ScentStyle.styles[0];
+ chosenStyle=style.id;
+ const outfit=outfitPresentation(style,main);
+ const accessories=currentSingles().map(ScentStyling.descriptor).filter(Boolean);
+ const active=accessories.filter(d=>!hiddenAccessories.has(d.id));
+ $('styling-board').innerHTML=`<div class="styling-heading"><p class="eyebrow">SCENT DRESSING ROOM</p><h3>향기를 입은 오늘의 스타일</h3><p class="hint">스타일을 바꿔보고, 향기 액세서리를 눌러 착용해보세요.</p></div><div class="styling-options" role="group" aria-label="스타일 선택">${ScentStyle.styles.map(s=>`<button type="button" data-outfit-style="${s.id}" aria-pressed="${s.id===style.id}">${s.name}</button>`).join('')}</div><label class="styling-gender">옷의 표현 <select id="styling-gender"><option value="any">스타일에 맞게</option><option value="female" ${stylingGender==='female'?'selected':''}>여성 스타일</option><option value="male" ${stylingGender==='male'?'selected':''}>남성 스타일</option></select></label><div class="styling-picture" style="background:${style.bg}">${ScentStyling.scene(outfitSvg(style,outfit.kind),active)}<span class="styling-picture-label">${style.name} · 액세서리 ${active.length}개</span></div><p class="styling-look">${outfit.look}</p><h4 class="accessory-heading">단일향으로 고르는 액세서리</h4><p class="hint">조합에 담은 단일향의 소품이에요. 소품만 숨겨도 향 조합은 그대로 유지돼요.</p><div class="accessory-options">${accessories.length?accessories.map(d=>`<button type="button" class="accessory-option" data-accessory="${d.id}" aria-pressed="${!hiddenAccessories.has(d.id)}">${ScentStyling.icon(d)}<span>${d.label}</span><small>${hiddenAccessories.has(d.id)?'착용하기':'적용 중 ✓'}</small></button>`).join(''):'<p class="hint">단일향을 추가하면 어울리는 액세서리가 나타나요.</p>'}</div>`;
+ $('styling-gender').addEventListener('change',e=>{stylingGender=e.target.value;renderStylingBoard();updateBlendUrl();});
+}
+function updateBlendUrl(){
+ const params=new URLSearchParams();params.set('main',selectedMain);if(selectedSingles.size)params.set('notes',[...selectedSingles].sort().join(','));
+ if(chosenStyle)params.set('style',chosenStyle);if(stylingGender)params.set('wear',stylingGender);
+ const hidden=[...hiddenAccessories].filter(id=>selectedSingles.has(id));if(hidden.length)params.set('hide',hidden.sort().join(','));
+ history.replaceState(null,'',location.pathname+'?'+params.toString());
+}
 function showResult(scroll=true){
   const main=catalog.mainScents.find(s=>s.id===selectedMain);if(!main)return;
   lastResult=ScentStyle.recommend(main,currentSingles());
+  if(!stylingGender)stylingGender=$('profile-gender').value||'any';
   const [first,...others]=lastResult.ranked;
   const outfit=first?outfitPresentation(first,main):null;
   if(!first){$('result').innerHTML='<div class="missing-notice">이 메인향은 원본에 향 설명이 없어 아직 스타일을 추천하기 어려워요. 단일향을 추가하면 선택한 단일향을 바탕으로 제안해드려요.</div>';}
   else{$('result').innerHTML=`${lastResult.missing?'<p class="missing-notice">이 메인향의 설명이 없어 선택한 단일향만을 바탕으로 추천했어요.</p>':''}<article class="style-card"><div class="style-visual" style="--style-bg:${first.bg}">${outfitSvg(first,outfit.kind)}<span class="visual-label">${first.english.replace('\n','<br>')}</span></div><div class="style-content"><p class="eyebrow">YOUR SCENT INSPIRES</p><h3>${first.name}</h3><p class="style-description">${first.reason}</p><p class="detail-label">이렇게 입어보세요</p><p class="look">${outfit.look}</p><p class="detail-label">어울리는 색</p><div class="palette">${first.colors.map(([name,color])=>`<span class="swatch"><i style="background:${color}"></i>${name}</span>`).join('')}</div><div class="style-extra">소재 · ${first.fabric}<br>어울리는 순간 · ${first.occasion}</div></div></article>${others.length?`<div class="alternatives">${others.map((s,i)=>`<article class="alternative"><small>ANOTHER MOOD 0${i+2}</small><h4>${s.name}</h4><p>${s.look}</p></article>`).join('')}</div>`:''}<details class="style-extra" style="margin-top:17px"><summary>이번 제안의 기준 보기</summary><p style="margin-top:9px">메인향 자료: ${main.description?escapeHtml(main.description.replace(/\s+/g,' ')):'원본 설명 없음'}<br>추가한 단일향: ${currentSingles().length?currentSingles().map(s=>escapeHtml(ScentStyle.singleName(s))).join(', '):'없음'}<br>단일향은 향 계열별로 작성한 스타일 연결 기준을 사용합니다. 배합량을 계산하거나 실제 혼합향을 예측하지 않습니다.</p></details>`;}
   const blend=ScentStyle.describeBlend(main,currentSingles());
   const fashion=$('result').innerHTML;
-  $('result').innerHTML=`<article class="blend-finish"><p class="eyebrow">YOUR PERSONAL SCENT</p><h3>완성된 향을 한마디로</h3><p class="blend-one-line">${escapeHtml(blend.sentence)}</p><div class="blend-keywords">${blend.facets.map(f=>`<span>${escapeHtml(f)}</span>`).join('')}</div><p class="blend-composition">메인향 1개 · 단일향 ${currentSingles().length}개</p><small>선택한 향의 설명과 이미지를 바탕으로 정리한 표현입니다.</small></article><details class="fashion-details"><summary>이 향에 어울리는 패션도 보기</summary>${fashion}</details>`;
+  $('result').innerHTML=`<article class="blend-finish"><p class="eyebrow">YOUR PERSONAL SCENT</p><h3>완성된 향을 한마디로</h3><p class="blend-one-line">${escapeHtml(blend.sentence)}</p><div class="blend-keywords">${blend.facets.map(f=>`<span>${escapeHtml(f)}</span>`).join('')}</div><p class="blend-composition">메인향 1개 · 단일향 ${currentSingles().length}개</p><small>선택한 향의 설명과 이미지를 바탕으로 정리한 표현입니다.</small></article><section id="styling-board" class="styling-board"></section><details class="fashion-details"><summary>추천 스타일과 향의 연결 이야기</summary>${fashion}</details>`;
   $('result-actions').hidden=false;$('status').textContent='';
-  const params=new URLSearchParams();params.set('main',selectedMain);if(selectedSingles.size)params.set('notes',[...selectedSingles].sort().join(','));
-  history.replaceState(null,'',location.pathname+'?'+params.toString());
+  renderStylingBoard();updateBlendUrl();
   if(scroll&&matchMedia('(max-width: 900px)').matches)$('result').scrollIntoView({behavior:'smooth',block:'start'});
 }
 async function init(){
@@ -115,13 +133,18 @@ async function init(){
     $('main-total').textContent=catalog.mainScents.length+'개';
     const params=new URLSearchParams(location.search),main=params.get('main');
     if(catalog.mainScents.some(s=>s.id===main))selectedMain=main;
+    if(ScentStyle.styles.some(s=>s.id===params.get('style')))chosenStyle=params.get('style');
+    stylingGender=['female','male','any'].includes(params.get('wear'))?params.get('wear'):null;
     const validIds=new Set(catalog.singleScents.map(s=>s.id));for(const id of (params.get('notes')||'').split(','))if(validIds.has(id))selectedSingles.add(id);
+    for(const id of (params.get('hide')||'').split(','))if(validIds.has(id))hiddenAccessories.add(id);
     renderMain();renderSingles();updateSummary();initProfile();
     StoryUI.init(catalog,recipe=>{selectedMain=recipe.main.id;selectedSingles=new Set(recipe.singles.map(s=>s.id));$('search').value='';renderMain();renderSingles();updateSummary();$('status').textContent='메인향 1개와 추천 단일향을 적용했어요. 단일향은 자유롭게 추가하거나 해제할 수 있어요.';continueToSingles();});
     if(selectedMain)showResult(false);
     $('search').addEventListener('input',renderMain);
     $('main-list').addEventListener('click',e=>{const button=e.target.closest('[data-main]');if(!button)return;selectMain(button.dataset.main);continueToSingles();});
     document.addEventListener('click',e=>{
+      const outfitButton=e.target.closest('[data-outfit-style]');if(outfitButton){chosenStyle=outfitButton.dataset.outfitStyle;renderStylingBoard();updateBlendUrl();return;}
+      const accessory=e.target.closest('[data-accessory]');if(accessory){const id=accessory.dataset.accessory;if(hiddenAccessories.has(id))hiddenAccessories.delete(id);else hiddenAccessories.add(id);renderStylingBoard();updateBlendUrl();return;}
       const detail=e.target.closest('[data-detail]');if(detail){openScentDetail(detail.dataset.detail);return;}
       const change=e.target.closest('#change-main');if(change){$('main-picker').hidden=false;$('main-step-title').textContent='변경할 메인향을 골라주세요';$('search').focus();return;}
       const use=e.target.closest('[data-use]');if(use){selectMain(use.dataset.use);$('search').value='';renderMain();if($('scent-dialog').open)$('scent-dialog').close();continueToSingles();}
@@ -131,7 +154,7 @@ async function init(){
     $('single-list').addEventListener('click',e=>{const button=e.target.closest('[data-single]');if(!button)return;const id=button.dataset.single;if(selectedSingles.has(id))selectedSingles.delete(id);else selectedSingles.add(id);button.setAttribute('aria-pressed',String(selectedSingles.has(id)));$('single-count').textContent=selectedSingles.size+'개 선택';updateSummary();});
     $('recommend').addEventListener('click',()=>showResult());
     $('share').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(location.href);$('status').textContent='조합 링크를 복사했어요. 같은 조합과 추천을 열 수 있어요.';}catch{$('status').textContent='주소창의 링크를 복사해주세요. 현재 조합이 링크에 담겨 있어요.';}});
-    $('reset').addEventListener('click',()=>{selectedMain=null;selectedSingles.clear();$('search').value='';renderMain();renderSingles();updateSummary();history.replaceState(null,'',location.pathname);$('selection').scrollIntoView({behavior:'smooth'});});
+    $('reset').addEventListener('click',()=>{selectedMain=null;selectedSingles.clear();chosenStyle=null;stylingGender=null;hiddenAccessories.clear();$('search').value='';renderMain();renderSingles();updateSummary();history.replaceState(null,'',location.pathname);$('selection').scrollIntoView({behavior:'smooth'});});
   }catch(error){$('main-list').innerHTML='<p class="missing-notice">향 목록을 불러오지 못했어요. 네트워크 연결을 확인한 뒤 새로고침해주세요.</p>';$('main-total').textContent='불러오기 실패';}
 }
 init();
