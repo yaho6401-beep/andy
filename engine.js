@@ -11,15 +11,15 @@
     {id:'cozy',name:'코지 소프트',english:'Warm &\nCozy',mood:'포근하고 따뜻한 분위기',bg:'#e8dfce',colors:[['밀크 베이지','#dfd0b6'],['토프','#a2917d'],['코코아','#8a7161']],look:'밀크 베이지 니트에 편안한 팬츠, 부드러운 카디건과 스웨이드 슈즈를 더해보세요.',fabric:'니트 · 캐시미어 느낌 소재 · 코듀로이',occasion:'카페 · 휴식 · 편안한 만남',reason:'파우더와 달콤하고 포근한 향의 인상을 따뜻한 색과 부드러운 촉감으로 표현하는 스타일이에요.'}
   ];
   const rules=[
-    [/비누|깨끗|머스크|섬유|화이트|은은/, {minimal:3,cozy:1}],
-    [/플로럴|꽃향|프리지아|로즈|장미|부케|자스민|튤립|생화|피오니/, {romantic:3,natural:1}],
-    [/시트러스|자몽|레몬|상큼|감귤|오렌지|만다린|활력/, {casual:3,sporty:1}],
-    [/과일|프루티|복숭아|딸기|파인애플|사과|달콤|달달/, {casual:2,romantic:2}],
-    [/우디|나무|우드|숲|풀향|풀잎|그린|허브|베티버/, {natural:3,classic:2}],
-    [/시원|상쾌|바다|해변|아웃도어|스포티|역동|신선/, {sporty:3,casual:1}],
+    [/비누|깨끗|머스크|머스키|섬유|알데하이드|알데하이딕|은은/, {minimal:3,cozy:1}],
+    [/플로럴|꽃향|프리지아|로즈|장미|부케|자스민|튤립|생화|피오니|오스만투스/, {romantic:3,natural:1}],
+    [/시트러스|자몽|레몬|상큼|감귤|오렌지|만다린|활력|유자|베르가못/, {casual:3,sporty:1}],
+    [/과일|프루티|복숭아|딸기|파인애플|사과|애플|배|넥타린|달콤|달달/, {casual:2,romantic:2}],
+    [/우디|나무|우드|숲|풀향|풀잎|그린|허브|허벌|베티버|모스|마테|티 어코드|블랙티/, {natural:3,classic:2}],
+    [/시원|상쾌|바다|해변|아웃도어|스포티|역동|신선|아쿠아틱|마린|워터민트/, {sporty:3,casual:1}],
     [/클래식|고급|세련|우아|왕족|자신감/, {classic:3,chic:1}],
-    [/포근|파우더|바닐라|크리미|코코넛/, {cozy:3,romantic:1}],
-    [/가죽|스파이시|관능|강렬|오리엔탈|앰버|커피|초콜렛|진한|깊고/, {chic:3,classic:1}]
+    [/포근|파우더|바닐라|크리미|코코넛|스위트/, {cozy:3,romantic:1}],
+    [/가죽|레더|스웨이드|스모키|스파이시|스파이스|타바코|관능|강렬|오리엔탈|앰버|커피|초콜릿|진한|깊고/, {chic:3,classic:1}]
   ];
   // Editorial associations, not a measurement or simulation of the fixed recipe.
   const singleProfiles={
@@ -28,16 +28,39 @@
     base:[['모스 (이끼)',{natural:4,classic:1}],['패츌리',{chic:3,natural:2}],['샌달우드',{natural:3,cozy:2}],['시더우드',{classic:3,natural:2}],['화이트 머스크',{minimal:4,cozy:1}],['앰버',{chic:3,cozy:2}],['바닐라',{cozy:4,romantic:1}],['코튼 블라썸',{minimal:3,cozy:2}],['베이비 파우더',{cozy:4,romantic:1}],['밤부 (대나무)',{natural:3,minimal:2}]]
   };
   function singleName(s){return singleProfiles[s.note]?.[s.number-1]?.[0]||s.name;}
+  function mainScores(main){
+    const scores=Object.fromEntries(styles.map(s=>[s.id,0]));
+    for(const [regex,weights] of rules){if(regex.test(main.description||''))for(const [id,v] of Object.entries(weights))scores[id]+=v;}
+    // The reference's overall character matters more than a shared trace note.
+    for(const [regex,weights] of rules){if(regex.test((main.accords||[]).join(' ')))for(const [id,v] of Object.entries(weights))scores[id]+=v*3;}
+    return scores;
+  }
   function recommend(main,singles){
     if(!main)throw new Error('메인향을 먼저 선택해주세요.');
-    const scores=Object.fromEntries(styles.map(s=>[s.id,0]));
-    let evidence=0;
-    for(const [regex,weights] of rules){if(regex.test(main.description||'')){for(const [id,v] of Object.entries(weights))scores[id]+=v;evidence++;}}
+    const scores=mainScores(main);
+    const evidence=Object.values(scores).some(v=>v>0);
     // Keep total single-note influence stable as the number selected changes.
     for(const s of singles){const profile=singleProfiles[s.note]?.[s.number-1];if(profile)for(const [id,v] of Object.entries(profile[1]))scores[id]+=v*2/Math.max(singles.length,1);}
     if(!evidence&&!singles.length)return {ranked:[],missing:true,main,singles};
     const ranked=styles.map((s,index)=>({...s,score:scores[s.id],index})).filter(s=>s.score>0).sort((a,b)=>b.score-a.score||a.index-b.index).slice(0,3);
     return {ranked,missing:!main.description,main,singles};
   }
-  root.ScentStyle={styles,singleName,recommend};
+  const profileOptions={
+    gender:{male:{classic:.35,sporty:.35},female:{romantic:.35,cozy:.35},any:{}},
+    age:{'10':{casual:.3,sporty:.2},'20':{casual:.3,minimal:.2},'30':{minimal:.3,chic:.2},'40':{classic:.3,minimal:.2},'50':{classic:.3,natural:.2},'60':{natural:.3,cozy:.2},'70':{cozy:.3,classic:.2},any:{}},
+    hair:{short:{sporty:.2,minimal:.3},bob:{minimal:.3,chic:.2},long:{romantic:.3,natural:.2},curly:{romantic:.2,casual:.3},any:{}}
+  };
+  function recommendForProfile(scents,profile){
+    const target=Object.fromEntries(styles.map(s=>[s.id,0]));
+    for(const id of new Set(profile.styles||[]))if(id in target)target[id]+=4;
+    for(const kind of ['gender','age','hair'])for(const [id,v] of Object.entries(profileOptions[kind][profile[kind]]||{}))target[id]+=v;
+    if(!Object.values(target).some(v=>v>0))return [];
+    return scents.map(s=>{
+      const scores=mainScores(s),sum=Object.values(scores).reduce((a,b)=>a+b,0);
+      const score=sum?Object.entries(scores).reduce((total,[id,v])=>total+v*target[id],0)/sum:0;
+      const matchedStyles=styles.filter(st=>scores[st.id]>0&&target[st.id]>0).sort((a,b)=>scores[b.id]*target[b.id]-scores[a.id]*target[a.id]).slice(0,2);
+      return {scent:s,score,matchedStyles};
+    }).filter(s=>s.score>0).sort((a,b)=>b.score-a.score||Number(a.scent.number)-Number(b.scent.number)).slice(0,6);
+  }
+  root.ScentStyle={styles,singleName,recommend,recommendForProfile};
 })(typeof globalThis!=='undefined'?globalThis:window);

@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "selection": {
     "mainCount": 1,
     "singleSelection": "multiple",
@@ -11,8 +11,8 @@
       "number": "1",
       "name": "구찌 러쉬 2 type",
       "sourceName": "구찌 러쉬 2 type",
-      "description": "#프리지아\n#비누향\n#머스크\n#산뜻시원",
-      "descriptionStatus": "source_provided",
+      "description": "그린 화이트 플로럴 머스키 프리지아 은방울꽃 장미 야자나무 수선화 백합 가드니아 블랙커런트 머스크 오크모스",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -21,15 +21,50 @@
       "descriptionSource": {
         "sheet": "향수설명",
         "cell": "D2"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "프리지아",
+          "은방울꽃",
+          "장미"
+        ],
+        "heart": [
+          "야자나무",
+          "수선화",
+          "백합",
+          "가드니아"
+        ],
+        "base": [
+          "블랙커런트",
+          "머스크",
+          "오크모스"
+        ],
+        "key": []
+      },
+      "accords": [
+        "그린",
+        "화이트 플로럴",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Gucci/Gucci-Rush-2-687.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "프리지아 · 은방울꽃의 첫인상에 야자나무 · 수선화이 이어지고, 블랙커런트 · 머스크이 여운을 남깁니다.",
+      "originalDescription": "#프리지아\n#비누향\n#머스크\n#산뜻시원"
     },
     {
       "id": "main-2",
       "number": "2",
       "name": "랑방 메리미 type",
       "sourceName": "랑방\n메리미 type",
-      "description": "#첫향수\n#플로럴 & \n프루티",
-      "descriptionStatus": "source_provided",
+      "description": "플로럴 프루티 머스키 비터 오렌지 복숭아 프리지아 자스민 매그놀리아 장미 머스크 시더우드 앰버",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -38,41 +73,128 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "H5"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "비터 오렌지",
+          "복숭아",
+          "프리지아"
+        ],
+        "heart": [
+          "자스민",
+          "매그놀리아",
+          "장미"
+        ],
+        "base": [
+          "머스크",
+          "시더우드",
+          "앰버"
+        ],
+        "key": []
+      },
+      "accords": [
+        "플로럴",
+        "프루티",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Lanvin/Marry-Me-9405.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "비터 오렌지 · 복숭아의 첫인상에 자스민 · 매그놀리아이 이어지고, 머스크 · 시더우드이 여운을 남깁니다.",
+      "originalDescription": "#첫향수\n#플로럴 & \n프루티"
     },
     {
       "id": "main-3",
       "number": "3",
-      "name": "랑방 에끌라 드 아르페쥬 type",
+      "name": "조말론 피오니 앤 블러쉬 스웨이드 type",
       "sourceName": "랑방 \n에끌라 드 \n아르페쥬 type",
-      "description": "#컨셉\n#복숭아",
-      "descriptionStatus": "source_provided",
+      "description": "플로럴 프루티 스웨이드 레드 애플 피오니 스웨이드",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "J5"
       },
-      "descriptionSource": {
-        "sheet": "향수타입 설명 2022",
-        "cell": "L5"
-      }
+      "descriptionSource": null,
+      "previousName": "랑방 에끌라 드 아르페쥬 type",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "레드 애플"
+        ],
+        "heart": [
+          "피오니"
+        ],
+        "base": [
+          "스웨이드"
+        ],
+        "key": []
+      },
+      "accords": [
+        "플로럴",
+        "프루티",
+        "스웨이드"
+      ],
+      "noteSource": {
+        "url": "https://www.johnlewis.com/jo-malone-london-peony-blush-suede-cologne/p573426",
+        "label": "johnlewis.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "레드 애플의 첫인상에 피오니이 이어지고, 스웨이드이 여운을 남깁니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-4",
       "number": "4",
-      "name": "레드 스무디 type",
+      "name": "빅토리아 시크릿 망고템테이션 type",
       "sourceName": "레드 \n스무디  type",
-      "description": "#달달복숭아\n#뿌리면 금방 \n사라짐",
-      "descriptionStatus": "source_provided",
+      "description": "트로피컬 프루티 플로럴 망고 히비스커스 캐모마일 알로에",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "N5"
       },
-      "descriptionSource": {
-        "sheet": "향수타입 설명 2022",
-        "cell": "P5"
-      }
+      "descriptionSource": null,
+      "previousName": "레드 스무디 type",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [],
+        "heart": [],
+        "base": [],
+        "key": [
+          "망고",
+          "히비스커스",
+          "캐모마일",
+          "알로에"
+        ]
+      },
+      "accords": [
+        "트로피컬",
+        "프루티",
+        "플로럴"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Victoria-s-Secret/Mango-Temptation-13036.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "2011년 공개 대표 노트 · 단계 구분 미공개"
+      },
+      "noteStatus": "key_notes",
+      "shortDescription": "망고 · 히비스커스 · 캐모마일 중심의 트로피컬 · 프루티 계열입니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-5",
@@ -89,15 +211,27 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "D6"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [],
+        "heart": [],
+        "base": [],
+        "key": []
+      },
+      "accords": [],
+      "noteStatus": "identity_unconfirmed",
+      "shortDescription": "플로럴 낯설고 신비로움 발랄함",
+      "noteSource": null
     },
     {
       "id": "main-6",
       "number": "6",
       "name": "마이 버버리 블랙 type",
       "sourceName": "마이\n버버리 \n블랙 type",
-      "description": "#달달함\n#포근\n#로즈\n#앰버,패츌리",
-      "descriptionStatus": "source_provided",
+      "description": "앰버 로즈 프루티 자스민 복숭아 장미 앰버 패츌리",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -106,15 +240,45 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "H6"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "자스민"
+        ],
+        "heart": [
+          "복숭아",
+          "장미"
+        ],
+        "base": [
+          "앰버",
+          "패츌리"
+        ],
+        "key": []
+      },
+      "accords": [
+        "앰버",
+        "로즈",
+        "프루티"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Burberry/My-Burberry-Black-32566.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "자스민의 첫인상에 복숭아 · 장미이 이어지고, 앰버 · 패츌리이 여운을 남깁니다.",
+      "originalDescription": "#달달함\n#포근\n#로즈\n#앰버,패츌리"
     },
     {
       "id": "main-7",
       "number": "7",
       "name": "마크제이콥스 데이지 type",
       "sourceName": "마크제이콥스 데이지 type",
-      "description": "#시원달달??\n#풀향…",
-      "descriptionStatus": "source_provided",
+      "description": "화이트 플로럴 그린 파우더리 바이올렛 리프 자몽 딸기 바이올렛 가드니아 자스민 머스크 화이트 우드 바닐라",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -123,15 +287,49 @@
       "descriptionSource": {
         "sheet": "향수설명",
         "cell": "AB2"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "바이올렛 리프",
+          "자몽",
+          "딸기"
+        ],
+        "heart": [
+          "바이올렛",
+          "가드니아",
+          "자스민"
+        ],
+        "base": [
+          "머스크",
+          "화이트 우드",
+          "바닐라"
+        ],
+        "key": []
+      },
+      "accords": [
+        "화이트 플로럴",
+        "그린",
+        "파우더리"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Marc-Jacobs/Daisy-1361.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "바이올렛 리프 · 자몽의 첫인상에 바이올렛 · 가드니아이 이어지고, 머스크 · 화이트 우드이 여운을 남깁니다.",
+      "originalDescription": "#시원달달??\n#풀향…"
     },
     {
       "id": "main-8",
       "number": "8",
       "name": "마크제이콥스 오롤라 type",
       "sourceName": "마크제이콥스 오롤라 type",
-      "description": "#풀 +꽃향\n#프루티\n#바닐라\n#샌달우드",
-      "descriptionStatus": "source_provided",
+      "description": "프루티 플로럴 바닐라 라즈베리 배 딸기 피오니 매그놀리아 시클라멘 바닐라 샌달우드 통카빈",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -140,15 +338,49 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "P6"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "라즈베리",
+          "배",
+          "딸기"
+        ],
+        "heart": [
+          "피오니",
+          "매그놀리아",
+          "시클라멘"
+        ],
+        "base": [
+          "바닐라",
+          "샌달우드",
+          "통카빈"
+        ],
+        "key": []
+      },
+      "accords": [
+        "프루티",
+        "플로럴",
+        "바닐라"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Marc-Jacobs/Oh-Lola-11789.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "라즈베리 · 배의 첫인상에 피오니 · 매그놀리아이 이어지고, 바닐라 · 샌달우드이 여운을 남깁니다.",
+      "originalDescription": "#풀 +꽃향\n#프루티\n#바닐라\n#샌달우드"
     },
     {
       "id": "main-9",
       "number": "9",
       "name": "몽블랑 레전드 type",
       "sourceName": "몽블랑 \n레전드 \ntype",
-      "description": "#스킨향의\n정석\n#자신감",
-      "descriptionStatus": "source_provided",
+      "description": "아로마틱 프루티 우디 라벤더 파인애플 베르가못 레몬 버베나 레드 애플 말린 과일 오크모스 제라늄 통카빈 샌달우드",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -157,15 +389,50 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "D7"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "라벤더",
+          "파인애플",
+          "베르가못",
+          "레몬 버베나"
+        ],
+        "heart": [
+          "레드 애플",
+          "말린 과일",
+          "오크모스",
+          "제라늄"
+        ],
+        "base": [
+          "통카빈",
+          "샌달우드"
+        ],
+        "key": []
+      },
+      "accords": [
+        "아로마틱",
+        "프루티",
+        "우디"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Mont-Blanc/Legend-11784.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "라벤더 · 파인애플의 첫인상에 레드 애플 · 말린 과일이 이어지고, 통카빈 · 샌달우드이 여운을 남깁니다.",
+      "originalDescription": "#스킨향의\n정석\n#자신감"
     },
     {
       "id": "main-10",
       "number": "10",
       "name": "페라리 블랙 type",
       "sourceName": "페라리 \n블랙 type",
-      "description": "#은은달콤 스킨\n#세련됨\n#다이나믹",
-      "descriptionStatus": "source_provided",
+      "description": "프루티 바닐라 스파이시 레드 애플 자두 라임 베르가못 시나몬 자스민 카다멈 장미 바닐라 앰버 시더우드 머스크",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -174,29 +441,96 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "H7"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "레드 애플",
+          "자두",
+          "라임",
+          "베르가못"
+        ],
+        "heart": [
+          "시나몬",
+          "자스민",
+          "카다멈",
+          "장미"
+        ],
+        "base": [
+          "바닐라",
+          "앰버",
+          "시더우드",
+          "머스크"
+        ],
+        "key": []
+      },
+      "accords": [
+        "프루티",
+        "바닐라",
+        "스파이시"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Ferrari/Ferrari-Black-792.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "레드 애플 · 자두의 첫인상에 시나몬 · 자스민이 이어지고, 바닐라 · 앰버이 여운을 남깁니다.",
+      "originalDescription": "#은은달콤 스킨\n#세련됨\n#다이나믹"
     },
     {
       "id": "main-11",
       "number": "11",
-      "name": "빅토리아 시크릿 망고템테이션 type",
+      "name": "디올 옴므 코롱 type",
       "sourceName": "빅토리아\n시크릿\n망고템테이션\ntype",
-      "description": "",
-      "descriptionStatus": "missing",
+      "description": "시트러스 화이트 플로럴 머스키 베르가못 자몽꽃 머스크",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "J7"
       },
-      "descriptionSource": null
+      "descriptionSource": null,
+      "previousName": "빅토리아 시크릿 망고템테이션 type",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "베르가못"
+        ],
+        "heart": [
+          "자몽꽃"
+        ],
+        "base": [
+          "머스크"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시트러스",
+        "화이트 플로럴",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Christian-Dior/Dior-Homme-Cologne-2013-17256.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "2013년 코롱 공개 노트"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "베르가못의 첫인상에 자몽꽃이 이어지고, 머스크이 여운을 남깁니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-12",
       "number": "12",
       "name": "빅토리아 시크릿 참 type",
       "sourceName": "빅토리아 \n시크릿 참 type",
-      "description": "#코오롱\n#과일향\n#부담없는\n은은함",
-      "descriptionStatus": "source_provided",
+      "description": "화이트 플로럴 프루티 허벌 허니서클 갈라 애플 스테파노티스",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -205,15 +539,41 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "P7"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [],
+        "heart": [],
+        "base": [],
+        "key": [
+          "허니서클",
+          "갈라 애플",
+          "스테파노티스"
+        ]
+      },
+      "accords": [
+        "화이트 플로럴",
+        "프루티",
+        "허벌"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Victoria-s-Secret/Secret-Charm-7991.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "제품 소개의 대표 노트 · 단계 구분 미공개"
+      },
+      "noteStatus": "key_notes",
+      "shortDescription": "허니서클 · 갈라 애플 · 스테파노티스 중심의 화이트 플로럴 · 프루티 계열입니다.",
+      "originalDescription": "#코오롱\n#과일향\n#부담없는\n은은함"
     },
     {
       "id": "main-13",
       "number": "13",
       "name": "산타마리아 프리지아 type",
       "sourceName": "산타마리아 \n프리지아  type",
-      "description": "#프리지아\n단일향\n#산뜻\n#비누향",
-      "descriptionStatus": "source_provided",
+      "description": "플로럴 파우더리 머스키 프리지아 바이올렛 센티폴리아 로즈 아이리스 머스크",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -222,15 +582,45 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "D8"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "프리지아"
+        ],
+        "heart": [
+          "바이올렛",
+          "센티폴리아 로즈"
+        ],
+        "base": [
+          "아이리스",
+          "머스크"
+        ],
+        "key": []
+      },
+      "accords": [
+        "플로럴",
+        "파우더리",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://us.smnovella.com/products/edcfresia",
+        "label": "us.smnovella.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "프리지아의 첫인상에 바이올렛 · 센티폴리아 로즈이 이어지고, 아이리스 · 머스크이 여운을 남깁니다.",
+      "originalDescription": "#프리지아\n단일향\n#산뜻\n#비누향"
     },
     {
       "id": "main-14",
       "number": "14",
       "name": "샤넬 NO5 type",
       "sourceName": "샤넬 NO5 type",
-      "description": "#바닐라\n#찐~함\n#마릴린먼로",
-      "descriptionStatus": "source_provided",
+      "description": "알데하이딕 플로럴 파우더리 알데하이드 일랑일랑 네롤리 베르가못 복숭아 아이리스 자스민 장미 은방울꽃 샌달우드 오크모스 바닐라 패츌리 베티버",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -239,49 +629,164 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "H8"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "알데하이드",
+          "일랑일랑",
+          "네롤리",
+          "베르가못",
+          "복숭아"
+        ],
+        "heart": [
+          "아이리스",
+          "자스민",
+          "장미",
+          "은방울꽃"
+        ],
+        "base": [
+          "샌달우드",
+          "오크모스",
+          "바닐라",
+          "패츌리",
+          "베티버"
+        ],
+        "key": []
+      },
+      "accords": [
+        "알데하이딕",
+        "플로럴",
+        "파우더리"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Chanel/Chanel-No-5-Eau-de-Parfum-40069.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "N°5 오 드 퍼퓸 참고 버전"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "알데하이드 · 일랑일랑의 첫인상에 아이리스 · 자스민이 이어지고, 샌달우드 · 오크모스이 여운을 남깁니다.",
+      "originalDescription": "#바닐라\n#찐~함\n#마릴린먼로"
     },
     {
       "id": "main-15",
       "number": "15",
-      "name": "조말론 블랙베리 앤 베이 type",
+      "name": "샤넬 코코 마드모아젤 type",
       "sourceName": "조말론\n블랙베리 앤 베이\ntype",
-      "description": "#오리엔탈\n#바닐라\n#관능적\n#깊고풍부",
-      "descriptionStatus": "source_provided",
+      "description": "시트러스 패츌리 플로럴 오렌지 만다린 베르가못 오렌지 블라썸 장미 자스민 미모사 일랑일랑 패츌리 화이트 머스크 바닐라 베티버 통카빈",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "J8"
       },
-      "descriptionSource": {
-        "sheet": "향수타입 설명 2022",
-        "cell": "L8"
-      }
+      "descriptionSource": null,
+      "previousName": "조말론 블랙베리 앤 베이 type",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "오렌지",
+          "만다린",
+          "베르가못",
+          "오렌지 블라썸"
+        ],
+        "heart": [
+          "장미",
+          "자스민",
+          "미모사",
+          "일랑일랑"
+        ],
+        "base": [
+          "패츌리",
+          "화이트 머스크",
+          "바닐라",
+          "베티버",
+          "통카빈"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시트러스",
+        "패츌리",
+        "플로럴"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Chanel/Chance-611.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "코코 마드모아젤 오 드 퍼퓸 참고 버전"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "오렌지 · 만다린의 첫인상에 장미 · 자스민이 이어지고, 패츌리 · 화이트 머스크이 여운을 남깁니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-16",
       "number": "16",
-      "name": "조말론 우드세이지&씨솔트 type",
+      "name": "시슬리 오 드 스와르 type",
       "sourceName": "조말론\n우드세이지&씨솔트 \ntype",
-      "description": "#우디플로럴\n#세련,우아",
-      "descriptionStatus": "source_provided",
+      "description": "시프레 플로럴 우디 만다린 자몽 페퍼 시링가 자스민 장미 일랑일랑 은방울꽃 아이리스 클로브 머스크 앰버 오크모스 패츌리 시스투스",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "N8"
       },
-      "descriptionSource": {
-        "sheet": "향수타입 설명 2022",
-        "cell": "P8"
-      }
+      "descriptionSource": null,
+      "previousName": "조말론 우드세이지&씨솔트 type",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "만다린",
+          "자몽",
+          "페퍼"
+        ],
+        "heart": [
+          "시링가",
+          "자스민",
+          "장미",
+          "일랑일랑",
+          "은방울꽃",
+          "아이리스",
+          "클로브"
+        ],
+        "base": [
+          "머스크",
+          "앰버",
+          "오크모스",
+          "패츌리",
+          "시스투스"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시프레",
+        "플로럴",
+        "우디"
+      ],
+      "noteSource": {
+        "url": "https://basenotes.com/fragrances/eau-du-soir-by-sisley.10213106",
+        "label": "basenotes.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "만다린 · 자몽의 첫인상에 시링가 · 자스민이 이어지고, 머스크 · 앰버이 여운을 남깁니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-17",
       "number": "17",
       "name": "아뜰리에 코롱 포멜로 파라디 type",
       "sourceName": "아뜰리에 \n코롱 \n포멜로 \n파라디 type",
-      "description": "#자몽상큼",
-      "descriptionStatus": "source_provided",
+      "description": "시트러스 아로마틱 그린 핑크 자몽 만다린 블랙커런트 오렌지 블라썸 민트 장미 베티버 앰버 아이리스",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -290,15 +795,49 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "D9"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "핑크 자몽",
+          "만다린",
+          "블랙커런트"
+        ],
+        "heart": [
+          "오렌지 블라썸",
+          "민트",
+          "장미"
+        ],
+        "base": [
+          "베티버",
+          "앰버",
+          "아이리스"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시트러스",
+        "아로마틱",
+        "그린"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Atelier-Cologne/Pomelo-Paradis-29327.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "핑크 자몽 · 만다린의 첫인상에 오렌지 블라썸 · 민트이 이어지고, 베티버 · 앰버이 여운을 남깁니다.",
+      "originalDescription": "#자몽상큼"
     },
     {
       "id": "main-18",
       "number": "18",
       "name": "조말론 잉글리쉬 페어& 프리지아 type",
       "sourceName": "조말론\n잉글리쉬\n페어&\n프리지아\ntype",
-      "description": "#신선한배\n#화이트 프리지아\n#머스크",
-      "descriptionStatus": "source_provided",
+      "description": "프루티 플로럴 우디 윌리엄스 페어 프리지아 패츌리",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -307,15 +846,43 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "H9"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "윌리엄스 페어"
+        ],
+        "heart": [
+          "프리지아"
+        ],
+        "base": [
+          "패츌리"
+        ],
+        "key": []
+      },
+      "accords": [
+        "프루티",
+        "플로럴",
+        "우디"
+      ],
+      "noteSource": {
+        "url": "https://www.jomalone.com/product/25946/12553/colognes/english-pear-freesia-cologne",
+        "label": "jomalone.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "윌리엄스 페어의 첫인상에 프리지아이 이어지고, 패츌리이 여운을 남깁니다.",
+      "originalDescription": "#신선한배\n#화이트 프리지아\n#머스크"
     },
     {
       "id": "main-19",
       "number": "19",
       "name": "조말론 오렌지 블라썸 type",
       "sourceName": "조말론 \n오렌지 \n블라썸\ntype",
-      "description": "#오렌지향\n#매혹적\n여성의향",
-      "descriptionStatus": "source_provided",
+      "description": "화이트 플로럴 시트러스 프레시 탠저린 블라썸 오렌지 블라썸 라일락 워터 릴리 베티버 아이리스",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -324,15 +891,46 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "L9"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "탠저린 블라썸"
+        ],
+        "heart": [
+          "오렌지 블라썸",
+          "라일락",
+          "워터 릴리"
+        ],
+        "base": [
+          "베티버",
+          "아이리스"
+        ],
+        "key": []
+      },
+      "accords": [
+        "화이트 플로럴",
+        "시트러스",
+        "프레시"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Jo-Malone/Orange-Blossom-2279.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "탠저린 블라썸의 첫인상에 오렌지 블라썸 · 라일락이 이어지고, 베티버 · 아이리스이 여운을 남깁니다.",
+      "originalDescription": "#오렌지향\n#매혹적\n여성의향"
     },
     {
       "id": "main-20",
       "number": "20",
       "name": "존바바토스 아티산 type",
       "sourceName": "존바바토스 \n아티산 type",
-      "description": "#세련,모던\n#상큼,은은\n#감귤,허브",
-      "descriptionStatus": "source_provided",
+      "description": "시트러스 아로마틱 우디 클레멘타인 탠저린 마조람 타임 오렌지 블라썸 생강 라벤더 자스민 머스크 우디 노트 앰버",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -341,15 +939,51 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "P9"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "클레멘타인",
+          "탠저린",
+          "마조람",
+          "타임"
+        ],
+        "heart": [
+          "오렌지 블라썸",
+          "생강",
+          "라벤더",
+          "자스민"
+        ],
+        "base": [
+          "머스크",
+          "우디 노트",
+          "앰버"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시트러스",
+        "아로마틱",
+        "우디"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/John-Varvatos/Artisan-5534.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "클레멘타인 · 탠저린의 첫인상에 오렌지 블라썸 · 생강이 이어지고, 머스크 · 우디 노트이 여운을 남깁니다.",
+      "originalDescription": "#세련,모던\n#상큼,은은\n#감귤,허브"
     },
     {
       "id": "main-21",
       "number": "21",
       "name": "지미추 EDT type",
       "sourceName": "지미추 EDT type",
-      "description": "#꽃향\n#파우더리\n#우디,플로럴",
-      "descriptionStatus": "source_provided",
+      "description": "프루티 플로럴 우디 배 그린 노트 생강 타이프 로즈 오키드 우디 노트 시더우드",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -358,15 +992,47 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "D10"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "배",
+          "그린 노트",
+          "생강"
+        ],
+        "heart": [
+          "타이프 로즈",
+          "오키드"
+        ],
+        "base": [
+          "우디 노트",
+          "시더우드"
+        ],
+        "key": []
+      },
+      "accords": [
+        "프루티",
+        "플로럴",
+        "우디"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfumes/Jimmy-Choo/Jimmy-Choo-Eau-de-Toilette-14109.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "배 · 그린 노트의 첫인상에 타이프 로즈 · 오키드이 이어지고, 우디 노트 · 시더우드이 여운을 남깁니다.",
+      "originalDescription": "#꽃향\n#파우더리\n#우디,플로럴"
     },
     {
       "id": "main-22",
       "number": "22",
       "name": "클린 레인 type",
       "sourceName": "클린\n레인\ntype",
-      "description": "#아침이슬\n#풀잎,산뜻\n#깨끗함",
-      "descriptionStatus": "source_provided",
+      "description": "아쿠아틱 그린 머스키 멜론 수선화 워터민트 데이지 워터 릴리 바이올렛 리프 머스크 우디 노트",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -375,15 +1041,48 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "H10"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "멜론",
+          "수선화",
+          "워터민트"
+        ],
+        "heart": [
+          "데이지",
+          "워터 릴리",
+          "바이올렛 리프"
+        ],
+        "base": [
+          "머스크",
+          "우디 노트"
+        ],
+        "key": []
+      },
+      "accords": [
+        "아쿠아틱",
+        "그린",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://www.cleanbeauty.com/collections/citrus-green/products/clean-classic-rain",
+        "label": "cleanbeauty.com",
+        "checkedAt": "2026-10-30",
+        "reference": "CLEAN CLASSIC 참고 버전"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "멜론 · 수선화의 첫인상에 데이지 · 워터 릴리이 이어지고, 머스크 · 우디 노트이 여운을 남깁니다.",
+      "originalDescription": "#아침이슬\n#풀잎,산뜻\n#깨끗함"
     },
     {
       "id": "main-23",
       "number": "23",
       "name": "클린 웜코튼 type",
       "sourceName": "클린\n웜코튼 type",
-      "description": "#시트러스\n#상큼포근",
-      "descriptionStatus": "source_provided",
+      "description": "시트러스 마린 머스키 시트러스 레몬 버베나 마린 노트 오렌지 블라썸 과일 머스크 고사리 앰버",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -392,15 +1091,48 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "L10"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "시트러스",
+          "레몬 버베나"
+        ],
+        "heart": [
+          "마린 노트",
+          "오렌지 블라썸",
+          "과일"
+        ],
+        "base": [
+          "머스크",
+          "고사리",
+          "앰버"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시트러스",
+        "마린",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/p/3024",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "2007년 오리지널 참고 버전"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "시트러스 · 레몬 버베나의 첫인상에 마린 노트 · 오렌지 블라썸이 이어지고, 머스크 · 고사리이 여운을 남깁니다.",
+      "originalDescription": "#시트러스\n#상큼포근"
     },
     {
       "id": "main-24",
       "number": "24",
       "name": "클린 쿨코튼 type",
       "sourceName": "클린\n쿨코튼 type",
-      "description": "#섬유유연제\n#가벼움",
-      "descriptionStatus": "source_provided",
+      "description": "파우더리 시트러스 그린 레몬 껍질 베르가못 그린 애플 코튼 플라워 민트 미모사 화이트 머스크 복숭아 앰버",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -409,15 +1141,49 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "P10"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "레몬 껍질",
+          "베르가못",
+          "그린 애플"
+        ],
+        "heart": [
+          "코튼 플라워",
+          "민트",
+          "미모사"
+        ],
+        "base": [
+          "화이트 머스크",
+          "복숭아",
+          "앰버"
+        ],
+        "key": []
+      },
+      "accords": [
+        "파우더리",
+        "시트러스",
+        "그린"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Clean/Cool-Cotton-23032.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "레몬 껍질 · 베르가못의 첫인상에 코튼 플라워 · 민트이 이어지고, 화이트 머스크 · 복숭아이 여운을 남깁니다.",
+      "originalDescription": "#섬유유연제\n#가벼움"
     },
     {
       "id": "main-25",
       "number": "25",
       "name": "탄 에덴 브리즈 type",
       "sourceName": "탄 에덴 \n브리즈 type",
-      "description": "#비누향\n#고급향",
-      "descriptionStatus": "source_provided",
+      "description": "플로럴 화이트 플로럴 로즈 자스민 장미",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -426,15 +1192,40 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "D11"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [],
+        "heart": [],
+        "base": [],
+        "key": [
+          "자스민",
+          "장미"
+        ]
+      },
+      "accords": [
+        "플로럴",
+        "화이트 플로럴",
+        "로즈"
+      ],
+      "noteSource": {
+        "url": "https://www.thann.info/aromatherapy-products",
+        "label": "thann.info",
+        "checkedAt": "2026-10-30",
+        "reference": "Eden Breeze 공개 대표 노트 · 단계 구분 미공개"
+      },
+      "noteStatus": "key_notes",
+      "shortDescription": "자스민 · 장미 중심의 플로럴 · 화이트 플로럴 계열입니다.",
+      "originalDescription": "#비누향\n#고급향"
     },
     {
       "id": "main-26",
       "number": "26",
       "name": "페라가모 인칸토 참 type",
       "sourceName": "페라가모 \n인칸토 참 type",
-      "description": "#이국적해변\n#은은달콤",
-      "descriptionStatus": "source_provided",
+      "description": "프루티 화이트 플로럴 머스키 패션프루트 허니서클 장미 자스민 머스크 우디 노트",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -443,32 +1234,98 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "H11"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "패션프루트",
+          "허니서클"
+        ],
+        "heart": [
+          "장미",
+          "자스민"
+        ],
+        "base": [
+          "머스크",
+          "우디 노트"
+        ],
+        "key": []
+      },
+      "accords": [
+        "프루티",
+        "화이트 플로럴",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Salvatore-Ferragamo/Incanto-Charms-653.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "패션프루트 · 허니서클의 첫인상에 장미 · 자스민이 이어지고, 머스크 · 우디 노트이 여운을 남깁니다.",
+      "originalDescription": "#이국적해변\n#은은달콤"
     },
     {
       "id": "main-27",
       "number": "27",
-      "name": "롤리타 램피카 type",
+      "name": "딥디크 플레르 드 뽀 type",
       "sourceName": "롤리타\n램피카\ntype",
-      "description": "#시원달달??\n#풀향…",
-      "descriptionStatus": "source_provided",
+      "description": "머스키 파우더리 아이리스 알데하이드 핑크 페퍼 안젤리카 베르가못 아이리스 장미 머스크 앰브레트 당근 앰버그리스 샌달우드",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "J11"
       },
-      "descriptionSource": {
-        "sheet": "향수타입 설명 2022",
-        "cell": "L6"
-      }
+      "descriptionSource": null,
+      "previousName": "롤리타 램피카 type",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "알데하이드",
+          "핑크 페퍼",
+          "안젤리카",
+          "베르가못"
+        ],
+        "heart": [
+          "아이리스",
+          "장미"
+        ],
+        "base": [
+          "머스크",
+          "앰브레트",
+          "당근",
+          "앰버그리스",
+          "샌달우드"
+        ],
+        "key": []
+      },
+      "accords": [
+        "머스키",
+        "파우더리",
+        "아이리스"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/diptyque/fleur-de-peau-eau-de-parfum-48681.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "알데하이드 · 핑크 페퍼의 첫인상에 아이리스 · 장미이 이어지고, 머스크 · 앰브레트이 여운을 남깁니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-28",
       "number": "28",
       "name": "폴로 랄프로렌 블루 type",
       "sourceName": "폴로 \n랄프로렌 \n블루 type",
-      "description": "#깨끗상쾌\n#바다내음",
-      "descriptionStatus": "source_provided",
+      "description": "아쿠아틱 아로마틱 그린 오이 멜론 만다린 바질 세이지 제라늄 스웨이드 우디 노트 머스크",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -477,15 +1334,49 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "P11"
-      }
+      },
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "오이",
+          "멜론",
+          "만다린"
+        ],
+        "heart": [
+          "바질",
+          "세이지",
+          "제라늄"
+        ],
+        "base": [
+          "스웨이드",
+          "우디 노트",
+          "머스크"
+        ],
+        "key": []
+      },
+      "accords": [
+        "아쿠아틱",
+        "아로마틱",
+        "그린"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/p/1198",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "오이 · 멜론의 첫인상에 바질 · 세이지이 이어지고, 스웨이드 · 우디 노트이 여운을 남깁니다.",
+      "originalDescription": "#깨끗상쾌\n#바다내음"
     },
     {
       "id": "main-29",
       "number": "29",
       "name": "폴로 스포츠 type",
       "sourceName": "폴로 \n스포츠 type",
-      "description": "#역동적남성\n#스포티함\n#신선함",
-      "descriptionStatus": "source_provided",
+      "description": "아로마틱 시트러스 그린 민트 알데하이드 라벤더 베르가못 레몬 씨그래스 생강 자스민 제라늄 머스크 샌달우드 시더우드 과이악우드 앰버",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -494,74 +1385,205 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "D12"
-      }
-    },
-    {
-      "id": "main-29-1",
-      "number": "29-1",
-      "name": "폴로 빅포니 우먼 2 type",
-      "sourceName": "폴로\n빅포니\n우먼 2\ntype",
-      "description": "#크리미한 \n딸기크림 : 달콤",
-      "descriptionStatus": "source_provided",
-      "source": {
-        "file": "향수사진 목록 10.xlsx",
-        "sheet": "향수타입 2022",
-        "cell": "F12"
       },
-      "descriptionSource": {
-        "sheet": "향수타입 설명 2022",
-        "cell": "H12"
-      }
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "민트",
+          "알데하이드",
+          "라벤더",
+          "베르가못",
+          "레몬"
+        ],
+        "heart": [
+          "씨그래스",
+          "생강",
+          "자스민",
+          "제라늄"
+        ],
+        "base": [
+          "머스크",
+          "샌달우드",
+          "시더우드",
+          "과이악우드",
+          "앰버"
+        ],
+        "key": []
+      },
+      "accords": [
+        "아로마틱",
+        "시트러스",
+        "그린"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Ralph-Lauren/Polo-Sport-894.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "민트 · 알데하이드의 첫인상에 씨그래스 · 생강이 이어지고, 머스크 · 샌달우드이 여운을 남깁니다.",
+      "originalDescription": "#역동적남성\n#스포티함\n#신선함"
     },
     {
       "id": "main-30",
       "number": "30",
-      "name": "다비도프 쿨워터포우먼",
+      "name": "이솝 테싯 type",
       "sourceName": "다비도프\n쿨워터포우먼",
-      "description": "",
-      "descriptionStatus": "missing",
+      "description": "시트러스 그린 허벌 유자 바질 클로브 로즈마리 민트 펜넬 시더우드 베티버 앰버",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "J12"
       },
-      "descriptionSource": null
+      "descriptionSource": null,
+      "previousName": "다비도프 쿨워터포우먼",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "유자",
+          "바질",
+          "클로브"
+        ],
+        "heart": [
+          "로즈마리",
+          "민트",
+          "펜넬"
+        ],
+        "base": [
+          "시더우드",
+          "베티버",
+          "앰버"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시트러스",
+        "그린",
+        "허벌"
+      ],
+      "noteSource": {
+        "url": "https://www.aesop.com/fragrance/fresh/tacit-eau-de-parfum/3614274579598.html",
+        "label": "aesop.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "유자 · 바질의 첫인상에 로즈마리 · 민트이 이어지고, 시더우드 · 베티버이 여운을 남깁니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-31",
       "number": "31",
-      "name": "딥디크 오 로즈 type",
+      "name": "이솝 휠 type",
       "sourceName": "딥디크\n오 로즈\ntype",
-      "description": "",
-      "descriptionStatus": "missing",
+      "description": "우디 스모키 아로마틱 스모키 노트 스파이스 타임 사이프러스 베티버 프랑킨센스 모스",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "N12"
       },
-      "descriptionSource": null
+      "descriptionSource": null,
+      "previousName": "딥디크 오 로즈 type",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "스모키 노트",
+          "스파이스",
+          "타임"
+        ],
+        "heart": [
+          "사이프러스"
+        ],
+        "base": [
+          "베티버",
+          "프랑킨센스",
+          "모스"
+        ],
+        "key": []
+      },
+      "accords": [
+        "우디",
+        "스모키",
+        "아로마틱"
+      ],
+      "noteSource": {
+        "url": "https://shop.aesop.com/no/r/the-athenaeum/a-guide-to-fragrance/",
+        "label": "shop.aesop.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "스모키 노트 · 스파이스의 첫인상에 사이프러스이 이어지고, 베티버 · 프랑킨센스이 여운을 남깁니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-32",
       "number": "32",
-      "name": "딥디크 오 데썽 type",
+      "name": "마크제이콥스 스플래쉬 레인 type",
       "sourceName": "딥디크\n오 데썽\ntype",
-      "description": "",
-      "descriptionStatus": "missing",
+      "description": "아쿠아틱 그린 플로럴 사이프러스 클레멘타인 풀잎 산딸기 오키드 패션플라워 레인 어코드 해바라기 티크우드 화이트 머스크 앰버 모스",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "B13"
       },
-      "descriptionSource": null
+      "descriptionSource": null,
+      "previousName": "딥디크 오 데썽 type",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": false,
+      "tier": "기본 향",
+      "notes": {
+        "top": [
+          "사이프러스",
+          "클레멘타인",
+          "풀잎",
+          "산딸기"
+        ],
+        "heart": [
+          "오키드",
+          "패션플라워",
+          "레인 어코드",
+          "해바라기"
+        ],
+        "base": [
+          "티크우드",
+          "화이트 머스크",
+          "앰버",
+          "모스"
+        ],
+        "key": []
+      },
+      "accords": [
+        "아쿠아틱",
+        "그린",
+        "플로럴"
+      ],
+      "noteSource": {
+        "url": "https://www.osmoz.com/perfumes/marc-jacobs/2497/splash--rain",
+        "label": "osmoz.com",
+        "checkedAt": "2026-10-30",
+        "reference": "Splash Rain 2006 참고 버전 · 2016 재출시 자료 존재"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "사이프러스 · 클레멘타인의 첫인상에 오키드 · 패션플라워이 이어지고, 티크우드 · 화이트 머스크이 여운을 남깁니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-33",
       "number": "33",
       "name": "딥디크 도손 type",
       "sourceName": "딥디크\n도손\ntype",
-      "description": "#플로럴\n화이트플라워\n#중성적\n#호불호\n나뉨",
-      "descriptionStatus": "source_provided",
+      "description": "화이트 플로럴 튜베로즈 마린 튜베로즈 오렌지 블라썸 자스민 마린 어코드",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -570,15 +1592,42 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "H13"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [],
+        "heart": [],
+        "base": [],
+        "key": [
+          "튜베로즈",
+          "오렌지 블라썸",
+          "자스민",
+          "마린 어코드"
+        ]
+      },
+      "accords": [
+        "화이트 플로럴",
+        "튜베로즈",
+        "마린"
+      ],
+      "noteSource": {
+        "url": "https://www.diptyqueparis.com/en_uk/p/do-son-eau-de-toilette-1.html",
+        "label": "diptyqueparis.com",
+        "checkedAt": "2026-10-30",
+        "reference": "오 드 뚜왈렛 대표 노트 · 단계 구분 미공개"
+      },
+      "noteStatus": "key_notes",
+      "shortDescription": "튜베로즈 · 오렌지 블라썸 · 자스민 중심의 화이트 플로럴 · 튜베로즈 계열입니다.",
+      "originalDescription": "#플로럴\n화이트플라워\n#중성적\n#호불호\n나뉨"
     },
     {
       "id": "main-34",
       "number": "34",
       "name": "딥디크 탐다오 type",
       "sourceName": "딥디크 \n탐다오 type",
-      "description": "#매력적\n고급진 \n우디향\n#중성적 세련",
-      "descriptionStatus": "source_provided",
+      "description": "우디 샌달우드 아로마틱 샌달우드 시더우드 사이프러스 코리앤더",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -587,15 +1636,42 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "L13"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [],
+        "heart": [],
+        "base": [],
+        "key": [
+          "샌달우드",
+          "시더우드",
+          "사이프러스",
+          "코리앤더"
+        ]
+      },
+      "accords": [
+        "우디",
+        "샌달우드",
+        "아로마틱"
+      ],
+      "noteSource": {
+        "url": "https://us.diptyqueparis.com/en-us/products/eau-de-parfum-tam-dao-tamdaop75cv1",
+        "label": "us.diptyqueparis.com",
+        "checkedAt": "2026-10-30",
+        "reference": "오 드 퍼퓸 대표 노트 · 단계 구분 미공개"
+      },
+      "noteStatus": "key_notes",
+      "shortDescription": "샌달우드 · 시더우드 · 사이프러스 중심의 우디 · 샌달우드 계열입니다.",
+      "originalDescription": "#매력적\n고급진 \n우디향\n#중성적 세련"
     },
     {
       "id": "main-35",
       "number": "35",
       "name": "딥디크 롬브로단로 type",
       "sourceName": "딥디크 \n롬브로단로 type",
-      "description": "#축축한 장미\n#비오는 날 어울리는 향",
-      "descriptionStatus": "source_provided",
+      "description": "그린 로즈 프루티 장미 블랙커런트 버드 페티그레인 블랙커런트 리프",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -604,15 +1680,42 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "P13"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [],
+        "heart": [],
+        "base": [],
+        "key": [
+          "장미",
+          "블랙커런트 버드",
+          "페티그레인",
+          "블랙커런트 리프"
+        ]
+      },
+      "accords": [
+        "그린",
+        "로즈",
+        "프루티"
+      ],
+      "noteSource": {
+        "url": "https://uk.diptyqueparis.com/en-uk/products/eau-de-toilette-ombre-dans-eau-ombre50v3",
+        "label": "uk.diptyqueparis.com",
+        "checkedAt": "2026-10-30",
+        "reference": "오 드 뚜왈렛 대표 노트 · 단계 구분 미공개"
+      },
+      "noteStatus": "key_notes",
+      "shortDescription": "장미 · 블랙커런트 버드 · 페티그레인 중심의 그린 · 로즈 계열입니다.",
+      "originalDescription": "#축축한 장미\n#비오는 날 어울리는 향"
     },
     {
       "id": "main-36",
       "number": "36",
       "name": "보야지 드 에르메스 type",
       "sourceName": "보야지 드\n에르메스\ntype",
-      "description": "#시트러스우디 #상큼함과 나무향이 \n동시에",
-      "descriptionStatus": "source_provided",
+      "description": "스파이시 시트러스 우디 카다멈 레몬 스파이스 주니퍼 베리 차 그린 노트 플로럴 노트 우디 노트 머스크 시더우드",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -621,15 +1724,50 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "D15"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "카다멈",
+          "레몬",
+          "스파이스",
+          "주니퍼 베리"
+        ],
+        "heart": [
+          "차",
+          "그린 노트",
+          "플로럴 노트"
+        ],
+        "base": [
+          "우디 노트",
+          "머스크",
+          "시더우드"
+        ],
+        "key": []
+      },
+      "accords": [
+        "스파이시",
+        "시트러스",
+        "우디"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Hermes/Voyage-d-Hermes-7916.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "카다멈 · 레몬의 첫인상에 차 · 그린 노트이 이어지고, 우디 노트 · 머스크이 여운을 남깁니다.",
+      "originalDescription": "#시트러스우디 #상큼함과 나무향이 \n동시에"
     },
     {
       "id": "main-37",
       "number": "37",
       "name": "입생로랑 몽 파리 type",
       "sourceName": "입생로랑 \n몽 파리 type",
-      "description": "#사랑의도시,\n파리\n#달달함\n#관능, 유혹",
-      "descriptionStatus": "source_provided",
+      "description": "프루티 플로럴 패츌리 딸기 라즈베리 배 오렌지 베르가못 피오니 자스민 다투라 오렌지 블라썸 패츌리 화이트 머스크 바닐라 앰브록산 시더우드",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -638,15 +1776,54 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "H15"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "딸기",
+          "라즈베리",
+          "배",
+          "오렌지",
+          "베르가못"
+        ],
+        "heart": [
+          "피오니",
+          "자스민",
+          "다투라",
+          "오렌지 블라썸"
+        ],
+        "base": [
+          "패츌리",
+          "화이트 머스크",
+          "바닐라",
+          "앰브록산",
+          "시더우드"
+        ],
+        "key": []
+      },
+      "accords": [
+        "프루티",
+        "플로럴",
+        "패츌리"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Yves-Saint-Laurent/Mon-Paris-38914.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "딸기 · 라즈베리의 첫인상에 피오니 · 자스민이 이어지고, 패츌리 · 화이트 머스크이 여운을 남깁니다.",
+      "originalDescription": "#사랑의도시,\n파리\n#달달함\n#관능, 유혹"
     },
     {
       "id": "main-38",
       "number": "38",
       "name": "크리드 실버 마운틴 워터 type",
       "sourceName": "크리드\n실버 마운틴\n워터 type",
-      "description": "#알프스산\n#시원상쾌\n#잔향깡패",
-      "descriptionStatus": "source_provided",
+      "description": "시트러스 그린 머스키 베르가못 만다린 그린티 블랙커런트 머스크 페티그레인 샌달우드 갈바넘",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -655,15 +1832,48 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "L15"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "베르가못",
+          "만다린"
+        ],
+        "heart": [
+          "그린티",
+          "블랙커런트"
+        ],
+        "base": [
+          "머스크",
+          "페티그레인",
+          "샌달우드",
+          "갈바넘"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시트러스",
+        "그린",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Creed/Silver-Mountain-Water-472.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "베르가못 · 만다린의 첫인상에 그린티 · 블랙커런트이 이어지고, 머스크 · 페티그레인이 여운을 남깁니다.",
+      "originalDescription": "#알프스산\n#시원상쾌\n#잔향깡패"
     },
     {
       "id": "main-39",
       "number": "39",
       "name": "크리드 어벤투스 type",
       "sourceName": "크리드 \n어벤투스 type",
-      "description": "#나폴레옹\n#왕족의향기",
-      "descriptionStatus": "source_provided",
+      "description": "프루티 우디 스모키 베르가못 블랙커런트 사과 레몬 핑크 페퍼 파인애플 패츌리 자스민 버치 머스크 오크모스 시더우드 앰브록산",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -672,46 +1882,161 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "P15"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "베르가못",
+          "블랙커런트",
+          "사과",
+          "레몬",
+          "핑크 페퍼"
+        ],
+        "heart": [
+          "파인애플",
+          "패츌리",
+          "자스민"
+        ],
+        "base": [
+          "버치",
+          "머스크",
+          "오크모스",
+          "시더우드",
+          "앰브록산"
+        ],
+        "key": []
+      },
+      "accords": [
+        "프루티",
+        "우디",
+        "스모키"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/creed/aventus-9828.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "베르가못 · 블랙커런트의 첫인상에 파인애플 · 패츌리이 이어지고, 버치 · 머스크이 여운을 남깁니다.",
+      "originalDescription": "#나폴레옹\n#왕족의향기"
     },
     {
       "id": "main-40",
       "number": "40",
-      "name": "랑방 미 로우 type",
+      "name": "크리드 어벤투스 포허 type",
       "sourceName": "랑방\n미 로우\ntype",
-      "description": "",
-      "descriptionStatus": "missing",
+      "description": "프루티 시트러스 머스키 그린 애플 베르가못 레몬 패츌리 핑크 페퍼 바이올렛 머스크 장미 샌달우드 스티락스 블랙커런트 복숭아 앰버 라일락 일랑일랑",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "B16"
       },
-      "descriptionSource": null
+      "descriptionSource": null,
+      "previousName": "랑방 미 로우 type",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "그린 애플",
+          "베르가못",
+          "레몬",
+          "패츌리",
+          "핑크 페퍼",
+          "바이올렛"
+        ],
+        "heart": [
+          "머스크",
+          "장미",
+          "샌달우드",
+          "스티락스"
+        ],
+        "base": [
+          "블랙커런트",
+          "복숭아",
+          "앰버",
+          "라일락",
+          "일랑일랑"
+        ],
+        "key": []
+      },
+      "accords": [
+        "프루티",
+        "시트러스",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Creed/Aventus-for-Her-38497.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "그린 애플 · 베르가못의 첫인상에 머스크 · 장미이 이어지고, 블랙커런트 · 복숭아이 여운을 남깁니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-41",
       "number": "41",
-      "name": "지방시 랑테르디 type",
+      "name": "메모 인레 type",
       "sourceName": "지방시 \n랑테르디 type",
-      "description": "#달달함\n#오드리햅번",
-      "descriptionStatus": "source_provided",
+      "description": "티 플로럴 그린 카다멈 베르가못 티 어코드 네롤리 오스만투스 무화과 자스민 삼박 머스크 시더우드 바이올렛 마테",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "F16"
       },
-      "descriptionSource": {
-        "sheet": "향수타입 설명 2022",
-        "cell": "H16"
-      }
+      "descriptionSource": null,
+      "previousName": "지방시 랑테르디 type",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "카다멈",
+          "베르가못",
+          "티 어코드",
+          "네롤리"
+        ],
+        "heart": [
+          "오스만투스",
+          "무화과",
+          "자스민 삼박"
+        ],
+        "base": [
+          "머스크",
+          "시더우드",
+          "바이올렛",
+          "마테"
+        ],
+        "key": []
+      },
+      "accords": [
+        "티",
+        "플로럴",
+        "그린"
+      ],
+      "noteSource": {
+        "url": "https://us.memoparis.com/products/inle-eau-de-parfum-75ml",
+        "label": "us.memoparis.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "카다멈 · 베르가못의 첫인상에 오스만투스 · 무화과이 이어지고, 머스크 · 시더우드이 여운을 남깁니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-42",
       "number": "42",
       "name": "파코라반 원미리언포맨 type",
       "sourceName": "파코라반 \n원미리언포맨 type",
-      "description": "#물질적욕망\n#강렬함\n#비싸보임",
-      "descriptionStatus": "source_provided",
+      "description": "스파이시 앰버 레더 블러드 만다린 자몽 민트 시나몬 스파이스 장미 앰버 가죽 우디 노트 패츌리",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -720,15 +2045,50 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "L16"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "블러드 만다린",
+          "자몽",
+          "민트"
+        ],
+        "heart": [
+          "시나몬",
+          "스파이스",
+          "장미"
+        ],
+        "base": [
+          "앰버",
+          "가죽",
+          "우디 노트",
+          "패츌리"
+        ],
+        "key": []
+      },
+      "accords": [
+        "스파이시",
+        "앰버",
+        "레더"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Paco-Rabanne/1-Million-3747.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "블러드 만다린 · 자몽의 첫인상에 시나몬 · 스파이스이 이어지고, 앰버 · 가죽이 여운을 남깁니다.",
+      "originalDescription": "#물질적욕망\n#강렬함\n#비싸보임"
     },
     {
       "id": "main-43",
       "number": "43",
       "name": "돌체 앤 가바나 라이트블루 type",
       "sourceName": "돌체 앤 \n가바나 \n라이트블루 type",
-      "description": "#풋사과\n#해변가\n#스위트\n#머스크",
-      "descriptionStatus": "source_provided",
+      "description": "시트러스 프루티 우디 시칠리안 레몬 사과 시더우드 벨플라워 대나무 자스민 화이트 로즈 시더우드 머스크 앰버",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -737,15 +2097,50 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "P16"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "시칠리안 레몬",
+          "사과",
+          "시더우드",
+          "벨플라워"
+        ],
+        "heart": [
+          "대나무",
+          "자스민",
+          "화이트 로즈"
+        ],
+        "base": [
+          "시더우드",
+          "머스크",
+          "앰버"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시트러스",
+        "프루티",
+        "우디"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Dolce-Gabbana/Light-Blue-485.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "시칠리안 레몬 · 사과의 첫인상에 대나무 · 자스민이 이어지고, 시더우드 · 머스크이 여운을 남깁니다.",
+      "originalDescription": "#풋사과\n#해변가\n#스위트\n#머스크"
     },
     {
       "id": "main-44",
       "number": "44",
       "name": "크리찬디올 자도르 type",
       "sourceName": "크리찬디올 \n자도르 type",
-      "description": "달달한 첫향, 향의 변화를 느껴보세요",
-      "descriptionStatus": "source_provided",
+      "description": "화이트 플로럴 플로럴 프루티 배 멜론 매그놀리아 복숭아 만다린 베르가못 자스민 은방울꽃 튜베로즈 프리지아 장미 머스크 바닐라 시더우드 블랙베리",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -754,15 +2149,55 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "U5"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "배",
+          "멜론",
+          "매그놀리아",
+          "복숭아",
+          "만다린",
+          "베르가못"
+        ],
+        "heart": [
+          "자스민",
+          "은방울꽃",
+          "튜베로즈",
+          "프리지아",
+          "장미"
+        ],
+        "base": [
+          "머스크",
+          "바닐라",
+          "시더우드",
+          "블랙베리"
+        ],
+        "key": []
+      },
+      "accords": [
+        "화이트 플로럴",
+        "플로럴",
+        "프루티"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/p/210",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "배 · 멜론의 첫인상에 자스민 · 은방울꽃이 이어지고, 머스크 · 바닐라이 여운을 남깁니다.",
+      "originalDescription": "달달한 첫향, 향의 변화를 느껴보세요"
     },
     {
       "id": "main-45",
       "number": "45",
       "name": "미스 디올 블루밍 부케 type",
       "sourceName": "미스 디올 \n블루밍\n부케 type",
-      "description": "#화사한부케꽃\n#잔향 최고",
-      "descriptionStatus": "source_provided",
+      "description": "플로럴 로즈 머스키 시칠리안 만다린 피오니 다마스크 로즈 살구 복숭아 화이트 머스크",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -771,15 +2206,46 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "Y5"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "시칠리안 만다린"
+        ],
+        "heart": [
+          "피오니",
+          "다마스크 로즈",
+          "살구",
+          "복숭아"
+        ],
+        "base": [
+          "화이트 머스크"
+        ],
+        "key": []
+      },
+      "accords": [
+        "플로럴",
+        "로즈",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Dior/Miss-Dior-Blooming-Bouquet-23280.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "2014년 오 드 뚜왈렛 참고 버전"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "시칠리안 만다린의 첫인상에 피오니 · 다마스크 로즈이 이어지고, 화이트 머스크이 여운을 남깁니다.",
+      "originalDescription": "#화사한부케꽃\n#잔향 최고"
     },
     {
       "id": "main-46",
       "number": "46",
       "name": "크리찬디올 소바주 type",
       "sourceName": "크리찬디올 소바주 type",
-      "description": "#야생\n#광활한\n아웃도어\n#상남자",
-      "descriptionStatus": "source_provided",
+      "description": "스파이시 앰버 아로마틱 베르가못 페퍼 쓰촨 페퍼 라벤더 핑크 페퍼 베티버 패츌리 제라늄 엘레미 앰브록산 시더우드 라브다넘",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -788,15 +2254,52 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "AC5"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "베르가못",
+          "페퍼"
+        ],
+        "heart": [
+          "쓰촨 페퍼",
+          "라벤더",
+          "핑크 페퍼",
+          "베티버",
+          "패츌리",
+          "제라늄",
+          "엘레미"
+        ],
+        "base": [
+          "앰브록산",
+          "시더우드",
+          "라브다넘"
+        ],
+        "key": []
+      },
+      "accords": [
+        "스파이시",
+        "앰버",
+        "아로마틱"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/christian-dior/sauvage-2015-31861.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "2015년 오 드 뚜왈렛 참고 버전"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "베르가못 · 페퍼의 첫인상에 쓰촨 페퍼 · 라벤더이 이어지고, 앰브록산 · 시더우드이 여운을 남깁니다.",
+      "originalDescription": "#야생\n#광활한\n아웃도어\n#상남자"
     },
     {
       "id": "main-47",
       "number": "47",
       "name": "톰포드 네롤리 포르토피노 type",
       "sourceName": "톰포드\n네롤리 \n포르토피노 type",
-      "description": "#이태리레몬\n#활력\n#생동감",
-      "descriptionStatus": "source_provided",
+      "description": "시트러스 화이트 플로럴 아로마틱 베르가못 만다린 레몬 비터 오렌지 라벤더 오렌지 플라워 네롤리 자스민 앰버 앰브레트 안젤리카",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -805,15 +2308,51 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "AG5"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "베르가못",
+          "만다린",
+          "레몬",
+          "비터 오렌지",
+          "라벤더"
+        ],
+        "heart": [
+          "오렌지 플라워",
+          "네롤리",
+          "자스민"
+        ],
+        "base": [
+          "앰버",
+          "앰브레트",
+          "안젤리카"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시트러스",
+        "화이트 플로럴",
+        "아로마틱"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Tom-Ford/Neroli-Portofino-12192.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "베르가못 · 만다린의 첫인상에 오렌지 플라워 · 네롤리이 이어지고, 앰버 · 앰브레트이 여운을 남깁니다.",
+      "originalDescription": "#이태리레몬\n#활력\n#생동감"
     },
     {
       "id": "main-48",
       "number": "48",
       "name": "톰포드 오드우드 type",
       "sourceName": "톰포드 \n오드우드 type",
-      "description": "#열정적\n#이국적\n#남성적",
-      "descriptionStatus": "source_provided",
+      "description": "우디 스파이시 앰버 카다멈 핑크 페퍼 패츌리 앰버 오드 통카빈",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -822,15 +2361,44 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "U6"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [],
+        "heart": [],
+        "base": [],
+        "key": [
+          "카다멈",
+          "핑크 페퍼",
+          "패츌리",
+          "앰버",
+          "오드",
+          "통카빈"
+        ]
+      },
+      "accords": [
+        "우디",
+        "스파이시",
+        "앰버"
+      ],
+      "noteSource": {
+        "url": "https://www.tomfordbeauty.com/products/oud-wood-eau-de-parfum",
+        "label": "tomfordbeauty.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공식 대표 노트 · 단계 구분 미공개"
+      },
+      "noteStatus": "key_notes",
+      "shortDescription": "카다멈 · 핑크 페퍼 · 패츌리 중심의 우디 · 스파이시 계열입니다.",
+      "originalDescription": "#열정적\n#이국적\n#남성적"
     },
     {
       "id": "main-49",
       "number": "49",
       "name": "샤넬 샹스 오땅드르 type",
       "sourceName": "샤넬 샹스\n오땅드르\ntype",
-      "description": "살짝 달달한듯, 결국 은은한 꽃향",
-      "descriptionStatus": "source_provided",
+      "description": "플로럴 프루티 머스키 모과 자몽 히아신스 자스민 머스크 아이리스 시더우드 앰버",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -839,15 +2407,48 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "Y6"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "모과",
+          "자몽"
+        ],
+        "heart": [
+          "히아신스",
+          "자스민"
+        ],
+        "base": [
+          "머스크",
+          "아이리스",
+          "시더우드",
+          "앰버"
+        ],
+        "key": []
+      },
+      "accords": [
+        "플로럴",
+        "프루티",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Chanel/Chance-Eau-Tendre-8069.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "2010년 오 드 뚜왈렛 참고 버전"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "모과 · 자몽의 첫인상에 히아신스 · 자스민이 이어지고, 머스크 · 아이리스이 여운을 남깁니다.",
+      "originalDescription": "살짝 달달한듯, 결국 은은한 꽃향"
     },
     {
       "id": "main-50",
       "number": "50",
       "name": "블루 드 샤넬 type",
       "sourceName": "블루 드 \n샤넬 \ntype",
-      "description": "#관능적\n#오리엔탈\n#세련된 우디",
-      "descriptionStatus": "source_provided",
+      "description": "시트러스 우디 아로마틱 자몽 레몬 민트 핑크 페퍼 생강 너트메그 자스민 아이소 이 슈퍼 인센스 시더우드 베티버 샌달우드 패츌리 화이트 머스크",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -856,15 +2457,54 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "AC6"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "자몽",
+          "레몬",
+          "민트",
+          "핑크 페퍼"
+        ],
+        "heart": [
+          "생강",
+          "너트메그",
+          "자스민",
+          "아이소 이 슈퍼"
+        ],
+        "base": [
+          "인센스",
+          "시더우드",
+          "베티버",
+          "샌달우드",
+          "패츌리",
+          "화이트 머스크"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시트러스",
+        "우디",
+        "아로마틱"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Chanel/Bleu-de-Chanel-9099.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "2010년 오 드 뚜왈렛 참고 버전"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "자몽 · 레몬의 첫인상에 생강 · 너트메그이 이어지고, 인센스 · 시더우드이 여운을 남깁니다.",
+      "originalDescription": "#관능적\n#오리엔탈\n#세련된 우디"
     },
     {
       "id": "main-51",
       "number": "51",
       "name": "바이레도 슈퍼시더 type",
       "sourceName": "바이레도 \n슈퍼시더 type",
-      "description": "#은은한 \n나무향",
-      "descriptionStatus": "source_provided",
+      "description": "우디 머스키 로즈 로즈 페탈 시더우드 베티버 실크 머스크",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -873,15 +2513,44 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "AG6"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "로즈 페탈"
+        ],
+        "heart": [
+          "시더우드"
+        ],
+        "base": [
+          "베티버",
+          "실크 머스크"
+        ],
+        "key": []
+      },
+      "accords": [
+        "우디",
+        "머스키",
+        "로즈"
+      ],
+      "noteSource": {
+        "url": "https://www.byredo.com/uk_en/p/super-cedar-eau-de-parfum",
+        "label": "byredo.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "로즈 페탈의 첫인상에 시더우드이 이어지고, 베티버 · 실크 머스크이 여운을 남깁니다.",
+      "originalDescription": "#은은한 \n나무향"
     },
     {
       "id": "main-52",
       "number": "52",
       "name": "구찌 블룸 type",
       "sourceName": "구찌 블룸 \ntype",
-      "description": "#상상속정원\n#다양한\n꽃향",
-      "descriptionStatus": "source_provided",
+      "description": "화이트 플로럴 튜베로즈 플로럴 튜베로즈 자스민 랑군 크리퍼",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -890,15 +2559,41 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "U7"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [],
+        "heart": [],
+        "base": [],
+        "key": [
+          "튜베로즈",
+          "자스민",
+          "랑군 크리퍼"
+        ]
+      },
+      "accords": [
+        "화이트 플로럴",
+        "튜베로즈",
+        "플로럴"
+      ],
+      "noteSource": {
+        "url": "https://www.gucci.com/us/en/st/stories/article/pre-fall-2017-bloom-fragrance-qa-alberto-morillas",
+        "label": "gucci.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공식 설명: 수평적 플로럴 구성 · 단계 구분 없음"
+      },
+      "noteStatus": "key_notes",
+      "shortDescription": "튜베로즈 · 자스민 · 랑군 크리퍼 중심의 화이트 플로럴 · 튜베로즈 계열입니다.",
+      "originalDescription": "#상상속정원\n#다양한\n꽃향"
     },
     {
       "id": "main-53",
       "number": "53",
-      "name": "에르메스 운 자르뎅 type",
+      "name": "에르메스 운 자르뎅 수르 닐 type",
       "sourceName": "에르메스\n운 자르뎅\ntype",
-      "description": "#가벼움\n#시원달달\n#인기향",
-      "descriptionStatus": "source_provided",
+      "description": "그린 우디 프루티 그린 망고 연꽃 시카모어 우드",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -907,49 +2602,141 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "Y7"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [],
+        "heart": [],
+        "base": [],
+        "key": [
+          "그린 망고",
+          "연꽃",
+          "시카모어 우드"
+        ]
+      },
+      "accords": [
+        "그린",
+        "우디",
+        "프루티"
+      ],
+      "noteStatus": "key_notes",
+      "shortDescription": "상큼한 그린 망고와 연꽃, 시카모어 우드가 어우러지는 맑고 푸른 정원의 분위기입니다.",
+      "noteSource": {
+        "url": "https://www.hermes.com/uk/en/product/un-jardin-sur-le-nil-eau-de-toilette-V20396/",
+        "label": "hermes.com",
+        "checkedAt": "2026-10-30",
+        "reference": "나일의 정원 오 드 뚜왈렛 공식 대표 노트 · 단계 구분 미공개"
+      },
+      "nameSource": "owner_correction_2026-10-30"
     },
     {
       "id": "main-54",
       "number": "54",
-      "name": "딥디크 휘기에 type",
+      "name": "메종 마르지엘라 레이지 선데이 모닝 type",
       "sourceName": "딥디크\n휘기에\ntype",
-      "description": "#무화과",
-      "descriptionStatus": "source_provided",
+      "description": "머스키 플로럴 알데하이딕 배 은방울꽃 알데하이드 아이리스 장미 오렌지 플라워 패츌리 앰브레트 화이트 머스크",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "AA7"
       },
-      "descriptionSource": {
-        "sheet": "향수타입 설명 2022",
-        "cell": "AC7"
-      }
+      "descriptionSource": null,
+      "previousName": "딥디크 휘기에 type",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "배",
+          "은방울꽃",
+          "알데하이드"
+        ],
+        "heart": [
+          "아이리스",
+          "장미",
+          "오렌지 플라워"
+        ],
+        "base": [
+          "패츌리",
+          "앰브레트",
+          "화이트 머스크"
+        ],
+        "key": []
+      },
+      "accords": [
+        "머스키",
+        "플로럴",
+        "알데하이딕"
+      ],
+      "noteSource": {
+        "url": "https://www.maisonmargiela-fragrances.us/fragrances/replica/replica-lazy-sunday-morning/MM009.html",
+        "label": "maisonmargiela-fragrances.us",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "배 · 은방울꽃의 첫인상에 아이리스 · 장미이 이어지고, 패츌리 · 앰브레트이 여운을 남깁니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-55",
       "number": "55",
-      "name": "딥디크 필로시코스 type",
+      "name": "메종 마르지엘라 재즈클럽 type",
       "sourceName": "딥디크\n필로시코스\ntype",
-      "description": "#무화과",
-      "descriptionStatus": "source_provided",
+      "description": "타바코 스파이시 바닐라 핑크 페퍼 레몬 네롤리 럼 클라리 세이지 베티버 타바코 리프 바닐라 스티락스",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "AE7"
       },
-      "descriptionSource": {
-        "sheet": "향수타입 설명 2022",
-        "cell": "AG7"
-      }
+      "descriptionSource": null,
+      "previousName": "딥디크 필로시코스 type",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "핑크 페퍼",
+          "레몬",
+          "네롤리"
+        ],
+        "heart": [
+          "럼",
+          "클라리 세이지",
+          "베티버"
+        ],
+        "base": [
+          "타바코 리프",
+          "바닐라",
+          "스티락스"
+        ],
+        "key": []
+      },
+      "accords": [
+        "타바코",
+        "스파이시",
+        "바닐라"
+      ],
+      "noteSource": {
+        "url": "https://www.maisonmargiela-fragrances.us/fragrances/replica-eau-de-toilette/replica-jazz-club/3605521932105.html",
+        "label": "maisonmargiela-fragrances.us",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "핑크 페퍼 · 레몬의 첫인상에 럼 · 클라리 세이지이 이어지고, 타바코 리프 · 바닐라이 여운을 남깁니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-56",
       "number": "56",
       "name": "랑방 모던 프린세스 type",
       "sourceName": "랑방\n모던 \n프린세스 type",
-      "description": "#자스민, 사과\n#프리지아,\n머스크",
-      "descriptionStatus": "source_provided",
+      "description": "프루티 플로럴 머스키 레드 애플 레드커런트 프리지아 자스민 바닐라 오키드 화이트 머스크 화이트 우드",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -958,15 +2745,47 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "U8"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "레드 애플",
+          "레드커런트"
+        ],
+        "heart": [
+          "프리지아",
+          "자스민"
+        ],
+        "base": [
+          "바닐라 오키드",
+          "화이트 머스크",
+          "화이트 우드"
+        ],
+        "key": []
+      },
+      "accords": [
+        "프루티",
+        "플로럴",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Lanvin/Modern-Princess-38890.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "레드 애플 · 레드커런트의 첫인상에 프리지아 · 자스민이 이어지고, 바닐라 오키드 · 화이트 머스크이 여운을 남깁니다.",
+      "originalDescription": "#자스민, 사과\n#프리지아,\n머스크"
     },
     {
       "id": "main-57",
       "number": "57",
       "name": "톰포드 투스칸레더 type",
       "sourceName": "톰포드\n투스칸레더\ntype",
-      "description": "#성공한 남성\n#통가죽\n#고급 \n가죽향",
-      "descriptionStatus": "source_provided",
+      "description": "레더 스파이시 스모키 라즈베리 사프란 타임 올리바넘 자스민 가죽 스웨이드 우디 노트 앰버",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -975,32 +2794,91 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "Y8"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "라즈베리",
+          "사프란",
+          "타임"
+        ],
+        "heart": [
+          "올리바넘",
+          "자스민"
+        ],
+        "base": [
+          "가죽",
+          "스웨이드",
+          "우디 노트",
+          "앰버"
+        ],
+        "key": []
+      },
+      "accords": [
+        "레더",
+        "스파이시",
+        "스모키"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Tom-Ford/Tuscan-Leather-1849.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "라즈베리 · 사프란의 첫인상에 올리바넘 · 자스민이 이어지고, 가죽 · 스웨이드이 여운을 남깁니다.",
+      "originalDescription": "#성공한 남성\n#통가죽\n#고급 \n가죽향"
     },
     {
       "id": "main-58",
       "number": "58",
-      "name": "톰포드 비터피치 type",
+      "name": "르라보 어나더 13 type",
       "sourceName": "톰포드\n비터피치\ntype",
-      "description": "#복숭아\n#고농축",
-      "descriptionStatus": "source_provided",
+      "description": "머스키 앰버 우디 앰브록사이드 자스민 모스",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
         "cell": "AA8"
       },
-      "descriptionSource": {
-        "sheet": "향수타입 설명 2022",
-        "cell": "AC8"
-      }
+      "descriptionSource": null,
+      "previousName": "톰포드 비터피치 type",
+      "nameSource": "owner_correction_2026-10-30",
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [],
+        "heart": [],
+        "base": [],
+        "key": [
+          "앰브록사이드",
+          "자스민",
+          "모스"
+        ]
+      },
+      "accords": [
+        "머스키",
+        "앰버",
+        "우디"
+      ],
+      "noteSource": {
+        "url": "https://www.lelabofragrances.com/fr/another-13-463.html",
+        "label": "lelabofragrances.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공식 대표 노트 · 단계 구분 미공개"
+      },
+      "noteStatus": "key_notes",
+      "shortDescription": "앰브록사이드 · 자스민 · 모스 중심의 머스키 · 앰버 계열입니다.",
+      "originalDescription": ""
     },
     {
       "id": "main-59",
       "number": "59",
       "name": "바이레도 블랑쉬 type",
       "sourceName": "바이레도\n블랑쉬\ntype",
-      "description": "#화이트\n로즈\n#바이올렛\n#머스크",
-      "descriptionStatus": "source_provided",
+      "description": "알데하이딕 플로럴 머스키 알데하이드 센티폴리아 로즈 피오니 바이올렛 머스크 샌달우드",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1009,15 +2887,46 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "AG8"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "알데하이드",
+          "센티폴리아 로즈"
+        ],
+        "heart": [
+          "피오니",
+          "바이올렛"
+        ],
+        "base": [
+          "머스크",
+          "샌달우드"
+        ],
+        "key": []
+      },
+      "accords": [
+        "알데하이딕",
+        "플로럴",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://www.byredo.com/uk_en/p/blanche-eau-de-parfum",
+        "label": "byredo.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "알데하이드 · 센티폴리아 로즈의 첫인상에 피오니 · 바이올렛이 이어지고, 머스크 · 샌달우드이 여운을 남깁니다.",
+      "originalDescription": "#화이트\n로즈\n#바이올렛\n#머스크"
     },
     {
       "id": "main-60",
       "number": "60",
       "name": "바이레도 라튤립 type",
       "sourceName": "바이레도\n라튤립\ntype",
-      "description": "#플로럴,\n그린\n#튤립,베티버,샌달우드",
-      "descriptionStatus": "source_provided",
+      "description": "플로럴 그린 우디 시클라멘 프리지아 루바브 튤립 블론드 우드 베티버",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1026,15 +2935,46 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "U9"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "시클라멘",
+          "프리지아",
+          "루바브"
+        ],
+        "heart": [
+          "튤립"
+        ],
+        "base": [
+          "블론드 우드",
+          "베티버"
+        ],
+        "key": []
+      },
+      "accords": [
+        "플로럴",
+        "그린",
+        "우디"
+      ],
+      "noteSource": {
+        "url": "https://www.byredo.com/ca_en/p/la-tulipe-eau-de-parfum",
+        "label": "byredo.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "시클라멘 · 프리지아의 첫인상에 튤립이 이어지고, 블론드 우드 · 베티버이 여운을 남깁니다.",
+      "originalDescription": "#플로럴,\n그린\n#튤립,베티버,샌달우드"
     },
     {
       "id": "main-61",
       "number": "61",
       "name": "톰포드 블랙 오키드 type",
       "sourceName": "톰포드\n블랙\n오키드\ntype",
-      "description": "#스파이시\n#플로럴\n#발사믹",
-      "descriptionStatus": "source_provided",
+      "description": "스파이시 앰버 플로럴 트러플 가드니아 블랙커런트 일랑일랑 자스민 베르가못 오키드 스파이스 과일 연꽃 다크 초콜릿 패츌리 바닐라 인센스 앰버 샌달우드",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1043,15 +2983,56 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "Y9"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "트러플",
+          "가드니아",
+          "블랙커런트",
+          "일랑일랑",
+          "자스민",
+          "베르가못"
+        ],
+        "heart": [
+          "오키드",
+          "스파이스",
+          "과일",
+          "연꽃"
+        ],
+        "base": [
+          "다크 초콜릿",
+          "패츌리",
+          "바닐라",
+          "인센스",
+          "앰버",
+          "샌달우드"
+        ],
+        "key": []
+      },
+      "accords": [
+        "스파이시",
+        "앰버",
+        "플로럴"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Tom-Ford/Black-Orchid-1018.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "트러플 · 가드니아의 첫인상에 오키드 · 스파이스이 이어지고, 다크 초콜릿 · 패츌리이 여운을 남깁니다.",
+      "originalDescription": "#스파이시\n#플로럴\n#발사믹"
     },
     {
       "id": "main-62",
       "number": "62",
       "name": "크리드 버진 아일랜드 워터 type",
       "sourceName": "크리드\n버진\n아일랜드\n워터\ntype",
-      "description": "#코코넛\n#화이트 버가못\n#머스크",
-      "descriptionStatus": "source_provided",
+      "description": "시트러스 코코넛 트로피컬 코코넛 라임 베르가못 만다린 생강 일랑일랑 자스민 히비스커스 화이트 럼 사탕수수 머스크",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1060,15 +3041,51 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "AC9"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "코코넛",
+          "라임",
+          "베르가못",
+          "만다린"
+        ],
+        "heart": [
+          "생강",
+          "일랑일랑",
+          "자스민",
+          "히비스커스"
+        ],
+        "base": [
+          "화이트 럼",
+          "사탕수수",
+          "머스크"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시트러스",
+        "코코넛",
+        "트로피컬"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Creed/Virgin-Island-Water-899.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "2007년 참고 버전"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "코코넛 · 라임의 첫인상에 생강 · 일랑일랑이 이어지고, 화이트 럼 · 사탕수수이 여운을 남깁니다.",
+      "originalDescription": "#코코넛\n#화이트 버가못\n#머스크"
     },
     {
       "id": "main-63",
       "number": "63",
       "name": "바이 킬리안 인톡시 케이티드 type",
       "sourceName": "바이\n킬리안\n인톡시\n케이티드\ntype",
-      "description": "#중독적커피향\n#스파이시\n#초콜렛\n#바닐라",
-      "descriptionStatus": "source_provided",
+      "description": "커피 스파이시 아로마틱 카다멈 커피 베르가못 알데하이드 너트메그 시나몬 타바코 생강 제라늄 캐러멜 모카 바닐라 전나무 패츌리",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1077,15 +3094,54 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "AG9"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "카다멈",
+          "커피",
+          "베르가못",
+          "알데하이드"
+        ],
+        "heart": [
+          "너트메그",
+          "시나몬",
+          "타바코",
+          "생강",
+          "제라늄"
+        ],
+        "base": [
+          "캐러멜",
+          "모카",
+          "바닐라",
+          "전나무",
+          "패츌리"
+        ],
+        "key": []
+      },
+      "accords": [
+        "커피",
+        "스파이시",
+        "아로마틱"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/By-Kilian/Intoxicated-25991.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "카다멈 · 커피의 첫인상에 너트메그 · 시나몬이 이어지고, 캐러멜 · 모카이 여운을 남깁니다.",
+      "originalDescription": "#중독적커피향\n#스파이시\n#초콜렛\n#바닐라"
     },
     {
       "id": "main-64",
       "number": "64",
       "name": "르라보 상탈 33 type",
       "sourceName": "르라보\n상탈 33\ntype",
-      "description": "#숲의 향",
-      "descriptionStatus": "source_provided",
+      "description": "우디 레더 스파이시 카다멈 아이리스 바이올렛 샌달우드 시더우드 가죽 머스크",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1094,15 +3150,45 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "U10"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [],
+        "heart": [],
+        "base": [],
+        "key": [
+          "카다멈",
+          "아이리스",
+          "바이올렛",
+          "샌달우드",
+          "시더우드",
+          "가죽",
+          "머스크"
+        ]
+      },
+      "accords": [
+        "우디",
+        "레더",
+        "스파이시"
+      ],
+      "noteSource": {
+        "url": "https://www.lelabofragrances.com/santal-33-147.html",
+        "label": "lelabofragrances.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공식 대표 노트 · 단계 구분 미공개"
+      },
+      "noteStatus": "key_notes",
+      "shortDescription": "카다멈 · 아이리스 · 바이올렛 중심의 우디 · 레더 계열입니다.",
+      "originalDescription": "#숲의 향"
     },
     {
       "id": "main-65",
       "number": "65",
       "name": "르라보 떼누아 29 type",
       "sourceName": "르라보 \n떼누아 29\ntype",
-      "description": "#우디\n#생화",
-      "descriptionStatus": "source_provided",
+      "description": "티 우디 아로마틱 베르가못 무화과 월계수 시더우드 베티버 머스크 블랙티",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1111,15 +3197,45 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "Y10"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [],
+        "heart": [],
+        "base": [],
+        "key": [
+          "베르가못",
+          "무화과",
+          "월계수",
+          "시더우드",
+          "베티버",
+          "머스크",
+          "블랙티"
+        ]
+      },
+      "accords": [
+        "티",
+        "우디",
+        "아로마틱"
+      ],
+      "noteSource": {
+        "url": "https://www.lelabofragrances.com/th-noir-29-148.html",
+        "label": "lelabofragrances.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공식 대표 노트 · 단계 구분 미공개"
+      },
+      "noteStatus": "key_notes",
+      "shortDescription": "베르가못 · 무화과 · 월계수 중심의 티 · 우디 계열입니다.",
+      "originalDescription": "#우디\n#생화"
     },
     {
       "id": "main-66",
       "number": "66",
       "name": "샤넬 코코마드 모아젤 엥땅스 type",
       "sourceName": "샤넬\n코코마드\n모아젤 \n엥땅스\ntype",
-      "description": "#관능적\n#모던하고 섹시한 느낌",
-      "descriptionStatus": "source_provided",
+      "description": "시트러스 패츌리 바닐라 오렌지 베르가못 장미 자스민 패츌리 통카빈 바닐라",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1128,15 +3244,47 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "AC10"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "오렌지",
+          "베르가못"
+        ],
+        "heart": [
+          "장미",
+          "자스민"
+        ],
+        "base": [
+          "패츌리",
+          "통카빈",
+          "바닐라"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시트러스",
+        "패츌리",
+        "바닐라"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/news/Chanel-Coco-Mademoiselle-Intense-10475.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "오렌지 · 베르가못의 첫인상에 장미 · 자스민이 이어지고, 패츌리 · 통카빈이 여운을 남깁니다.",
+      "originalDescription": "#관능적\n#모던하고 섹시한 느낌"
     },
     {
       "id": "main-67",
       "number": "67",
       "name": "아르마니 프리베- 루즈 말라키트 type",
       "sourceName": "아르마니\n프리베-\n루즈\n말라키트\ntype",
-      "description": "#오리엔탈 \n바닐라\n#진한 달달함\n#플로럴",
-      "descriptionStatus": "source_provided",
+      "description": "화이트 플로럴 튜베로즈 앰버 튜베로즈 핑크 페퍼 클라리 세이지 튜베로즈 자스민 일랑일랑 벤조인 캐시메란 오렌지 블라썸 튜베로즈 앰버",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1145,15 +3293,51 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "AG10"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "튜베로즈",
+          "핑크 페퍼",
+          "클라리 세이지"
+        ],
+        "heart": [
+          "튜베로즈",
+          "자스민",
+          "일랑일랑",
+          "벤조인",
+          "캐시메란",
+          "오렌지 블라썸"
+        ],
+        "base": [
+          "튜베로즈",
+          "앰버"
+        ],
+        "key": []
+      },
+      "accords": [
+        "화이트 플로럴",
+        "튜베로즈",
+        "앰버"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Giorgio-Armani/Armani-Prive-Rouge-Malachite-34589.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "튜베로즈 · 핑크 페퍼의 첫인상에 튜베로즈 · 자스민이 이어지고, 튜베로즈 · 앰버이 여운을 남깁니다.",
+      "originalDescription": "#오리엔탈 \n바닐라\n#진한 달달함\n#플로럴"
     },
     {
       "id": "main-68",
       "number": "68",
       "name": "퍼퓸 드 말리 달시 type",
       "sourceName": "퍼퓸 드\n말리 \n달시\ntype",
-      "description": "#진한 달달함\n#오리엔탈",
-      "descriptionStatus": "source_provided",
+      "description": "시트러스 플로럴 패츌리 베르가못 오렌지 시트러스 장미 자스민 패츌리 머스크 프랄린",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1162,15 +3346,48 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "U11"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "베르가못",
+          "오렌지",
+          "시트러스"
+        ],
+        "heart": [
+          "장미",
+          "자스민"
+        ],
+        "base": [
+          "패츌리",
+          "머스크",
+          "프랄린"
+        ],
+        "key": []
+      },
+      "accords": [
+        "시트러스",
+        "플로럴",
+        "패츌리"
+      ],
+      "noteSource": {
+        "url": "https://us.parfums-de-marly.com/products/darcy",
+        "label": "us.parfums-de-marly.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "베르가못 · 오렌지의 첫인상에 장미 · 자스민이 이어지고, 패츌리 · 머스크이 여운을 남깁니다.",
+      "originalDescription": "#진한 달달함\n#오리엔탈"
     },
     {
       "id": "main-69",
       "number": "69",
       "name": "하라주쿠 러버스 베이비 type",
       "sourceName": "하라주쿠 러버스\n 베이비\n type",
-      "description": "#베이비\n파우더",
-      "descriptionStatus": "source_provided",
+      "description": "파우더리 플로럴 머스키 베르가못 프리지아 화이트 로즈 자스민 오렌지 블라썸 티아레 우디 노트 헬리오트로프 머스크 바닐라 바이올렛",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1179,15 +3396,51 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "Y11"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "베르가못",
+          "프리지아",
+          "화이트 로즈"
+        ],
+        "heart": [
+          "자스민",
+          "오렌지 블라썸",
+          "티아레"
+        ],
+        "base": [
+          "우디 노트",
+          "헬리오트로프",
+          "머스크",
+          "바닐라",
+          "바이올렛"
+        ],
+        "key": []
+      },
+      "accords": [
+        "파우더리",
+        "플로럴",
+        "머스키"
+      ],
+      "noteSource": {
+        "url": "https://www.parfumo.com/Perfumes/harajuku-lovers/Harajuku_Lovers_Baby",
+        "label": "parfumo.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "베르가못 · 프리지아의 첫인상에 자스민 · 오렌지 블라썸이 이어지고, 우디 노트 · 헬리오트로프이 여운을 남깁니다.",
+      "originalDescription": "#베이비\n파우더"
     },
     {
       "id": "main-70",
       "number": "70",
       "name": "빅토리아 시크릿 밤쉘 type",
       "sourceName": "빅토리아\n시크릿\n밤쉘\ntype",
-      "description": "#파인애플\n#피오니\n#소나무",
-      "descriptionStatus": "source_provided",
+      "description": "프루티 플로럴 우디 퍼플 패션프루트 샹그릴라 피오니 바닐라 오키드 이탈리안 파인",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1196,15 +3449,44 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "AC11"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "퍼플 패션프루트"
+        ],
+        "heart": [
+          "샹그릴라 피오니"
+        ],
+        "base": [
+          "바닐라 오키드",
+          "이탈리안 파인"
+        ],
+        "key": []
+      },
+      "accords": [
+        "프루티",
+        "플로럴",
+        "우디"
+      ],
+      "noteSource": {
+        "url": "https://www.victoriassecret.com/us/vs/beauty/fragrances-bombshell-shop",
+        "label": "victoriassecret.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "퍼플 패션프루트의 첫인상에 샹그릴라 피오니이 이어지고, 바닐라 오키드 · 이탈리안 파인이 여운을 남깁니다.",
+      "originalDescription": "#파인애플\n#피오니\n#소나무"
     },
     {
       "id": "main-71",
       "number": "71",
       "name": "조말론 다크앰버앤 진저릴리 type",
       "sourceName": "조말론\n다크앰버앤\n진저릴리\ntype",
-      "description": "#박하없는데 박하느낌\n#생강",
-      "descriptionStatus": "source_provided",
+      "description": "스파이시 우디 앰버 생강 블랙 카다멈 핑크 페퍼 워터 릴리 오키드 자스민 장미 샌달우드 블랙 앰버 키아라 인센스 패츌리 가죽",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1213,15 +3495,52 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "AG11"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "생강",
+          "블랙 카다멈",
+          "핑크 페퍼"
+        ],
+        "heart": [
+          "워터 릴리",
+          "오키드",
+          "자스민",
+          "장미"
+        ],
+        "base": [
+          "샌달우드",
+          "블랙 앰버",
+          "키아라 인센스",
+          "패츌리",
+          "가죽"
+        ],
+        "key": []
+      },
+      "accords": [
+        "스파이시",
+        "우디",
+        "앰버"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Jo-Malone/Dark-Amber-Ginger-Lily-3783.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "생강 · 블랙 카다멈의 첫인상에 워터 릴리 · 오키드이 이어지고, 샌달우드 · 블랙 앰버이 여운을 남깁니다.",
+      "originalDescription": "#박하없는데 박하느낌\n#생강"
     },
     {
       "id": "main-72",
       "number": "72",
       "name": "조말론 넥타린 블로썸 type",
       "sourceName": "조말론\n넥타린\n블로썸\ntype",
-      "description": "#복숭아향",
-      "descriptionStatus": "source_provided",
+      "description": "프루티 그린 스위트 그린 노트 블랙커런트 페티그레인 넥타린 아카시아 아카시아 꿀 복숭아 자두 베티버",
+      "descriptionStatus": "public_reference_summary",
       "source": {
         "file": "향수사진 목록 10.xlsx",
         "sheet": "향수타입 2022",
@@ -1230,7 +3549,41 @@
       "descriptionSource": {
         "sheet": "향수타입 설명 2022",
         "cell": "U12"
-      }
+      },
+      "premium": true,
+      "tier": "프리미엄 향",
+      "notes": {
+        "top": [
+          "그린 노트",
+          "블랙커런트",
+          "페티그레인"
+        ],
+        "heart": [
+          "넥타린",
+          "아카시아",
+          "아카시아 꿀"
+        ],
+        "base": [
+          "복숭아",
+          "자두",
+          "베티버"
+        ],
+        "key": []
+      },
+      "accords": [
+        "프루티",
+        "그린",
+        "스위트"
+      ],
+      "noteSource": {
+        "url": "https://www.fragrantica.com/perfume/Jo-Malone-London/Nectarine-Blossom-amp-Honey-3782.html",
+        "label": "fragrantica.com",
+        "checkedAt": "2026-10-30",
+        "reference": "공개 노트의 주요 항목 요약"
+      },
+      "noteStatus": "pyramid",
+      "shortDescription": "그린 노트 · 블랙커런트의 첫인상에 넥타린 · 아카시아이 이어지고, 복숭아 · 자두이 여운을 남깁니다.",
+      "originalDescription": "#복숭아향"
     }
   ],
   "singleScents": [
@@ -1684,5 +4037,6 @@
         "cell": "H12"
       }
     }
-  ]
+  ],
+  "referenceNotice": "모든 메인향은 브랜드 정품이 아닌 공방의 type 향료입니다. 공개 노트는 참고 원향의 향조 설명으로, 공방 향료의 실제 배합식·원료·함량을 뜻하지 않습니다."
 }

@@ -2,13 +2,45 @@
 let catalog,selectedMain=null,selectedSingles=new Set(),lastResult=null;
 const $=id=>document.getElementById(id);
 const escapeHtml=text=>String(text).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function cleanName(s){return s.name.replace(/\s*type\s*$/i,'');}
+function cleanName(s){return s.name;}
 function currentSingles(){return catalog.singleScents.filter(s=>selectedSingles.has(s.id));}
 function renderMain(){
   const query=$('search').value.toLowerCase().replace(/\s/g,'');
   const filtered=catalog.mainScents.filter(s=>(s.number+' '+s.name).toLowerCase().replace(/\s/g,'').includes(query));
-  $('main-list').innerHTML=filtered.length?filtered.map(s=>`<button class="scent-option" data-main="${s.id}" aria-pressed="${selectedMain===s.id}"><span class="scent-number">${s.number}</span><span class="scent-name">${escapeHtml(cleanName(s))}</span></button>`).join(''):'<p class="hint">검색한 향이 없어요. 이름이나 번호를 다시 확인해주세요.</p>';
+  $('main-list').innerHTML=filtered.length?[false,true].map(premium=>{
+    const items=filtered.filter(s=>s.premium===premium);if(!items.length)return '';
+    return `<div class="catalog-group-title ${premium?'premium-title':''}"><span>${premium?'프리미엄 향':'기본 향'}</span><small>${premium?'33–72':'01–32'}</small></div>`+items.map(s=>`<div class="scent-item ${premium?'premium-item':''}"><button class="scent-option" data-main="${s.id}" aria-pressed="${selectedMain===s.id}"><span class="scent-number">${s.number}</span><span class="scent-name">${escapeHtml(cleanName(s))}</span></button><button class="scent-detail-button" data-detail="${s.id}" aria-label="${escapeHtml(s.name)} 노트 구성 어코드 확인">노트 · 어코드 <span aria-hidden="true">△</span></button></div>`).join('');
+  }).join(''):'<p class="hint">검색한 향이 없어요. 이름이나 번호를 다시 확인해주세요.</p>';
 }
+function pyramidMarkup(s){
+  const n=s.notes;
+  if(s.noteStatus!=='pyramid')return `<div class="key-note-visual"><span aria-hidden="true">△</span><p>${s.noteStatus==='key_notes'?'대표 노트':'원향 확인 중'}</p></div>${s.noteStatus==='key_notes'?`<div class="key-notes">${n.key.map(x=>`<span>${escapeHtml(x)}</span>`).join('')}</div><p class="hint">이 참고 자료는 탑·미들·베이스를 나누지 않습니다. 공개된 대표 노트를 그대로 안내합니다.</p>`:'<p class="missing-notice">정확한 원향 제품명이 아직 확인되지 않아 노트 피라미드를 확정하지 않았습니다. 아래 매장 설명을 참고해주세요.</p>'}`;
+  return `<div class="pyramid" role="img" aria-label="탑, 미들, 베이스 3단계 노트 피라미드. 상세 노트는 바로 아래 목록에서 확인할 수 있습니다."><svg viewBox="0 0 360 285" aria-hidden="true"><path d="M180 4 235 94H125Z" fill="#d7dfc7"/><path d="m125 98-56 91h222l-56-91Z" fill="#b9c9a4"/><path d="m67 193-55 88h336l-55-88Z" fill="#8da582"/></svg><div class="pyramid-label top-label"><b>TOP</b><span>${escapeHtml(n.top[0]||'미공개')}</span></div><div class="pyramid-label heart-label"><b>HEART</b><span>${escapeHtml(n.heart.slice(0,2).join(' · ')||'미공개')}</span></div><div class="pyramid-label base-label"><b>BASE</b><span>${escapeHtml(n.base.slice(0,2).join(' · ')||'미공개')}</span></div></div><dl class="note-list">${[['top','탑 노트 · 첫인상'],['heart','미들 노트 · 향의 중심'],['base','베이스 노트 · 여운']].map(([key,label])=>`<div><dt>${label}</dt><dd>${escapeHtml(n[key].join(' · ')||'자료 미공개')}</dd></div>`).join('')}</dl>`;
+}
+function openScentDetail(id){
+  const s=catalog.mainScents.find(s=>s.id===id);if(!s)return;
+  $('scent-dialog-body').innerHTML=`<span class="detail-tier ${s.premium?'detail-premium':''}">${s.tier} · ${s.number}번</span><h2 id="scent-dialog-title">${escapeHtml(s.name)}</h2><p class="dialog-description">${escapeHtml(s.shortDescription)}</p><h3 class="detail-subheading">노트 구성</h3>${pyramidMarkup(s)}<h3 class="detail-subheading">어코드 · 향의 전체적인 분위기</h3>${s.accords.length?`<div class="accords">${s.accords.map(a=>`<span>${escapeHtml(a)}</span>`).join('')}</div><p class="accord-explanation">공개 노트를 바탕으로 정리한 향 계열입니다. 원료 함량이나 향의 강도 비율을 의미하지 않습니다.</p>`:'<p class="hint">참고 원향 확인 후 향 계열을 연결합니다.</p>'}<div class="reference-notice">${escapeHtml(catalog.referenceNotice)}</div>${s.noteSource?`<p class="note-source">${escapeHtml(s.noteSource.reference)}<br><a href="${escapeHtml(s.noteSource.url)}" target="_blank" rel="noopener noreferrer">참고 노트 출처 · ${escapeHtml(s.noteSource.label)} ↗</a><br>자료 확인: ${escapeHtml(s.noteSource.checkedAt)}</p>`:''}<button class="primary" type="button" data-use="${s.id}">이 향으로 조합하기 <span aria-hidden="true">→</span></button>`;
+  $('scent-dialog').showModal();
+}
+function selectMain(id){
+  selectedMain=id;renderMain();updateSummary();
+}
+const selectedProfileStyles=new Set();
+const styleLabels={minimal:'미니멀 · 깔끔함',romantic:'로맨틱 · 부드러움',natural:'내추럴 · 편안함',classic:'클래식 · 우아함',casual:'캐주얼 · 경쾌함',sporty:'스포티 · 활동적',chic:'시크 · 세련됨',cozy:'코지 · 포근함'};
+function initProfile(){
+  $('profile-styles').innerHTML=Object.entries(styleLabels).map(([id,label])=>`<button type="button" class="profile-style" data-style="${id}" aria-pressed="false">${label}</button>`).join('');
+  $('profile-styles').addEventListener('click',e=>{const b=e.target.closest('[data-style]');if(!b)return;const id=b.dataset.style;if(selectedProfileStyles.has(id))selectedProfileStyles.delete(id);else selectedProfileStyles.add(id);b.setAttribute('aria-pressed',String(selectedProfileStyles.has(id)));markProfileChanged();});
+  for(const id of ['profile-gender','profile-age','profile-hair'])$(id).addEventListener('change',markProfileChanged);
+  $('profile-form').addEventListener('submit',e=>{
+    e.preventDefault();
+    const profile={gender:$('profile-gender').value,age:$('profile-age').value,hair:$('profile-hair').value,styles:[...selectedProfileStyles]};
+    const results=ScentStyle.recommendForProfile(catalog.mainScents,profile);
+    if(!results.length){$('profile-results').innerHTML='<p class="missing-notice">표현하고 싶은 분위기나 성별·연령대·헤어스타일 중 하나 이상을 골라주세요.</p>';return;}
+    const labels=[...profile.styles.map(id=>styleLabels[id]),...['profile-gender','profile-age','profile-hair'].filter(id=>$(id).value!=='any').map(id=>$(id).selectedOptions[0].textContent)];
+    $('profile-results').innerHTML=`<div class="profile-result-heading"><p class="eyebrow">YOUR SIGNATURE SCENTS</p><h3>당신의 이야기에 어울리는 향</h3><p>${escapeHtml(labels.join(' · '))}</p></div><div class="profile-grid">${results.map(({scent:s,matchedStyles},i)=>`<article class="profile-scent-card"><div class="profile-card-meta"><span>추천 0${i+1}</span><span class="${s.premium?'premium-text':''}">${s.tier}</span></div><h4><span>${s.number}.</span> ${escapeHtml(s.name)}</h4><p class="profile-match">${matchedStyles.map(st=>st.name).join(' · ')} 분위기에 어울리는 후보</p><p class="profile-scent-description">${escapeHtml(s.shortDescription)}</p><div class="profile-card-actions"><button type="button" class="secondary" data-detail="${s.id}">노트 · 어코드 △</button><button type="button" class="secondary" data-use="${s.id}">이 향 고르기 →</button></div></article>`).join('')}</div><p class="profile-note">선택한 연출 취향과 향 계열을 연결한 편집 추천입니다. 실제 시향으로 마음에 드는 향을 확인해보세요.</p>`;
+  });
+}
+function markProfileChanged(){if($('profile-results').innerHTML)$('profile-results').innerHTML='<p class="hint">스타일이 바뀌었어요. 향 찾기 버튼을 눌러 새 추천을 확인해주세요.</p>';}
 function renderSingles(){
   $('single-list').innerHTML=['top','middle','base'].map((note,i)=>`<section class="note-group" data-note="${note}"><h3 class="note-heading"><span class="note-dot" aria-hidden="true"></span>${['탑 노트','미들 노트','베이스 노트'][i]}<small>${['THE FIRST IMPRESSION','THE HEART OF YOUR SCENT','THE LASTING MEMORY'][i]}</small></h3><div class="single-options">${catalog.singleScents.filter(s=>s.note===note).map(s=>`<button class="single-option" data-single="${s.id}" aria-pressed="${selectedSingles.has(s.id)}">${escapeHtml(ScentStyle.singleName(s))}</button>`).join('')}</div></section>`).join('');
   $('single-count').textContent=selectedSingles.size+'개 선택';
@@ -39,9 +71,15 @@ async function init(){
     const params=new URLSearchParams(location.search),main=params.get('main');
     if(catalog.mainScents.some(s=>s.id===main))selectedMain=main;
     const validIds=new Set(catalog.singleScents.map(s=>s.id));for(const id of (params.get('notes')||'').split(','))if(validIds.has(id))selectedSingles.add(id);
-    renderMain();renderSingles();updateSummary();if(selectedMain)showResult(false);
+    renderMain();renderSingles();updateSummary();initProfile();if(selectedMain)showResult(false);
     $('search').addEventListener('input',renderMain);
-    $('main-list').addEventListener('click',e=>{const button=e.target.closest('[data-main]');if(!button)return;selectedMain=button.dataset.main;renderMain();updateSummary();});
+    $('main-list').addEventListener('click',e=>{const button=e.target.closest('[data-main]');if(!button)return;selectMain(button.dataset.main);});
+    document.addEventListener('click',e=>{
+      const detail=e.target.closest('[data-detail]');if(detail){openScentDetail(detail.dataset.detail);return;}
+      const use=e.target.closest('[data-use]');if(use){selectMain(use.dataset.use);$('search').value='';renderMain();if($('scent-dialog').open)$('scent-dialog').close();$('selection').scrollIntoView({behavior:'smooth'});$('recommend').focus({preventScroll:true});}
+    });
+    $('close-dialog').addEventListener('click',()=>$('scent-dialog').close());
+    $('scent-dialog').addEventListener('click',e=>{if(e.target===$('scent-dialog')){const rect=e.target.getBoundingClientRect();if(e.clientX<rect.left||e.clientX>rect.right||e.clientY<rect.top||e.clientY>rect.bottom)e.target.close();}});
     $('single-list').addEventListener('click',e=>{const button=e.target.closest('[data-single]');if(!button)return;const id=button.dataset.single;if(selectedSingles.has(id))selectedSingles.delete(id);else selectedSingles.add(id);button.setAttribute('aria-pressed',String(selectedSingles.has(id)));$('single-count').textContent=selectedSingles.size+'개 선택';updateSummary();});
     $('recommend').addEventListener('click',()=>showResult());
     $('share').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(location.href);$('status').textContent='조합 링크를 복사했어요. 같은 조합과 추천을 열 수 있어요.';}catch{$('status').textContent='주소창의 링크를 복사해주세요. 현재 조합이 링크에 담겨 있어요.';}});
