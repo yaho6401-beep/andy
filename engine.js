@@ -62,5 +62,16 @@
       return {scent:s,score,matchedStyles};
     }).filter(s=>s.score>0).sort((a,b)=>b.score-a.score||Number(a.scent.number)-Number(b.scent.number)).slice(0,6);
   }
-  root.ScentStyle={styles,singleName,recommend,recommendForProfile};
+  function describeBlend(main,singles){
+    const mainImages={'그린':'싱그러운 잎사귀의 느낌','플로럴':'화사한 꽃의 느낌','화이트 플로럴':'풍성한 흰 꽃의 느낌','프루티':'달콤한 과일의 느낌','시트러스':'산뜻한 시트러스의 느낌','머스키':'깨끗한 머스크의 느낌','파우더리':'부드러운 파우더의 느낌','우디':'차분한 나무의 느낌','시프레':'깊은 풀과 나무의 느낌','아쿠아틱':'맑고 시원한 물의 느낌','트로피컬':'밝은 열대 과일의 느낌','알데하이딕':'보송하고 깨끗한 느낌','스파이시':'따뜻한 스파이스의 느낌','타바코':'그윽한 타바코의 느낌','레더':'선명한 가죽의 느낌','티':'은은한 차의 느낌'};
+    const singleImages={top:['시트러스의 산뜻함','자몽의 상큼함','차의 싱그러움','사과의 경쾌함','레몬의 밝은 상큼함','만다린의 밝은 달콤함','청포도의 산뜻함','딸기의 달콤함','모과의 은은함','체리의 진한 달콤함'],middle:['장미의 화사함','라일락의 부드러움','자스민의 풍성함','일랑일랑의 풍성함','바다의 시원함','아카시아의 화사함','라벤더의 차분함','허브의 시원함','카네이션의 꽃향','잎사귀의 싱그러움'],base:['이끼의 차분함','패츌리의 깊이','샌달우드의 포근함','시더우드의 담백함','머스크의 부드러움','앰버의 따뜻함','바닐라의 달콤함','코튼의 포근함','파우더의 보송함','대나무의 싱그러움']};
+    const first=recommend(main,singles).ranked[0];
+    const moods={minimal:'맑고 단정한',romantic:'다정하고 화사한',natural:'싱그럽고 편안한',classic:'차분하고 깊이 있는',casual:'밝고 경쾌한',sporty:'시원하고 활기찬',chic:'깊고 선명한',cozy:'부드럽고 포근한'};
+    const mainImage=mainImages[main.accords?.[0]]||'메인향 고유의 느낌';
+    const facets=[...new Set(singles.map(s=>singleImages[s.note]?.[s.number-1]).filter(Boolean))];
+    // A short editorial description of selected facets, never a dose simulation.
+    const sentence=facets.length?`${mainImage}에 ${facets.slice(0,2).join('과 ')}을 더한, ${moods[first?.id]||'나만의'} 향.`:`${mainImage}을 담은, ${moods[first?.id]||'나만의'} 향.`;
+    return {sentence,facets:[main.accords?.[0]||'나만의 향',...facets.slice(0,4)]};
+  }
+  root.ScentStyle={styles,singleName,recommend,recommendForProfile,describeBlend};
 })(typeof globalThis!=='undefined'?globalThis:window);
