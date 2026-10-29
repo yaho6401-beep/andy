@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#203c32"><meta name="description" content="책과향기에서 고른 향에 어울리는 스타일을 만나보세요. 메인향과 단일향을 선택하는 나만의 향수 스타일 가이드.">
+  <title>책과향기 · 향을 입다</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/engine.js" defer></script><script src="/app.js" defer></script>
+</head>
+<body>
+<header class="site-header"><a href="/" class="brand"><span class="brand-icon" aria-hidden="true">향</span><span>책과향기<small>SCENT & STYLE STUDIO</small></span></a><span class="header-note">나만의 향, 나다운 스타일</span></header>
+<main>
+  <section class="hero"><div><p class="eyebrow">YOUR SCENT, YOUR STYLE</p><h1>오늘의 향을,<br><em>스타일로 입다.</em></h1><p class="intro">마음에 드는 향을 골라보세요.<br>당신의 향에 어울리는 옷과 색, 분위기를 찾아드려요.</p><a href="#selection" class="hero-link">나의 향 조합하기 <span aria-hidden="true">↘</span></a></div><div class="hero-art" aria-hidden="true"><div class="orbit"></div><div class="bottle"><div class="cap"></div><div class="bottle-neck"></div><div class="bottle-body"><span>책과향기</span><b>PERSONAL<br>ESSENCE</b><small>an expression of you</small></div></div><span class="art-caption">A LITTLE SCENT.<br>A DIFFERENT MOOD.</span><span class="art-number">01 / YOUR OWN ESSENCE</span></div></section>
+  <div class="studio-line"><span>향을 고르고</span><i></i><span>취향을 더하고</span><i></i><span>나만의 스타일을 발견하세요</span></div>
+  <div class="workspace" id="selection"><div class="selection-column">
+    <section class="panel"><div class="section-heading"><div><p class="eyebrow">STEP 01 · BASE SCENT</p><h2>메인향을 골라주세요</h2></div><span class="count" id="main-total">불러오는 중</span></div><p class="hint">가장 마음에 드는 향 하나가 스타일의 시작이 됩니다.</p>
+      <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="향 이름 또는 번호로 검색" aria-label="메인향 이름 또는 번호 검색" autocomplete="off"></label>
+      <div id="main-list" class="main-list" role="group" aria-label="메인향 한 개 선택"><p class="hint" role="status">향 목록을 불러오고 있어요.</p></div><p class="catalog-note">1~72번 · 별도 번호 29-1 포함 · 브랜드 타입 향료</p>
+    </section>
+    <section class="panel"><div class="section-heading"><div><p class="eyebrow">STEP 02 · PERSONAL TOUCH</p><h2>나만의 느낌을 더해보세요</h2></div><span class="count" id="single-count">0개 선택</span></div><p class="hint">단일향은 여러 개 선택할 수 있어요. 배합량 입력은 필요 없어요.</p><div id="single-list"></div></section>
+  </div>
+  <aside class="result-column"><section class="result-shell"><div class="section-heading"><div><p class="eyebrow">YOUR STYLE EDIT</p><h2>향이 그려낸 스타일</h2></div><span class="sparkle" aria-hidden="true">✳</span></div>
+    <div id="selection-summary" class="selection-summary">메인향을 선택하면 여기에 조합이 표시돼요.</div>
+    <button id="recommend" class="primary" disabled>어울리는 스타일 보기 <span aria-hidden="true">→</span></button>
+    <div id="result" aria-live="polite"><div class="empty-state"><div class="empty-shape" aria-hidden="true">✧</div><h3>당신의 향을 기다리고 있어요</h3><p>메인향을 고르고 원하는 단일향을 더하면<br>나에게 어울리는 스타일 카드가 완성돼요.</p></div></div>
+    <div class="result-actions" hidden id="result-actions"><button id="share" class="secondary">조합 링크 복사</button><button id="reset" class="text-button">처음부터 고르기</button></div><p id="status" class="status" role="status"></p>
+  </section><p class="method-note">매장 향 설명과 향 계열을 바탕으로 만든 스타일 제안입니다. 실제 시향과 취향에 따라 느껴지는 분위기는 달라질 수 있어요.</p></aside></div>
+  <section class="closing"><p class="eyebrow">MADE PERSONAL</p><h2>향에도, 스타일에도<br>정답은 당신의 취향.</h2><p>새로운 조합으로 또 다른 나를 발견해보세요.</p></section>
+</main><footer><span>책과향기</span><span>SCENT & STYLE · 나만의 향수 스타일 가이드</span></footer>
+</body></html>
