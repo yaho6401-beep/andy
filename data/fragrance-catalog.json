@@ -1,0 +1,1688 @@
+{
+  "version": 1,
+  "selection": {
+    "mainCount": 1,
+    "singleSelection": "multiple",
+    "quantityInput": false
+  },
+  "mainScents": [
+    {
+      "id": "main-1",
+      "number": "1",
+      "name": "구찌 러쉬 2 type",
+      "sourceName": "구찌 러쉬 2 type",
+      "description": "#프리지아\n#비누향\n#머스크\n#산뜻시원",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "B5"
+      },
+      "descriptionSource": {
+        "sheet": "향수설명",
+        "cell": "D2"
+      }
+    },
+    {
+      "id": "main-2",
+      "number": "2",
+      "name": "랑방 메리미 type",
+      "sourceName": "랑방\n메리미 type",
+      "description": "#첫향수\n#플로럴 & \n프루티",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "F5"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "H5"
+      }
+    },
+    {
+      "id": "main-3",
+      "number": "3",
+      "name": "랑방 에끌라 드 아르페쥬 type",
+      "sourceName": "랑방 \n에끌라 드 \n아르페쥬 type",
+      "description": "#컨셉\n#복숭아",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "J5"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "L5"
+      }
+    },
+    {
+      "id": "main-4",
+      "number": "4",
+      "name": "레드 스무디 type",
+      "sourceName": "레드 \n스무디  type",
+      "description": "#달달복숭아\n#뿌리면 금방 \n사라짐",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "N5"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "P5"
+      }
+    },
+    {
+      "id": "main-5",
+      "number": "5",
+      "name": "록시땅 매그놀리아 type",
+      "sourceName": "록시땅 \n매그놀리아 type",
+      "description": "#플로럴\n#낯설고\n#신비로움\n#발랄함",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "B6"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "D6"
+      }
+    },
+    {
+      "id": "main-6",
+      "number": "6",
+      "name": "마이 버버리 블랙 type",
+      "sourceName": "마이\n버버리 \n블랙 type",
+      "description": "#달달함\n#포근\n#로즈\n#앰버,패츌리",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "F6"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "H6"
+      }
+    },
+    {
+      "id": "main-7",
+      "number": "7",
+      "name": "마크제이콥스 데이지 type",
+      "sourceName": "마크제이콥스 데이지 type",
+      "description": "#시원달달??\n#풀향…",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "J6"
+      },
+      "descriptionSource": {
+        "sheet": "향수설명",
+        "cell": "AB2"
+      }
+    },
+    {
+      "id": "main-8",
+      "number": "8",
+      "name": "마크제이콥스 오롤라 type",
+      "sourceName": "마크제이콥스 오롤라 type",
+      "description": "#풀 +꽃향\n#프루티\n#바닐라\n#샌달우드",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "N6"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "P6"
+      }
+    },
+    {
+      "id": "main-9",
+      "number": "9",
+      "name": "몽블랑 레전드 type",
+      "sourceName": "몽블랑 \n레전드 \ntype",
+      "description": "#스킨향의\n정석\n#자신감",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "B7"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "D7"
+      }
+    },
+    {
+      "id": "main-10",
+      "number": "10",
+      "name": "페라리 블랙 type",
+      "sourceName": "페라리 \n블랙 type",
+      "description": "#은은달콤 스킨\n#세련됨\n#다이나믹",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "F7"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "H7"
+      }
+    },
+    {
+      "id": "main-11",
+      "number": "11",
+      "name": "빅토리아 시크릿 망고템테이션 type",
+      "sourceName": "빅토리아\n시크릿\n망고템테이션\ntype",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "J7"
+      },
+      "descriptionSource": null
+    },
+    {
+      "id": "main-12",
+      "number": "12",
+      "name": "빅토리아 시크릿 참 type",
+      "sourceName": "빅토리아 \n시크릿 참 type",
+      "description": "#코오롱\n#과일향\n#부담없는\n은은함",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "N7"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "P7"
+      }
+    },
+    {
+      "id": "main-13",
+      "number": "13",
+      "name": "산타마리아 프리지아 type",
+      "sourceName": "산타마리아 \n프리지아  type",
+      "description": "#프리지아\n단일향\n#산뜻\n#비누향",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "B8"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "D8"
+      }
+    },
+    {
+      "id": "main-14",
+      "number": "14",
+      "name": "샤넬 NO5 type",
+      "sourceName": "샤넬 NO5 type",
+      "description": "#바닐라\n#찐~함\n#마릴린먼로",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "F8"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "H8"
+      }
+    },
+    {
+      "id": "main-15",
+      "number": "15",
+      "name": "조말론 블랙베리 앤 베이 type",
+      "sourceName": "조말론\n블랙베리 앤 베이\ntype",
+      "description": "#오리엔탈\n#바닐라\n#관능적\n#깊고풍부",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "J8"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "L8"
+      }
+    },
+    {
+      "id": "main-16",
+      "number": "16",
+      "name": "조말론 우드세이지&씨솔트 type",
+      "sourceName": "조말론\n우드세이지&씨솔트 \ntype",
+      "description": "#우디플로럴\n#세련,우아",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "N8"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "P8"
+      }
+    },
+    {
+      "id": "main-17",
+      "number": "17",
+      "name": "아뜰리에 코롱 포멜로 파라디 type",
+      "sourceName": "아뜰리에 \n코롱 \n포멜로 \n파라디 type",
+      "description": "#자몽상큼",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "B9"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "D9"
+      }
+    },
+    {
+      "id": "main-18",
+      "number": "18",
+      "name": "조말론 잉글리쉬 페어& 프리지아 type",
+      "sourceName": "조말론\n잉글리쉬\n페어&\n프리지아\ntype",
+      "description": "#신선한배\n#화이트 프리지아\n#머스크",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "F9"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "H9"
+      }
+    },
+    {
+      "id": "main-19",
+      "number": "19",
+      "name": "조말론 오렌지 블라썸 type",
+      "sourceName": "조말론 \n오렌지 \n블라썸\ntype",
+      "description": "#오렌지향\n#매혹적\n여성의향",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "J9"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "L9"
+      }
+    },
+    {
+      "id": "main-20",
+      "number": "20",
+      "name": "존바바토스 아티산 type",
+      "sourceName": "존바바토스 \n아티산 type",
+      "description": "#세련,모던\n#상큼,은은\n#감귤,허브",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "N9"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "P9"
+      }
+    },
+    {
+      "id": "main-21",
+      "number": "21",
+      "name": "지미추 EDT type",
+      "sourceName": "지미추 EDT type",
+      "description": "#꽃향\n#파우더리\n#우디,플로럴",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "B10"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "D10"
+      }
+    },
+    {
+      "id": "main-22",
+      "number": "22",
+      "name": "클린 레인 type",
+      "sourceName": "클린\n레인\ntype",
+      "description": "#아침이슬\n#풀잎,산뜻\n#깨끗함",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "F10"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "H10"
+      }
+    },
+    {
+      "id": "main-23",
+      "number": "23",
+      "name": "클린 웜코튼 type",
+      "sourceName": "클린\n웜코튼 type",
+      "description": "#시트러스\n#상큼포근",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "J10"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "L10"
+      }
+    },
+    {
+      "id": "main-24",
+      "number": "24",
+      "name": "클린 쿨코튼 type",
+      "sourceName": "클린\n쿨코튼 type",
+      "description": "#섬유유연제\n#가벼움",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "N10"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "P10"
+      }
+    },
+    {
+      "id": "main-25",
+      "number": "25",
+      "name": "탄 에덴 브리즈 type",
+      "sourceName": "탄 에덴 \n브리즈 type",
+      "description": "#비누향\n#고급향",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "B11"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "D11"
+      }
+    },
+    {
+      "id": "main-26",
+      "number": "26",
+      "name": "페라가모 인칸토 참 type",
+      "sourceName": "페라가모 \n인칸토 참 type",
+      "description": "#이국적해변\n#은은달콤",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "F11"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "H11"
+      }
+    },
+    {
+      "id": "main-27",
+      "number": "27",
+      "name": "롤리타 램피카 type",
+      "sourceName": "롤리타\n램피카\ntype",
+      "description": "#시원달달??\n#풀향…",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "J11"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "L6"
+      }
+    },
+    {
+      "id": "main-28",
+      "number": "28",
+      "name": "폴로 랄프로렌 블루 type",
+      "sourceName": "폴로 \n랄프로렌 \n블루 type",
+      "description": "#깨끗상쾌\n#바다내음",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "N11"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "P11"
+      }
+    },
+    {
+      "id": "main-29",
+      "number": "29",
+      "name": "폴로 스포츠 type",
+      "sourceName": "폴로 \n스포츠 type",
+      "description": "#역동적남성\n#스포티함\n#신선함",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "B12"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "D12"
+      }
+    },
+    {
+      "id": "main-29-1",
+      "number": "29-1",
+      "name": "폴로 빅포니 우먼 2 type",
+      "sourceName": "폴로\n빅포니\n우먼 2\ntype",
+      "description": "#크리미한 \n딸기크림 : 달콤",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "F12"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "H12"
+      }
+    },
+    {
+      "id": "main-30",
+      "number": "30",
+      "name": "다비도프 쿨워터포우먼",
+      "sourceName": "다비도프\n쿨워터포우먼",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "J12"
+      },
+      "descriptionSource": null
+    },
+    {
+      "id": "main-31",
+      "number": "31",
+      "name": "딥디크 오 로즈 type",
+      "sourceName": "딥디크\n오 로즈\ntype",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "N12"
+      },
+      "descriptionSource": null
+    },
+    {
+      "id": "main-32",
+      "number": "32",
+      "name": "딥디크 오 데썽 type",
+      "sourceName": "딥디크\n오 데썽\ntype",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "B13"
+      },
+      "descriptionSource": null
+    },
+    {
+      "id": "main-33",
+      "number": "33",
+      "name": "딥디크 도손 type",
+      "sourceName": "딥디크\n도손\ntype",
+      "description": "#플로럴\n화이트플라워\n#중성적\n#호불호\n나뉨",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "F13"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "H13"
+      }
+    },
+    {
+      "id": "main-34",
+      "number": "34",
+      "name": "딥디크 탐다오 type",
+      "sourceName": "딥디크 \n탐다오 type",
+      "description": "#매력적\n고급진 \n우디향\n#중성적 세련",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "J13"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "L13"
+      }
+    },
+    {
+      "id": "main-35",
+      "number": "35",
+      "name": "딥디크 롬브로단로 type",
+      "sourceName": "딥디크 \n롬브로단로 type",
+      "description": "#축축한 장미\n#비오는 날 어울리는 향",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "N13"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "P13"
+      }
+    },
+    {
+      "id": "main-36",
+      "number": "36",
+      "name": "보야지 드 에르메스 type",
+      "sourceName": "보야지 드\n에르메스\ntype",
+      "description": "#시트러스우디 #상큼함과 나무향이 \n동시에",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "B15"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "D15"
+      }
+    },
+    {
+      "id": "main-37",
+      "number": "37",
+      "name": "입생로랑 몽 파리 type",
+      "sourceName": "입생로랑 \n몽 파리 type",
+      "description": "#사랑의도시,\n파리\n#달달함\n#관능, 유혹",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "F15"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "H15"
+      }
+    },
+    {
+      "id": "main-38",
+      "number": "38",
+      "name": "크리드 실버 마운틴 워터 type",
+      "sourceName": "크리드\n실버 마운틴\n워터 type",
+      "description": "#알프스산\n#시원상쾌\n#잔향깡패",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "J15"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "L15"
+      }
+    },
+    {
+      "id": "main-39",
+      "number": "39",
+      "name": "크리드 어벤투스 type",
+      "sourceName": "크리드 \n어벤투스 type",
+      "description": "#나폴레옹\n#왕족의향기",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "N15"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "P15"
+      }
+    },
+    {
+      "id": "main-40",
+      "number": "40",
+      "name": "랑방 미 로우 type",
+      "sourceName": "랑방\n미 로우\ntype",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "B16"
+      },
+      "descriptionSource": null
+    },
+    {
+      "id": "main-41",
+      "number": "41",
+      "name": "지방시 랑테르디 type",
+      "sourceName": "지방시 \n랑테르디 type",
+      "description": "#달달함\n#오드리햅번",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "F16"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "H16"
+      }
+    },
+    {
+      "id": "main-42",
+      "number": "42",
+      "name": "파코라반 원미리언포맨 type",
+      "sourceName": "파코라반 \n원미리언포맨 type",
+      "description": "#물질적욕망\n#강렬함\n#비싸보임",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "J16"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "L16"
+      }
+    },
+    {
+      "id": "main-43",
+      "number": "43",
+      "name": "돌체 앤 가바나 라이트블루 type",
+      "sourceName": "돌체 앤 \n가바나 \n라이트블루 type",
+      "description": "#풋사과\n#해변가\n#스위트\n#머스크",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "N16"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "P16"
+      }
+    },
+    {
+      "id": "main-44",
+      "number": "44",
+      "name": "크리찬디올 자도르 type",
+      "sourceName": "크리찬디올 \n자도르 type",
+      "description": "달달한 첫향, 향의 변화를 느껴보세요",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "S5"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "U5"
+      }
+    },
+    {
+      "id": "main-45",
+      "number": "45",
+      "name": "미스 디올 블루밍 부케 type",
+      "sourceName": "미스 디올 \n블루밍\n부케 type",
+      "description": "#화사한부케꽃\n#잔향 최고",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "W5"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "Y5"
+      }
+    },
+    {
+      "id": "main-46",
+      "number": "46",
+      "name": "크리찬디올 소바주 type",
+      "sourceName": "크리찬디올 소바주 type",
+      "description": "#야생\n#광활한\n아웃도어\n#상남자",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AA5"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AC5"
+      }
+    },
+    {
+      "id": "main-47",
+      "number": "47",
+      "name": "톰포드 네롤리 포르토피노 type",
+      "sourceName": "톰포드\n네롤리 \n포르토피노 type",
+      "description": "#이태리레몬\n#활력\n#생동감",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AE5"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AG5"
+      }
+    },
+    {
+      "id": "main-48",
+      "number": "48",
+      "name": "톰포드 오드우드 type",
+      "sourceName": "톰포드 \n오드우드 type",
+      "description": "#열정적\n#이국적\n#남성적",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "S6"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "U6"
+      }
+    },
+    {
+      "id": "main-49",
+      "number": "49",
+      "name": "샤넬 샹스 오땅드르 type",
+      "sourceName": "샤넬 샹스\n오땅드르\ntype",
+      "description": "살짝 달달한듯, 결국 은은한 꽃향",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "W6"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "Y6"
+      }
+    },
+    {
+      "id": "main-50",
+      "number": "50",
+      "name": "블루 드 샤넬 type",
+      "sourceName": "블루 드 \n샤넬 \ntype",
+      "description": "#관능적\n#오리엔탈\n#세련된 우디",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AA6"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AC6"
+      }
+    },
+    {
+      "id": "main-51",
+      "number": "51",
+      "name": "바이레도 슈퍼시더 type",
+      "sourceName": "바이레도 \n슈퍼시더 type",
+      "description": "#은은한 \n나무향",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AE6"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AG6"
+      }
+    },
+    {
+      "id": "main-52",
+      "number": "52",
+      "name": "구찌 블룸 type",
+      "sourceName": "구찌 블룸 \ntype",
+      "description": "#상상속정원\n#다양한\n꽃향",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "S7"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "U7"
+      }
+    },
+    {
+      "id": "main-53",
+      "number": "53",
+      "name": "에르메스 운 자르뎅 type",
+      "sourceName": "에르메스\n운 자르뎅\ntype",
+      "description": "#가벼움\n#시원달달\n#인기향",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "W7"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "Y7"
+      }
+    },
+    {
+      "id": "main-54",
+      "number": "54",
+      "name": "딥디크 휘기에 type",
+      "sourceName": "딥디크\n휘기에\ntype",
+      "description": "#무화과",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AA7"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AC7"
+      }
+    },
+    {
+      "id": "main-55",
+      "number": "55",
+      "name": "딥디크 필로시코스 type",
+      "sourceName": "딥디크\n필로시코스\ntype",
+      "description": "#무화과",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AE7"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AG7"
+      }
+    },
+    {
+      "id": "main-56",
+      "number": "56",
+      "name": "랑방 모던 프린세스 type",
+      "sourceName": "랑방\n모던 \n프린세스 type",
+      "description": "#자스민, 사과\n#프리지아,\n머스크",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "S8"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "U8"
+      }
+    },
+    {
+      "id": "main-57",
+      "number": "57",
+      "name": "톰포드 투스칸레더 type",
+      "sourceName": "톰포드\n투스칸레더\ntype",
+      "description": "#성공한 남성\n#통가죽\n#고급 \n가죽향",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "W8"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "Y8"
+      }
+    },
+    {
+      "id": "main-58",
+      "number": "58",
+      "name": "톰포드 비터피치 type",
+      "sourceName": "톰포드\n비터피치\ntype",
+      "description": "#복숭아\n#고농축",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AA8"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AC8"
+      }
+    },
+    {
+      "id": "main-59",
+      "number": "59",
+      "name": "바이레도 블랑쉬 type",
+      "sourceName": "바이레도\n블랑쉬\ntype",
+      "description": "#화이트\n로즈\n#바이올렛\n#머스크",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AE8"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AG8"
+      }
+    },
+    {
+      "id": "main-60",
+      "number": "60",
+      "name": "바이레도 라튤립 type",
+      "sourceName": "바이레도\n라튤립\ntype",
+      "description": "#플로럴,\n그린\n#튤립,베티버,샌달우드",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "S9"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "U9"
+      }
+    },
+    {
+      "id": "main-61",
+      "number": "61",
+      "name": "톰포드 블랙 오키드 type",
+      "sourceName": "톰포드\n블랙\n오키드\ntype",
+      "description": "#스파이시\n#플로럴\n#발사믹",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "W9"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "Y9"
+      }
+    },
+    {
+      "id": "main-62",
+      "number": "62",
+      "name": "크리드 버진 아일랜드 워터 type",
+      "sourceName": "크리드\n버진\n아일랜드\n워터\ntype",
+      "description": "#코코넛\n#화이트 버가못\n#머스크",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AA9"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AC9"
+      }
+    },
+    {
+      "id": "main-63",
+      "number": "63",
+      "name": "바이 킬리안 인톡시 케이티드 type",
+      "sourceName": "바이\n킬리안\n인톡시\n케이티드\ntype",
+      "description": "#중독적커피향\n#스파이시\n#초콜렛\n#바닐라",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AE9"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AG9"
+      }
+    },
+    {
+      "id": "main-64",
+      "number": "64",
+      "name": "르라보 상탈 33 type",
+      "sourceName": "르라보\n상탈 33\ntype",
+      "description": "#숲의 향",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "S10"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "U10"
+      }
+    },
+    {
+      "id": "main-65",
+      "number": "65",
+      "name": "르라보 떼누아 29 type",
+      "sourceName": "르라보 \n떼누아 29\ntype",
+      "description": "#우디\n#생화",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "W10"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "Y10"
+      }
+    },
+    {
+      "id": "main-66",
+      "number": "66",
+      "name": "샤넬 코코마드 모아젤 엥땅스 type",
+      "sourceName": "샤넬\n코코마드\n모아젤 \n엥땅스\ntype",
+      "description": "#관능적\n#모던하고 섹시한 느낌",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AA10"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AC10"
+      }
+    },
+    {
+      "id": "main-67",
+      "number": "67",
+      "name": "아르마니 프리베- 루즈 말라키트 type",
+      "sourceName": "아르마니\n프리베-\n루즈\n말라키트\ntype",
+      "description": "#오리엔탈 \n바닐라\n#진한 달달함\n#플로럴",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AE10"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AG10"
+      }
+    },
+    {
+      "id": "main-68",
+      "number": "68",
+      "name": "퍼퓸 드 말리 달시 type",
+      "sourceName": "퍼퓸 드\n말리 \n달시\ntype",
+      "description": "#진한 달달함\n#오리엔탈",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "S11"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "U11"
+      }
+    },
+    {
+      "id": "main-69",
+      "number": "69",
+      "name": "하라주쿠 러버스 베이비 type",
+      "sourceName": "하라주쿠 러버스\n 베이비\n type",
+      "description": "#베이비\n파우더",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "W11"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "Y11"
+      }
+    },
+    {
+      "id": "main-70",
+      "number": "70",
+      "name": "빅토리아 시크릿 밤쉘 type",
+      "sourceName": "빅토리아\n시크릿\n밤쉘\ntype",
+      "description": "#파인애플\n#피오니\n#소나무",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AA11"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AC11"
+      }
+    },
+    {
+      "id": "main-71",
+      "number": "71",
+      "name": "조말론 다크앰버앤 진저릴리 type",
+      "sourceName": "조말론\n다크앰버앤\n진저릴리\ntype",
+      "description": "#박하없는데 박하느낌\n#생강",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "AE11"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "AG11"
+      }
+    },
+    {
+      "id": "main-72",
+      "number": "72",
+      "name": "조말론 넥타린 블로썸 type",
+      "sourceName": "조말론\n넥타린\n블로썸\ntype",
+      "description": "#복숭아향",
+      "descriptionStatus": "source_provided",
+      "source": {
+        "file": "향수사진 목록 10.xlsx",
+        "sheet": "향수타입 2022",
+        "cell": "S12"
+      },
+      "descriptionSource": {
+        "sheet": "향수타입 설명 2022",
+        "cell": "U12"
+      }
+    }
+  ],
+  "singleScents": [
+    {
+      "id": "single-top-1",
+      "number": 1,
+      "note": "top",
+      "noteLabel": "탑",
+      "name": "버 가 못 (베르가못) Bergamot",
+      "sourceName": "버 가 못\n(베르가못)\nBergamot",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "B3"
+      }
+    },
+    {
+      "id": "single-top-2",
+      "number": 2,
+      "note": "top",
+      "noteLabel": "탑",
+      "name": "그레이프 프룻 (자 몽) Grape Fruit",
+      "sourceName": "그레이프 프룻\n(자 몽)\nGrape Fruit",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "B4"
+      }
+    },
+    {
+      "id": "single-top-3",
+      "number": 3,
+      "note": "top",
+      "noteLabel": "탑",
+      "name": "그 린 티 Green Tea",
+      "sourceName": "그 린 티\nGreen Tea",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "B5"
+      }
+    },
+    {
+      "id": "single-top-4",
+      "number": 4,
+      "note": "top",
+      "noteLabel": "탑",
+      "name": "애 플 (사 과) Apple",
+      "sourceName": "애 플 (사 과)\nApple",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "B6"
+      }
+    },
+    {
+      "id": "single-top-5",
+      "number": 5,
+      "note": "top",
+      "noteLabel": "탑",
+      "name": "레 몬 Lemon",
+      "sourceName": "레 몬\nLemon",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "B7"
+      }
+    },
+    {
+      "id": "single-top-6",
+      "number": 6,
+      "note": "top",
+      "noteLabel": "탑",
+      "name": "만 다 린 Mandarin",
+      "sourceName": "만 다 린\nMandarin",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "B8"
+      }
+    },
+    {
+      "id": "single-top-7",
+      "number": 7,
+      "note": "top",
+      "noteLabel": "탑",
+      "name": "그린 그레이프 (청 포 도) Green Grape",
+      "sourceName": "그린 그레이프\n(청 포 도)\nGreen Grape",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "B9"
+      }
+    },
+    {
+      "id": "single-top-8",
+      "number": 8,
+      "note": "top",
+      "noteLabel": "탑",
+      "name": "스트로 베리 (딸 기) Strawberry",
+      "sourceName": "스트로 베리\n(딸 기)\nStrawberry",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "B10"
+      }
+    },
+    {
+      "id": "single-top-9",
+      "number": 9,
+      "note": "top",
+      "noteLabel": "탑",
+      "name": "퀸 스 (모 과) Quince",
+      "sourceName": "퀸 스\n(모 과)\nQuince",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "B11"
+      }
+    },
+    {
+      "id": "single-top-10",
+      "number": 10,
+      "note": "top",
+      "noteLabel": "탑",
+      "name": "블랙 체리 Black Cherry",
+      "sourceName": "블랙 체리\nBlack Cherry",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "B12"
+      }
+    },
+    {
+      "id": "single-middle-1",
+      "number": 1,
+      "note": "middle",
+      "noteLabel": "미들",
+      "name": "로 즈 (장 미) Rose",
+      "sourceName": "로 즈\n(장 미)\nRose",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "E3"
+      }
+    },
+    {
+      "id": "single-middle-2",
+      "number": 2,
+      "note": "middle",
+      "noteLabel": "미들",
+      "name": "라 일 락 Lilac",
+      "sourceName": "라 일 락\nLilac",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "E4"
+      }
+    },
+    {
+      "id": "single-middle-3",
+      "number": 3,
+      "note": "middle",
+      "noteLabel": "미들",
+      "name": "자 스 민 Jasmin",
+      "sourceName": "자 스 민\nJasmin",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "E5"
+      }
+    },
+    {
+      "id": "single-middle-4",
+      "number": 4,
+      "note": "middle",
+      "noteLabel": "미들",
+      "name": "일랑 일랑 Ylang-Ylang",
+      "sourceName": "일랑 일랑\nYlang-Ylang\n",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "E6"
+      }
+    },
+    {
+      "id": "single-middle-5",
+      "number": 5,
+      "note": "middle",
+      "noteLabel": "미들",
+      "name": "마 린 (Marine)",
+      "sourceName": "마 린\n(Marine)",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "E7"
+      }
+    },
+    {
+      "id": "single-middle-6",
+      "number": 6,
+      "note": "middle",
+      "noteLabel": "미들",
+      "name": "아카시아 Acacia",
+      "sourceName": "아카시아\nAcacia",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "E8"
+      }
+    },
+    {
+      "id": "single-middle-7",
+      "number": 7,
+      "note": "middle",
+      "noteLabel": "미들",
+      "name": "라 벤 더 Lavender",
+      "sourceName": "라 벤 더\nLavender",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "E9"
+      }
+    },
+    {
+      "id": "single-middle-8",
+      "number": 8,
+      "note": "middle",
+      "noteLabel": "미들",
+      "name": "유칼립투스 Eucalyptus",
+      "sourceName": "유칼립투스\nEucalyptus",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "E10"
+      }
+    },
+    {
+      "id": "single-middle-9",
+      "number": 9,
+      "note": "middle",
+      "noteLabel": "미들",
+      "name": "카네이션 Carnation",
+      "sourceName": "카네이션\nCarnation",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "E11"
+      }
+    },
+    {
+      "id": "single-middle-10",
+      "number": 10,
+      "note": "middle",
+      "noteLabel": "미들",
+      "name": "바이올렛 리프 (바 이 올 렛) Violet Leaf",
+      "sourceName": "바이올렛 리프\n(바 이 올 렛)\nViolet Leaf",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "E12"
+      }
+    },
+    {
+      "id": "single-base-1",
+      "number": 1,
+      "note": "base",
+      "noteLabel": "베이스",
+      "name": "모 스 (이 끼) Moss",
+      "sourceName": "모 스\n(이 끼)\nMoss",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "H3"
+      }
+    },
+    {
+      "id": "single-base-2",
+      "number": 2,
+      "note": "base",
+      "noteLabel": "베이스",
+      "name": "패 츌 리 Patchouli",
+      "sourceName": "패 츌 리\nPatchouli",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "H4"
+      }
+    },
+    {
+      "id": "single-base-3",
+      "number": 3,
+      "note": "base",
+      "noteLabel": "베이스",
+      "name": "샌달 우드 Sandalwood",
+      "sourceName": "샌달 우드\nSandalwood",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "H5"
+      }
+    },
+    {
+      "id": "single-base-4",
+      "number": 4,
+      "note": "base",
+      "noteLabel": "베이스",
+      "name": "시더 우드 Cedarwood",
+      "sourceName": "시더 우드\nCedarwood",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "H6"
+      }
+    },
+    {
+      "id": "single-base-5",
+      "number": 5,
+      "note": "base",
+      "noteLabel": "베이스",
+      "name": "화이트 머스크 White Musk (Musk 사향麝香)",
+      "sourceName": "화이트 머스크\nWhite Musk\n(Musk 사향麝香)",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "H7"
+      }
+    },
+    {
+      "id": "single-base-6",
+      "number": 6,
+      "note": "base",
+      "noteLabel": "베이스",
+      "name": "엠 버 (용 연 향) Amber",
+      "sourceName": "엠 버\n(용 연 향)\nAmber",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "H8"
+      }
+    },
+    {
+      "id": "single-base-7",
+      "number": 7,
+      "note": "base",
+      "noteLabel": "베이스",
+      "name": "바 닐 라 Vanilla",
+      "sourceName": "바 닐 라\nVanilla",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "H9"
+      }
+    },
+    {
+      "id": "single-base-8",
+      "number": 8,
+      "note": "base",
+      "noteLabel": "베이스",
+      "name": "코튼 블라썸 Cotton Blossom",
+      "sourceName": "코튼 블라썸\nCotton Blossom",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "H10"
+      }
+    },
+    {
+      "id": "single-base-9",
+      "number": 9,
+      "note": "base",
+      "noteLabel": "베이스",
+      "name": "베이비 파우더 Baby Powder",
+      "sourceName": "베이비 파우더\nBaby Powder",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "H11"
+      }
+    },
+    {
+      "id": "single-base-10",
+      "number": 10,
+      "note": "base",
+      "noteLabel": "베이스",
+      "name": "밤 부 (대 나 무) Bamboo",
+      "sourceName": "밤 부\n(대 나 무)\nBamboo",
+      "description": "",
+      "descriptionStatus": "missing",
+      "source": {
+        "file": "☆ 향수 단일향 리스트.xlsx",
+        "sheet": "Sheet1",
+        "cell": "H12"
+      }
+    }
+  ]
+}
