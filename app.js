@@ -71,7 +71,9 @@ async function init(){
     const params=new URLSearchParams(location.search),main=params.get('main');
     if(catalog.mainScents.some(s=>s.id===main))selectedMain=main;
     const validIds=new Set(catalog.singleScents.map(s=>s.id));for(const id of (params.get('notes')||'').split(','))if(validIds.has(id))selectedSingles.add(id);
-    renderMain();renderSingles();updateSummary();initProfile();if(selectedMain)showResult(false);
+    renderMain();renderSingles();updateSummary();initProfile();
+    StoryUI.init(catalog,recipe=>{selectedMain=recipe.main.id;selectedSingles=new Set(recipe.singles.map(s=>s.id));$('search').value='';renderMain();renderSingles();updateSummary();$('status').textContent='이야기에 어울리는 메인향과 단일향 조합을 선택했어요.';$('selection').scrollIntoView({behavior:'smooth'});});
+    if(selectedMain)showResult(false);
     $('search').addEventListener('input',renderMain);
     $('main-list').addEventListener('click',e=>{const button=e.target.closest('[data-main]');if(!button)return;selectMain(button.dataset.main);});
     document.addEventListener('click',e=>{
