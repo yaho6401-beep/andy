@@ -27,7 +27,8 @@
     const selected=new Set(explicit.filter(id=>themes.some(t=>t.id===id)));
     const detected=[];
     const negatives={happiness:/행복하지않|행복하지못|행복한게아니|기쁘지않|기쁘지못/,joy:/즐겁지않|즐겁지못|즐거운게아니|재미없|재밌지않/,excitement:/설레지않|설레지못/,love:/사랑이아니|사랑은아니|사랑하지않/,calm:/차분하지않|차분하지못/,energy:/활기없|활기가없|기운없|기운이없/};
-    for(const theme of themes){const matches=theme.words.filter(word=>clean.includes(compact(word)));if(matches.length&&!negatives[theme.id]?.test(clean))detected.push({theme,matches:[...new Set(matches)]});}
+    const foreignNegatives={happiness:/nothappy|nothappiness|不幸福|不开心|幸せじゃない|嬉しくない/,joy:/notfun|nojoy|不快乐|不好玩|楽しくない/,love:/notlove|不爱|不是爱情|愛じゃない/,calm:/notcalm|不平静|不安静|穏やかじゃない/,energy:/noenergy|没精神|没有活力|元気がない/,confidence:/notconfident|没有自信|自信がない/};
+    for(const theme of themes){const foreign=(globalThis.StoryLocaleKeywords?.[theme.id]||[]);const matches=[...theme.words,...foreign].filter(word=>/^[a-z ]+$/i.test(word)?new RegExp('(^|[^a-z])'+word.replace(/ /g,'\\s+')+'($|[^a-z])','i').test(String(text||'').slice(0,800)):clean.includes(compact(word)));if(matches.length&&!negatives[theme.id]?.test(clean)&&!foreignNegatives[theme.id]?.test(clean))detected.push({theme,matches:[...new Set(matches)]});}
     return themes.filter(t=>selected.has(t.id)||detected.some(d=>d.theme.id===t.id)).map(theme=>({theme,explicit:selected.has(theme.id),matches:detected.find(d=>d.theme.id===theme.id)?.matches||[]}));
   }
   function matchesNote(note,keywords){

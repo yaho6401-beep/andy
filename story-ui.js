@@ -16,7 +16,7 @@
     function invalidate(){recipes=[];if($('story-results').innerHTML)$('story-results').innerHTML='<p class="hint">이야기의 포인트가 바뀌었어요. 향기 찾기를 눌러 새 조합을 확인해주세요.</p>';}
     $('story-text').addEventListener('input',()=>{$('story-char-count').textContent=$('story-text').value.length+' / 800';invalidate();});
     $('story-points').addEventListener('click',e=>{const b=e.target.closest('[data-story-point]');if(!b)return;const id=b.dataset.storyPoint;if(selected.has(id))selected.delete(id);else selected.add(id);b.setAttribute('aria-pressed',String(selected.has(id)));invalidate();});
-    $('story-examples').addEventListener('click',e=>{const b=e.target.closest('[data-example]');if(!b)return;selected.clear();renderChips();$('story-text').value=examples[Number(b.dataset.example)];$('story-char-count').textContent=$('story-text').value.length+' / 800';invalidate();$('story-text').focus();});
+    $('story-examples').addEventListener('click',e=>{const b=e.target.closest('[data-example]');if(!b)return;selected.clear();renderChips();$('story-text').value=globalThis.ScentI18n?.text(examples[Number(b.dataset.example)])||examples[Number(b.dataset.example)];$('story-char-count').textContent=$('story-text').value.length+' / 800';invalidate();$('story-text').focus();});
     $('story-form').addEventListener('submit',e=>{
       e.preventDefault();const text=$('story-text').value.trim().slice(0,800);const points=StoryScent.analyze(text,[...selected]);
       if(!points.length){recipes=[];$('story-results').innerHTML='<p class="missing-notice">이야기에 담고 싶은 마음이나 날씨를 아래 포인트에서 하나 이상 골라주세요. 짧게 적거나 단어만 선택해도 괜찮아요.</p>';return;}
@@ -26,7 +26,7 @@
     });
     $('story-results').addEventListener('click',async e=>{
       const use=e.target.closest('[data-story-apply]');if(use){const r=recipes[Number(use.dataset.storyApply)];if(r){apply(r);$('story-action-status').textContent='메인향과 단일향을 조합 영역에 적용했어요.';}return;}
-      const share=e.target.closest('[data-story-share]');if(share){const r=recipes[Number(share.dataset.storyShare)];if(!r)return;const params=new URLSearchParams({main:r.main.id,notes:r.singles.map(s=>s.id).join(',')});const url=location.origin+location.pathname+'?'+params.toString();try{await navigator.clipboard.writeText(url);$('story-action-status').textContent='향 조합 링크를 복사했어요. 작성한 이야기 원문은 링크에 포함되지 않아요.';}catch{$('story-action-status').textContent='링크 복사를 지원하지 않는 환경이에요. 조합을 선택한 뒤 아래 스타일 보기에서 공유해주세요.';}}
+      const share=e.target.closest('[data-story-share]');if(share){const r=recipes[Number(share.dataset.storyShare)];if(!r)return;const params=new URLSearchParams({main:r.main.id,notes:r.singles.map(s=>s.id).join(',')});if(globalThis.ScentI18n?.lang&&ScentI18n.lang!=='ko')params.set('lang',ScentI18n.lang);const url=location.origin+location.pathname+'?'+params.toString();try{await navigator.clipboard.writeText(url);$('story-action-status').textContent='향 조합 링크를 복사했어요. 작성한 이야기 원문은 링크에 포함되지 않아요.';}catch{$('story-action-status').textContent='링크 복사를 지원하지 않는 환경이에요. 조합을 선택한 뒤 아래 스타일 보기에서 공유해주세요.';}}
     });
   }
   root.StoryUI={init};

@@ -8,8 +8,9 @@ function cleanName(s){return s.name;}
 function highlightMarkup(s){return s.highlight?`<div class="scent-highlight"><p>${escapeHtml(s.highlight.summary)}</p><div>${s.highlight.tags.map(t=>`<span>${escapeHtml(t)}</span>`).join('')}</div></div>`:'';}
 function currentSingles(){return catalog.singleScents.filter(s=>selectedSingles.has(s.id));}
 function renderMain(){
-  const query=$('search').value.toLowerCase().replace(/\s/g,'');
-  const filtered=catalog.mainScents.filter(s=>(s.number+' '+s.name).toLowerCase().replace(/\s/g,'').includes(query));
+  const fold=s=>s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/\s/g,'');
+  const query=fold($('search').value);
+  const filtered=catalog.mainScents.filter(s=>fold(s.number+' '+(globalThis.ScentI18n?.searchText(s.name)||s.name)).includes(query));
   $('main-list').innerHTML=filtered.length?[false,true].map(premium=>{
     const items=filtered.filter(s=>s.premium===premium);if(!items.length)return '';
     return `<div class="catalog-group-title ${premium?'premium-title':''}"><span>${premium?'프리미엄 향':'기본 향'}</span><small>${premium?'33–72':'01–32'}</small></div>`+items.map(s=>`<div class="scent-item ${premium?'premium-item':''}"><button class="scent-option" data-main="${s.id}" aria-pressed="${selectedMain===s.id}"><span class="scent-number">${s.number}</span><span class="scent-name">${escapeHtml(cleanName(s))}</span></button><button class="scent-detail-button" data-detail="${s.id}" aria-label="${escapeHtml(s.name)} 노트 구성 어코드 확인">노트 · 어코드 <span aria-hidden="true">△</span></button></div>`).join('');
@@ -92,7 +93,7 @@ function renderStylingBoard(){
  $('styling-gender').addEventListener('change',e=>{stylingGender=e.target.value;renderStylingBoard();updateBlendUrl();});
 }
 function updateBlendUrl(){
- const params=new URLSearchParams();params.set('main',selectedMain);if(selectedSingles.size)params.set('notes',[...selectedSingles].sort().join(','));
+ const params=new URLSearchParams();if(globalThis.ScentI18n?.lang&&ScentI18n.lang!=='ko')params.set('lang',ScentI18n.lang);params.set('main',selectedMain);if(selectedSingles.size)params.set('notes',[...selectedSingles].sort().join(','));
  if(chosenStyle)params.set('style',chosenStyle);if(stylingGender)params.set('wear',stylingGender);
  const hidden=[...hiddenAccessories].filter(id=>selectedSingles.has(id));if(hidden.length)params.set('hide',hidden.sort().join(','));
  history.replaceState(null,'',location.pathname+'?'+params.toString());

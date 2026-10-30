@@ -1,0 +1,108 @@
+{
+  "styles": {
+    "minimal": {
+      "name":["Clean Minimal","简约清新","クリーン・ミニマル"],
+      "mood":["Clean and understated","干净而自然","清潔感のある控えめな雰囲気"],
+      "look":["Pair an ivory shirt with charcoal straight-leg trousers and neat loafers.","象牙白衬衫搭配炭灰直筒裤和简洁乐福鞋。","アイボリーのシャツにチャコールのストレートパンツと端正なローファーを。"],
+      "fabric":["Cotton · Smooth knitwear","棉 · 平滑针织","コットン・なめらかなニット"],
+      "occasion":["Everyday · Work · Gallery visits","日常 · 上班 · 看展","日常・通勤・美術館"],
+      "reason":["Clear, polished scents inspire simple silhouettes and quiet colors.","清透整洁的香气，适合简洁线条与沉静色彩。","澄んだ整った香りの印象を、シンプルな形と落ち着いた色で表現します。"]
+    },
+    "romantic": {
+      "name":["Soft Romantic","柔美浪漫","ソフト・ロマンティック"],
+      "mood":["Soft and radiant","温柔明亮","やわらかく華やかな雰囲気"],
+      "look":["Try a cream blouse with a flowing skirt or wide trousers and delicate accessories.","奶油色衬衫搭配飘逸半裙或阔腿裤，再加精致配饰。","クリーム色のブラウスに流れるスカートやワイドパンツ、小さなアクセサリーを。"],
+      "fabric":["Chiffon · Silky fabrics · Fine knitwear","雪纺 · 丝滑面料 · 轻薄针织","シフォン・シルク調素材・薄手ニット"],
+      "occasion":["Dates · Brunch · Anniversaries","约会 · 早午餐 · 纪念日","デート・ブランチ・記念日"],
+      "reason":["Floral sweetness pairs with flowing fabrics and softly glowing colors.","花香与甜美感，适合柔软流动的面料和淡雅色彩。","花や甘さから感じるやさしさを、しなやかな素材と淡い色で表現します。"]
+    },
+    "natural": {
+      "name":["Quiet Natural","舒适自然","ナチュラルムード"],
+      "mood":["Relaxed and unhurried","轻松自在","気取らずゆったりした雰囲気"],
+      "look":["Choose an oatmeal knit or linen shirt, relaxed beige trousers and suede shoes.","燕麦色针织或亚麻衬衫，配宽松米色裤和麂皮鞋。","オートミールのニットやリネンシャツに、ゆったりしたベージュのパンツとスエード靴を。"],
+      "fabric":["Linen · Cotton · Suede","亚麻 · 棉 · 麂皮","リネン・コットン・スエード"],
+      "occasion":["Walks · Cafés · Easy weekends","散步 · 咖啡馆 · 休闲周末","散歩・カフェ・ゆったりした週末"],
+      "reason":["Leaves and woods suggest natural textures and earthy tones.","绿叶与木质的沉静感，呼应自然纹理和大地色。","草木の穏やかな印象を、自然な質感とアースカラーにつなげます。"]
+    },
+    "classic": {
+      "name":["Modern Classic","现代优雅","モダン・クラシック"],
+      "mood":["Composed and refined","端庄而有深度","端正で奥行きのある雰囲気"],
+      "look":["Style a navy jacket with an ecru top, tailored trousers and leather loafers.","藏蓝西装外套搭配米白内搭、剪裁长裤和皮革乐福鞋。","ネイビーのジャケットにエクリュのインナー、テーラードパンツと革のローファーを。"],
+      "fabric":["Wool · Twill · Structured cotton","羊毛 · 斜纹布 · 挺括棉","ウール・ツイル・ハリのあるコットン"],
+      "occasion":["Work · Gatherings · Formal occasions","上班 · 聚会 · 正式场合","通勤・集まり・きちんとした場面"],
+      "reason":["Deep woody scents complement tailored jackets and balanced colors.","深邃木质香适合结构感外套与稳重配色。","ウッディで深い香りの印象を、構築的なジャケットと安定感のある配色で。"]
+    },
+    "casual": {
+      "name":["Fresh Casual","清新休闲","フレッシュ・カジュアル"],
+      "mood":["Bright and lighthearted","清爽轻快","爽やかで軽快な雰囲気"],
+      "look":["Wear a white T-shirt with light denim, easy sneakers and a small pop of color.","白色T恤搭浅色牛仔裤和轻便运动鞋，点缀一点亮色。","白いTシャツに明るいデニムとスニーカー、小さな差し色を添えて。"],
+      "fabric":["Cotton · Denim · Light jersey","棉 · 牛仔 · 轻薄针织棉","コットン・デニム・軽いジャージー"],
+      "occasion":["Weekends · Travel · Meeting friends","周末 · 旅行 · 朋友聚会","週末・旅行・友達との約束"],
+      "reason":["Lively fruit and citrus notes inspire bright, easy-to-move-in outfits.","水果与柑橘的轻快感，适合明亮、行动自如的穿搭。","果実やシトラスの軽快さを、明るい色と動きやすい服で表します。"]
+    },
+    "sporty": {
+      "name":["Cool Sporty","清凉运动","クール・スポーティー"],
+      "mood":["Cool and energetic","清凉有活力","涼しげでアクティブな雰囲気"],
+      "look":["Pair a light windbreaker with a simple tee, joggers or straight trousers and sneakers.","轻薄防风外套搭简洁T恤、束脚裤或直筒裤与运动鞋。","軽いウィンドブレーカーにTシャツ、ジョガーやストレートパンツとスニーカーを。"],
+      "fabric":["Nylon · Jersey · Light cotton","尼龙 · 针织棉 · 轻薄棉","ナイロン・ジャージー・軽いコットン"],
+      "occasion":["Outdoors · Travel · Active weekends","户外 · 旅行 · 活力周末","アウトドア・旅行・活動的な週末"],
+      "reason":["Cool, refreshing scents pair with light layers and active silhouettes.","清凉爽朗的香气，适合轻便外套和运动感线条。","涼しく爽やかな香りを、軽い羽織りと活動的なシルエットにつなげます。"]
+    },
+    "chic": {
+      "name":["Deep Chic","深邃摩登","ディープ・シック"],
+      "mood":["Distinctive and confident","鲜明而有存在感","印象的で存在感のある雰囲気"],
+      "look":["Choose a black shirt or knit, straight trousers, a leather jacket or small metal details.","黑色衬衫或针织搭利落长裤，加入皮外套或金属配饰。","黒のシャツやニットにまっすぐなパンツ、革のジャケットや小さな金属アクセサリーを。"],
+      "fabric":["Leather · Satin · Fine dense knit","皮革 · 缎面 · 细密针织","レザー・サテン・目の詰まったニット"],
+      "occasion":["Evening plans · Performances · Special gatherings","晚间约会 · 演出 · 特别聚会","夜の約束・公演・特別な集まり"],
+      "reason":["Intense, spicy scents inspire deep colors and defined silhouettes.","浓郁辛香的存在感，适合深色与鲜明剪裁。","濃厚でスパイシーな香りの存在感を、深い色と明確な形で表現します。"]
+    },
+    "cozy": {
+      "name":["Warm Cozy","温柔舒适","コージー・ソフト"],
+      "mood":["Soft and warm","温暖柔软","ふんわり暖かな雰囲気"],
+      "look":["Try a milk-beige knit with relaxed trousers, a soft cardigan and suede shoes.","奶米色针织搭舒适长裤、柔软开衫与麂皮鞋。","ミルクベージュのニットに楽なパンツ、やわらかいカーディガンとスエード靴を。"],
+      "fabric":["Knitwear · Cashmere-like textures · Corduroy","针织 · 羊绒质感 · 灯芯绒","ニット・カシミヤ調素材・コーデュロイ"],
+      "occasion":["Cafés · Rest · Easy get-togethers","咖啡馆 · 休息 · 轻松会面","カフェ・休息・気軽な集まり"],
+      "reason":["Powdery, sweet comfort becomes warm colors and soft textures.","粉香与甜暖感，化作暖色和柔软触感。","パウダリーで甘く包まれる印象を、暖かな色とやわらかな手触りで表します。"]
+    }
+  },
+  "themes": {
+    "elegance":[["Elegance · Femininity","优雅 · 女性气质","優雅さ・フェミニン"],["Elegance in your own way","绽放自己的优雅","自分らしく咲く優雅さ"],["Soft flowers and fruit reflect an elegant, feminine mood.","以柔和花果意象表达优雅女性气质。","やわらかな花と果実で、優雅でフェミニンな雰囲気を表します。"],["Rose and white musk add radiant petals and a soft finish.","玫瑰与白麝香带来明亮花香和柔软余韵。","ローズとホワイトムスクで華やかな花とやさしい余韻を添えます。"]],
+    "confidence":[["Confidence · Poise","自信 · 从容","自信・堂々と"],["Confidence to lead your story","自信书写自己的故事","自分の物語を導く自信"],["Bright fruit and deep woods express a story of confidence and challenge.","以鲜明水果和深沉木质表达自信与挑战。","鮮やかな果実と深い木のイメージで、自信と挑戦の物語を表します。"],["Bergamot and cedarwood connect a bright opening to a grounded finish.","佛手柑与雪松连接明亮开场和沉稳余韵。","ベルガモットとシダーウッドで明るい始まりとしっかりした余韻を。"]],
+    "love":[["Love","爱意","愛"],["A flower to share your heart","传递心意的一朵花","気持ちを伝える一輪の花"],["Rose imagery captures the wish to share your heart and grow closer.","用玫瑰意象承载心意与靠近彼此的愿望。","気持ちを伝え、近づきたい物語をバラのイメージに込めました。"],["Rose symbolizes affection; white musk adds a gentle lingering impression.","玫瑰象征爱意，白麝香添上温柔余韵。","ローズで愛を伝える花、ホワイトムスクでやさしい余韻を添えました。"]],
+    "energy":[["Energy","活力","活気"],["A light step into the day","轻快跃入新的一天","軽やかに弾む一日"],["Bright, sparkling citrus evokes an energetic day.","明亮跳跃的柑橘意象，呼应充满活力的一天。","明るく弾けるシトラスで、元気に動く一日を表しました。"],["Grapefruit and marine notes bring a vivid opening and a cool impression.","葡萄柚和海洋香调带来鲜明开场与清凉意象。","グレープフルーツの鮮やかな第一印象とマリンの涼しさを選びました。"]],
+    "happiness":[["Happiness","幸福","幸せ"],["A lovely moment to remember","想长久珍藏的好时光","長く覚えていたい幸せな瞬間"],["Ripe fruit and radiant flowers capture precious joy.","成熟水果与灿烂花朵，承载珍贵喜悦。","熟した果実と華やかな花に、大切な喜びを込めました。"],["Mandarin and acacia express the brightness of a happy moment.","柑橘与金合欢表达幸福时刻的明亮感。","マンダリンの明るさとアカシアの花で、よい瞬間を表現しました。"]],
+    "joy":[["Joy · Fun","快乐 · 趣味","楽しさ"],["A scene filled with laughter","笑意蔓延的一幕","笑顔が広がるひとこま"],["Playful fruit and flowers capture shared laughter and fun.","用轻快花果，描绘一起欢笑的时刻。","一緒に笑って楽しむ場面を、軽快な果実と花で表しました。"],["Apple and lilac add a playful first impression and a floral touch.","苹果和紫丁香带来活泼开场与花香点缀。","アップルの弾む第一印象に、ライラックの花を合わせました。"]],
+    "excitement":[["Anticipation","心动 · 期待","ときめき"],["The excitement of a first page","翻开第一页的心动","最初のページをめくるときめき"],["Light flowers evoke the anticipation of a moment to come.","轻盈花朵呼应对即将到来时刻的期待。","ピオニーやフリージアの軽い花に、これからの瞬間を待つ心を重ねました。"],["Bergamot opens the story clearly, with lilac for a flutter of flowers.","佛手柑清亮开篇，紫丁香添上心动花意。","ベルガモットで明るく開き、ライラックでときめく花の印象を。"]],
+    "calm":[["Calm","平静","穏やかさ"],["A quiet moment for yourself","回归自己的安静时光","自分に戻る静かな時間"],["Tea, woods and leaves evoke a calm, reflective day.","茶、木与绿叶，描绘安静沉思的一天。","お茶と木、葉のイメージで穏やかな一日を表しました。"],["Green tea and sandalwood suggest a quiet forest and a cup of tea.","绿茶和檀香让人联想到静谧森林与一杯茶。","グリーンティーとサンダルウッドで、静かな森とお茶の時間を。"]],
+    "comfort":[["Comfort · Reassurance","温暖 · 安慰","ぬくもり・慰め"],["A soft moment that holds you","轻轻拥抱自己的余韵","頑張った自分を包む余韻"],["Cotton and soft powder evoke rest and a little reassurance.","棉花与柔软粉香，描绘休息和安慰。","コットンとやわらかなパウダーに、ひと休みしたい気持ちを込めました。"],["Cotton blossom and lavender suggest comfortable clothes and a gentle pause.","棉花与薰衣草让人想起舒适衣物和短暂休息。","コットンブロッサムとラベンダーで、楽な服と小さな休息を。"]],
+    "beginning":[["New beginnings","新的开始","新しい始まり"],["The first line of a new page","新篇章的第一句话","新しいページの最初の一文"],["Clear citrus and fresh leaves express taking a new step.","清透柑橘与新鲜绿叶，表达迈出新一步。","澄んだシトラスと新鮮な葉で、一歩を踏み出す物語を表しました。"],["Bergamot and violet leaf evoke opening a clean new page.","佛手柑和紫罗兰叶，像翻开清新的新一页。","ベルガモットとバイオレットリーフで、新しい紙を開くように爽やかに。"]],
+    "freedom":[["Travel · Freedom","旅行 · 自由","旅・自由"],["A heart ready for new scenery","奔向新风景的心","知らない景色へ旅する心"],["Sea and tropical fruit reflect open landscapes and a free spirit.","海洋与热带水果描绘开阔风景和自由心境。","海とトロピカルな果実で、開けた景色と自由な歩みを表しました。"],["Lemon and marine notes capture sunlight sparkling on the sea.","柠檬与海洋香调，描绘阳光闪耀的海面。","レモンとマリンで、陽射しがきらめく海の場面を。"]],
+    "memory":[["Memories · What matters","回忆 · 珍贵","思い出・大切なもの"],["A scent to keep a memory close","留在记忆里的香气","記憶に残しておきたい香り"],["Flowers and soft woods connect precious people and moments.","花朵与柔和木质，连接珍贵的人和时光。","花とやわらかな木の余韻に、大切な人と時間を重ねました。"],["Rose and sandalwood reflect the gentleness and depth of a cherished memory.","玫瑰与檀香表达珍贵回忆的温柔与深度。","ローズとサンダルウッドで、大切な場面のやさしさと深みを。"]],
+    "sunny":[["Sunshine · Clear skies","晴天 · 阳光","晴れた日・陽射し"],["A bright drop of sunlight","像阳光一样明亮的一滴","陽射しのような明るい一滴"],["Vivid citrus and bright fruit evoke a sunlit scene.","鲜明柑橘与明亮水果，描绘阳光场景。","鮮やかなシトラスと明るい果実で、陽射しの場面を表しました。"],["Lemon and acacia add clear brightness and radiant flowers.","柠檬与金合欢增添清亮和花朵光彩。","レモンの鮮やかさに、アカシアの華やかさを添えました。"]],
+    "rainy":[["Rainy days","雨天","雨の日"],["A story blooming between raindrops","在雨声间绽放的故事","雨音の間に咲く物語"],["Wet leaves, flowers and soft woods evoke a rainy landscape.","湿润绿叶、花与柔和木质，描绘雨天风景。","濡れた葉と花、やわらかな木で雨の風景を表しました。"],["Violet leaf and moss suggest a garden touched by raindrops.","紫罗兰叶与苔藓，像挂着雨珠的花园。","バイオレットリーフとモスで、雨粒のついた庭を。"]],
+    "spring":[["Spring · A floral breeze","春天 · 花风","春・花の風"],["A season blooming again","再次绽放的季节","再び咲く自分の季節"],["Light flowers and fresh leaves welcome a new season.","轻盈花朵与新鲜绿叶，迎接新的季节。","軽やかな花と新鮮な葉で、新しい季節の物語を表しました。"],["Lilac and green grape add spring flowers and lively fruit.","紫丁香和青葡萄，带来春花与鲜活水果意象。","ライラックとマスカットで、春の花と生き生きした果実を。"]],
+    "summer":[["Summer · Staying fresh","夏天 · 清凉","夏・涼しい日"],["A fresh moment on a hot day","炎热天气的一抹清新","暑い日の爽やかなひとこま"],["Citrus, clear water and green leaves capture a refreshing summer mood.","柑橘、清水与绿叶，描绘夏日清爽感。","シトラスと澄んだ水、新鮮な葉に暑い季節の物語を込めました。"],["Lemon and marine notes express a cool, fresh summer impression.","柠檬与海洋香调，表达清凉夏日。","レモンとマリンで、涼しく爽やかな夏のイメージを。"]],
+    "autumn":[["Autumn · A deeper finish","秋天 · 深长余韵","秋・深い余韻"],["A page in a deeper season","深秋故事的一页","深まる季節の一ページ"],["Woods, tea and gentle spice reflect an autumn story.","木、茶与柔和辛香描绘秋日故事。","木とお茶、やわらかなスパイスで秋の物語を表しました。"],["Green tea and sandalwood bring the calm of tea and woods.","绿茶与檀香带来一杯茶与木质的平静。","グリーンティーとサンダルウッドで、お茶と木の穏やかな余韻を。"]],
+    "winter":[["Winter · Snowy days","冬天 · 雪日","冬・雪の日"],["Warmth in the cold season","寒冷季节里的温暖","冷たい季節に残すぬくもり"],["Soft knitwear and woods inspire warmth in a cool-season story.","用柔软针织与木质意象，表达寒冷季节的温暖。","ニットのようなぬくもりと木のイメージで、寒い日の物語を表しました。"],["Vanilla and lavender bring warm colors and a soft finish.","香草和薰衣草带来暖色和柔软余韵。","バニラとラベンダーで、暖かな色とやわらかな余韻を選びました。"]]
+  },
+  "keywords": {
+    "elegance":["elegant","elegance","feminine","优雅","女性气质","優雅","フェミニン"],
+    "confidence":["confidence","confident","leader","success","napoleon","自信","从容","成就","拿破仑","自信","堂々","ナポレオン"],
+    "love":["love","romance","romantic","date","anniversary","rose","爱","爱情","约会","玫瑰","恋","愛","デート","記念日","バラ"],
+    "energy":["energy","energetic","active","exercise","running","活力","运动","元气","活気","元気","運動"],
+    "happiness":["happy","happiness","grateful","celebrate","birthday","幸福","开心","感恩","生日","幸せ","嬉しい","誕生日"],
+    "joy":["joy","fun","laugh","party","friends","快乐","欢乐","朋友","派对","楽しい","笑顔","友達","パーティー"],
+    "excitement":["excited","anticipation","first date","butterflies","心动","期待","初次见面","ときめき","わくわく","初デート"],
+    "calm":["calm","quiet","peaceful","reading","meditation","平静","安静","阅读","冥想","静か","穏やか","読書","瞑想"],
+    "comfort":["comfort","cozy","rest","relax","tired","温暖","安慰","休息","放松","疲惫","ぬくもり","癒し","休息","疲れ"],
+    "beginning":["beginning","new start","challenge","courage","new job","新开始","新的开始","挑战","勇气","新しい始まり","新生活","挑戦","勇気"],
+    "freedom":["travel","freedom","sea","holiday","beach","旅行","自由","大海","海边","旅","自由","海","ビーチ"],
+    "memory":["memory","memories","family","precious","gift","回忆","家人","珍贵","礼物","思い出","記憶","家族","贈り物"],
+    "sunny":["sunny","sunshine","clear sky","阳光","晴天","晴れ","陽射し"],
+    "rainy":["rain","rainy","rainfall","雨天","下雨","雨の日","雨"],
+    "spring":["spring","cherry blossom","春天","春季","春","桜"],
+    "summer":["summer","hot day","夏天","夏季","夏","暑い"],
+    "autumn":["autumn","fall","秋天","秋季","秋","紅葉"],
+    "winter":["winter","snow","cold day","冬天","冬季","雪天","冬","雪","寒い"]
+  }
+}
