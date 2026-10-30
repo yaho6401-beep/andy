@@ -3,6 +3,8 @@
   const $=id=>document.getElementById(id),config=g.FeedbackConfig;
   if(!config||!$('gallery'))return;
   const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let visitor;try{visitor=localStorage.getItem('scent-gallery-visitor');if(!/^[a-f0-9-]{36}$/i.test(visitor||'')){visitor=crypto.randomUUID();localStorage.setItem('scent-gallery-visitor',visitor);}}catch{visitor=crypto.randomUUID();}
+  let eventPhotos=new Map(),eventData=null,voting=false;
   let page=1,pages=1,items=[],adminToken=null,blob=null,previewUrl=null,preparing=false,uploading=false,deleteId=null,deleting=false,loadVersion=0;
   async function api(path='',options={}){
     const headers={apikey:config.key,...(adminToken?{Authorization:'Bearer '+adminToken}:{})};
@@ -11,12 +13,12 @@
     const result=await r.json();if(!r.ok){const error=Error(result.error||'갤러리와 연결하지 못했어요. 잠시 후 다시 시도해주세요.');error.status=r.status;throw error;}return result;
   }
   function render(){
-    $('gallery-grid').innerHTML=items.length?items.map(item=>`<article class="gallery-card"><button type="button" class="gallery-photo" data-gallery-view="${item.id}" aria-label="사진 크게 보기"><img src="${escape(item.image_url)}" alt="${escape(item.caption)}" loading="lazy" width="600" height="600"></button><div class="gallery-card-text"><p data-no-i18n>${escape(item.caption)}</p><small><span data-no-i18n>${escape(item.nickname)}</span><time datetime="${escape(item.created_at)}">${new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(item.created_at))}</time></small><button type="button" class="text-button" data-gallery-delete="${item.id}">${adminToken?'관리자 삭제':'내 사진 삭제'}</button></div></article>`).join(''):'<p class="gallery-empty">공방에서 만든 첫 향수 사진을 남겨주세요.</p>';
+    $('gallery-grid').innerHTML=items.length?items.map(item=>`<article class="gallery-card"><button type="button" class="gallery-photo" data-gallery-view="${item.id}" aria-label="사진 크게 보기"><img src="${escape(item.image_url)}" alt="${escape(item.caption)}" loading="lazy" width="600" height="600"></button><div class="gallery-card-text"><p data-no-i18n>${escape(item.caption)}</p><small><span data-no-i18n>${escape(item.nickname)}</span><time datetime="${escape(item.created_at)}">${new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(item.created_at))}</time></small><button type="button" class="gallery-heart" data-gallery-like="${item.id}" aria-pressed="${Boolean(eventPhotos.get(item.id)?.liked)}">${eventPhotos.get(item.id)?.liked?'♥':'♡'} ${Number(eventPhotos.get(item.id)?.likes||0)}</button>${eventPhotos.get(item.id)?.last4?`<small class="gallery-entry-number" data-no-i18n>•••• ${escape(eventPhotos.get(item.id).last4)}</small>`:''}<button type="button" class="text-button" data-gallery-delete="${item.id}">${adminToken?'관리자 삭제':'내 사진 삭제'}</button></div></article>`).join(''):'<p class="gallery-empty">공방에서 만든 첫 향수 사진을 남겨주세요.</p>';
     $('gallery-page').textContent=page+' / '+pages;$('gallery-prev').disabled=page<=1;$('gallery-next').disabled=page>=pages;
   }
   async function load(target=1){
     const version=++loadVersion;
-    try{const data=await api('?page='+target);if(version!==loadVersion)return;items=data.items;page=data.page;pages=data.pages;render();$('gallery-load-status').textContent='';}
+    try{const data=await api('?page='+target);if(version!==loadVersion)return;items=data.items;page=data.page;pages=data.pages;await loadEvent();render();$('gallery-load-status').textContent='';}
     catch(error){if(version===loadVersion)$('gallery-load-status').textContent=error.message;}
   }
   function clearPreview(){blob=null;if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=null;$('gallery-preview').removeAttribute('src');$('gallery-preview').hidden=true;}
@@ -43,13 +45,14 @@
     if([...nickname].length>20||!caption||[...caption].length>100){$('gallery-status').textContent='닉네임은 20자, 설명은 100자 이내로 적어주세요.';return;}
     if(password.length<4||password.length>64){$('gallery-status').textContent='삭제용 비밀번호를 4~64자로 설정해주세요.';return;}
     if(!$('gallery-consent').checked){$('gallery-status').textContent='공개 갤러리 등록에 동의해주세요.';return;}
-    const form=new FormData();form.append('image',blob,'perfume.jpg');form.append('nickname',nickname);form.append('caption',caption);form.append('password',password);form.append('consent','true');
+    const form=new FormData();form.append('image',blob,'perfume.jpg');form.append('nickname',nickname);form.append('caption',caption);form.append('password',password);form.append('consent','true');if($('gallery-event-consent').checked){if(!/^01[0-9]{8,9}$/.test($('gallery-phone').value.replace(/[-\s]/g,''))){$('gallery-status').textContent='이벤트 연락처를 확인해주세요.';return;}form.append('eventConsent','true');form.append('phone',$('gallery-phone').value);}
     uploading=true;$('gallery-submit').disabled=true;$('gallery-file').disabled=true;$('gallery-password').value='';$('gallery-status').textContent='사진을 올리고 있어요…';
     try{await api('',{method:'POST',body:form});$('gallery-form').reset();clearPreview();$('gallery-form').hidden=true;$('gallery-open-form').setAttribute('aria-expanded','false');await load(1);$('gallery-load-status').textContent='향수 사진을 갤러리에 남겼어요.';}
     catch(error){$('gallery-status').textContent=error.message;}
     finally{uploading=false;$('gallery-submit').disabled=false;$('gallery-file').disabled=false;}
   });
-  $('gallery-grid').addEventListener('click',e=>{
+  $('gallery-grid').addEventListener('click',async e=>{
+    const heart=e.target.closest('[data-gallery-like]');if(heart){if(voting)return;voting=true;heart.disabled=true;try{await api('/like',{method:'POST',body:JSON.stringify({id:heart.dataset.galleryLike,visitorId:visitor})});await loadEvent();render();}catch(error){$('gallery-load-status').textContent=error.message;}finally{voting=false;heart.disabled=false;}return;}
     const view=e.target.closest('[data-gallery-view]');
     if(view){const item=items.find(i=>i.id===view.dataset.galleryView);if(!item)return;$('gallery-view-image').src=item.image_url;$('gallery-view-image').alt=item.caption;$('gallery-view-caption').textContent=item.caption;$('gallery-view-dialog').showModal();return;}
     const remove=e.target.closest('[data-gallery-delete]');if(remove){deleteId=remove.dataset.galleryDelete;$('gallery-delete-password').value='';$('gallery-delete-status').textContent='';$('gallery-delete-password-wrap').hidden=Boolean(adminToken);$('gallery-delete-password').required=!adminToken;$('gallery-delete-dialog').showModal();}
@@ -61,11 +64,16 @@
     e.preventDefault();if(!deleteId||deleting)return;const id=deleteId,password=$('gallery-delete-password').value;$('gallery-delete-password').value='';
     deleting=true;$('gallery-delete-confirm').disabled=true;
     try{await api('/delete',{method:'POST',body:JSON.stringify({id,password})});$('gallery-delete-dialog').close();deleteId=null;await load(page);$('gallery-load-status').textContent='사진을 삭제했어요.';}
-    catch(error){$('gallery-delete-status').textContent=error.message;if(error.status===401&&adminToken){adminToken=null;$('gallery-delete-password-wrap').hidden=false;$('gallery-delete-password').required=true;render();}}
+    catch(error){$('gallery-delete-status').textContent=error.message;if(error.status===401&&adminToken){g.PerfumeGallery.setAdminToken(null);$('gallery-delete-password-wrap').hidden=false;$('gallery-delete-password').required=true;render();}}
     finally{deleting=false;$('gallery-delete-confirm').disabled=false;}
   });
   $('gallery-prev').addEventListener('click',()=>load(Math.max(1,page-1)));
   $('gallery-next').addEventListener('click',()=>load(Math.min(pages,page+1)));
-  g.PerfumeGallery={setAdminToken(token){adminToken=token;render();}};
+  async function loadEvent(){try{eventData=await api('/event',{method:'POST',body:JSON.stringify({ids:items.map(x=>x.id),visitorId:visitor})});eventPhotos=new Map(eventData.photos.map(x=>[x.id,x]));$('gallery-event-results').innerHTML=(eventData.leaders.length?'<strong>이번 달 인기 사진</strong><ol>'+eventData.leaders.slice(0,3).map(x=>'<li data-no-i18n>'+escape(x.nickname)+' · •••• '+escape(x.last4)+' · ♥ '+Number(x.likes)+'</li>').join('')+'</ol>':'')+(eventData.awards.length?'<strong>월간 당선자</strong><ul>'+eventData.awards.map(x=>'<li data-no-i18n>'+escape(x.month.slice(0,7))+' · '+escape(x.nickname)+' · •••• '+escape(x.phone_last4)+' · ♥ '+Number(x.likes)+'</li>').join('')+'</ul>':'');}catch(error){$('gallery-load-status').textContent=error.message;}}
+  let spin=0;const wheel=$('gallery-wheel');wheel.addEventListener('click',()=>{if(wheel.disabled)return;wheel.disabled=true;spin+=1080+Math.floor(Math.random()*360);wheel.style.transform='rotate('+spin+'deg)';$('gallery-wheel-status').textContent='하트가 모이면, 나의 사진이 이달의 주인공!';setTimeout(()=>{wheel.disabled=false;},2600);});
+  let contactPage=0;async function loadContacts(reset=false){try{const token=adminToken,next=reset?1:contactPage+1,data=await api('/contacts?page='+next);if(!token||token!==adminToken)return;const lines=data.items.map(x=>[x.workshop_gallery?.nickname,x.phone,x.workshop_gallery?.created_at?.slice(0,10)].join(' · ')).join('\n');$('gallery-contacts').textContent=(reset?'':$('gallery-contacts').textContent+'\n')+(lines||'참여자가 없습니다.');contactPage=next;$('gallery-contacts-more').hidden=data.items.length<200;}catch(error){$('gallery-award-status').textContent=error.message;}}
+  $('gallery-contacts-load').addEventListener('click',()=>loadContacts(true));$('gallery-contacts-more').addEventListener('click',()=>loadContacts());
+  $('gallery-award-finalize').addEventListener('click',async()=>{if(!$('gallery-award-confirm').checked){$('gallery-award-status').textContent='확정 동의를 체크해주세요.';return;}const b=$('gallery-award-finalize');b.disabled=true;try{const data=await api('/finalize',{method:'POST',body:JSON.stringify({month:$('gallery-award-month').value+'-01'})});$('gallery-award-status').textContent=data.award.nickname+' · •••• '+data.award.phone_last4;await loadEvent();}catch(error){$('gallery-award-status').textContent=error.message;}finally{b.disabled=false;}});
+  g.PerfumeGallery={setAdminToken(token){adminToken=token;$('gallery-event-admin').hidden=!token;$('gallery-contacts').textContent='';$('gallery-contacts-more').hidden=true;contactPage=0;$('gallery-award-status').textContent='';if(!token){$('gallery-event-admin').open=false;$('gallery-award-confirm').checked=false;}render();}};
   load();
 })(globalThis);

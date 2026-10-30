@@ -57,6 +57,8 @@ export async function handleGallery(req:Request,d:GalleryDeps){
   if(!caption||[...caption].length>100||[...nickname].length>20||/[\u0000-\u001f\u007f]/.test(nickname+caption))return reply({error:'닉네임은 20자, 설명은 100자 이내로 적어주세요.'},400);
   if(typeof password!=='string'||password.length<4||password.length>64)return reply({error:'삭제용 비밀번호를 4~64자로 설정해주세요.'},400);
   if(form.get('consent')!=='true')return reply({error:'공개 갤러리 등록에 동의해주세요.'},400);
+  const eventConsent=form.get('eventConsent')==='true',phone=String(form.get('phone')||'').replace(/[-\s]/g,'');
+  if(eventConsent&&!/^01[0-9]{8,9}$/.test(phone))return reply({error:'이벤트 연락처를 확인해주세요.'},400);
   const bytes=new Uint8Array(await image.arrayBuffer());
   if(bytes[0]!==255||bytes[1]!==216||bytes[2]!==255||bytes[bytes.length-2]!==255||bytes[bytes.length-1]!==217)return reply({error:'JPG 사진 파일을 확인해주세요.'},400);
   const id=crypto.randomUUID(),storagePath=`${id}.jpg`,salt=Array.from(crypto.getRandomValues(new Uint8Array(24)),x=>x.toString(16).padStart(2,'0')).join('');
@@ -67,6 +69,10 @@ export async function handleGallery(req:Request,d:GalleryDeps){
   try{
     const saved=await fetch(`${url}/rest/v1/workshop_gallery`,{method:'POST',headers:dbHeaders,body:JSON.stringify(row)});
     if(!saved.ok)throw Error('gallery save');
+    if(eventConsent){
+      const contact=await fetch(url+'/rest/v1/workshop_gallery_contacts',{method:'POST',headers:dbHeaders,body:JSON.stringify({photo_id:id,phone})});
+      if(!contact.ok){await fetch(url+'/rest/v1/workshop_gallery?id=eq.'+id,{method:'DELETE',headers:dbHeaders});throw Error('event contact save');}
+    }
   }catch(error){await removeFile(storagePath);throw error;}
   return reply({uploaded:true,id},201);
 }

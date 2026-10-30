@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {stripTypeScriptTypes} from 'node:module';
+import vm from 'node:vm';
+const calls=[];let admin=false;
+const json=(v,s=200)=>new Response(JSON.stringify(v),{status:s});
+const ctx=vm.createContext({URL,Response,Blob,fetch:async()=>json([{phone:'01012345678'}])});
+vm.runInContext(stripTypeScriptTypes(await readFile(new URL('../supabase/functions/feedback-wall/gallery-event.ts',import.meta.url),'utf8')).replace('export async function','async function'),ctx);
+const deps={url:'https://test.invalid',dbHeaders:{},reply:json,limited:async()=>true,sessionHash:async()=>admin?'admin':null,visitorHash:async()=> 'hashed-visitor',rpc:async(name,args)=>{calls.push({name,args});return json({photos:[],leaders:[],awards:[]});}};
+const req=(path,body)=>new Request('https://test.invalid/gallery/'+path,body?{method:'POST',body:JSON.stringify(body)}:{});
+assert.equal((await ctx.handleGalleryEvent(req('contacts'),deps)).status,401);
+assert.equal((await ctx.handleGalleryEvent(req('finalize',{month:'2026-09-01'}),deps)).status,401);assert.equal(calls.length,0);
+assert.equal((await ctx.handleGalleryEvent(req('event',{visitorId:'bad',ids:[]}),deps)).status,400);
+assert.equal((await ctx.handleGalleryEvent(req('event',{visitorId:'11111111-1111-4111-8111-111111111111',ids:[]}),deps)).status,200);
+assert.equal(calls[0].args.p_visitor,'hashed-visitor');
+admin=true;assert.equal((await ctx.handleGalleryEvent(req('contacts'),deps)).status,200);
+assert.equal((await ctx.handleGalleryEvent(req('finalize',{month:'not-date'}),deps)).status,400);
+console.log('Gallery event protects full phone numbers and finalization behind administrator session; public identity is hashed.');
