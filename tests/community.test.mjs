@@ -51,7 +51,7 @@ await el('feedback-settings').listeners.submit({preventDefault(){}});
 assert.equal(el('feedback-submit').disabled,true);assert.equal(el('comment-submit').disabled,true);
 assert.ok(el('feedback-notes').innerHTML.includes('disabled'));
 const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
-assert.equal((html.match(/data-reservation=/g)||[]).length,4);
+assert.equal((html.match(/data-reservation=/g)||[]).length,5);
 assert.ok((await readFile(new URL('../app.js',import.meta.url),'utf8')).includes('data-reservation="blend-result"'));
 assert.equal(Object.keys(context.FeedbackAnimals.labels).length,15);
 console.log('Pagination, hearts, comments, nickname escaping, admin controls, 15 animals and booking links passed.');

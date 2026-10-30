@@ -12,14 +12,15 @@
   let thread=null,threadPage=1,threadPages=1,threadTotal=0,comments=[],commentIntent=null,commentBusy=false,threadVersion=0,confirmComment=null;
   const heartBusy=new Set();
   let adminToken=null,confirmDelete=null,deleting=false;
+  let editingId=null,editBusy=false;
   const deletedIds=new Set();
   const illustration=FeedbackAnimals.illustration;
   function card(note,preview=false){
     const safeColor=note.color in colors?note.color:'butter';
     const angle=[-2,1.5,-1,2,-1.5,.7][(note.id||'').split('').reduce((a,c)=>a+c.charCodeAt(0),0)%6];
-    const social=!preview?`<div class="note-social"><button type="button" data-heart="${note.id}" aria-pressed="${Boolean(note.liked)}" aria-label="공감 ${Number(note.hearts||0)}개${note.liked?', 취소하기':''}" ${heartBusy.has(note.id)||!settings.likes_open?'disabled':''}><span aria-hidden="true">${note.liked?'♥':'♡'}</span> ${Number(note.hearts||0)}</button><button type="button" data-thread="${note.id}">댓글 ${Number(note.comments||0)}</button></div>`:'';
+    const social=!preview?`<div class="note-social"><button type="button" data-heart="${note.id}" aria-pressed="${Boolean(note.liked)}" aria-label="공감 ${Number(note.hearts||0)}개${note.liked?', 취소하기':''}" ${heartBusy.has(note.id)||!settings.likes_open?'disabled':''}><span aria-hidden="true">${note.liked?'♥':'♡'}</span> ${Number(note.hearts||0)}</button><button type="button" data-thread="${note.id}">댓글 ${Number(note.comments||0)}</button>${note.editable||adminToken?`<button type="button" class="feedback-edit-link" data-edit-memo="${note.id}">글 수정</button>`:''}</div>`:'';
     const date=preview?'미리보기':new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(note.created_at));
-    return `<article class="feedback-note note-${safeColor}${preview?' note-preview':''}" style="--note-angle:${angle}deg"><span class="note-tape" aria-hidden="true"></span><span class="note-category">${categories[note.category]||categories.message}</span><p class="note-body">${escape(note.body)}</p><div class="note-bottom"><span>${escape(note.nickname||'향기를 남긴 손님')}<small>${date}</small></span>${illustration(note.animal)}</div>${social}${!preview&&adminToken?`<div class="note-moderation">${confirmDelete===note.id?`<span>이 메모를 삭제할까요?</span><button type="button" data-feedback-confirm-delete="${note.id}" ${deleting?'disabled':''}>삭제</button><button type="button" data-feedback-cancel-delete ${deleting?'disabled':''}>취소</button>`:`<button type="button" data-feedback-delete="${note.id}" aria-label="${escape(note.nickname||'손님')}님의 메모 삭제">메모 삭제 ×</button><button type="button" data-reset-hearts="${note.id}">하트 초기화</button>`}</div>`:''}</article>`;
+    return `<article class="feedback-note note-${safeColor}${preview?' note-preview':''}" style="--note-angle:${angle}deg"><span class="note-tape" aria-hidden="true"></span><span class="note-category">${categories[note.category]||categories.message}</span><p class="note-body">${escape(note.body)}</p><div class="note-bottom"><span>${escape(note.nickname||'향기를 남긴 손님')}<small>${date}${note.edited_at?' · 수정됨':''}</small></span>${illustration(note.animal)}</div>${social}${!preview&&adminToken?`<div class="note-moderation">${confirmDelete===note.id?`<span>이 메모를 삭제할까요?</span><button type="button" data-feedback-confirm-delete="${note.id}" ${deleting?'disabled':''}>삭제</button><button type="button" data-feedback-cancel-delete ${deleting?'disabled':''}>취소</button>`:`<button type="button" data-feedback-delete="${note.id}" aria-label="${escape(note.nickname||'손님')}님의 메모 삭제">메모 삭제 ×</button><button type="button" data-reset-hearts="${note.id}">하트 초기화</button>`}</div>`:''}</article>`;
   }
   function preview(){
     const body=$('feedback-text').value.trim()||'당신의 한 줄이 이곳에 예쁘게 붙어요.';
@@ -60,12 +61,14 @@
     if(!body||[...body].length>100){$('feedback-submit-status').textContent='100자 이내로 한 줄을 남겨주세요.';$('feedback-text').focus();return;}
     const nickname=$('feedback-nickname').value.normalize('NFC').trim().replace(/\s+/g,' ');
     if([...nickname].length>20){$('feedback-submit-status').textContent='닉네임은 20자 이내로 적어주세요.';return;}
-    const payload={body,nickname,category:$('feedback-category').value,color,animal,website:$('feedback-website').value};
+    const password=$('feedback-edit-password').value;
+    if(password.length<4||password.length>64){$('feedback-submit-status').textContent='글 수정용 비밀번호를 4~64자로 설정해주세요.';$('feedback-edit-password').focus();return;}
+    const payload={body,nickname,password,category:$('feedback-category').value,color,animal,website:$('feedback-website').value};
     const signature=JSON.stringify(payload);if(!intent||intent.signature!==signature)intent={id:crypto.randomUUID(),signature};
     sending=true;$('feedback-submit').disabled=true;$('feedback-submit').textContent='메모를 붙이고 있어요…';$('feedback-submit-status').textContent='';
     try{
       const result=await api('',{method:'POST',body:JSON.stringify({id:intent.id,...payload})});
-      await load(1);intent=null;$('feedback-text').value='';preview();
+      await load(1);intent=null;$('feedback-text').value='';$('feedback-edit-password').value='';preview();
       $('feedback-submit-status').textContent='메모를 붙였어요. 소중한 의견 고맙습니다!';
       $('feedback-board').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});
     }catch(error){$('feedback-submit-status').textContent=error.message;}
@@ -89,6 +92,7 @@
     catch(error){$('feedback-admin-status').textContent=error.message;}
   });
   $('feedback-notes').addEventListener('click',async e=>{
+    const edit=e.target.closest('[data-edit-memo]');if(edit){openEdit(edit.dataset.editMemo);return;}
     const heart=e.target.closest('[data-heart]');if(heart){await toggleHeart(heart.dataset.heart);return;}
     const threadButton=e.target.closest('[data-thread]');if(threadButton){await openThread(threadButton.dataset.thread);return;}
     if(!adminToken||deleting)return;
@@ -101,6 +105,22 @@
     try{await api('?id='+encodeURIComponent(id),{method:'DELETE'});deletedIds.add(id);notes=notes.filter(n=>n.id!==id);confirmDelete=null;if(thread?.id===id){$('feedback-thread').close();thread=null;}await load(page);$('feedback-admin-status').textContent='메모를 삭제했어요.';}
     catch(error){$('feedback-admin-status').textContent=error.message;if(error.status===401){adminToken=null;confirmDelete=null;adminState();$('feedback-admin-panel').hidden=false;}}
     finally{deleting=false;render();}
+  });
+  function openEdit(id){
+    const note=notes.find(n=>n.id===id);if(!note)return;editingId=id;
+    $('memo-edit-nickname').value=note.nickname||'';$('memo-edit-body').value=note.body;$('memo-edit-password').value='';$('memo-edit-status').textContent='';
+    $('memo-edit-password-wrap').hidden=Boolean(adminToken);$('memo-edit-admin-hint').hidden=!adminToken;$('memo-edit-password').required=!adminToken;
+    $('memo-edit-dialog').showModal();
+  }
+  $('memo-edit-close').addEventListener('click',()=>$('memo-edit-dialog').close());
+  $('memo-edit-form').addEventListener('submit',async e=>{
+    e.preventDefault();if(!editingId||editBusy)return;
+    const body=$('memo-edit-body').value.normalize('NFC').trim().replace(/\s+/g,' '),nickname=$('memo-edit-nickname').value.normalize('NFC').trim().replace(/\s+/g,' '),password=$('memo-edit-password').value;
+    if(!body||[...body].length>100||[...nickname].length>20){$('memo-edit-status').textContent='닉네임은 20자, 메모는 100자 이내로 적어주세요.';return;}
+    editBusy=true;$('memo-edit-save').disabled=true;$('memo-edit-password').value='';
+    try{await api('/edit',{method:'POST',body:JSON.stringify({id:editingId,body,nickname,password})});$('memo-edit-dialog').close();await load(page);$('feedback-load-status').textContent='메모를 수정했어요.';}
+    catch(error){$('memo-edit-status').textContent=error.message;if(adminToken&&error.status===401){handleAdminError(error);$('memo-edit-password-wrap').hidden=false;$('memo-edit-admin-hint').hidden=true;$('memo-edit-password').required=true;}}
+    finally{editBusy=false;$('memo-edit-save').disabled=false;}
   });
   function handleAdminError(error){
     $('feedback-admin-status').textContent=error.message;if(error.status===401){adminToken=null;confirmDelete=null;adminState();$('feedback-admin-panel').hidden=false;}

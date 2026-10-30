@@ -9,6 +9,7 @@ function el(id){
   return elements.get(id);
 }
 el('feedback-category').value='improvement';
+el('feedback-edit-password').value='test-only-memo-password';
 let failWrite=false,writes=0,stored=[];
 const context=vm.createContext({
   document:{getElementById:el},Intl,Date,Map,Set,AbortSignal,crypto:webcrypto,

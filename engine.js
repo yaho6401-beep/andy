@@ -48,7 +48,7 @@
   const profileOptions={
     gender:{male:{classic:.35,sporty:.35},female:{romantic:.35,cozy:.35},any:{}},
     age:{'10':{casual:.3,sporty:.2},'20':{casual:.3,minimal:.2},'30':{minimal:.3,chic:.2},'40':{classic:.3,minimal:.2},'50':{classic:.3,natural:.2},'60':{natural:.3,cozy:.2},'70':{cozy:.3,classic:.2},any:{}},
-    hair:{short:{sporty:.2,minimal:.3},bob:{minimal:.3,chic:.2},long:{romantic:.3,natural:.2},curly:{romantic:.2,casual:.3},any:{}}
+    hair:{short:{sporty:.2,minimal:.3},bob:{minimal:.3,chic:.2},medium:{minimal:.2,natural:.2,romantic:.1},long:{romantic:.3,natural:.2},curly:{romantic:.2,casual:.3},any:{}}
   };
   function recommendForProfile(scents,profile){
     const target=Object.fromEntries(styles.map(s=>[s.id,0]));

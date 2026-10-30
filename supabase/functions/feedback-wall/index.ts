@@ -19,6 +19,11 @@ async function visitorHash(value:string){
 async function rpc(name:string,body:unknown){return fetch(`${url}/rest/v1/rpc/${name}`,{method:'POST',headers:dbHeaders,body:JSON.stringify(body)});}
 async function limited(req:Request,kind:string,max:number){const r=await rpc('feedback_action_limit',{p_key:kind+':'+await rateKeyFor(req),p_limit:max});if(!r.ok)throw Error('limit');return await r.json();}
 const cleanText=(value:unknown)=>typeof value==='string'?value.normalize('NFC').trim().replace(/\s+/g,' '):'';
+async function passwordHash(password:string,salt:string,iterations=210000){
+  const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveBits']);
+  return hex(await crypto.subtle.deriveBits({name:'PBKDF2',salt:new TextEncoder().encode(salt),iterations,hash:'SHA-256'},key,256));
+}
+function equalHash(a:string,b:string){let different=a.length^b.length;for(let i=0;i<a.length;i++)different|=a.charCodeAt(i)^(b.charCodeAt(i)||0);return different===0;}
 async function rateKeyFor(req:Request){
   const ip=req.headers.get('x-forwarded-for')?.split(',')[0].trim()||req.headers.get('cf-connecting-ip')||'unknown';
   const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(secret),{name:'HMAC',hash:'SHA-256'},false,['sign']);
@@ -116,6 +121,22 @@ Deno.serve(async req=>{
       if(!input||!uuid.test(input.id||''))return reply({error:'메모를 확인해주세요.'},400);
       const result=await fetch(`${url}/rest/v1/workshop_feedback_hearts?feedback_id=eq.${input.id}`,{method:'DELETE',headers:dbHeaders});if(!result.ok)throw Error('reset');return reply({hearts:0,liked:false});
     }
+    if(path.endsWith('/edit')){
+      const body=cleanText(input?.body),nickname=cleanText(input?.nickname)||'향기를 남긴 손님';
+      if(!input||!uuid.test(input.id||'')||!body||[...body].length>100||[...nickname].length>20||/[\u0000-\u001f\u007f]/.test(body+nickname))return reply({error:'닉네임은 20자, 메모는 100자 이내로 적어주세요.'},400);
+      const isAdmin=Boolean(await sessionHash(req));
+      if(!isAdmin){
+        const limit=await rpc('feedback_login_attempt',{p_rate_key:'edit:'+await rateKeyFor(req)});if(!limit.ok)throw Error('edit limit');
+        if(!await limit.json())return reply({error:'수정 시도가 많아요. 15분 후 다시 시도해주세요.'},429);
+        if(typeof input.password!=='string'||input.password.length<4||input.password.length>64)return reply({error:'작성할 때 설정한 비밀번호를 입력해주세요.'},401);
+        const result=await fetch(`${url}/rest/v1/workshop_feedback_edit_keys?feedback_id=eq.${input.id}&select=password_hash,salt,iterations&limit=1`,{headers:dbHeaders});
+        if(!result.ok)throw Error('edit key');const [key]=await result.json();
+        if(!key||!equalHash(await passwordHash(input.password,key.salt,key.iterations),key.password_hash))return reply({error:'비밀번호가 맞지 않거나 수정 비밀번호가 없는 메모예요.'},401);
+      }
+      const result=await fetch(`${url}/rest/v1/workshop_feedback?id=eq.${input.id}&hidden=eq.false`,{method:'PATCH',headers:{...dbHeaders,Prefer:'return=representation'},body:JSON.stringify({body,nickname,edited_at:new Date().toISOString()})});
+      if(!result.ok)throw Error('edit');const [item]=await result.json();if(!item)return reply({error:'삭제된 메모예요.'},404);
+      return reply({item});
+    }
     if(path.endsWith('/visit')){
       if(!input||!uuid.test(input.id||'')||!uuid.test(input.visitor||'')||!['visit','booking'].includes(input.kind))return reply({error:'잘못된 요청입니다.'},400);
       if(!await limited(req,'events',1000))return reply({error:'잠시 후 다시 시도해주세요.'},429);
@@ -145,7 +166,9 @@ Deno.serve(async req=>{
     if([...nickname].length>20||/[\u0000-\u001f\u007f]/.test(nickname))return reply({error:'닉네임은 20자 이내로 적어주세요.'},400);
     if(!body||[...body].length>100||/[\u0000-\u001f\u007f]/.test(body)||!uuid.test(input.id||'')||!categories.includes(input.category)||!colors.includes(input.color)||!animals.includes(input.animal))return reply({error:'100자 이내 한 줄과 메모 모양을 확인해주세요.'},400);
     if(input.website)return reply({error:'잠시 후 다시 시도해주세요.'},400);
-    const result=await fetch(`${url}/rest/v1/rpc/submit_workshop_feedback`,{method:'POST',headers:dbHeaders,body:JSON.stringify({p_id:input.id,p_body:body,p_category:input.category,p_color:input.color,p_animal:input.animal,p_nickname:nickname,p_rate_key:await rateKeyFor(req)})});
+    if(typeof input.password!=='string'||input.password.length<4||input.password.length>64)return reply({error:'글 수정용 비밀번호를 4~64자로 설정해주세요.'},400);
+    const salt=hex(crypto.getRandomValues(new Uint8Array(24)).buffer);
+    const result=await rpc('submit_feedback_with_edit',{p_id:input.id,p_body:body,p_category:input.category,p_color:input.color,p_animal:input.animal,p_nickname:nickname,p_rate_key:await rateKeyFor(req),p_hash:await passwordHash(input.password,salt),p_salt:salt});
     if(!result.ok){const error=await result.text();if(error.includes('feedback_closed'))return reply({error:'지금은 새 메모 작성을 쉬고 있어요.'},403);if(error.includes('feedback_rate_limit'))return reply({error:'메모가 많이 도착했어요. 잠시 후 다시 남겨주세요.'},429);if(error.includes('feedback_conflict'))return reply({error:'새 메모로 다시 남겨주세요.'},409);throw new Error('write');}
     return reply({item:await result.json()},201);
   }catch{return reply({error:'보드와 연결하지 못했어요. 잠시 후 다시 시도해주세요.'},503);}
