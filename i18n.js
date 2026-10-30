@@ -6,11 +6,18 @@
   const phrases=Object.keys(data).filter(k=>k.length>1).sort((a,b)=>b.length-a.length);
   const reverse=new Map();for(const [key,values] of Object.entries(data))for(const value of Object.values(values))if(!reverse.has(value))reverse.set(value,key);
   const select=(en,zh,ja)=>({en,zh,ja})[language];
+  function blendNotes(value){
+    const shared=value.match(/^([^의]+?)(?:과|와) ([^의]+?)의 (.+)$/);
+    if(shared){const a=text(shared[1]),b=text(shared[2]),quality=text(shared[3]);return select(`the ${quality.toLowerCase()} of ${a.toLowerCase()} and ${b.toLowerCase()}`,`${a}与${b}的${quality}`,`${a}と${b}の${quality}`);}
+    return value.split(/[과와] /).map(text).join(select(' and ','与','と'));
+  }
   function text(source){
     if(source==null)return '';const original=String(source);if(language==='ko')return original;
     const key=original.trim().replace(/\s+/g,' ');if(!key)return original;
     if(data[key]?.[language])return original.replace(original.trim(),data[key][language]);
     let m;
+    if((m=key.match(/^(.*?)에 (.*?)(?:이|가) 어우러져, (.*?)\.$/))){const base=text(m[1]),notes=blendNotes(m[2]),ending=text(m[3]);return select(`A blend of ${base.toLowerCase()} and ${notes}, with ${ending}.`,`${base}融入${notes}，带来${ending}。`,`${base}に${notes}を重ね、${ending}。`);}
+    if((m=key.match(/^(.*?)(?:이|가) 중심을 이루며, (.*?)\.$/))){const base=text(m[1]),ending=text(m[2]);return select(`${base}, with ${ending}.`,`${base}为主调，呈现${ending}。`,`${base}を中心に、${ending}。`);}
     if((m=key.match(/^(.*?)에 (.*?)을 더한, (.*?) 향\.$/))){const main=text(m[1]),notes=m[2].split('과 ').map(text),mood=text(m[3]);return select(`${main}, with ${notes.join(' and ')}: a ${mood} scent.`,`${main}，加入${notes.join('与')}，呈现${mood}的香气。`,`${main}に${notes.join('と')}を重ねた、${mood}香り。`);}
     if((m=key.match(/^(.*?)을 담은, (.*?) 향\.$/)))return select(`${text(m[1])}: a ${text(m[2])} scent.`,`${text(m[1])}，呈现${text(m[2])}的香气。`,`${text(m[1])}を込めた、${text(m[2])}香り。`);
     if((m=key.match(/^(\d+)개 선택$/)))return select(`${m[1]} selected`,`已选${m[1]}种`,`${m[1]}個選択`);
