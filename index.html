@@ -4,8 +4,10 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#203c32"><meta name="description" content="당신의 이야기에 향을 입히세요. 책과향기의 향 노트와 어코드를 살펴보고, 나의 스타일에 어울리는 type 향을 찾아보세요.">
   <title>책과향기 · 향을 입다</title>
-  <link rel="stylesheet" href="/style.css?v=points-6">
+  <link rel="stylesheet" href="/style.css?v=wall-7">
   <script src="/engine.js?v=points-6" defer></script><script src="/story-engine.js?v=points-6" defer></script><script src="/story-ui.js?v=points-6" defer></script><script src="/styling.js?v=points-6" defer></script><script src="/app.js?v=points-6" defer></script>
+  <link rel="stylesheet" href="/feedback.css?v=wall-1">
+  <script src="/feedback-config.js?v=wall-1" defer></script><script src="/feedback.js?v=wall-1" defer></script>
 </head>
 <body>
 <header class="site-header"><a href="/" class="brand" aria-label="책과향기 홈"><img class="brand-logo" src="/assets/books-and-scents-logo.png" alt="책과향기" width="745" height="540" fetchpriority="high"></a><span class="header-note">나만의 향, 나다운 스타일</span></header>
@@ -28,6 +30,23 @@
     <div class="result-actions" hidden id="result-actions"><button id="share" class="secondary">조합 링크 복사</button><button id="reset" class="text-button">처음부터 고르기</button></div><p id="status" class="status" role="status"></p>
   </section><p class="method-note">매장 향 설명과 향 계열을 바탕으로 만든 스타일 제안입니다. 실제 시향과 취향에 따라 느껴지는 분위기는 달라질 수 있어요.</p></aside></div>
   <section class="closing"><p class="eyebrow">YOUR STORY HAS A SCENT</p><h2>당신의 스토리에는<br>향이 있습니다.</h2><p>오늘의 기억과 당신만의 취향을, 하나의 향에 담아보세요.</p></section>
+
+  <section class="feedback-section" id="feedback" aria-labelledby="feedback-title">
+    <div class="feedback-title"><p class="eyebrow">A LITTLE NOTE, A BETTER STORY</p><h2 id="feedback-title">당신의 한 줄로, 더 향기롭게</h2><p>바라는 점, 더 좋아졌으면 하는 점.<br>작은 메모 한 장으로 함께 만들어가요.</p></div>
+    <div class="feedback-compose">
+      <form id="feedback-form" class="feedback-form">
+        <label for="feedback-category">어떤 이야기를 남길까요?</label><select id="feedback-category" name="category"><option value="improvement">개선사항</option><option value="request">요청사항</option><option value="message">한마디</option></select>
+        <div class="feedback-input-heading"><label for="feedback-text">향기 메모 한 줄</label><small id="feedback-count">0 / 100</small></div>
+        <input type="text" id="feedback-text" name="body" maxlength="200" required placeholder="이런 점이 더 좋아지면 좋겠어요…" aria-describedby="feedback-public-note feedback-count" autocomplete="off">
+        <div class="feedback-decoration"><fieldset><legend>메모 색</legend><div id="feedback-colors" class="note-swatches"></div></fieldset><fieldset><legend>작은 친구</legend><div id="feedback-animals" class="animal-options"></div></fieldset></div>
+        <div class="feedback-honeypot" aria-hidden="true"><label for="feedback-website">Website</label><input type="text" id="feedback-website" name="website" tabindex="-1" autocomplete="off"></div>
+        <p class="feedback-public-note" id="feedback-public-note">로그인 없이 남겨요. 메모는 모든 방문자에게 공개돼요.</p>
+        <button type="submit" class="primary feedback-submit" id="feedback-submit">보드에 메모 붙이기 ↗</button><p class="status" id="feedback-submit-status" role="status"></p>
+      </form>
+      <div class="feedback-preview"><p class="feedback-preview-label">YOUR LITTLE NOTE · 미리보기</p><div id="feedback-preview" aria-label="메모 미리보기"></div></div>
+    </div>
+    <div class="feedback-board" id="feedback-board"><div class="feedback-board-heading"><div><h3>책과향기, 작은 메모 보드</h3><small>STORIES WE GROW TOGETHER</small></div><span class="chalk-doodle" aria-hidden="true">✧ ♡ ✧</span></div><div class="feedback-notes" id="feedback-notes"></div><p class="feedback-load-status" id="feedback-load-status" role="status"></p><div class="feedback-board-actions"><button type="button" id="feedback-more" hidden>메모 더 보기 ↓</button><button type="button" id="feedback-retry" hidden>다시 불러오기 ↻</button></div></div>
+  </section>
 </main><footer><span>책과향기</span><span>SCENT & STYLE · 나만의 향수 스타일 가이드</span></footer>
 <dialog id="scent-dialog" class="scent-dialog" aria-labelledby="scent-dialog-title"><div class="dialog-top"><p class="eyebrow">SCENT NOTES & ACCORDS</p><button type="button" id="close-dialog" aria-label="향 설명 닫기" autofocus>✕</button></div><div id="scent-dialog-body"></div></dialog>
 </body></html>
