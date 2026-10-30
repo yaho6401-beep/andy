@@ -1,6 +1,14 @@
 (function(g){
   const rows=`
 나중에 이 글을 수정하거나 삭제할 때 사용해요|Use this to edit or delete your note later.|以后修改或删除留言时使用。|あとでメモを編集・削除するときに使います。
+책과향기를 소개합니다|Meet Books & Scents|认识书与香气|本と香りについて
+소개 창 닫기|Close introduction|关闭介绍|紹介を閉じる
+좋아하는 향에 나만의 취향을 더해, 하루의 기억을 한 병의 향수로 완성하는 향수공방입니다.|At our perfume atelier, add your own touch to a scent you love and turn the memory of your day into a bottle of perfume.|在我们的香水工坊，为喜欢的香气加入个人喜好，将一天的回忆装进一瓶香水。|好きな香りに自分らしさを添えて、一日の思い出を一本の香水に仕立てる香水工房です。
+72가지 메인향 중 하나를 고르고, 30가지 단일향으로 나만의 포인트를 더해보세요.|Choose one of 72 main scents, then add your personal touch with 30 single notes.|从72款主香中选择一款，再用30种单香增添专属点缀。|72種類のメインからひとつ選び、30種類の単香で自分らしいアクセントを添えてみませんか。
+나만의 커스텀 향수|Your own custom perfume|专属定制香水|自分だけのカスタム香水
+함께 남기는 특별한 기억|A special memory together|一起留下特别的回忆|一緒に残す特別な思い出
+이야기가 담긴 향|A scent with a story|藏着故事的香气|物語を込めた香り
+체험 프로그램 · 공방 안내 보기|Explore workshops & visitor information|查看体验项目与工坊介绍|体験プログラム・工房のご案内
 어떤 방식으로 나만의 향을 찾아볼까요?|How would you like to find your scent?|想用哪种方式寻找专属香气？|どの方法で自分の香りを探しますか？
 향 찾기 방법 선택|Choose how to find your scent|选择寻香方式|香りの探し方を選択
 오늘의 마음과 순간을 향으로|Turn today's feelings into scent|把今天的心情化为香气|今日の気持ちと瞬間を香りに
