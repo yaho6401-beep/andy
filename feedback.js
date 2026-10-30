@@ -77,6 +77,7 @@
   $('feedback-nickname').addEventListener('input',()=>{const chars=[...$('feedback-nickname').value];if(chars.length>20)$('feedback-nickname').value=chars.slice(0,20).join('');preview();});
   function adminState(){
     globalThis.PerfumeGallery?.setAdminToken(adminToken);
+    globalThis.ScentCommunity?.setAdminToken(adminToken);
     $('feedback-admin-login').hidden=Boolean(adminToken);$('feedback-admin-logout').hidden=!adminToken;
     $('feedback-admin-open').textContent=adminToken?'관리자 모드 · 켜짐':'관리자';$('feedback-admin-controls').hidden=!adminToken;render();if(thread)renderComments();syncSettings();
   }
@@ -205,6 +206,7 @@
     try{await api('/admin/hearts',{method:'POST',body:JSON.stringify({id})});const note=notes.find(n=>n.id===id);if(note){note.hearts=0;note.liked=false;}render();$('feedback-admin-confirm').hidden=true;$('feedback-admin-status').textContent='하트를 초기화했어요.';}
     catch(error){handleAdminError(error);}
   });
+  globalThis.FeedbackAdmin={get token(){return adminToken;},async login(password){const result=await api('/admin/login',{method:'POST',body:JSON.stringify({password})});adminToken=result.token;confirmDelete=null;adminState();loadAdminStats();return true;},invalidate(){adminToken=null;confirmDelete=null;adminState();}};
   adminState();
   $('feedback-prev').addEventListener('click',()=>load(Math.max(1,page-1)));
   $('feedback-next').addEventListener('click',()=>load(Math.min(pages,page+1)));

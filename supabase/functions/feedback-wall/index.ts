@@ -1,4 +1,5 @@
 import {handleGallery} from './gallery.ts';
+import {handleScent} from './scent.ts';
 // Public guestbook: application-key authorization, bounded input, service-only tables.
 const url=Deno.env.get('SUPABASE_URL')!;
 const secretKeys=JSON.parse(Deno.env.get('SUPABASE_SECRET_KEYS')||'{}');
@@ -51,6 +52,7 @@ Deno.serve(async req=>{
   try{
     const path=new URL(req.url).pathname.replace(/\/$/,'');
     const params=new URL(req.url).searchParams;
+    if(/\/scent(?:\/(?:like|review|delete|staff(?:\/delete)?))?$/.test(path))return await handleScent(req,{url,dbHeaders,reply,rpc,limited,sessionHash,visitorHash,passwordHash,equalHash,rateKeyFor,cleanText});
     if(/\/gallery(?:\/delete)?$/.test(path))return await handleGallery(req,{url,dbHeaders,reply,limited,sessionHash,passwordHash,equalHash,cleanText});
     if(req.method==='DELETE'){
       if(!await sessionHash(req))return reply({error:'관리자 로그인이 필요해요.'},401);

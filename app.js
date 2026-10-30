@@ -13,7 +13,7 @@ function renderMain(){
   const filtered=catalog.mainScents.filter(s=>fold(s.number+' '+(globalThis.ScentI18n?.searchText(s.name)||s.name)).includes(query));
   $('main-list').innerHTML=filtered.length?[false,true].map(premium=>{
     const items=filtered.filter(s=>s.premium===premium);if(!items.length)return '';
-    return `<div class="catalog-group-title ${premium?'premium-title':''}"><span>${premium?'프리미엄 향':'기본 향'}</span><small>${premium?'33–72':'01–32'}</small></div>`+items.map(s=>`<div class="scent-item ${premium?'premium-item':''}"><button class="scent-option" data-main="${s.id}" aria-pressed="${selectedMain===s.id}"><span class="scent-number">${s.number}</span><span class="scent-name">${escapeHtml(cleanName(s))}</span></button><button class="scent-detail-button" data-detail="${s.id}" aria-label="${escapeHtml(s.name)} 노트 구성 어코드 확인">노트 · 어코드 <span aria-hidden="true">△</span></button></div>`).join('');
+    return `<div class="catalog-group-title ${premium?'premium-title':''}"><span>${premium?'프리미엄 향':'기본 향'}</span><small>${premium?'33–72':'01–32'}</small></div>`+items.map(s=>`<div class="scent-item ${premium?'premium-item':''}"><button class="scent-option" data-main="${s.id}" aria-pressed="${selectedMain===s.id}"><span class="scent-number">${s.number}</span><span class="scent-name">${escapeHtml(cleanName(s))}</span></button><button class="scent-detail-button" data-detail="${s.id}" aria-label="${escapeHtml(s.name)} 노트 구성 어코드 확인">코멘트 · 노트 <span aria-hidden="true">△</span></button></div>`).join('');
   }).join(''):'<p class="hint">검색한 향이 없어요. 이름이나 번호를 다시 확인해주세요.</p>';
 }
 function pyramidMarkup(s){
@@ -23,7 +23,8 @@ function pyramidMarkup(s){
 }
 function openScentDetail(id){
   const s=catalog.mainScents.find(s=>s.id===id);if(!s)return;
-  $('scent-dialog-body').innerHTML=`<span class="detail-tier ${s.premium?'detail-premium':''}">${s.tier} · ${s.number}번</span><h2 id="scent-dialog-title">${escapeHtml(s.name)}</h2><p class="dialog-description">${escapeHtml(s.shortDescription)}</p>${highlightMarkup(s)}<h3 class="detail-subheading">노트 구성</h3>${pyramidMarkup(s)}<h3 class="detail-subheading">어코드 · 향의 전체적인 분위기</h3>${s.accords.length?`<div class="accords">${s.accords.map(a=>`<span>${escapeHtml(a)}</span>`).join('')}</div><p class="accord-explanation">공개 노트를 바탕으로 정리한 향 계열입니다. 원료 함량이나 향의 강도 비율을 의미하지 않습니다.</p>`:'<p class="hint">참고 원향 확인 후 향 계열을 연결합니다.</p>'}<div class="reference-notice">${escapeHtml(catalog.referenceNotice)}</div>${s.noteSource?`<p class="note-source">${escapeHtml(s.noteSource.reference)}<br><a href="${escapeHtml(s.noteSource.url)}" target="_blank" rel="noopener noreferrer">참고 노트 출처 · ${escapeHtml(s.noteSource.label)} ↗</a><br>자료 확인: ${escapeHtml(s.noteSource.checkedAt)}</p>`:''}<button class="primary" type="button" data-use="${s.id}">이 향으로 조합하기 <span aria-hidden="true">→</span></button>`;
+  $('scent-dialog-body').innerHTML=`<span class="detail-tier ${s.premium?'detail-premium':''}">${s.tier} · ${s.number}번</span><h2 id="scent-dialog-title">${escapeHtml(s.name)}</h2><p class="dialog-description">${escapeHtml(s.shortDescription)}</p><div id="detail-scent-community" class="scent-community"></div>${highlightMarkup(s)}<h3 class="detail-subheading">노트 구성</h3>${pyramidMarkup(s)}<h3 class="detail-subheading">어코드 · 향의 전체적인 분위기</h3>${s.accords.length?`<div class="accords">${s.accords.map(a=>`<span>${escapeHtml(a)}</span>`).join('')}</div><p class="accord-explanation">공개 노트를 바탕으로 정리한 향 계열입니다. 원료 함량이나 향의 강도 비율을 의미하지 않습니다.</p>`:'<p class="hint">참고 원향 확인 후 향 계열을 연결합니다.</p>'}<div class="reference-notice">${escapeHtml(catalog.referenceNotice)}</div>${s.noteSource?`<p class="note-source">${escapeHtml(s.noteSource.reference)}<br><a href="${escapeHtml(s.noteSource.url)}" target="_blank" rel="noopener noreferrer">참고 노트 출처 · ${escapeHtml(s.noteSource.label)} ↗</a><br>자료 확인: ${escapeHtml(s.noteSource.checkedAt)}</p>`:''}<button class="primary" type="button" data-use="${s.id}">이 향으로 조합하기 <span aria-hidden="true">→</span></button>`;
+  globalThis.ScentCommunity?.mount($('detail-scent-community'),s.id);
   $('scent-dialog').showModal();
 }
 function selectMain(id){
@@ -32,7 +33,7 @@ function selectMain(id){
 }
 function continueToSingles(){
   globalThis.ScentJourney?.show('selection',{scroll:false});
-  $('single-selection').scrollIntoView({behavior:'smooth',block:'start'});
+  $('main-choice').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function renderMainChoice(){
   const main=catalog.mainScents.find(s=>s.id===selectedMain);
@@ -41,7 +42,8 @@ function renderMainChoice(){
   $('main-step-hint').textContent=main?'메인향은 이 향 하나로 진행합니다. 아래에서 단일향을 여러 개 더해보세요.':'가장 마음에 드는 향 하나가 스타일의 시작이 됩니다.';
   $('main-picker').hidden=Boolean(main);
   $('main-choice').hidden=!main;
-  $('main-choice').innerHTML=main?`<div class="chosen-main"><span class="chosen-label">선택한 메인향 · 1 / 1</span><strong>${escapeHtml(main.number)}. ${escapeHtml(main.name)}</strong><small>${main.tier}</small><div><button type="button" class="secondary" data-detail="${main.id}">노트 · 어코드 △</button><button type="button" class="text-button" id="change-main">다른 메인향으로 변경</button></div></div>`:'';
+  $('main-choice').innerHTML=main?`<div class="chosen-main"><span class="chosen-label">선택한 메인향 · 1 / 1</span><strong>${escapeHtml(main.number)}. ${escapeHtml(main.name)}</strong><small>${main.tier}</small><div><button type="button" class="secondary" data-detail="${main.id}">코멘트 · 노트 △</button><button type="button" class="text-button" id="change-main">다른 메인향으로 변경</button><button type="button" class="secondary" id="continue-notes">단일향 더하기 ↓</button></div></div>`:'';
+  globalThis.ScentCommunity?.showSelected(main?.id);
 }
 const selectedProfileStyles=new Set();
 const styleLabels={minimal:'미니멀 · 깔끔함',romantic:'로맨틱 · 부드러움',natural:'내추럴 · 편안함',classic:'클래식 · 우아함',casual:'캐주얼 · 경쾌함',sporty:'스포티 · 활동적',chic:'시크 · 세련됨',cozy:'코지 · 포근함'};
@@ -55,7 +57,7 @@ function initProfile(){
     const results=ScentStyle.recommendForProfile(catalog.mainScents,profile);
     if(!results.length){$('profile-results').innerHTML='<p class="missing-notice">표현하고 싶은 분위기나 성별·연령대·헤어스타일 중 하나 이상을 골라주세요.</p>';return;}
     const labels=[...profile.styles.map(id=>styleLabels[id]),...['profile-gender','profile-age','profile-hair'].filter(id=>$(id).value!=='any').map(id=>$(id).selectedOptions[0].textContent)];
-    $('profile-results').innerHTML=`<div class="profile-result-heading"><p class="eyebrow">YOUR SIGNATURE SCENTS</p><h3>당신의 이야기에 어울리는 향</h3><p>${escapeHtml(labels.join(' · '))}</p></div><div class="profile-grid">${results.map(({scent:s,matchedStyles},i)=>`<article class="profile-scent-card"><div class="profile-card-meta"><span>추천 0${i+1}</span><span class="${s.premium?'premium-text':''}">${s.tier}</span></div><h4><span>${s.number}.</span> ${escapeHtml(s.name)}</h4>${highlightMarkup(s)}<p class="profile-match">${matchedStyles.map(st=>st.name).join(' · ')} 분위기에 어울리는 후보</p><p class="profile-scent-description">${escapeHtml(s.shortDescription)}</p><div class="profile-card-actions"><button type="button" class="secondary" data-detail="${s.id}">노트 · 어코드 △</button><button type="button" class="secondary" data-use="${s.id}">이 향 고르기 →</button></div></article>`).join('')}</div><p class="profile-note">선택한 연출 취향과 향 계열을 연결한 편집 추천입니다. 실제 시향으로 마음에 드는 향을 확인해보세요.</p>`;
+    $('profile-results').innerHTML=`<div class="profile-result-heading"><p class="eyebrow">YOUR SIGNATURE SCENTS</p><h3>당신의 이야기에 어울리는 향</h3><p>${escapeHtml(labels.join(' · '))}</p></div><div class="profile-grid">${results.map(({scent:s,matchedStyles},i)=>`<article class="profile-scent-card"><div class="profile-card-meta"><span>추천 0${i+1}</span><span class="${s.premium?'premium-text':''}">${s.tier}</span></div><h4><span>${s.number}.</span> ${escapeHtml(s.name)}</h4>${highlightMarkup(s)}<p class="profile-match">${matchedStyles.map(st=>st.name).join(' · ')} 분위기에 어울리는 후보</p><p class="profile-scent-description">${escapeHtml(s.shortDescription)}</p><div class="profile-card-actions"><button type="button" class="secondary" data-detail="${s.id}">코멘트 · 노트 △</button><button type="button" class="secondary" data-use="${s.id}">이 향 고르기 →</button></div></article>`).join('')}</div><p class="profile-note">선택한 연출 취향과 향 계열을 연결한 편집 추천입니다. 실제 시향으로 마음에 드는 향을 확인해보세요.</p>`;
   });
 }
 function markProfileChanged(){if($('profile-results').innerHTML)$('profile-results').innerHTML='<p class="hint">스타일이 바뀌었어요. 향 찾기 버튼을 눌러 새 추천을 확인해주세요.</p>';}
@@ -133,6 +135,7 @@ async function init(){
       const outfitButton=e.target.closest('[data-outfit-style]');if(outfitButton){chosenStyle=outfitButton.dataset.outfitStyle;renderStylingBoard();updateBlendUrl();return;}
       const accessory=e.target.closest('[data-accessory]');if(accessory){const id=accessory.dataset.accessory;if(hiddenAccessories.has(id))hiddenAccessories.delete(id);else hiddenAccessories.add(id);renderStylingBoard();updateBlendUrl();return;}
       const detail=e.target.closest('[data-detail]');if(detail){openScentDetail(detail.dataset.detail);return;}
+      if(e.target.closest('#continue-notes')){$('single-selection').scrollIntoView({behavior:'smooth',block:'start'});return;}
       const change=e.target.closest('#change-main');if(change){$('main-picker').hidden=false;$('main-step-title').textContent='변경할 메인향을 골라주세요';$('search').focus();return;}
       const use=e.target.closest('[data-use]');if(use){selectMain(use.dataset.use);$('search').value='';renderMain();if($('scent-dialog').open)$('scent-dialog').close();continueToSingles();}
     });
