@@ -33,13 +33,20 @@
     return shapes[d.motif]||shapes.leaf;
   }
   function icon(d){return `<svg viewBox="-22 -22 44 44" aria-hidden="true">${motif(d)}</svg>`;}
-  function scene(outfit,accessories){
+  function scene(outfit,accessories,style){
     const counts={};
-    const ornaments=accessories.map(d=>{const n=counts[d.place]||0;counts[d.place]=n+1;
-      const positions={neck:[90+n%3*10-10,65+Math.floor(n/3)*9],ear:[n%2?109:71,24+Math.floor(n/2)*10],brooch:[70+n%3*11,83+Math.floor(n/3)*10],hair:[75+n%3*13,7+Math.floor(n/3)*10],bracelet:[53+n%2*72,112+Math.floor(n/2)*10],bag:[127+n%2*14,88+Math.floor(n/2)*19],prop:[22+n%2*134,136-Math.floor(n/2)*30]};
-      const [x,y]=positions[d.place];return `<g transform="translate(${x} ${y}) scale(${d.place==='prop'?'.65':'.36'})"><title>${d.label}</title>${motif(d)}</g>`;
+    const ornaments=accessories.map(d=>{
+      const n=counts[d.place]||0;counts[d.place]=n+1;
+      const positions={neck:[143+n%3*11,107+Math.floor(n/3)*10],ear:[294,93+n*31],brooch:[113+n%2*12,96+Math.floor(n/2)*15],hair:[289+n%2*27,224+Math.floor(n/2)*23],bracelet:[43,235+n*27],bag:[240+n%2*14,210+Math.floor(n/2)*15],prop:[235+n%3*35,310+Math.floor(n/3)*29]};
+      const [x,y]=positions[d.place];
+      const size=d.place==='prop'?.59:d.place==='ear'?.28:.32;
+      const jewel=d.place==='ear'?`<path d="M-8-14v5m16-5v5" stroke="#b59a6b"/><g transform="translate(-8 1)">${motif(d)}</g><g transform="translate(8 1)">${motif(d)}</g>`:motif(d);
+      return `<g class="scent-detail scent-detail-${d.place}" transform="translate(${x} ${y}) scale(${size})"><title>${d.label}</title>${jewel}</g>`;
     }).join('');
-    return `<svg class="styling-scene" viewBox="0 0 180 190" role="img" aria-label="선택한 옷과 향기 액세서리를 함께 보여주는 스타일링 일러스트"><ellipse cx="90" cy="173" rx="66" ry="6" fill="#c8c2b2" opacity=".22"/><ellipse cx="90" cy="22" rx="17" ry="20" fill="#e2c9af"/><path d="M73 21Q66-8 91 0 113-2 108 23L101 12 83 9Z" fill="#746458"/><path d="M84 38v12h12V38" fill="#e2c9af"/>${outfit.replace('<svg ','<svg x="40" y="45" width="100" height="120" ')}<path d="M81 59q9 14 18 0" fill="none" stroke="#bca47b" stroke-width=".7"/>${ornaments}</svg>`;
+    const chain=counts.neck?'<path d="M137 83q15 35 31 0" stroke="#b69b6b" stroke-width=".7" fill="none"/>':'';
+    const bag=counts.bag?'<g stroke="#9a8d76" stroke-width=".7"><path d="M225 191q16-35 31 0" fill="none"/><path d="m221 191-3 34q21 6 42 0l-3-34Z" fill="#c9baa0"/><path d="M224 198h30"/></g>':'';
+    const dots=(style?.colors||[]).map((c,i)=>`<circle cx="${284+i*14}" cy="43" r="4" fill="${c[1]}" stroke="#bfb6a2" stroke-width=".4"/>`).join('');
+    return `<svg class="styling-scene" viewBox="0 0 360 410" role="img" aria-label="의상과 작은 향기 액세서리를 함께 펼친 패션 무드보드"><path d="M25 46H248M25 384H335" stroke="#bdb4a2" stroke-width=".5"/><text x="25" y="31" font-family="Georgia,serif" font-size="13" letter-spacing="2.5" fill="#626457">SCENT / ATELIER</text><text x="26" y="370" font-family="sans-serif" font-size="7" letter-spacing="2" fill="#949385">A WARDROBE OF YOUR STORY</text>${dots}<path d="M271 66v201" stroke="#c3baaa" stroke-width=".5"/><text x="287" y="72" font-family="sans-serif" font-size="6" letter-spacing="1.3" fill="#9b917c">DETAILS</text><ellipse cx="150" cy="347" rx="79" ry="4" fill="#a49c87" opacity=".1"/>${outfit.replace('<svg ','<svg x="38" y="51" width="230" height="300" ')}${chain}${bag}${ornaments}</svg>`;
   }
   root.ScentStyling={descriptor,icon,scene};
 })(globalThis);

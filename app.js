@@ -80,23 +80,7 @@ function outfitPresentation(style,main){
   const looks={dress:'허리선이 부드럽게 잡힌 우아한 원피스에 작은 진주 귀걸이와 스트랩 슈즈를 더해보세요.',suit:'구조적인 테일러드 정장에 밝은 셔츠와 가죽 로퍼를 매치해보세요.','tailored-dress':'단정한 테일러드 원피스에 얇은 벨트와 클래식 펌프스를 매치해보세요.','evening-dress':'매끈한 새틴 롱 원피스에 작은 금속 액세서리로 선명한 포인트를 더해보세요.',jumpsuit:'곧게 떨어지는 블랙 점프수트에 가죽 부츠와 작은 금속 액세서리를 더해보세요.','soft-shirt':'부드러운 크림 셔츠에 여유 있는 테일러드 팬츠와 작은 액세서리를 더해보세요.',cardigan:'포근한 카디건에 골지 이너와 코듀로이 팬츠, 스웨이드 슈즈를 매치해보세요.'};
   return {kind,look:looks[kind]||style.look};
 }
-function outfitSvg(style,kind){
- const [a,b,c]=style.colors.map(x=>x[1]);
- const pants='<path d="M35 67H65L69 111H55L50 82 45 111H31Z" fill="'+b+'"/>';
- const paths={
- dress:'<path d="M40 12 46 8Q50 14 54 8L60 12 67 35 58 39 62 52 80 103Q50 114 20 103L38 52 42 39 33 35Z" fill="'+a+'"/><path d="M38 51H62" stroke="'+c+'" stroke-width="3"/><path d="m41 63-8 36m18-36v40m8-40 8 36" opacity=".35"/>',
- 'tailored-dress':'<path d="M37 12 46 8H54L63 12 72 42 63 45 59 29 60 53 69 104H31L40 53 41 29 37 45 28 42Z" fill="'+a+'"/><path d="m44 10 6 23 6-23M40 53h20" stroke="'+b+'" stroke-width="2"/><circle cx="51" cy="39" r="1.5"/>',
- 'evening-dress':'<path d="m40 13 5-4 5 15 5-15 5 4-3 25 3 16 13 56H27L40 54 43 38Z" fill="'+a+'"/><path d="m54 63 8 41M43 54h14" stroke="'+b+'"/>',
- suit:pants+'<path d="M35 13 44 8H56L65 13 77 56 65 60 60 33 64 74 50 69 36 74 40 33 35 60 23 56Z" fill="'+a+'"/><path d="m44 9 6 13 6-13-6 42Z" fill="#f4f0e6"/><path d="m50 23-3 6 3 21 3-21Z" fill="'+c+'"/><path d="m42 11-5 15 13 18 13-18-5-15M50 44v25"/>',
- casual:pants+'<path d="M36 13 44 10Q50 20 56 10L64 13 78 34 65 42 60 32 62 69H38L40 32 35 42 22 34Z" fill="'+a+'"/><path d="M32 109h14v6H27Zm23 0h14l5 6H55Z" fill="#faf7ed"/>',
- sport:'<path d="M36 64H64L65 105H55L50 79 45 105H35Z" fill="'+c+'"/><path d="M36 17 43 10Q50 5 57 10L64 17 78 55 67 59 59 33 63 67H37L41 33 33 59 22 55Z" fill="'+a+'"/><path d="M43 11q7 20 14 0M50 26v39M37 45l11 4m4 0 11-4"/><path d="m35 105-7 9h18v-9m9 0v9h18l-8-9" fill="'+b+'"/>',
- jumpsuit:'<path d="M38 13 45 9 50 19 55 9 62 13 70 39 61 43 58 31 60 56 68 111H53L50 77 47 111H32L40 56 42 31 39 43 30 39Z" fill="'+a+'"/><path d="M40 55h20M50 20v34" stroke="'+b+'" stroke-width="2"/>',
- cardigan:pants+'<path d="M37 14 44 10H56L63 14 75 59 64 62 59 34 62 76H38L41 34 36 62 25 59Z" fill="'+a+'"/><path d="M44 10h12v52H44Z" fill="'+b+'"/><path d="m44 10 6 27 6-27M50 27v46M38 62h8m8 0h8"/>',
- linen:pants+'<path d="M36 14 44 10 50 16 56 10 64 14 76 55 64 59 59 33 63 76H37L41 33 36 59 24 55Z" fill="'+a+'"/><path d="m44 11 6 10 6-10M50 22v51M54 31h7v10h-7"/>'
- };
- const shirt=pants+'<path d="M35 14 44 9 50 16 56 9 65 14 78 47 66 53 60 32 62 69H38L40 32 34 53 22 47Z" fill="'+a+'"/><path d="m44 10 6 12 6-12M50 23v44"/>';
- return '<svg class="outfit outfit-'+kind+'" viewBox="0 0 100 120" fill="none" stroke="#6a6b60" stroke-width=".8" stroke-linejoin="round" role="img" aria-label="'+escapeHtml(({dress:'우아한 원피스',suit:'테일러드 정장','tailored-dress':'테일러드 원피스','evening-dress':'새틴 롱 원피스',jumpsuit:'시크한 점프수트',casual:'티셔츠와 데님',sport:'바람막이와 조거',cardigan:'니트 카디건',linen:'리넨 셔츠'})[kind]||'셔츠와 팬츠')+' 스타일 일러스트">'+(paths[kind]||shirt)+'</svg>';
-}
+function outfitSvg(style,kind){return ScentWardrobe.garment(style,kind);}
 function renderStylingBoard(){
  const main=catalog.mainScents.find(s=>s.id===selectedMain);if(!main)return;
  const style=ScentStyle.styles.find(s=>s.id===chosenStyle)||lastResult?.ranked[0]||ScentStyle.styles[0];
@@ -104,7 +88,7 @@ function renderStylingBoard(){
  const outfit=outfitPresentation(style,main);
  const accessories=currentSingles().map(ScentStyling.descriptor).filter(Boolean);
  const active=accessories.filter(d=>!hiddenAccessories.has(d.id));
- $('styling-board').innerHTML=`<div class="styling-heading"><p class="eyebrow">SCENT DRESSING ROOM</p><h3>향기를 입은 오늘의 스타일</h3><p class="hint">스타일을 바꿔보고, 향기 액세서리를 눌러 착용해보세요.</p></div><div class="styling-options" role="group" aria-label="스타일 선택">${ScentStyle.styles.map(s=>`<button type="button" data-outfit-style="${s.id}" aria-pressed="${s.id===style.id}">${s.name}</button>`).join('')}</div><label class="styling-gender">옷의 표현 <select id="styling-gender"><option value="any">스타일에 맞게</option><option value="female" ${stylingGender==='female'?'selected':''}>여성 스타일</option><option value="male" ${stylingGender==='male'?'selected':''}>남성 스타일</option></select></label><div class="styling-picture" style="background:${style.bg}">${ScentStyling.scene(outfitSvg(style,outfit.kind),active)}<span class="styling-picture-label">${style.name} · 액세서리 ${active.length}개</span></div><p class="styling-look">${outfit.look}</p><h4 class="accessory-heading">단일향으로 고르는 액세서리</h4><p class="hint">조합에 담은 단일향의 소품이에요. 소품만 숨겨도 향 조합은 그대로 유지돼요.</p><div class="accessory-options">${accessories.length?accessories.map(d=>`<button type="button" class="accessory-option" data-accessory="${d.id}" aria-pressed="${!hiddenAccessories.has(d.id)}">${ScentStyling.icon(d)}<span>${d.label}</span><small>${hiddenAccessories.has(d.id)?'착용하기':'적용 중 ✓'}</small></button>`).join(''):'<p class="hint">단일향을 추가하면 어울리는 액세서리가 나타나요.</p>'}</div>`;
+ $('styling-board').innerHTML=`<div class="styling-heading"><p class="eyebrow">SCENT DRESSING ROOM</p><h3>향기를 입은 오늘의 스타일</h3><p class="hint">스타일을 바꿔보고, 향기 액세서리를 눌러 착용해보세요.</p></div><div class="styling-options" role="group" aria-label="스타일 선택">${ScentStyle.styles.map(s=>`<button type="button" data-outfit-style="${s.id}" aria-pressed="${s.id===style.id}">${s.name}</button>`).join('')}</div><label class="styling-gender">옷의 표현 <select id="styling-gender"><option value="any">스타일에 맞게</option><option value="female" ${stylingGender==='female'?'selected':''}>여성 스타일</option><option value="male" ${stylingGender==='male'?'selected':''}>남성 스타일</option></select></label><div class="styling-picture" style="background:${style.bg}">${ScentStyling.scene(outfitSvg(style,outfit.kind),active,style)}<div class="styling-picture-caption"><span>${style.name}</span><small>SCENT DETAILS · ${active.length}</small></div></div><p class="styling-look">${outfit.look}</p><h4 class="accessory-heading">단일향으로 고르는 액세서리</h4><p class="hint">조합에 담은 단일향의 소품이에요. 소품만 숨겨도 향 조합은 그대로 유지돼요.</p><div class="accessory-options">${accessories.length?accessories.map(d=>`<button type="button" class="accessory-option" data-accessory="${d.id}" aria-pressed="${!hiddenAccessories.has(d.id)}">${ScentStyling.icon(d)}<span>${d.label}</span><small>${hiddenAccessories.has(d.id)?'착용하기':'적용 중 ✓'}</small></button>`).join(''):'<p class="hint">단일향을 추가하면 어울리는 액세서리가 나타나요.</p>'}</div>`;
  $('styling-gender').addEventListener('change',e=>{stylingGender=e.target.value;renderStylingBoard();updateBlendUrl();});
 }
 function updateBlendUrl(){
