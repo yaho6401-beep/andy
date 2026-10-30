@@ -7,6 +7,8 @@
   const animals={bear:'곰돌이',bunny:'토끼',cat:'고양이',fox:'여우'};
   const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   let color='butter',animal='bear',next=null,loading=false,sending=false,notes=[],intent=null;
+  let adminToken=null,confirmDelete=null,deleting=false;
+  const deletedIds=new Set();
   function illustration(kind){
     const faces={
       bear:'<circle cx="18" cy="17" r="9" fill="#ba9171"/><circle cx="46" cy="17" r="9" fill="#ba9171"/><circle cx="18" cy="17" r="4" fill="#e2bfa5"/><circle cx="46" cy="17" r="4" fill="#e2bfa5"/><ellipse cx="32" cy="34" rx="23" ry="22" fill="#cba483"/><ellipse cx="32" cy="41" rx="11" ry="8" fill="#f0dcc4"/>',
@@ -20,11 +22,11 @@
     const safeColor=note.color in colors?note.color:'butter';
     const angle=[-2,1.5,-1,2,-1.5,.7][(note.id||'').split('').reduce((a,c)=>a+c.charCodeAt(0),0)%6];
     const date=preview?'미리보기':new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(note.created_at));
-    return `<article class="feedback-note note-${safeColor}${preview?' note-preview':''}" style="--note-angle:${angle}deg"><span class="note-tape" aria-hidden="true"></span><span class="note-category">${categories[note.category]||categories.message}</span><p class="note-body">${escape(note.body)}</p><div class="note-bottom"><span>${preview?'당신의 작은 아이디어':'향기를 남긴 손님'}<small>${date}</small></span>${illustration(note.animal)}</div></article>`;
+    return `<article class="feedback-note note-${safeColor}${preview?' note-preview':''}" style="--note-angle:${angle}deg"><span class="note-tape" aria-hidden="true"></span><span class="note-category">${categories[note.category]||categories.message}</span><p class="note-body">${escape(note.body)}</p><div class="note-bottom"><span>${escape(note.nickname||'향기를 남긴 손님')}<small>${date}</small></span>${illustration(note.animal)}</div>${!preview&&adminToken?`<div class="note-moderation">${confirmDelete===note.id?`<span>이 메모를 삭제할까요?</span><button type="button" data-feedback-confirm-delete="${note.id}" ${deleting?'disabled':''}>삭제</button><button type="button" data-feedback-cancel-delete ${deleting?'disabled':''}>취소</button>`:`<button type="button" data-feedback-delete="${note.id}" aria-label="${escape(note.nickname||'손님')}님의 메모 삭제">메모 삭제 ×</button>`}</div>`:''}</article>`;
   }
   function preview(){
     const body=$('feedback-text').value.trim()||'당신의 한 줄이 이곳에 예쁘게 붙어요.';
-    $('feedback-preview').innerHTML=card({body,category:$('feedback-category').value,color,animal},true);
+    $('feedback-preview').innerHTML=card({body,nickname:$('feedback-nickname').value.trim(),category:$('feedback-category').value,color,animal},true);
     $('feedback-count').textContent=[...$('feedback-text').value].length+' / 100';
   }
   function render(){
@@ -32,9 +34,9 @@
     $('feedback-more').hidden=!next;
   }
   async function api(path='',options={}){
-    const response=await fetch(config.endpoint+path,{...options,headers:{apikey:config.key,'Content-Type':'application/json'},signal:AbortSignal.timeout(15000)});
+    const response=await fetch(config.endpoint+path,{...options,headers:{apikey:config.key,'Content-Type':'application/json',...(adminToken?{Authorization:'Bearer '+adminToken}:{}),...options.headers},signal:AbortSignal.timeout(15000)});
     let result;try{result=await response.json();}catch{throw Error('보드와 연결하지 못했어요. 잠시 후 다시 시도해주세요.');}
-    if(!response.ok)throw Error(result.error||'메모를 불러오지 못했어요.');
+    if(!response.ok){const error=Error(result.error||'메모를 불러오지 못했어요.');error.status=response.status;throw error;}
     return result;
   }
   async function load(more=false){
@@ -42,7 +44,7 @@
     $('feedback-load-status').textContent='메모를 가져오고 있어요…';
     try{
       const result=await api(more&&next?'?before='+encodeURIComponent(next):'');
-      const combined=[...notes,...result.items];
+      const combined=[...notes,...result.items].filter(n=>!deletedIds.has(n.id));
       notes=[...new Map(combined.map(n=>[n.id,n])).values()];next=result.next;render();$('feedback-load-status').textContent='';
     }catch(error){$('feedback-load-status').textContent=error.message;$('feedback-retry').hidden=false;}
     finally{loading=false;$('feedback-more').disabled=false;}
@@ -57,7 +59,9 @@
     e.preventDefault();if(sending)return;
     const body=$('feedback-text').value.normalize('NFC').trim().replace(/\s+/g,' ');
     if(!body||[...body].length>100){$('feedback-submit-status').textContent='100자 이내로 한 줄을 남겨주세요.';$('feedback-text').focus();return;}
-    const payload={body,category:$('feedback-category').value,color,animal,website:$('feedback-website').value};
+    const nickname=$('feedback-nickname').value.normalize('NFC').trim().replace(/\s+/g,' ');
+    if([...nickname].length>20){$('feedback-submit-status').textContent='닉네임은 20자 이내로 적어주세요.';return;}
+    const payload={body,nickname,category:$('feedback-category').value,color,animal,website:$('feedback-website').value};
     const signature=JSON.stringify(payload);if(!intent||intent.signature!==signature)intent={id:crypto.randomUUID(),signature};
     sending=true;$('feedback-submit').disabled=true;$('feedback-submit').textContent='메모를 붙이고 있어요…';$('feedback-submit-status').textContent='';
     try{
@@ -68,6 +72,35 @@
     }catch(error){$('feedback-submit-status').textContent=error.message;}
     finally{sending=false;$('feedback-submit').disabled=false;$('feedback-submit').textContent='보드에 메모 붙이기 ↗';}
   });
+  $('feedback-nickname').addEventListener('input',()=>{const chars=[...$('feedback-nickname').value];if(chars.length>20)$('feedback-nickname').value=chars.slice(0,20).join('');preview();});
+  function adminState(){
+    $('feedback-admin-login').hidden=Boolean(adminToken);$('feedback-admin-logout').hidden=!adminToken;
+    $('feedback-admin-open').textContent=adminToken?'관리자 모드 · 켜짐':'관리자';render();
+  }
+  $('feedback-admin-open').addEventListener('click',()=>{$('feedback-admin-panel').hidden=!$('feedback-admin-panel').hidden;if(!$('feedback-admin-panel').hidden&&!adminToken)$('feedback-admin-password').focus();});
+  $('feedback-admin-login').addEventListener('submit',async e=>{
+    e.preventDefault();const password=$('feedback-admin-password').value;$('feedback-admin-password').value='';
+    $('feedback-admin-login-button').disabled=true;$('feedback-admin-status').textContent='확인하고 있어요…';
+    try{const result=await api('/admin/login',{method:'POST',body:JSON.stringify({password})});adminToken=result.token;confirmDelete=null;adminState();$('feedback-admin-status').textContent='관리자 모드예요. 삭제할 메모의 버튼을 눌러주세요.';}
+    catch(error){$('feedback-admin-status').textContent=error.message;}
+    finally{$('feedback-admin-login-button').disabled=false;}
+  });
+  $('feedback-admin-logout').addEventListener('click',async()=>{
+    try{await api('/admin/logout',{method:'POST'});adminToken=null;confirmDelete=null;adminState();$('feedback-admin-status').textContent='관리자 모드를 종료했어요.';}
+    catch(error){$('feedback-admin-status').textContent=error.message;}
+  });
+  $('feedback-notes').addEventListener('click',async e=>{
+    if(!adminToken||deleting)return;
+    const ask=e.target.closest('[data-feedback-delete]');if(ask){confirmDelete=ask.dataset.feedbackDelete;render();return;}
+    if(e.target.closest('[data-feedback-cancel-delete]')){confirmDelete=null;render();return;}
+    const button=e.target.closest('[data-feedback-confirm-delete]');if(!button)return;
+    const id=button.dataset.feedbackConfirmDelete;if(id!==confirmDelete)return;
+    deleting=true;render();
+    try{await api('?id='+encodeURIComponent(id),{method:'DELETE'});deletedIds.add(id);notes=notes.filter(n=>n.id!==id);confirmDelete=null;$('feedback-admin-status').textContent='메모를 삭제했어요.';}
+    catch(error){$('feedback-admin-status').textContent=error.message;if(error.status===401){adminToken=null;confirmDelete=null;adminState();$('feedback-admin-panel').hidden=false;}}
+    finally{deleting=false;render();}
+  });
+  adminState();
   $('feedback-more').addEventListener('click',()=>load(true));
   $('feedback-retry').addEventListener('click',()=>load(Boolean(notes.length&&next)));
   preview();load();

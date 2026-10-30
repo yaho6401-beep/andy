@@ -10,20 +10,49 @@ const colors=['butter','rose','lavender','sage','sky','peach'];
 const animals=['bear','bunny','cat','fox'];
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const dbHeaders={'apikey':secret,'Content-Type':'application/json',...(secret.startsWith('sb_secret_')?{}:{Authorization:`Bearer ${secret}`})};
+const hex=(bytes:ArrayBuffer)=>Array.from(new Uint8Array(bytes)).map(b=>b.toString(16).padStart(2,'0')).join('');
+async function digest(value:string){return hex(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)));}
+async function rateKeyFor(req:Request){
+  const ip=req.headers.get('x-forwarded-for')?.split(',')[0].trim()||req.headers.get('cf-connecting-ip')||'unknown';
+  const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(secret),{name:'HMAC',hash:'SHA-256'},false,['sign']);
+  return hex(await crypto.subtle.sign('HMAC',key,new TextEncoder().encode(`${new Date().toISOString().slice(0,10)}:${ip}`)));
+}
+async function sessionHash(req:Request){
+  const token=req.headers.get('authorization')?.replace(/^Bearer /,'')||'';
+  if(!/^[0-9a-f]{64}$/.test(token))return null;
+  const hash=await digest(token);
+  const query=new URLSearchParams({select:'token_hash',token_hash:`eq.${hash}`,expires_at:`gt.${new Date().toISOString()}`,limit:'1'});
+  const result=await fetch(`${url}/rest/v1/workshop_feedback_sessions?${query}`,{headers:dbHeaders});
+  if(!result.ok)throw Error('session');
+  return (await result.json()).length?hash:null;
+}
 
 Deno.serve(async req=>{
   const origin=req.headers.get('origin');
   const headers:Record<string,string>={'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','Vary':'Origin'};
-  if(origin&&origins.has(origin))Object.assign(headers,{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Headers':'apikey, content-type','Access-Control-Allow-Methods':'GET, POST, OPTIONS'});
+  if(origin&&origins.has(origin))Object.assign(headers,{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Headers':'apikey, content-type, authorization','Access-Control-Allow-Methods':'GET, POST, DELETE, OPTIONS'});
   const reply=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers});
   if(origin&&!origins.has(origin))return reply({error:'접근할 수 없는 주소입니다.'},403);
   if(req.method==='OPTIONS')return new Response(null,{status:204,headers});
   if(!allowedKeys.has(req.headers.get('apikey')||''))return reply({error:'연결 정보를 확인해주세요.'},401);
   try{
+    const path=new URL(req.url).pathname.replace(/\/$/,'');
+    if(req.method==='DELETE'){
+      if(!await sessionHash(req))return reply({error:'관리자 로그인이 필요해요.'},401);
+      const id=new URL(req.url).searchParams.get('id');if(!id||!uuid.test(id))return reply({error:'메모를 확인해주세요.'},400);
+      const result=await fetch(`${url}/rest/v1/workshop_feedback?id=eq.${id}`,{method:'DELETE',headers:{...dbHeaders,Prefer:'return=representation'}});
+      if(!result.ok)throw Error('delete');
+      return reply({deleted:true});
+    }
+    if(req.method==='POST'&&path.endsWith('/admin/logout')){
+      const hash=await sessionHash(req);
+      if(hash){const result=await fetch(`${url}/rest/v1/workshop_feedback_sessions?token_hash=eq.${hash}`,{method:'DELETE',headers:dbHeaders});if(!result.ok)throw Error('logout');}
+      return reply({loggedOut:true});
+    }
     if(req.method==='GET'){
       const before=new URL(req.url).searchParams.get('before');
       if(before&&(before.length>40||Number.isNaN(Date.parse(before))))return reply({error:'잘못된 페이지입니다.'},400);
-      const query=new URLSearchParams({select:'id,body,category,color,animal,created_at',hidden:'eq.false',order:'created_at.desc,id.desc',limit:'25'});
+      const query=new URLSearchParams({select:'id,body,category,color,animal,nickname,created_at',hidden:'eq.false',order:'created_at.desc,id.desc',limit:'25'});
       if(before)query.set('created_at',`lt.${before}`);
       const result=await fetch(`${url}/rest/v1/workshop_feedback?${query}`,{headers:dbHeaders});
       if(!result.ok)throw new Error('read');
@@ -38,15 +67,30 @@ Deno.serve(async req=>{
     while(true){const {value,done}=await reader.read();if(done)break;size+=value.length;if(size>4096){await reader.cancel();return reply({error:'글이 너무 길어요.'},413);}chunks.push(value);}
     const bytes=new Uint8Array(size);let offset=0;for(const c of chunks){bytes.set(c,offset);offset+=c.length;}
     let input;try{input=JSON.parse(new TextDecoder().decode(bytes));}catch{return reply({error:'글을 다시 확인해주세요.'},400);}
+    if(path.endsWith('/admin/login')){
+      const limit=await fetch(`${url}/rest/v1/rpc/feedback_login_attempt`,{method:'POST',headers:dbHeaders,body:JSON.stringify({p_rate_key:await rateKeyFor(req)})});
+      if(!limit.ok)throw Error('login limit');
+      if(!await limit.json())return reply({error:'로그인 시도가 많아요. 15분 후 다시 시도해주세요.'},429);
+      if(!input||typeof input.password!=='string'||input.password.length>100)return reply({error:'비밀번호를 확인해주세요.'},401);
+      const settings=await fetch(`${url}/rest/v1/workshop_feedback_admin?select=password_hash,salt,iterations&id=eq.true&limit=1`,{headers:dbHeaders});
+      if(!settings.ok)throw Error('settings');const [admin]=await settings.json();if(!admin)throw Error('no settings');
+      const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(input.password),'PBKDF2',false,['deriveBits']);
+      const candidate=hex(await crypto.subtle.deriveBits({name:'PBKDF2',salt:new TextEncoder().encode(admin.salt),iterations:admin.iterations,hash:'SHA-256'},key,256));
+      let mismatch=0;for(let i=0;i<64;i++)mismatch|=candidate.charCodeAt(i)^admin.password_hash.charCodeAt(i);
+      if(mismatch)return reply({error:'비밀번호가 맞지 않아요.'},401);
+      const token=hex(crypto.getRandomValues(new Uint8Array(32)).buffer);const expiresAt=new Date(Date.now()+2*60*60*1000).toISOString();
+      const saved=await fetch(`${url}/rest/v1/workshop_feedback_sessions`,{method:'POST',headers:dbHeaders,body:JSON.stringify({token_hash:await digest(token),expires_at:expiresAt})});
+      if(!saved.ok)throw Error('save session');
+      await fetch(`${url}/rest/v1/workshop_feedback_sessions?expires_at=lt.${new Date().toISOString()}`,{method:'DELETE',headers:dbHeaders});
+      return reply({token,expiresAt});
+    }
     if(!input||typeof input!=='object'||typeof input.body!=='string')return reply({error:'한 줄을 적어주세요.'},400);
     const body=input.body.normalize('NFC').trim().replace(/[\r\n\t]+/g,' ').replace(/ {2,}/g,' ');
+    const nickname=(typeof input.nickname==='string'?input.nickname:'').normalize('NFC').trim().replace(/\s+/g,' ')||'향기를 남긴 손님';
+    if([...nickname].length>20||/[\u0000-\u001f\u007f]/.test(nickname))return reply({error:'닉네임은 20자 이내로 적어주세요.'},400);
     if(!body||[...body].length>100||/[\u0000-\u001f\u007f]/.test(body)||!uuid.test(input.id||'')||!categories.includes(input.category)||!colors.includes(input.color)||!animals.includes(input.animal))return reply({error:'100자 이내 한 줄과 메모 모양을 확인해주세요.'},400);
     if(input.website)return reply({error:'잠시 후 다시 시도해주세요.'},400);
-    const ip=req.headers.get('x-forwarded-for')?.split(',')[0].trim()||req.headers.get('cf-connecting-ip')||'unknown';
-    const hashKey=await crypto.subtle.importKey('raw',new TextEncoder().encode(secret),{name:'HMAC',hash:'SHA-256'},false,['sign']);
-    const signature=await crypto.subtle.sign('HMAC',hashKey,new TextEncoder().encode(`${new Date().toISOString().slice(0,10)}:${ip}`));
-    const rateKey=Array.from(new Uint8Array(signature)).map(b=>b.toString(16).padStart(2,'0')).join('');
-    const result=await fetch(`${url}/rest/v1/rpc/submit_workshop_feedback`,{method:'POST',headers:dbHeaders,body:JSON.stringify({p_id:input.id,p_body:body,p_category:input.category,p_color:input.color,p_animal:input.animal,p_rate_key:rateKey})});
+    const result=await fetch(`${url}/rest/v1/rpc/submit_workshop_feedback`,{method:'POST',headers:dbHeaders,body:JSON.stringify({p_id:input.id,p_body:body,p_category:input.category,p_color:input.color,p_animal:input.animal,p_nickname:nickname,p_rate_key:await rateKeyFor(req)})});
     if(!result.ok){const error=await result.text();if(error.includes('feedback_rate_limit'))return reply({error:'메모가 많이 도착했어요. 잠시 후 다시 남겨주세요.'},429);if(error.includes('feedback_conflict'))return reply({error:'새 메모로 다시 남겨주세요.'},409);throw new Error('write');}
     return reply({item:await result.json()},201);
   }catch{return reply({error:'보드와 연결하지 못했어요. 잠시 후 다시 시도해주세요.'},503);}

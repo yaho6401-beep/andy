@@ -15,6 +15,10 @@ const context=vm.createContext({
   matchMedia:()=>({matches:false}),
   FeedbackConfig:{endpoint:'https://test.invalid/feedback',key:'public-test'},
   fetch:async(_url,options)=>{
+    if(_url.endsWith('/admin/login')){const payload=JSON.parse(options.body);return payload.password==='test-only-password'?{ok:true,json:async()=>({token:'test-session'})}:{ok:false,status:401,json:async()=>({error:'비밀번호가 맞지 않아요.'})};}
+    if(_url.endsWith('/admin/logout'))return {ok:true,json:async()=>({loggedOut:true})};
+    if(options.method==='DELETE'){assert.equal(options.headers.Authorization,'Bearer test-session');const id=new URL(_url).searchParams.get('id');stored=stored.filter(n=>n.id!==id);return {ok:true,json:async()=>({deleted:true})};}
+
     if(options.method==='POST'){
       writes++;const payload=JSON.parse(options.body);
       if(failWrite)throw Error('테스트 연결 오류');
@@ -28,6 +32,9 @@ vm.runInContext(await readFile(new URL('../feedback.js',import.meta.url),'utf8')
 await new Promise(r=>setTimeout(r,0));
 assert.equal((el('feedback-colors').innerHTML.match(/data-note-color=/g)||[]).length,6);
 assert.equal((el('feedback-animals').innerHTML.match(/data-note-animal=/g)||[]).length,4);
+el('feedback-nickname').value='<b>봄</b>';
+el('feedback-nickname').listeners.input();
+assert.ok(el('feedback-preview').innerHTML.includes('&lt;b&gt;봄&lt;/b&gt;'));
 el('feedback-text').value='<img src=x onerror=alert(1)> 예쁜 메모';
 el('feedback-text').listeners.input();
 assert.ok(el('feedback-preview').innerHTML.includes('&lt;img'));
@@ -52,3 +59,22 @@ assert.equal(writes,2);
 el('feedback-text').value='🍋'.repeat(101);el('feedback-text').listeners.input();
 assert.equal([...el('feedback-text').value].length,100);
 console.log('Feedback preview, decorations, escaping, save, retry and validation checks passed.');
+
+assert.ok(!el('feedback-notes').innerHTML.includes('data-feedback-delete='));
+el('feedback-admin-password').value='wrong-test';await el('feedback-admin-login').listeners.submit({preventDefault(){}});
+assert.ok(el('feedback-admin-status').textContent.includes('비밀번호가 맞지'));
+assert.equal(el('feedback-admin-password').value,'');
+el('feedback-admin-password').value='test-only-password';await el('feedback-admin-login').listeners.submit({preventDefault(){}});
+assert.ok(el('feedback-notes').innerHTML.includes('data-feedback-delete='));
+assert.equal(el('feedback-admin-login').hidden,true);
+const deleteId=stored[0].id;
+await el('feedback-notes').listeners.click({target:{closest:s=>s==='[data-feedback-delete]'?{dataset:{feedbackDelete:deleteId}}:null}});
+assert.ok(el('feedback-notes').innerHTML.includes('이 메모를 삭제할까요?'));
+await el('feedback-notes').listeners.click({target:{closest:s=>s==='[data-feedback-cancel-delete]'?{}:null}});
+assert.ok(!el('feedback-notes').innerHTML.includes('이 메모를 삭제할까요?'));
+await el('feedback-notes').listeners.click({target:{closest:s=>s==='[data-feedback-delete]'?{dataset:{feedbackDelete:deleteId}}:null}});
+await el('feedback-notes').listeners.click({target:{closest:s=>s==='[data-feedback-confirm-delete]'?{dataset:{feedbackConfirmDelete:deleteId}}:null}});
+assert.equal(stored.length,0);
+assert.ok(el('feedback-notes').innerHTML.includes('첫 번째 향기 메모'));
+await el('feedback-admin-logout').listeners.click();assert.equal(el('feedback-admin-login').hidden,false);
+console.log('Nickname escaping, admin login, delete confirmation, deletion and logout checks passed.');
