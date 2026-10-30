@@ -1,4 +1,16 @@
 (function(g){const rows=`
+진열장으로 돌아가기 ↓|Back to the cabinet ↓|返回陈列柜 ↓|香料棚へ戻る ↓
+개봉 예정|Opening soon|即将开放|近日公開
+개봉 예정 향료|Scent opening soon|即将开放的香料|近日公開の香料
+네 가지 향은 지금 공개 중 · 잠긴 향료는 차례로 개봉할게요.|Four scents are open now. Locked scents will be revealed one by one.|四款香气现已开放，其余香料将逐步揭晓。|4つの香りを公開中。ロックされた香料は順次公開します。
+안내 팝업 닫기|Close announcement|关闭公告|お知らせを閉じる
+3년 만에, 다시 준비 중!|Returning after three years — in preparation!|时隔三年，再次筹备中！|3年ぶりに、再び準備中！
+향기로 시작하는 새로운 만남.|A new connection begins with scent.|以香气开启新的相遇。|香りから始まる新しい出会い。
+솔로만 프로그램 사전 참가신청은|To express interest in the Solo Only program,|单身限定活动预报名，|ソロ限定プログラムの事前参加申請は
+커뮤니티 라운지에서 함께해주세요.|join us in the Community Lounge.|请前往社区休息室。|コミュニティラウンジへ。
+커뮤니티 라운지에서 사전신청하기 →|Apply in the Community Lounge →|前往社区休息室预报名 →|コミュニティラウンジで事前申請 →
+오늘 하루 열지 않기|Don't show again today|今天不再显示|今日は表示しない
+닫기|Close|关闭|閉じる
 책과향기 라운지|Books & Scents lounges|书与香气休息室|本と香りのラウンジ
 VIP 라운지|VIP Lounge|VIP贵宾室|VIPラウンジ
 커뮤니티 라운지|Community Lounge|社区休息室|コミュニティラウンジ

@@ -1,9 +1,10 @@
 (function(g){
  'use strict';
  const $=id=>document.getElementById(id),dialog=$('runner-dialog'),canvas=$('runner-canvas'),ctx=canvas.getContext('2d'),E=g.PerfumeRunnerEngine,config=g.FeedbackConfig;
- const labels={discount1000:'매장 1,000원 할인권',discount2000:'매장 2,000원 할인권',discount3000:'매장 3,000원 할인권',extra5:'5ml 제공권',extra3:'3ml 제공권'};
+ const labels={discount1000:'매장 1,000원 할인권',discount2000:'매장 2,000원 할인권',discount3000:'매장 3,000원 할인권',extra5:'5ml 제공권',extra3:'3ml 제공권',bottleUpgrade:'공병 1단계 업그레이드 쿠폰'};
  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let state=E.create(1),session=null,events=[],savedTick=0,playing=false,raf=0,last=0,acc=0,lastSync=0,syncPromise=null,loading=false,reload=false,drawBusy=false,draw=null,coupon=null,wallet=[],adminToken=g.FeedbackAdmin?.token||null,checkedCoupon=null;
+ let best=0;try{best=Number(localStorage.getItem('scent-runner-best'))||0;}catch{}
  const visitor=g.FeedbackVisitor||crypto.randomUUID(),time=n=>String(Math.floor(n/3600)).padStart(2,'0')+':'+String(Math.floor(n/60)%60).padStart(2,'0');
  const date=v=>new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(v));
  const text=s=>g.ScentI18n?.text(s)||s;
@@ -11,14 +12,15 @@
  async function api(path,body){const r=await fetch(config.endpoint+'/game/'+path,{method:'POST',headers:{apikey:config.key,'Content-Type':'application/json',...(adminToken?{Authorization:'Bearer '+adminToken}:{})},body:JSON.stringify(body),signal:AbortSignal.timeout(20000)});const data=await r.json();if(!r.ok){const error=Error(data.error||'게임과 연결하지 못했어요. 잠시 후 다시 시도해주세요.');error.status=r.status;throw error;}return data;}
  function queue(change){events.push({t:state.tick+1,...change});}
  function release(){if(session)queue({j:0,s:0});}
- function pause(){playing=false;release();update();}
+ function pause(){playing=false;release();try{localStorage.setItem('scent-runner-best',String(best));}catch{}update();}
  function update(){
+  best=Math.max(best,state.score);$('runner-best').textContent=String(best);$('runner-combo').textContent=String(state.combo||0);
   $('runner-time').textContent=time(state.active);$('runner-score').textContent=String(state.score);$('runner-hearts').textContent='♥'.repeat(Math.max(0,state.hp))+'♡'.repeat(3-Math.max(0,state.hp));
   $('runner-progress').value=Math.min(1,Math.min(state.active/E.GOAL_TICKS,state.score/E.GOAL_SCORE));
   $('runner-play').textContent=loading?'연결 중…':playing?'일시정지':state.over&&session?'다시 달리기':session?'이어 하기':'게임 시작';
   $('runner-play').disabled=loading;$('runner-jump').disabled=!playing||state.over;$('runner-spray').disabled=!playing||state.over;
  }
- async function connect(){loading=true;update();try{if(syncPromise)await syncPromise;const data=await api('start',{visitor});session={id:data.id,version:data.version};state=data.state;savedTick=state.tick;events=[];reload=false;draw=data.draw;wallet=data.coupons||[];renderWallet();if(draw)showDraw(draw);status('플레이 기록은 자동으로 저장돼요.');return true;}catch(error){status(error.message);return false;}finally{loading=false;update();}}
+ async function connect(){loading=true;update();try{if(syncPromise)await syncPromise;const data=await api('start',{visitor});session={id:data.id,version:data.version};state=data.state;E.upgrade(state);savedTick=state.tick;events=[];reload=false;draw=data.draw;wallet=data.coupons||[];renderWallet();if(draw)showDraw(draw);status('플레이 기록은 자동으로 저장돼요.');return true;}catch(error){status(error.message);return false;}finally{loading=false;update();}}
  async function claim(){
   if(draw||drawBusy)return;drawBusy=true;
   try{const result=await api('claim',{visitor,id:session.id});draw=result.draw;pause();showDraw(draw);if(draw.prize!=='none'){wallet.unshift(draw);renderWallet();}status('오늘의 향기 미션을 완료했어요!');}
@@ -62,7 +64,12 @@
   for(let i=0;i<10;i++){const x=((i*130-offset*.15)%1300+1300)%1300-100;ctx.fillStyle=i%2?'#ced9be':'#d9dfca';ctx.fillRect(x,215,70,125);ellipse(x+35,212,50,54,ctx.fillStyle);}
   ctx.fillStyle='#b9c8a2';ctx.fillRect(0,343,900,5);ctx.fillStyle='#e9e0cb';ctx.fillRect(0,348,900,92);ctx.strokeStyle='#cfc7b5';ctx.lineWidth=2;for(let i=0;i<14;i++){const x=((i*80-offset)%1120+1120)%1120;ctx.beginPath();ctx.moveTo(x,373);ctx.lineTo(x+25,373);ctx.stroke();}
   for(const e of state.enemies){if(e.type==='obstacle'){ctx.fillStyle='#baaa8b';ctx.fillRect(e.x-20,292,40,48);ctx.fillStyle='#819878';ctx.fillRect(e.x-25,285,50,10);ctx.fillStyle='#a3b18c';ellipse(e.x,277,20,17,'#a3b18c');}else if(e.type==='stink'){ellipse(e.x,e.y-17,18,17,'#899475');ellipse(e.x-6,e.y-21,4,4,'#ccd1ac');}else{animal(e.x,e.y,e.type,e.boss?110:e.type==='bear'?75:63);if(e.boss){ctx.fillStyle='#cfcab5';ctx.fillRect(e.x-54,e.y-132,108,9);ctx.fillStyle='#a87991';ctx.fillRect(e.x-54,e.y-132,108*e.hp/e.maxHp,9);ctx.fillStyle='#68795d';ctx.font='bold 14px sans-serif';ctx.textAlign='center';ctx.fillText(text('악취 보스'),e.x,e.y-143);}}}
-  for(const b of state.bolts){ellipse(b.x,b.y,18,8,'#b6c5d7bb');ellipse(b.x+14,b.y-3,6,6,'#d4bfd7');}
+  for(const b of state.bolts){
+   const age=b.age||0,radius=Math.min(b.fever?95:78,14+age*4),alpha=Math.max(0,1-age/22);ctx.save();ctx.globalAlpha=alpha*.55;const mist=ctx.createRadialGradient(b.x,b.y,3,b.x+radius*.3,b.y,radius);mist.addColorStop(0,b.fever?'#ead0a5':'#d5c4e8');mist.addColorStop(1,'#e3e7ed00');ctx.fillStyle=mist;ctx.beginPath();ctx.moveTo(157,b.y);ctx.bezierCurveTo(b.x+radius,b.y-radius*.8,b.x+radius*1.2,b.y+radius*.8,157,b.y+5);ctx.fill();for(let i=0;i<32;i++){const angle=(i*2.399+b.id)*.8,distance=radius*(.2+(i%9)/11),x=b.x+Math.abs(Math.cos(angle))*distance,y=b.y+Math.sin(angle)*distance*.55;ellipse(x,y,1.3+i%4,1.3+i%4,i%3?'#f6f6fa':'#d3b9dc');}ctx.restore();
+  }
+  if(state.fever>0){ctx.strokeStyle='#d8ad69';ctx.lineWidth=7;ctx.strokeRect(4,4,892,432);ctx.fillStyle='#b38b4d';ctx.font='bold 18px sans-serif';ctx.textAlign='right';ctx.fillText(text('안개 피버!')+' '+Math.ceil(state.fever/60)+'s',875,34);}
+  if(state.noticeTTL>0){ctx.save();ctx.globalAlpha=Math.min(1,state.noticeTTL/20);ctx.fillStyle=state.notice==='fever'?'#b48a46':'#a66e8f';ctx.font='bold 24px sans-serif';ctx.textAlign='center';ctx.fillText(text(state.notice==='fever'?'5콤보! 향기 점수 2배':state.notice==='boss'?'보스 구출 성공!':'퍼펙트 타이밍!'),450,77);ctx.restore();}
+  if(state.combo>1){ctx.fillStyle='#9a7789';ctx.font='bold 20px sans-serif';ctx.textAlign='left';ctx.fillText('COMBO ×'+state.combo,23,36);}
   for(const f of state.friends){ctx.globalAlpha=f.t/100;if(f.type!=='stink')animal(f.x,f.y,f.type,f.boss?95:63,true);ctx.fillStyle='#c7889c';ctx.font='24px sans-serif';ctx.textAlign='center';ctx.fillText('♥',f.x+28,f.y-95);ctx.globalAlpha=1;}
   if(!state.shield||Math.floor(state.tick/6)%2)animal(132,state.y,'raccoon',74,true);
   ctx.fillStyle='#6b7e5f';ctx.font='14px sans-serif';ctx.textAlign='left';ctx.fillText(text('책과향기 · 향기로 행복을 전해요'),22,412);
@@ -82,7 +89,7 @@
  $('runner-wallet-load').addEventListener('click',async()=>{pause();await sync();if(!await connect())return;$('runner-wallet').open=true;});
  $('runner-wallet-list').addEventListener('click',e=>{const b=e.target.closest('[data-wallet]');if(b)showDraw(wallet[Number(b.dataset.wallet)]);});
  $('runner-save-coupon').addEventListener('click',async()=>{
-  if(!coupon)return;const c=document.createElement('canvas');c.width=1100;c.height=1450;const x=c.getContext('2d');x.fillStyle='#f8f4e9';x.fillRect(0,0,c.width,c.height);x.strokeStyle='#9aaa85';x.lineWidth=4;x.strokeRect(40,40,1020,1370);x.textAlign='center';x.fillStyle='#3b5840';x.font='42px sans-serif';x.fillText('책과향기',550,165);x.font='24px sans-serif';x.fillText('향수 미니게임 · 향기 선물',550,235);x.font='bold 62px sans-serif';x.fillText(labels[coupon.prize],550,430);x.font='bold 47px monospace';x.fillText(coupon.code,550,590);x.font='29px sans-serif';x.fillText('유효기간: '+date(coupon.expires_at)+'까지',550,710);x.font='25px sans-serif';for(const [i,line] of ['방문당 1장 · 다른 쿠폰과 중복 불가','매장에서 쿠폰 번호 확인 후 사용 처리','발급일: '+date(coupon.issued_at)].entries())x.fillText(line,550,850+i*55);x.font='30px serif';x.fillText('당신의 이야기에 향을 입히세요.',550,1160);x.font='23px sans-serif';x.fillText('실제 사용 여부는 매장 조회 결과를 기준으로 합니다.',550,1290);const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=coupon.code+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);
+  if(!coupon)return;const c=document.createElement('canvas');c.width=1100;c.height=1450;const x=c.getContext('2d');x.fillStyle='#f8f4e9';x.fillRect(0,0,c.width,c.height);x.strokeStyle='#9aaa85';x.lineWidth=4;x.strokeRect(40,40,1020,1370);x.textAlign='center';x.fillStyle='#3b5840';x.font='42px sans-serif';x.fillText('책과향기',550,165);x.font='24px sans-serif';x.fillText('향수 미니게임 · 향기 선물',550,235);x.font='bold '+(coupon.prize==='bottleUpgrade'?43:62)+'px sans-serif';x.fillText(labels[coupon.prize],550,430);x.font='bold 47px monospace';x.fillText(coupon.code,550,590);x.font='29px sans-serif';x.fillText('유효기간: '+date(coupon.expires_at)+'까지',550,710);x.font='25px sans-serif';for(const [i,line] of ['방문당 1장 · 다른 쿠폰과 중복 불가','매장에서 쿠폰 번호 확인 후 사용 처리','발급일: '+date(coupon.issued_at)].entries())x.fillText(line,550,850+i*55);x.font='30px serif';x.fillText('당신의 이야기에 향을 입히세요.',550,1160);x.font='23px sans-serif';x.fillText('실제 사용 여부는 매장 조회 결과를 기준으로 합니다.',550,1290);const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));const a=document.createElement('a'),url=URL.createObjectURL(blob);a.href=url;a.download=coupon.code+'.png';a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);
  });
  function adminState(){$('runner-admin-login').hidden=Boolean(adminToken);$('runner-admin-check').hidden=!adminToken;if(!adminToken){checkedCoupon=null;$('runner-admin-confirm').hidden=true;$('runner-admin-result').textContent='';}}
  $('runner-admin-login').addEventListener('submit',async e=>{e.preventDefault();const password=$('runner-admin-password').value;$('runner-admin-password').value='';$('runner-admin-login-button').disabled=true;try{await g.FeedbackAdmin.login(password);$('runner-admin-status').textContent='관리자 모드예요.';}catch(error){$('runner-admin-status').textContent=error.message;}finally{$('runner-admin-login-button').disabled=false;}});
