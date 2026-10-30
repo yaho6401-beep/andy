@@ -56,7 +56,7 @@ Deno.serve(async req=>{
     const path=new URL(req.url).pathname.replace(/\/$/,'');
     const params=new URL(req.url).searchParams;
     if(/\/lounge\/(?:apply|applications(?:\/(?:status|delete))?)$/.test(path))return await handleLounge(req,{url,dbHeaders,reply,limited,sessionHash,visitorHash,cleanText});
-    if(/\/game\/(?:start|checkpoint|claim|check-coupon|redeem)$/.test(path))return await handleGame(req,{url,dbHeaders,reply,rpc,limited,sessionHash,visitorHash});
+    if(/\/game\/(?:start|checkpoint|claim|check-coupon|redeem|leaderboard)$/.test(path))return await handleGame(req,{url,dbHeaders,reply,rpc,limited,sessionHash,visitorHash});
     if(/\/scent(?:\/(?:like|review|delete|staff(?:\/delete)?))?$/.test(path))return await handleScent(req,{url,dbHeaders,reply,rpc,limited,sessionHash,visitorHash,passwordHash,equalHash,rateKeyFor,cleanText});
     if(/\/gallery\/(?:event|like|contacts|finalize)$/.test(path))return await handleGalleryEvent(req,{url,dbHeaders,reply,rpc,limited,sessionHash,visitorHash});
     if(/\/gallery(?:\/delete)?$/.test(path))return await handleGallery(req,{url,dbHeaders,reply,limited,sessionHash,passwordHash,equalHash,cleanText});

@@ -1,0 +1,21 @@
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {stripTypeScriptTypes} from 'node:module';
+import {webcrypto} from 'node:crypto';
+import vm from 'node:vm';
+const json=(v,s=200)=>new Response(JSON.stringify(v),{status:s});
+const calls=[],id='11111111-1111-4111-8111-111111111111';
+const ctx=vm.createContext({URL,URLSearchParams,Response,Blob,Intl,crypto:webcrypto,fetch:async url=>{
+ if(url.includes('workshop_game_draws'))return json([]);
+ return json([{id,state:ctx.PerfumeRunnerEngine.create(42),version:0}]);
+}});
+vm.runInContext(await readFile(new URL('../supabase/functions/feedback-wall/runner-engine.js',import.meta.url),'utf8'),ctx);
+vm.runInContext(stripTypeScriptTypes((await readFile(new URL('../supabase/functions/feedback-wall/game.ts',import.meta.url),'utf8')).replace("import './runner-engine.js';",'')).replace('export async function','async function'),ctx);
+const mine={nickname:'향기친구',score:150,place:1,code:'R-1234ABCD'};
+const deps={url:'https://test.invalid',dbHeaders:{},reply:json,limited:async()=>true,sessionHash:async()=>null,visitorHash:async()=> 'server-hash',rpc:async(name,args)=>{calls.push({name,args});if(name==='workshop_game_register')return json({nickname:args.p_nickname,totalScore:150,code:mine.code});if(name==='workshop_game_leaderboard')return json({leaders:[mine],mine});return json(true);}};
+const request=(path,body)=>new Request('https://test.invalid/game/'+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({visitor:id,...body})});
+assert.equal((await ctx.handleGame(request('start',{}),deps)).status,400);assert.equal(calls.length,0);
+assert.equal((await ctx.handleGame(request('start',{nickname:'가'.repeat(13)}),deps)).status,400);
+const started=await ctx.handleGame(request('start',{nickname:' 향기친구 ',total_score:999999,score:999999}),deps);assert.equal(started.status,200);const body=await started.json();assert.equal(body.profile.totalScore,150);assert.equal(body.leaderboard.mine.score,150);assert.deepEqual(JSON.parse(JSON.stringify(calls[0].args)),{p_visitor_hash:'server-hash',p_nickname:'향기친구'});
+const board=await ctx.handleGame(request('leaderboard',{}),deps);assert.equal(board.status,200);assert.equal((await board.json()).mine.place,1);
+console.log('Nickname is required and normalized; leaderboard and cumulative totals come only from server RPCs, ignoring supplied scores.');

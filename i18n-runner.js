@@ -1,5 +1,21 @@
 (function(g){
  const rows=`
+랭킹에 사용할 닉네임|Your ranking nickname|排行榜昵称|ランキング用のニックネーム
+닉네임 1~12자|Nickname: 1–12 characters|昵称1至12字|ニックネーム1～12文字
+닉네임과 누적 점수는 랭킹에 공개됩니다.|Your nickname and cumulative score will be public on the leaderboard.|昵称与累计分数将公开在排行榜上。|ニックネームと累計スコアはランキングに公開されます。
+누적 랭킹 TOP 20|All-time Top 20|累计排行榜前20名|累計ランキング TOP 20
+누적 랭킹 1위에게 추후 10ml 향수 제공 예정!|A 10ml perfume gift is planned for the future all-time ranking winner!|计划为届时累计排行榜第一名提供10ml香水！|累計ランキング1位に、後日10mlの香水をプレゼント予定！
+선정일과 지급 방법은 추후 안내합니다.|The selection date and gift details will be announced later.|评选日期与领取方式将另行通知。|選出日とお渡し方法は後日ご案内します。
+내 누적 점수|My cumulative score|我的累计分数|自分の累計スコア
+내 순위|My rank|我的排名|自分の順位
+날짜가 바뀌어도 누적 점수는 유지돼요.|Your cumulative score carries over each day.|累计分数不会每天重置。|日付が変わっても累計スコアは続きます。
+랭킹 새로고침|Refresh rankings|刷新排行榜|ランキングを更新
+순위|Rank|排名|順位
+누적 점수|Cumulative score|累计分数|累計スコア
+서버가 검증한 점수만 합산합니다. 같은 브라우저 기준이며, 브라우저 데이터를 삭제하거나 다른 기기를 사용하면 기록이 분리됩니다. 기존에 이 브라우저로 플레이한 서버 기록도 닉네임 등록 시 합산돼요. 동점이면 해당 누적 점수를 먼저 달성한 순서로 정합니다.|Only server-verified points count, per browser. Clearing browser data or using another device creates a separate record. Earlier server-saved games from this browser are included when you register. Ties go to whoever reached the total first.|仅累计服务器验证的分数，以同一浏览器为准。清除浏览器数据或更换设备会产生独立记录。注册昵称时也会计入此浏览器以前保存在服务器上的游戏记录。同分时，先达到该分数者优先。|サーバーで検証した点数のみを同じブラウザ単位で合算します。ブラウザデータの削除や他の端末では記録が分かれます。登録時に同じブラウザの過去のサーバー記録も合算します。同点は先にその点数に達した順です。
+게임을 시작하기 전에 닉네임을 1~12자로 적어주세요.|Enter a 1–12 character nickname before starting.|开始游戏前，请输入1至12字的昵称。|開始前にニックネームを1～12文字で入力してください。
+첫 번째 누적 랭커를 기다려요.|Be the first to join the all-time rankings.|期待首位累计排行榜玩家。|最初の累計ランカーをお待ちしています。
+랭킹을 불러오고 있어요…|Loading rankings…|正在加载排行榜…|ランキングを読み込んでいます…
 공병 1단계 업그레이드 쿠폰|One-tier bottle upgrade voucher|空瓶升级一级券|ボトル1段階アップグレード券
 공병 1단계 업그레이드 · 10%|One-tier bottle upgrade · 10%|空瓶升级一级 · 10%|ボトル1段階アップグレード・10%
 연속 구출|Rescue combo|连续救助|連続救出

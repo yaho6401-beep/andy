@@ -27,10 +27,15 @@ export async function handleGame(req:Request,d:Deps){
  const day=['year','month','day'].map(k=>parts.find(p=>p.type===k)!.value).join('-');
  async function findSession(){const r=await fetch(`${url}/rest/v1/workshop_game_sessions?visitor_hash=eq.${visitor}&day=eq.${day}&select=*&limit=1`,{headers:dbHeaders});if(!r.ok)throw Error('runner read');return (await r.json())[0];}
  async function drawFor(id:string){const r=await fetch(`${url}/rest/v1/workshop_game_draws?session_id=eq.${id}&select=code,prize,status,issued_at,expires_at,redeemed_at`,{headers:dbHeaders});if(!r.ok)throw Error('draw read');return (await r.json())[0]||null;}
+ async function board(){const r=await rpc('workshop_game_leaderboard',{p_visitor_hash:visitor});if(!r.ok)throw Error('leaderboard');return r.json();}
+ if(path.endsWith('/leaderboard'))return reply(await board());
  if(path.endsWith('/start')){
+  const nickname=typeof input.nickname==='string'?input.nickname.normalize('NFC').trim().replace(/\s+/g,' '):'';
+  if(!nickname||[...nickname].length>12||/[\u0000-\u001f\u007f\u200b-\u200f\u202a-\u202e\u2066-\u2069]/.test(nickname))return reply({error:'게임을 시작하기 전에 닉네임을 1~12자로 적어주세요.'},400);
+  const registered=await rpc('workshop_game_register',{p_visitor_hash:visitor,p_nickname:nickname});if(!registered.ok)throw Error('player register');const profile=await registered.json();
   let session=await findSession();if(!session){const state=Engine.create(crypto.getRandomValues(new Uint32Array(1))[0]);const saved=await fetch(`${url}/rest/v1/workshop_game_sessions`,{method:'POST',headers:dbHeaders,body:JSON.stringify({id:crypto.randomUUID(),visitor_hash:visitor,state})});if(!saved.ok&&saved.status!==409)throw Error('runner create');session=await findSession();}
   const wallet=await fetch(`${url}/rest/v1/workshop_game_draws?visitor_hash=eq.${visitor}&prize=neq.none&order=issued_at.desc&limit=30&select=code,prize,status,issued_at,expires_at,redeemed_at`,{headers:dbHeaders});if(!wallet.ok)throw Error('wallet');
-  return reply({id:session.id,state:session.state,version:session.version,draw:await drawFor(session.id),coupons:await wallet.json()});
+  return reply({id:session.id,state:session.state,version:session.version,draw:await drawFor(session.id),coupons:await wallet.json(),profile,leaderboard:await board()});
  }
  if(!uuid.test(input.id||''))return reply({error:'게임 정보를 확인해주세요.'},400);
  const r=await fetch(`${url}/rest/v1/workshop_game_sessions?id=eq.${input.id}&visitor_hash=eq.${visitor}&day=eq.${day}&select=*&limit=1`,{headers:dbHeaders});if(!r.ok)throw Error('session read');const [session]=await r.json();if(!session)return reply({error:'오늘의 게임을 다시 열어주세요.'},409);
@@ -39,7 +44,7 @@ export async function handleGame(req:Request,d:Deps){
   let state;try{state=Engine.replay(session.state,input.toTick,input.events);}catch{return reply({error:'게임 입력을 확인해주세요. 다시 이어주세요.'},400);}
   const saved=await rpc('workshop_game_checkpoint',{p_id:session.id,p_visitor_hash:visitor,p_version:session.version,p_state:state});
   if(!saved.ok)throw Error('checkpoint');if(!await saved.json())return reply({error:'게임 시간을 확인하지 못했어요. 잠시 후 이어주세요.'},409);
-  return reply({version:session.version+1,verifiedActive:state.active,score:state.score});
+  return reply({version:session.version+1,verifiedActive:state.active,score:state.score,leaderboard:await board()});
  }
  if(path.endsWith('/claim')){
   if(!Engine.eligible(session.state))return reply({error:'실제 플레이 5분과 향기 점수 1,000점을 채워주세요.'},409);
