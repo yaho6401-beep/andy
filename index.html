@@ -7,8 +7,8 @@
   <script src="/i18n-data.js?v=gallery-16" defer></script><script src="/i18n-catalog.js?v=copy-20" defer></script><script src="/i18n-community.js?v=about-17" defer></script><script src="/i18n-scent.js?v=scent-19" defer></script><script src="/i18n-event.js?v=event-22" defer></script><script src="/i18n-runner.js?v=mist-24" defer></script><script src="/i18n-lounge.js?v=mist-24" defer></script><script src="/i18n.js?v=runner-21" defer></script><link rel="stylesheet" href="/i18n.css?v=lang-14">
   <link rel="stylesheet" href="/style.css?v=community-11">
   <script src="/engine.js?v=copy-20" defer></script><script src="/story-engine.js?v=lang-13" defer></script><script src="/story-ui.js?v=lang-13" defer></script><script src="/wardrobe.js?v=fit-10" defer></script><script src="/styling.js?v=fit-10" defer></script><script src="/app.js?v=scent-19" defer></script>
-  <link rel="stylesheet" href="/feedback.css?v=community-11"><link rel="stylesheet" href="/community.css?v=community-11">
-  <script src="/feedback-config.js?v=admin-8" defer></script><script src="/feedback-animals.js?v=gallery-16" defer></script><script src="/visits.js?v=read-15" defer></script><script src="/feedback.js?v=lounge-23" defer></script>
+  <link rel="stylesheet" href="/feedback.css?v=category-25"><link rel="stylesheet" href="/community.css?v=community-11">
+  <script src="/feedback-config.js?v=admin-8" defer></script><script src="/feedback-animals.js?v=gallery-16" defer></script><script src="/visits.js?v=read-15" defer></script><script src="/feedback.js?v=category-25" defer></script>
 <link rel="stylesheet" href="/perfume-game.css?v=play-12"><script src="/perfume-game.js?v=play-12" defer></script>
 <link rel="stylesheet" href="/mobile-readability.css?v=read-15">
 <link rel="stylesheet" href="/journey-gallery.css?v=event-22"><script src="/journey.js?v=gallery-16" defer></script><script src="/gallery.js?v=event-22" defer></script>
@@ -48,10 +48,10 @@
     
     <div class="feedback-compose">
       <form id="feedback-form" class="feedback-form">
-        <label for="feedback-category">어떤 이야기를 남길까요?</label><select id="feedback-category" name="category"><option value="improvement">개선사항</option><option value="request">요청사항</option><option value="message">한마디</option></select>
+        <fieldset class="feedback-category-field"><legend id="feedback-category-heading">어떤 이야기를 남길까요?</legend><input type="hidden" id="feedback-category" name="category" value="message"><div id="feedback-category-options" class="feedback-category-options" role="group" aria-labelledby="feedback-category-heading"><button type="button" data-feedback-category="message" aria-pressed="true">한마디</button><button type="button" data-feedback-category="request" aria-pressed="false">요청사항</button><button type="button" data-feedback-category="improvement" aria-pressed="false">개선사항</button></div></fieldset>
         <label for="feedback-nickname">닉네임 <small class="feedback-optional">선택 · 20자 이내</small></label><input type="text" id="feedback-nickname" name="nickname" maxlength="40" placeholder="어떤 이름으로 남길까요?" autocomplete="nickname">
         <div class="feedback-input-heading"><label for="feedback-text">향기 메모 한 줄</label><small id="feedback-count">0 / 100</small></div>
-        <input type="text" id="feedback-text" name="body" maxlength="200" required placeholder="이런 점이 더 좋아지면 좋겠어요…" aria-describedby="feedback-public-note feedback-count" autocomplete="off">
+        <input type="text" id="feedback-text" name="body" maxlength="200" required placeholder="당신의 한 줄이 이곳에 예쁘게 붙어요." aria-describedby="feedback-public-note feedback-count" autocomplete="off">
         <label class="feedback-edit-password-label" for="feedback-edit-password">내 글 수정·삭제용 비밀번호 <small class="feedback-optional">필수 · 4~64자</small></label><input type="password" id="feedback-edit-password" name="edit_password" required minlength="4" maxlength="64" autocomplete="new-password" placeholder="나중에 이 글을 수정하거나 삭제할 때 사용해요"><p class="feedback-password-hint">개인 비밀번호는 메모에 공개되지 않아요.</p><div class="feedback-decoration"><fieldset><legend>메모 색</legend><div id="feedback-colors" class="note-swatches"></div></fieldset><fieldset><legend>작은 친구 <small>동물 친구를 골라주세요</small></legend><div id="feedback-animals" class="animal-options"></div></fieldset></div>
         <div class="feedback-honeypot" aria-hidden="true"><label for="feedback-website">Website</label><input type="text" id="feedback-website" name="website" tabindex="-1" autocomplete="off"></div>
         <p id="feedback-writing-state" class="status"></p><p class="feedback-public-note" id="feedback-public-note">로그인 없이 남겨요. 메모는 모든 방문자에게 공개돼요.</p>

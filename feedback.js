@@ -54,7 +54,7 @@
   $('feedback-colors').addEventListener('click',e=>{const b=e.target.closest('[data-note-color]');if(!b)return;color=b.dataset.noteColor;for(const button of $('feedback-colors').querySelectorAll('button')){button.setAttribute('aria-pressed',String(button.dataset.noteColor===color));button.querySelector('span').textContent=button.dataset.noteColor===color?'✓':'';}preview();});
   $('feedback-animals').addEventListener('click',e=>{const b=e.target.closest('[data-note-animal]');if(!b)return;animal=b.dataset.noteAnimal;for(const button of $('feedback-animals').querySelectorAll('button'))button.setAttribute('aria-pressed',String(button.dataset.noteAnimal===animal));preview();});
   $('feedback-text').addEventListener('input',()=>{const chars=[...$('feedback-text').value];if(chars.length>100)$('feedback-text').value=chars.slice(0,100).join('');preview();});
-  $('feedback-category').addEventListener('change',preview);
+  $('feedback-category-options').addEventListener('click',e=>{const button=e.target.closest('[data-feedback-category]');if(!button||!Object.hasOwn(categories,button.dataset.feedbackCategory))return;$('feedback-category').value=button.dataset.feedbackCategory;for(const choice of $('feedback-category-options').querySelectorAll('button'))choice.setAttribute('aria-pressed',String(choice===button));preview();});
   $('feedback-form').addEventListener('submit',async e=>{
     e.preventDefault();if(sending)return;
     const body=$('feedback-text').value.normalize('NFC').trim().replace(/\s+/g,' ');
