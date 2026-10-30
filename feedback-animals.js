@@ -1,6 +1,6 @@
 (function(root){
   'use strict';
-  const labels={rat:'쥐 · 자',ox:'소 · 축',tiger:'호랑이 · 인',bunny:'토끼 · 묘',dragon:'용 · 진',snake:'뱀 · 사',horse:'말 · 오',goat:'양 · 미',monkey:'원숭이 · 신',rooster:'닭 · 유',dog:'개 · 술',pig:'돼지 · 해',bear:'곰돌이',cat:'고양이',fox:'여우'};
+  const labels={rat:'쥐',ox:'소',tiger:'호랑이',bunny:'토끼',dragon:'용',snake:'뱀',horse:'말',goat:'양',monkey:'원숭이',rooster:'닭',dog:'개',pig:'돼지',bear:'곰돌이',cat:'고양이',fox:'여우'};
   const round=(color)=>`<ellipse cx="32" cy="36" rx="23" ry="22" fill="${color}"/>`;
   const ears=(color,size=8)=>`<circle cx="16" cy="17" r="${size}" fill="${color}"/><circle cx="48" cy="17" r="${size}" fill="${color}"/>`;
   const faces={

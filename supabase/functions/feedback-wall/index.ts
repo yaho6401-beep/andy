@@ -1,3 +1,4 @@
+import {handleGallery} from './gallery.ts';
 // Public guestbook: application-key authorization, bounded input, service-only tables.
 const url=Deno.env.get('SUPABASE_URL')!;
 const secretKeys=JSON.parse(Deno.env.get('SUPABASE_SECRET_KEYS')||'{}');
@@ -50,6 +51,7 @@ Deno.serve(async req=>{
   try{
     const path=new URL(req.url).pathname.replace(/\/$/,'');
     const params=new URL(req.url).searchParams;
+    if(/\/gallery(?:\/delete)?$/.test(path))return await handleGallery(req,{url,dbHeaders,reply,limited,sessionHash,passwordHash,equalHash,cleanText});
     if(req.method==='DELETE'){
       if(!await sessionHash(req))return reply({error:'관리자 로그인이 필요해요.'},401);
       const id=new URL(req.url).searchParams.get('id');if(!id||!uuid.test(id))return reply({error:'메모를 확인해주세요.'},400);
@@ -124,6 +126,20 @@ Deno.serve(async req=>{
       }
       if(!input||!uuid.test(input.id||''))return reply({error:'메모를 확인해주세요.'},400);
       const result=await fetch(`${url}/rest/v1/workshop_feedback_hearts?feedback_id=eq.${input.id}`,{method:'DELETE',headers:dbHeaders});if(!result.ok)throw Error('reset');return reply({hearts:0,liked:false});
+    }
+    if(path.endsWith('/delete')){
+      if(!input||!uuid.test(input.id||''))return reply({error:'메모를 확인해주세요.'},400);
+      if(!await sessionHash(req)){
+        const limit=await rpc('feedback_login_attempt',{p_rate_key:'delete:'+await rateKeyFor(req)});if(!limit.ok)throw Error('delete limit');
+        if(!await limit.json())return reply({error:'삭제 시도가 많아요. 15분 후 다시 시도해주세요.'},429);
+        if(typeof input.password!=='string'||input.password.length<4||input.password.length>64)return reply({error:'작성할 때 설정한 비밀번호를 입력해주세요.'},401);
+        const result=await fetch(`${url}/rest/v1/workshop_feedback_edit_keys?feedback_id=eq.${input.id}&select=password_hash,salt,iterations&limit=1`,{headers:dbHeaders});
+        if(!result.ok)throw Error('delete key');const [key]=await result.json();
+        if(!key||!equalHash(await passwordHash(input.password,key.salt,key.iterations),key.password_hash))return reply({error:'비밀번호가 맞지 않거나 수정 비밀번호가 없는 메모예요.'},401);
+      }
+      const result=await fetch(`${url}/rest/v1/workshop_feedback?id=eq.${input.id}`,{method:'DELETE',headers:{...dbHeaders,Prefer:'return=representation'}});
+      if(!result.ok)throw Error('owner delete');if(!(await result.json()).length)return reply({error:'삭제된 메모예요.'},404);
+      return reply({deleted:true});
     }
     if(path.endsWith('/edit')){
       const body=cleanText(input?.body),nickname=cleanText(input?.nickname)||'향기를 남긴 손님';

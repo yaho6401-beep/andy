@@ -8,6 +8,7 @@ el('feedback-category').value='message';
 let rows=[],posts=0;
 const context=vm.createContext({document:{getElementById:el},Intl,Date,Map,Set,AbortSignal,crypto:webcrypto,matchMedia:()=>({matches:false}),FeedbackConfig:{endpoint:'https://test.invalid',key:'public'},fetch:async(url,options)=>{
   const ok=data=>({ok:true,json:async()=>data});
+  if(url.endsWith('/delete')){const p=JSON.parse(options.body);if(p.password!=='test-only-password')return {ok:false,status:401,json:async()=>({error:'비밀번호가 맞지 않아요.'})};rows=rows.filter(n=>n.id!==p.id);return ok({deleted:true});}
   if(url.endsWith('/edit')){const p=JSON.parse(options.body);if(p.password!=='test-only-password')return {ok:false,status:401,json:async()=>({error:'비밀번호가 맞지 않아요.'})};const row=rows.find(n=>n.id===p.id);Object.assign(row,{body:p.body,nickname:p.nickname,edited_at:new Date().toISOString()});return ok({item:row});}
   if(options.method==='POST'){posts++;const {password,...p}=JSON.parse(options.body);assert.equal(password,'test-only-password');const row={...p,created_at:new Date().toISOString(),editable:true,hearts:2,comments:1};rows.unshift(row);return ok({item:row});}
   return ok({items:rows,page:1,pages:1,total:rows.length,settings:{posting_open:true,comments_open:true,likes_open:true}});
@@ -27,3 +28,10 @@ el('memo-edit-password').value='test-only-password';await el('memo-edit-form').l
 assert.equal(rows[0].body,'수정한 내 메모');assert.equal(rows[0].hearts,2);assert.equal(rows[0].comments,1);assert.equal(el('memo-edit-dialog').open,false);assert.ok(el('feedback-notes').innerHTML.includes('수정됨'));
 assert.ok(!el('feedback-notes').innerHTML.includes('test-only-password'));
 console.log('Personal edit-password validation, wrong password, private form clearing, editing and reaction preservation passed.');
+
+assert.ok(el('feedback-notes').innerHTML.includes('data-delete-memo='));
+await el('feedback-notes').listeners.click({target:{closest:s=>s==='[data-delete-memo]'?{dataset:{deleteMemo:id}}:null}});
+assert.equal(el('memo-delete-dialog').open,true);
+el('memo-delete-password').value='wrong';await el('memo-delete-form').listeners.submit({preventDefault(){}});assert.equal(rows.length,1);assert.equal(el('memo-delete-password').value,'');assert.equal(el('memo-delete-dialog').open,true);
+el('memo-delete-password').value='test-only-password';await el('memo-delete-form').listeners.submit({preventDefault(){}});assert.equal(rows.length,0);assert.equal(el('memo-delete-dialog').open,false);
+console.log('Personal memo deletion accepts the correct password and rejects the wrong password.');

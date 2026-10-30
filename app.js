@@ -31,6 +31,7 @@ function selectMain(id){
   selectedMain=id;renderMain();updateSummary();
 }
 function continueToSingles(){
+  globalThis.ScentJourney?.show('selection',{scroll:false});
   $('single-selection').scrollIntoView({behavior:'smooth',block:'start'});
 }
 function renderMainChoice(){
@@ -125,7 +126,7 @@ async function init(){
     for(const id of (params.get('hide')||'').split(','))if(validIds.has(id))hiddenAccessories.add(id);
     renderMain();renderSingles();updateSummary();initProfile();
     StoryUI.init(catalog,recipe=>{selectedMain=recipe.main.id;selectedSingles=new Set(recipe.singles.map(s=>s.id));$('search').value='';renderMain();renderSingles();updateSummary();$('status').textContent='메인향 1개와 추천 단일향을 적용했어요. 단일향은 자유롭게 추가하거나 해제할 수 있어요.';continueToSingles();});
-    if(selectedMain)showResult(false);
+    if(selectedMain){globalThis.ScentJourney?.show('selection',{scroll:false});showResult(false);}
     $('search').addEventListener('input',renderMain);
     $('main-list').addEventListener('click',e=>{const button=e.target.closest('[data-main]');if(!button)return;selectMain(button.dataset.main);continueToSingles();});
     document.addEventListener('click',e=>{

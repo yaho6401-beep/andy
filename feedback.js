@@ -12,13 +12,13 @@
   let thread=null,threadPage=1,threadPages=1,threadTotal=0,comments=[],commentIntent=null,commentBusy=false,threadVersion=0,confirmComment=null;
   const heartBusy=new Set();
   let adminToken=null,confirmDelete=null,deleting=false;
-  let editingId=null,editBusy=false;
+  let editingId=null,editBusy=false,ownerDeleteId=null,ownerDeleteBusy=false;
   const deletedIds=new Set();
   const illustration=FeedbackAnimals.illustration;
   function card(note,preview=false){
     const safeColor=note.color in colors?note.color:'butter';
     const angle=[-2,1.5,-1,2,-1.5,.7][(note.id||'').split('').reduce((a,c)=>a+c.charCodeAt(0),0)%6];
-    const social=!preview?`<div class="note-social"><button type="button" data-heart="${note.id}" aria-pressed="${Boolean(note.liked)}" aria-label="공감 ${Number(note.hearts||0)}개${note.liked?', 취소하기':''}" ${heartBusy.has(note.id)||!settings.likes_open?'disabled':''}><span aria-hidden="true">${note.liked?'♥':'♡'}</span> ${Number(note.hearts||0)}</button><button type="button" data-thread="${note.id}">댓글 ${Number(note.comments||0)}</button>${note.editable||adminToken?`<button type="button" class="feedback-edit-link" data-edit-memo="${note.id}">글 수정</button>`:''}</div>`:'';
+    const social=!preview?`<div class="note-social"><button type="button" data-heart="${note.id}" aria-pressed="${Boolean(note.liked)}" aria-label="공감 ${Number(note.hearts||0)}개${note.liked?', 취소하기':''}" ${heartBusy.has(note.id)||!settings.likes_open?'disabled':''}><span aria-hidden="true">${note.liked?'♥':'♡'}</span> ${Number(note.hearts||0)}</button><button type="button" data-thread="${note.id}">댓글 ${Number(note.comments||0)}</button>${note.editable||adminToken?`<button type="button" class="feedback-edit-link" data-edit-memo="${note.id}">글 수정</button><button type="button" data-delete-memo="${note.id}">글 삭제</button>`:''}</div>`:'';
     const date=preview?'미리보기':`<time datetime="${escape(note.created_at)}"><span>${new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(note.created_at))}</span> <span>${new Intl.DateTimeFormat('ko-KR',{timeZone:'Asia/Seoul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(new Date(note.created_at))}</span></time>`;
     return `<article class="feedback-note note-${safeColor}${preview?' note-preview':''}" style="--note-angle:${angle}deg"><span class="note-tape" aria-hidden="true"></span><span class="note-category">${categories[note.category]||categories.message}</span><p class="note-body">${escape(note.body)}</p><div class="note-bottom"><span>${escape(note.nickname||'향기를 남긴 손님')}<small>${date}${note.edited_at?' · 수정됨':''}</small></span>${illustration(note.animal)}</div>${social}${!preview&&adminToken?`<div class="note-moderation">${confirmDelete===note.id?`<span>이 메모를 삭제할까요?</span><button type="button" data-feedback-confirm-delete="${note.id}" ${deleting?'disabled':''}>삭제</button><button type="button" data-feedback-cancel-delete ${deleting?'disabled':''}>취소</button>`:`<button type="button" data-feedback-delete="${note.id}" aria-label="${escape(note.nickname||'손님')}님의 메모 삭제">메모 삭제 ×</button><button type="button" data-reset-hearts="${note.id}">하트 초기화</button>`}</div>`:''}</article>`;
   }
@@ -76,6 +76,7 @@
   });
   $('feedback-nickname').addEventListener('input',()=>{const chars=[...$('feedback-nickname').value];if(chars.length>20)$('feedback-nickname').value=chars.slice(0,20).join('');preview();});
   function adminState(){
+    globalThis.PerfumeGallery?.setAdminToken(adminToken);
     $('feedback-admin-login').hidden=Boolean(adminToken);$('feedback-admin-logout').hidden=!adminToken;
     $('feedback-admin-open').textContent=adminToken?'관리자 모드 · 켜짐':'관리자';$('feedback-admin-controls').hidden=!adminToken;render();if(thread)renderComments();syncSettings();
   }
@@ -92,6 +93,7 @@
     catch(error){$('feedback-admin-status').textContent=error.message;}
   });
   $('feedback-notes').addEventListener('click',async e=>{
+    const ownerDelete=e.target.closest('[data-delete-memo]');if(ownerDelete){openOwnerDelete(ownerDelete.dataset.deleteMemo);return;}
     const edit=e.target.closest('[data-edit-memo]');if(edit){openEdit(edit.dataset.editMemo);return;}
     const heart=e.target.closest('[data-heart]');if(heart){await toggleHeart(heart.dataset.heart);return;}
     const threadButton=e.target.closest('[data-thread]');if(threadButton){await openThread(threadButton.dataset.thread);return;}
@@ -121,6 +123,22 @@
     try{await api('/edit',{method:'POST',body:JSON.stringify({id:editingId,body,nickname,password})});$('memo-edit-dialog').close();await load(page);$('feedback-load-status').textContent='메모를 수정했어요.';}
     catch(error){$('memo-edit-status').textContent=error.message;if(adminToken&&error.status===401){handleAdminError(error);$('memo-edit-password-wrap').hidden=false;$('memo-edit-admin-hint').hidden=true;$('memo-edit-password').required=true;}}
     finally{editBusy=false;$('memo-edit-save').disabled=false;}
+  });
+  function openOwnerDelete(id){
+    if(!notes.some(n=>n.id===id))return;ownerDeleteId=id;
+    $('memo-delete-password').value='';$('memo-delete-status').textContent='';
+    $('memo-delete-password-wrap').hidden=Boolean(adminToken);$('memo-delete-password').required=!adminToken;
+    $('memo-delete-dialog').showModal();
+  }
+  $('memo-delete-close').addEventListener('click',()=>$('memo-delete-dialog').close());
+  $('memo-delete-dialog').addEventListener('close',()=>{$('memo-delete-password').value='';ownerDeleteId=null;});
+  $('memo-delete-form').addEventListener('submit',async e=>{
+    e.preventDefault();if(!ownerDeleteId||ownerDeleteBusy)return;
+    const id=ownerDeleteId,password=$('memo-delete-password').value;$('memo-delete-password').value='';
+    ownerDeleteBusy=true;$('memo-delete-confirm').disabled=true;
+    try{await api('/delete',{method:'POST',body:JSON.stringify({id,password})});if(thread?.id===id){$('feedback-thread').close();thread=null;}$('memo-delete-dialog').close();ownerDeleteId=null;await load(page);$('feedback-load-status').textContent='메모를 삭제했어요.';}
+    catch(error){$('memo-delete-status').textContent=error.message;if(adminToken&&error.status===401){handleAdminError(error);$('memo-delete-password-wrap').hidden=false;$('memo-delete-password').required=true;}}
+    finally{ownerDeleteBusy=false;$('memo-delete-confirm').disabled=false;}
   });
   function handleAdminError(error){
     $('feedback-admin-status').textContent=error.message;if(error.status===401){adminToken=null;confirmDelete=null;adminState();$('feedback-admin-panel').hidden=false;}
