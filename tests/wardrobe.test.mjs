@@ -18,3 +18,10 @@ for(const style of context.ScentStyle.styles){
   }
 }
 console.log('88 wardrobe combinations and all 30 removable scent details passed.');
+
+const casual=context.ScentStyle.styles.find(s=>s.id==='casual');
+const whiteTee=context.ScentWardrobe.garment(casual,'casual');
+assert.ok(whiteTee.includes('fill="#fffdf7"'));
+assert.ok(whiteTee.includes('stroke="#aaa796"'));
+assert.ok(!whiteTee.includes('L122 222'));
+assert.ok(!whiteTee.includes('fill="'+casual.colors[2][1]+'"'));
