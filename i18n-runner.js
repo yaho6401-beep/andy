@@ -1,5 +1,15 @@
 (function(g){
  const rows=`
+공병 1단계 업그레이드 쿠폰|One-tier bottle upgrade voucher|空瓶升级一级券|ボトル1段階アップグレード券
+공병 1단계 업그레이드 · 10%|One-tier bottle upgrade · 10%|空瓶升级一级 · 10%|ボトル1段階アップグレード・10%
+연속 구출|Rescue combo|连续救助|連続救出
+최고 기록|Personal best|最高纪录|ベスト記録
+점프는 누르고, 향수는 가까이 왔을 때 톡!|Hold to jump; tap to spray when they're close!|按住跳跃，靠近时轻点喷香水！|ジャンプは長押し、香水は近づいたらタップ！
+가까이서 칙! 퍼펙트 타이밍 보너스 · 5콤보마다 8초 피버로 향기 점수 2배!|Spray up close for perfect timing! Every 5-combo triggers 8 seconds of double-score fever.|近距离喷香水获得完美时机奖励！每5连击触发8秒双倍分数狂热！|近くでシュッ！絶妙なタイミングでボーナス。5コンボごとに8秒間スコア2倍！
+안개 피버!|Mist fever!|香雾狂热！|ミストフィーバー！
+5콤보! 향기 점수 2배|5-combo! Double scent score|5连击！香气分数翻倍|5コンボ！香りスコア2倍
+보스 구출 성공!|Boss rescued!|首领救助成功！|ボス救出成功！
+퍼펙트 타이밍!|Perfect timing!|完美时机！|パーフェクトタイミング！
 (게임잘하면 할인쿠폰 있음!)|(Play well for a chance at coupons!)|（玩得好，有机会赢优惠券！）|（上手に遊んでクーポンのチャンス！）
 향수 미니게임 ♡|Perfume mini game ♡|香水小游戏 ♡|香水ミニゲーム ♡
 향수 미니게임|Perfume mini game|香水小游戏|香水ミニゲーム
@@ -38,12 +48,11 @@
 게임 방법 · 선물 확률 · 사용 조건|How to play · Gift odds · Terms|玩法 · 礼物概率 · 使用条件|遊び方・当選確率・利用条件
 화면을 닫거나 다른 탭으로 이동한 시간은 플레이 시간에 포함되지 않아요. 쓰러져도 오늘의 점수와 플레이 시간은 유지돼요. 이어 하기 전까지는 시간이 흐르지 않아요.|Closed or background time does not count. Today's time and score survive a fall. Time stays paused until you continue.|关闭画面或切换标签的时间不计入游戏。倒下后保留当天时间和分数，继续游戏前暂停计时。|閉じた画面や別タブの時間は数えません。倒れても当日の時間と点数は維持され、再開まで時間は止まります。
 5분과 1,000점을 모두 채우면 서버에서 한 번 추첨해요. 같은 브라우저에서 한국 시간 기준 하루 한 번 참여할 수 있어요.|The server draws once after both 5 minutes and 1,000 points. One draw per browser per Korean calendar day.|同时达到5分钟和1000分后，由服务器抽取一次。同一浏览器按韩国日期每天一次。|5分と1,000点の両方を満たすとサーバーで抽選します。同じブラウザで韓国時間の1日1回です。
-1,000원 할인 · 30%|₩1,000 discount · 30%|减1000韩元 · 30%|1,000ウォン割引・30%
-2,000원 할인 · 20%|₩2,000 discount · 20%|减2000韩元 · 20%|2,000ウォン割引・20%
-3,000원 할인 · 10%|₩3,000 discount · 10%|减3000韩元 · 10%|3,000ウォン割引・10%
+1,000원 할인 · 20%|₩1,000 discount · 20%|减1000韩元 · 20%|1,000ウォン割引・20%
+2,000원 할인 · 10%|₩2,000 discount · 10%|减2000韩元 · 10%|2,000ウォン割引・10%
+3,000원 할인 · 5%|₩3,000 discount · 5%|减3000韩元 · 5%|3,000ウォン割引・5%
 5ml 제공권 · 5%|5 ml voucher · 5%|5ml赠送券 · 5%|5mlプレゼント券・5%
-3ml 제공권 · 5%|3 ml voucher · 5%|3ml赠送券 · 5%|3mlプレゼント券・5%
-미당첨 · 30%|No prize · 30%|未中奖 · 30%|当選なし・30%
+3ml 제공권 · 10%|3 ml voucher · 10%|3ml赠送券 · 10%|3mlプレゼント券・10%
 쿠폰은 발급일부터 30일 동안 유효하며, 방문당 1장만 사용할 수 있어요. 다른 쿠폰과 중복 사용은 불가해요. 실제 사용 여부는 매장 조회 결과를 기준으로 합니다.|Coupons last 30 days from issue. Use one per visit, with no other coupons. The atelier's code lookup determines validity.|优惠券自发放起30天有效，每次到店限一张，不可叠加。实际有效性以店内查询结果为准。|発行から30日間有効。1回の来店につき1枚、他クーポン併用不可。利用可否は店頭の照会結果に従います。
 내 쿠폰함|My coupons|我的优惠券|自分のクーポン
 내 쿠폰 불러오기|Load my coupons|查看我的优惠券|クーポンを読み込む
