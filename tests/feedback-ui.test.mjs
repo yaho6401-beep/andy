@@ -5,7 +5,7 @@ import vm from 'node:vm';
 
 const elements=new Map();
 function el(id){
-  if(!elements.has(id))elements.set(id,{id,value:'',innerHTML:'',textContent:'',hidden:false,disabled:false,listeners:{},addEventListener(k,f){this.listeners[k]=f;},querySelectorAll(){return [];},scrollIntoView(){},focus(){}});
+  if(!elements.has(id))elements.set(id,{id,value:'',innerHTML:'',textContent:'',hidden:false,disabled:false,listeners:{},addEventListener(k,f){this.listeners[k]=f;},querySelectorAll(){return [];},scrollIntoView(){},focus(){},showModal(){this.open=true;},close(){this.open=false;}});
   return elements.get(id);
 }
 el('feedback-category').value='improvement';
@@ -15,6 +15,7 @@ const context=vm.createContext({
   matchMedia:()=>({matches:false}),
   FeedbackConfig:{endpoint:'https://test.invalid/feedback',key:'public-test'},
   fetch:async(_url,options)=>{
+    if(_url.endsWith('/admin/stats'))return {ok:true,json:async()=>({visitors:3,views:4,bookingClicks:2})};
     if(_url.endsWith('/admin/login')){const payload=JSON.parse(options.body);return payload.password==='test-only-password'?{ok:true,json:async()=>({token:'test-session'})}:{ok:false,status:401,json:async()=>({error:'비밀번호가 맞지 않아요.'})};}
     if(_url.endsWith('/admin/logout'))return {ok:true,json:async()=>({loggedOut:true})};
     if(options.method==='DELETE'){assert.equal(options.headers.Authorization,'Bearer test-session');const id=new URL(_url).searchParams.get('id');stored=stored.filter(n=>n.id!==id);return {ok:true,json:async()=>({deleted:true})};}
@@ -25,13 +26,14 @@ const context=vm.createContext({
       const item={...payload,created_at:new Date().toISOString()};stored.push(item);
       return {ok:true,json:async()=>({item})};
     }
-    return {ok:true,json:async()=>({items:stored,next:null})};
+    const page=Number(new URL(_url).searchParams.get('page')||1);return {ok:true,json:async()=>({items:stored.slice((page-1)*9,page*9),page,pages:Math.max(1,Math.ceil(stored.length/9)),total:stored.length,settings:{posting_open:true,comments_open:true,likes_open:true}})};
   }
 });
+vm.runInContext(await readFile(new URL('../feedback-animals.js',import.meta.url),'utf8'),context);
 vm.runInContext(await readFile(new URL('../feedback.js',import.meta.url),'utf8'),context);
 await new Promise(r=>setTimeout(r,0));
 assert.equal((el('feedback-colors').innerHTML.match(/data-note-color=/g)||[]).length,6);
-assert.equal((el('feedback-animals').innerHTML.match(/data-note-animal=/g)||[]).length,4);
+assert.equal((el('feedback-animals').innerHTML.match(/data-note-animal=/g)||[]).length,15);
 el('feedback-nickname').value='<b>봄</b>';
 el('feedback-nickname').listeners.input();
 assert.ok(el('feedback-preview').innerHTML.includes('&lt;b&gt;봄&lt;/b&gt;'));

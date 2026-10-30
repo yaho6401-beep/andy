@@ -7,11 +7,18 @@ const allowedKeys=new Set([...publicKeys,Deno.env.get('SUPABASE_ANON_KEY')].filt
 const origins=new Set(['https://andy-plum.vercel.app']);
 const categories=['improvement','request','message'];
 const colors=['butter','rose','lavender','sage','sky','peach'];
-const animals=['bear','bunny','cat','fox'];
+const animals=['rat','ox','tiger','bunny','dragon','snake','horse','goat','monkey','rooster','dog','pig','bear','cat','fox'];
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const dbHeaders={'apikey':secret,'Content-Type':'application/json',...(secret.startsWith('sb_secret_')?{}:{Authorization:`Bearer ${secret}`})};
 const hex=(bytes:ArrayBuffer)=>Array.from(new Uint8Array(bytes)).map(b=>b.toString(16).padStart(2,'0')).join('');
 async function digest(value:string){return hex(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value)));}
+async function visitorHash(value:string){
+  const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(secret),{name:'HMAC',hash:'SHA-256'},false,['sign']);
+  return hex(await crypto.subtle.sign('HMAC',key,new TextEncoder().encode('visitor:'+value)));
+}
+async function rpc(name:string,body:unknown){return fetch(`${url}/rest/v1/rpc/${name}`,{method:'POST',headers:dbHeaders,body:JSON.stringify(body)});}
+async function limited(req:Request,kind:string,max:number){const r=await rpc('feedback_action_limit',{p_key:kind+':'+await rateKeyFor(req),p_limit:max});if(!r.ok)throw Error('limit');return await r.json();}
+const cleanText=(value:unknown)=>typeof value==='string'?value.normalize('NFC').trim().replace(/\s+/g,' '):'';
 async function rateKeyFor(req:Request){
   const ip=req.headers.get('x-forwarded-for')?.split(',')[0].trim()||req.headers.get('cf-connecting-ip')||'unknown';
   const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(secret),{name:'HMAC',hash:'SHA-256'},false,['sign']);
@@ -37,10 +44,12 @@ Deno.serve(async req=>{
   if(!allowedKeys.has(req.headers.get('apikey')||''))return reply({error:'연결 정보를 확인해주세요.'},401);
   try{
     const path=new URL(req.url).pathname.replace(/\/$/,'');
+    const params=new URL(req.url).searchParams;
     if(req.method==='DELETE'){
       if(!await sessionHash(req))return reply({error:'관리자 로그인이 필요해요.'},401);
       const id=new URL(req.url).searchParams.get('id');if(!id||!uuid.test(id))return reply({error:'메모를 확인해주세요.'},400);
-      const result=await fetch(`${url}/rest/v1/workshop_feedback?id=eq.${id}`,{method:'DELETE',headers:{...dbHeaders,Prefer:'return=representation'}});
+      const table=params.get('target')==='comment'?'workshop_feedback_comments':'workshop_feedback';
+      const result=await fetch(`${url}/rest/v1/${table}?id=eq.${id}`,{method:'DELETE',headers:{...dbHeaders,Prefer:'return=representation'}});
       if(!result.ok)throw Error('delete');
       return reply({deleted:true});
     }
@@ -50,14 +59,27 @@ Deno.serve(async req=>{
       return reply({loggedOut:true});
     }
     if(req.method==='GET'){
-      const before=new URL(req.url).searchParams.get('before');
-      if(before&&(before.length>40||Number.isNaN(Date.parse(before))))return reply({error:'잘못된 페이지입니다.'},400);
-      const query=new URLSearchParams({select:'id,body,category,color,animal,nickname,created_at',hidden:'eq.false',order:'created_at.desc,id.desc',limit:'25'});
-      if(before)query.set('created_at',`lt.${before}`);
-      const result=await fetch(`${url}/rest/v1/workshop_feedback?${query}`,{headers:dbHeaders});
-      if(!result.ok)throw new Error('read');
-      const rows=await result.json();
-      return reply({items:rows.slice(0,24),next:rows.length>24?rows[23].created_at:null});
+      if(path.endsWith('/stats')){
+        const result=await rpc('workshop_visit_stats',{});if(!result.ok)throw Error('stats');const stats=await result.json();
+        if(path.endsWith('/admin/stats')){if(!await sessionHash(req))return reply({error:'관리자 로그인이 필요해요.'},401);return reply(stats);}
+        return reply({date:stats.date,visitors:stats.visitors,views:stats.views});
+      }
+      const page=Number(params.get('page')||1);if(!Number.isInteger(page)||page<1||page>10000)return reply({error:'잘못된 페이지입니다.'},400);
+      if(path.endsWith('/comments')){
+        const id=params.get('id');if(!id||!uuid.test(id))return reply({error:'메모를 확인해주세요.'},400);
+        const parent=await fetch(`${url}/rest/v1/workshop_feedback?select=id&id=eq.${id}&hidden=eq.false`,{headers:dbHeaders});
+        if(!parent.ok)throw Error('parent');if(!(await parent.json()).length)return reply({error:'삭제된 메모예요.'},404);
+        const query=new URLSearchParams({select:'id,feedback_id,nickname,body,created_at',feedback_id:`eq.${id}`,order:'created_at.asc,id.asc',limit:'9',offset:String((page-1)*9)});
+        let result=await fetch(`${url}/rest/v1/workshop_feedback_comments?${query}`,{headers:{...dbHeaders,Prefer:'count=exact'}});
+        let actualPage=page;
+        if(result.status===416){const total=Number(result.headers.get('content-range')?.split('/')[1]||0);actualPage=Math.max(1,Math.ceil(total/9));query.set('offset',String((actualPage-1)*9));result=await fetch(`${url}/rest/v1/workshop_feedback_comments?${query}`,{headers:{...dbHeaders,Prefer:'count=exact'}});}
+        if(!result.ok)throw Error('comments');
+        const total=Number(result.headers.get('content-range')?.split('/')[1]||0);
+        return reply({items:await result.json(),page:actualPage,pages:Math.max(1,Math.ceil(total/9)),total});
+      }
+      const visitor=params.get('visitor');
+      const result=await rpc('workshop_feedback_page',{p_page:page,p_visitor_hash:visitor&&uuid.test(visitor)?await visitorHash(visitor):''});
+      if(!result.ok)throw Error('read');return reply(await result.json());
     }
     if(req.method!=='POST')return reply({error:'지원하지 않는 요청입니다.'},405);
     if(!req.headers.get('content-type')?.includes('application/json'))return reply({error:'올바른 형식으로 보내주세요.'},415);
@@ -84,6 +106,39 @@ Deno.serve(async req=>{
       await fetch(`${url}/rest/v1/workshop_feedback_sessions?expires_at=lt.${new Date().toISOString()}`,{method:'DELETE',headers:dbHeaders});
       return reply({token,expiresAt});
     }
+    if(path.endsWith('/admin/settings')||path.endsWith('/admin/hearts')){
+      if(!await sessionHash(req))return reply({error:'관리자 로그인이 필요해요.'},401);
+      if(path.endsWith('/admin/settings')){
+        if(!input||!['posting_open','comments_open','likes_open'].every(k=>typeof input[k]==='boolean'))return reply({error:'설정을 확인해주세요.'},400);
+        const settings={posting_open:input.posting_open,comments_open:input.comments_open,likes_open:input.likes_open};
+        const result=await fetch(`${url}/rest/v1/workshop_feedback_settings?id=eq.true`,{method:'PATCH',headers:dbHeaders,body:JSON.stringify(settings)});if(!result.ok)throw Error('settings');return reply({settings});
+      }
+      if(!input||!uuid.test(input.id||''))return reply({error:'메모를 확인해주세요.'},400);
+      const result=await fetch(`${url}/rest/v1/workshop_feedback_hearts?feedback_id=eq.${input.id}`,{method:'DELETE',headers:dbHeaders});if(!result.ok)throw Error('reset');return reply({hearts:0,liked:false});
+    }
+    if(path.endsWith('/visit')){
+      if(!input||!uuid.test(input.id||'')||!uuid.test(input.visitor||'')||!['visit','booking'].includes(input.kind))return reply({error:'잘못된 요청입니다.'},400);
+      if(!await limited(req,'events',1000))return reply({error:'잠시 후 다시 시도해주세요.'},429);
+      const result=await fetch(`${url}/rest/v1/workshop_site_events?on_conflict=id`,{method:'POST',headers:{...dbHeaders,Prefer:'resolution=ignore-duplicates'},body:JSON.stringify({id:input.id,visitor_hash:await visitorHash(input.visitor),kind:input.kind,position:cleanText(input.position).slice(0,40)})});if(!result.ok)throw Error('event');return reply({recorded:true});
+    }
+    if(path.endsWith('/heart')){
+      if(!input||!uuid.test(input.id||'')||!uuid.test(input.visitor||'')||typeof input.liked!=='boolean')return reply({error:'잘못된 요청입니다.'},400);
+      if(!await limited(req,'hearts',180))return reply({error:'잠시 후 다시 눌러주세요.'},429);
+      const result=await rpc('workshop_feedback_heart',{p_id:input.id,p_visitor_hash:await visitorHash(input.visitor),p_liked:input.liked});
+      if(!result.ok){const error=await result.text();if(error.includes('feedback_closed'))return reply({error:'지금은 공감을 쉬고 있어요.'},403);if(error.includes('feedback_not_found'))return reply({error:'삭제된 메모예요.'},404);throw Error('heart');}return reply(await result.json());
+    }
+    if(path.endsWith('/comments')){
+      const body=cleanText(input?.body),nickname=cleanText(input?.nickname)||'향기를 남긴 손님';
+      if(!input||!uuid.test(input.id||'')||!uuid.test(input.feedback_id||'')||!body||[...body].length>200||[...nickname].length>20||/[\u0000-\u001f\u007f]/.test(body+nickname))return reply({error:'닉네임은 20자, 댓글은 200자 이내로 적어주세요.'},400);
+      if(!await limited(req,'comments',30))return reply({error:'댓글이 많아요. 잠시 후 남겨주세요.'},429);
+      const parent=await fetch(`${url}/rest/v1/workshop_feedback?select=id&id=eq.${input.feedback_id}&hidden=eq.false`,{headers:dbHeaders});if(!parent.ok)throw Error('parent');if(!(await parent.json()).length)return reply({error:'삭제된 메모예요.'},404);
+      const row={id:input.id,feedback_id:input.feedback_id,body,nickname};
+      const result=await fetch(`${url}/rest/v1/workshop_feedback_comments?on_conflict=id`,{method:'POST',headers:{...dbHeaders,Prefer:'resolution=ignore-duplicates,return=representation'},body:JSON.stringify(row)});
+      if(!result.ok){const error=await result.text();if(error.includes('feedback_closed'))return reply({error:'지금은 댓글 작성을 쉬고 있어요.'},403);throw Error('comment');}
+      const items=await result.json();
+      if(!items.length){const existing=await fetch(`${url}/rest/v1/workshop_feedback_comments?id=eq.${input.id}&select=*`,{headers:dbHeaders});if(!existing.ok)throw Error('existing');const [item]=await existing.json();if(!item||item.body!==body||item.nickname!==nickname||item.feedback_id!==input.feedback_id)return reply({error:'새 댓글로 다시 남겨주세요.'},409);return reply({item},201);}
+      return reply({item:items[0]},201);
+    }
     if(!input||typeof input!=='object'||typeof input.body!=='string')return reply({error:'한 줄을 적어주세요.'},400);
     const body=input.body.normalize('NFC').trim().replace(/[\r\n\t]+/g,' ').replace(/ {2,}/g,' ');
     const nickname=(typeof input.nickname==='string'?input.nickname:'').normalize('NFC').trim().replace(/\s+/g,' ')||'향기를 남긴 손님';
@@ -91,7 +146,7 @@ Deno.serve(async req=>{
     if(!body||[...body].length>100||/[\u0000-\u001f\u007f]/.test(body)||!uuid.test(input.id||'')||!categories.includes(input.category)||!colors.includes(input.color)||!animals.includes(input.animal))return reply({error:'100자 이내 한 줄과 메모 모양을 확인해주세요.'},400);
     if(input.website)return reply({error:'잠시 후 다시 시도해주세요.'},400);
     const result=await fetch(`${url}/rest/v1/rpc/submit_workshop_feedback`,{method:'POST',headers:dbHeaders,body:JSON.stringify({p_id:input.id,p_body:body,p_category:input.category,p_color:input.color,p_animal:input.animal,p_nickname:nickname,p_rate_key:await rateKeyFor(req)})});
-    if(!result.ok){const error=await result.text();if(error.includes('feedback_rate_limit'))return reply({error:'메모가 많이 도착했어요. 잠시 후 다시 남겨주세요.'},429);if(error.includes('feedback_conflict'))return reply({error:'새 메모로 다시 남겨주세요.'},409);throw new Error('write');}
+    if(!result.ok){const error=await result.text();if(error.includes('feedback_closed'))return reply({error:'지금은 새 메모 작성을 쉬고 있어요.'},403);if(error.includes('feedback_rate_limit'))return reply({error:'메모가 많이 도착했어요. 잠시 후 다시 남겨주세요.'},429);if(error.includes('feedback_conflict'))return reply({error:'새 메모로 다시 남겨주세요.'},409);throw new Error('write');}
     return reply({item:await result.json()},201);
   }catch{return reply({error:'보드와 연결하지 못했어요. 잠시 후 다시 시도해주세요.'},503);}
 });
