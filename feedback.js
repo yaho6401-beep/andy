@@ -79,6 +79,7 @@
     globalThis.PerfumeGallery?.setAdminToken(adminToken);
     globalThis.ScentCommunity?.setAdminToken(adminToken);
     globalThis.PerfumeRunner?.setAdminToken(adminToken);
+    globalThis.WorkshopLounge?.setAdminToken(adminToken);
     $('feedback-admin-login').hidden=Boolean(adminToken);$('feedback-admin-logout').hidden=!adminToken;
     $('feedback-admin-open').textContent=adminToken?'관리자 모드 · 켜짐':'관리자';$('feedback-admin-controls').hidden=!adminToken;render();if(thread)renderComments();syncSettings();
   }
