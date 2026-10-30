@@ -67,7 +67,11 @@ Deno.serve(async req=>{
       if(path.endsWith('/stats')){
         const result=await rpc('workshop_visit_stats',{});if(!result.ok)throw Error('stats');const stats=await result.json();
         if(path.endsWith('/admin/stats')){if(!await sessionHash(req))return reply({error:'관리자 로그인이 필요해요.'},401);return reply(stats);}
-        return reply({date:stats.date,visitors:stats.visitors,views:stats.views});
+        const all=await fetch(`${url}/rest/v1/workshop_site_events?select=id&kind=eq.visit`,{method:'HEAD',headers:{...dbHeaders,Prefer:'count=exact'}});
+        if(!all.ok)throw Error('total stats');
+        const total=all.headers.get('content-range')?.split('/')[1];
+        if(!total||!/^\d+$/.test(total))throw Error('total count');
+        return reply({date:stats.date,visitors:stats.visitors,views:stats.views,totalViews:Number(total)});
       }
       const page=Number(params.get('page')||1);if(!Number.isInteger(page)||page<1||page>10000)return reply({error:'잘못된 페이지입니다.'},400);
       if(path.endsWith('/comments')){

@@ -3,6 +3,9 @@
 책과향기|Books & Scents|书与香气|本と香り
 책과향기 · 향을 입다|Books & Scents · Wear Your Story|书与香气 · 为故事赋香|本と香り · 物語を香りに
 언어 선택|Language|语言|言語
+누적 조회|All-time views|累计浏览|累計閲覧
+당신의 한 줄로,|With your little note,|用你的一句话，|あなたのひと言で、
+더 향기롭게|a little more fragrant|让香气更美好|もっと香り豊かに
 당신의 이야기를, 진짜 향수로 만들어보세요.|Turn your story into a perfume of your own.|把你的故事，做成专属香水。|あなたの物語を、自分だけの香水に。
 책과향기 방문 예약|Book your atelier visit|预约到店制香|アトリエ来店予約
 나만의 향, 나다운 스타일|Your scent. Your style.|专属香气，独特风格|自分の香り、自分のスタイル

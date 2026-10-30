@@ -24,7 +24,7 @@ const context=vm.createContext({
     if(options.method==='POST'){
       writes++;const payload=JSON.parse(options.body);
       if(failWrite)throw Error('테스트 연결 오류');
-      const item={...payload,created_at:new Date().toISOString()};stored.push(item);
+      const item={...payload,created_at:'2026-10-29T15:07:00.000Z'};stored.push(item);
       return {ok:true,json:async()=>({item})};
     }
     const page=Number(new URL(_url).searchParams.get('page')||1);return {ok:true,json:async()=>({items:stored.slice((page-1)*9,page*9),page,pages:Math.max(1,Math.ceil(stored.length/9)),total:stored.length,settings:{posting_open:true,comments_open:true,likes_open:true}})};
@@ -52,6 +52,9 @@ assert.equal(el('feedback-submit').disabled,false);
 failWrite=false;
 await el('feedback-form').listeners.submit({preventDefault(){}});
 assert.equal(stored.length,1);
+assert.ok(el('feedback-notes').innerHTML.includes('00:07'));
+assert.ok(el('feedback-notes').innerHTML.includes('2026. 10. 30.'));
+assert.ok(el('feedback-notes').innerHTML.includes('datetime="2026-10-29T15:07:00.000Z"'));
 assert.equal(stored[0].animal,'bunny');assert.equal(stored[0].color,'lavender');
 assert.equal(el('feedback-text').value,'');
 assert.ok(el('feedback-notes').innerHTML.includes('&lt;img'));
