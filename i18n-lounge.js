@@ -1,4 +1,18 @@
 (function(g){const rows=`
+나이대 · 필수|Age group · required|年龄段 · 必填|年齢層 · 必須
+나이대를 선택해주세요|Please select your age group|请选择年龄段|年齢層を選んでください
+10대 중후반|Mid to late teens|十几岁中后期|10代半ば〜後半
+20대 초중반|Early to mid 20s|20岁出头至中期|20代前半〜半ば
+20대 중후반|Mid to late 20s|20多岁中后期|20代半ば〜後半
+30대 초중반|Early to mid 30s|30岁出头至中期|30代前半〜半ば
+30대 중후반|Mid to late 30s|30多岁中后期|30代半ば〜後半
+40대 초반|Early 40s|40岁出头|40代前半
+간단한 자기소개 · 필수|Short introduction · required|简单自我介绍 · 必填|簡単な自己紹介 · 必須
+성격이나 취향, 참여하고 싶은 이유 등을 간단히 소개해주세요.|Tell us briefly about your personality, interests or why you would like to join.|请简单介绍性格、喜好或参加的理由。|性格や好み、参加したい理由などを簡単にご紹介ください。
+간단한 자기소개를 적어주세요.|Please write a short introduction.|请填写简单的自我介绍。|簡単な自己紹介を入力してください。
+수집 항목: 닉네임, 나이대, 선택한 연락처(인스타 아이디 또는 전화번호), 자기소개.|Information collected: nickname, age group, chosen contact (Instagram ID or phone number), and introduction.|收集信息：昵称、年龄段、所选联系方式（Instagram账号或电话号码）和自我介绍。|収集項目：ニックネーム、年齢層、選択した連絡先（Instagram IDまたは電話番号）、自己紹介。
+나이대 미입력|Age group not provided|未填写年龄段|年齢層未入力
+자기소개|Introduction|自我介绍|自己紹介
 진열장으로 돌아가기 ↓|Back to the cabinet ↓|返回陈列柜 ↓|香料棚へ戻る ↓
 개봉 예정|Opening soon|即将开放|近日公開
 개봉 예정 향료|Scent opening soon|即将开放的香料|近日公開の香料
