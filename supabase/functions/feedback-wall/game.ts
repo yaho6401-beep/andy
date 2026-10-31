@@ -47,9 +47,9 @@ export async function handleGame(req:Request,d:Deps){
   return reply({version:session.version+1,verifiedActive:state.active,score:state.score,leaderboard:await board()});
  }
  if(path.endsWith('/claim')){
-  if(!Engine.eligible(session.state))return reply({error:'실제 플레이 5분과 향기 점수 1,000점을 채워주세요.'},409);
+  if(!Engine.eligible(session.state))return reply({error:'한 판에서 2분을 완주하고 500점을 채워주세요.'},409);
   const claimed=await rpc('workshop_game_claim',{p_id:session.id,p_visitor_hash:visitor,p_roll:prizeRoll(),p_code:couponCode()});
-  if(!claimed.ok){const e=await claimed.text();if(e.includes('game_not_ready'))return reply({error:'실제 플레이 5분과 향기 점수 1,000점을 채워주세요.'},409);throw Error('claim');}
+  if(!claimed.ok){const e=await claimed.text();if(e.includes('game_not_ready'))return reply({error:'한 판에서 2분을 완주하고 500점을 채워주세요.'},409);throw Error('claim');}
   return reply({draw:await claimed.json()});
  }
  return reply({error:'지원하지 않는 요청입니다.'},404);
