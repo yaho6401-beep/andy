@@ -1,6 +1,6 @@
 (function(g){
  'use strict';
- const VERSION=4,FPS=60,GOAL_TICKS=7200,GOAL_SCORE=500;
+ const VERSION=5,FPS=60,GOAL_TICKS=7200,GOAL_SCORE=180;
  function create(seed){return {v:VERSION,seed:seed>>>0,tick:0,active:0,score:0,run:0,y:338,vy:0,hp:3,shield:0,over:false,jump:false,spray:false,cool:0,spawn:65,nextId:1,bossStage:0,bosses:0,enemies:[],bolts:[],friends:[],deaths:0,combo:0,comboTTL:0,fever:0,perfects:0,notice:'',noticeTTL:0,finished:false,bestScore:0,round:1,invincible:0,items:[],itemSpawn:250,birdSpawn:500,lastScore:0,lastTicks:0,hidden:0,portalStage:0,nozzle:0};}
  function random(s){let n=s.seed||123456789;n^=n<<13;n^=n>>>17;n^=n<<5;s.seed=n>>>0;return s.seed/4294967296;}
  function upgrade(s){if(s.v===VERSION)return;const tick=s.tick||0,seed=s.seed;Object.assign(s,create(seed),{tick});}
@@ -27,14 +27,14 @@
   if(s.spray&&!wasSpray&&s.cool<=0){s.bolts.push({id:s.nextId++,x:164,y:s.y-35,age:0,life:s.nozzle>0?30:20,hits:[],fever:s.fever>0,boost:s.nozzle>0});s.cool=s.fever>0?12:18;}
   const stage=s.active>=5700?3:s.active>=3600?2:s.active>=1500?1:0;
   if(stage>s.bossStage&&!s.enemies.some(e=>e.boss)){s.bossStage++;const type=['rat','rabbit','bear'][s.bossStage-1],hp=[18,24,32][s.bossStage-1];s.enemies.push({id:s.nextId++,x:960,y:338,type,boss:true,hp,maxHp:hp,attack:95,phase:0});}
-  s.spawn--;if(s.spawn<=0){const obstacle=random(s)<.25,type=obstacle?'obstacle':s.active>4200?'bear':s.active>2100?'rabbit':'rat',elite=!obstacle&&random(s)<(.10+s.active/60000),hp=obstacle?1:(type==='bear'?4:type==='rabbit'?3:2)+(elite?2:0);s.enemies.push({id:s.nextId++,x:950,y:338,type,boss:false,hp,maxHp:hp,elite,attack:0});s.spawn=Math.max(58,105-s.active/220)+Math.floor(random(s)*28);}
+  s.spawn--;if(s.spawn<=0){const obstacle=random(s)<.25,type=obstacle?'obstacle':s.active>4200?'bear':s.active>2100?'rabbit':'rat',elite=!obstacle&&random(s)<(.08+s.active/90000),hp=obstacle?1:(type==='bear'?4:type==='rabbit'?3:2)+(elite?2:0);s.enemies.push({id:s.nextId++,x:950,y:338,type,boss:false,hp,maxHp:hp,elite,attack:0});s.spawn=Math.max(58,105-s.active/220)+Math.floor(random(s)*28);}
   s.birdSpawn--;if(s.birdSpawn<=0){const type=random(s)<.5?'pigeon':'sparrow',y=random(s)<.35?270+random(s)*15:195+random(s)*42,hp=type==='pigeon'?3:2;s.enemies.push({id:s.nextId++,x:960,y,type,boss:false,hp,maxHp:hp,attack:0});s.birdSpawn=330+Math.floor(random(s)*260);}
   s.itemSpawn--;if(s.itemSpawn<=0){const type=random(s)<.5?'nozzle':'oil';s.items.push({id:s.nextId++,x:940,y:type==='nozzle'?165:292,type});s.itemSpawn=1100+Math.floor(random(s)*500);}
   if(s.active>=2100&&s.portalStage===0||s.active>=4500&&s.portalStage===1){s.portalStage++;s.items.push({id:s.nextId++,x:960,y:225,type:'portal'});}
   for(const item of s.items){item.x-=speed;const kind=item.type||'oil',dy=Math.abs(item.y-(s.y-40)),dx=Math.abs(item.x-132);if(dx<(kind==='nozzle'?24:36)&&dy<(kind==='nozzle'?24:kind==='portal'?55:40)){item.taken=true;if(kind==='portal'){s.hidden=720;s.shield=Math.max(s.shield,90);cheer(s,'hidden');}else if(kind==='nozzle'){s.nozzle=720;award(s,4);cheer(s,'nozzle');}else{s.invincible=480;s.shield=0;cheer(s,'aroma');}}}s.items=s.items.filter(i=>i.x>-40&&!i.taken);
   for(const b of s.bolts){b.age++;b.x+=2.2*(b.boost?3:1);}
   for(const e of s.enemies){
-   if(e.boss){e.phase=(e.phase||0)+1;const charging=e.phase%300>=240&&e.phase%300<274,target=charging?175:282;e.x=e.x>target?Math.max(target,e.x-speed*(charging?1.6:.8)):Math.min(target,e.x+speed);e.attack--;if(e.attack<=0){e.shots=(e.shots||0)+1;s.enemies.push({id:s.nextId++,x:e.x-45,y:e.shots%3===0?274:333,type:'stink',boss:false,hp:1,maxHp:1,attack:0});e.attack=e.hp<e.maxHp/2?70:100;}} 
+   if(e.boss){e.phase=(e.phase||0)+1;const charging=e.phase%300>=240&&e.phase%300<274,target=charging?175:282;e.x=e.x>target?Math.max(target,e.x-speed*(charging?1.6:.8)):Math.min(target,e.x+speed);e.attack--;if(e.attack<=0){e.shots=(e.shots||0)+1;s.enemies.push({id:s.nextId++,x:e.x-45,y:e.shots%3===0?274:333,type:'stink',boss:false,hp:1,maxHp:1,attack:0});e.attack=e.hp<e.maxHp/2?90:125;}} 
    else e.x-=['pigeon','sparrow'].includes(e.type)?speed*1.18+1.5:e.type==='stink'?speed+2.5:speed;
    const size=e.boss?96:e.type==='bear'?68:e.type==='obstacle'?49:e.type==='stink'?33:e.type==='pigeon'?44:e.type==='sparrow'?32:49;
    if(e.type!=='obstacle')for(const b of s.bolts){
