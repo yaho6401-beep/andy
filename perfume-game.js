@@ -7,7 +7,7 @@
     {title:'두 번째 미션 · 얼마나 뿌릴까요?',prompt:'곁에 있는 친구도 편안하게 느끼도록!',choices:[['light','소량부터 시작해요'],['lots','계속 많이 뿌려요']],correct:['light'],tip:'향의 농도와 공간에 따라 다르게 느껴져요. 소량부터 시작하고, 향이 퍼지는 모습을 기다려보세요.',retry:'많이 뿌리기보다 소량부터! 은은하게 시작해보세요.'},
     {title:'마지막 미션 · 뿌린 다음에는?',prompt:'향기로운 여운을 남기는 작은 습관.',choices:[['dry','자연스럽게 말려요'],['rub','손목을 세게 비벼요']],correct:['dry'],tip:'뿌린 뒤에는 손목을 세게 비비지 말고 자연스럽게 말려주세요.',retry:'손목을 세게 비비지 않아요. 자연스럽게 말리기를 골라보세요.'}
   ];
-  const artAsset=document.currentScript?.src?new URL('./assets/perfume-raccoons-editorial-v2.png',document.currentScript.src).href:'/assets/perfume-raccoons-editorial-v2.png';
+  const artAsset=document.currentScript?.src?new URL('./assets/perfume-raccoons-cute-v3.png',document.currentScript.src).href:'/assets/perfume-raccoons-cute-v3.png';
   $('spray-game-art').innerHTML=`<div class="ritual-scene" aria-hidden="true"><div class="ritual-figure ritual-boy"><img src="${artAsset}" alt="" width="960" height="640"></div><div class="ritual-figure game-date"><img src="${artAsset}" alt="" width="960" height="640"></div><div class="game-mist ritual-mist"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="game-speech" id="spray-game-speech">으흠~ 좋아! ♡</div>`;
   function draw(){
     const mission=missions[step];$('spray-game-title').textContent=done?'향기 매너 미션 성공!':mission.title;
