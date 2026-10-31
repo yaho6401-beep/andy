@@ -4,9 +4,9 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#203c32"><meta name="description" content="당신의 이야기에 향을 입히세요. 책과향기의 향 노트와 어코드를 살펴보고, 나의 스타일에 어울리는 type 향을 찾아보세요.">
   <title>책과향기 · 향을 입다</title>
-  <script src="/i18n-data.js?v=gallery-16" defer></script><script src="/i18n-catalog.js?v=copy-20" defer></script><script src="/i18n-community.js?v=about-17" defer></script><script src="/i18n-scent.js?v=scent-19" defer></script><script src="/i18n-event.js?v=event-22" defer></script><script src="/i18n-runner.js?v=round-27" defer></script><script src="/i18n-lounge.js?v=solo-29" defer></script><script src="/i18n.js?v=runner-21" defer></script><link rel="stylesheet" href="/i18n.css?v=lang-14">
+  <script src="/i18n-data.js?v=gallery-16" defer></script><script src="/i18n-catalog.js?v=copy-20" defer></script><script src="/i18n-community.js?v=about-17" defer></script><script src="/i18n-scent.js?v=scent-19" defer></script><script src="/i18n-event.js?v=event-22" defer></script><script src="/i18n-runner.js?v=round-27" defer></script><script src="/i18n-lounge.js?v=solo-29" defer></script><script src="/i18n-organ.js?v=organ-30" defer></script><script src="/i18n.js?v=runner-21" defer></script><link rel="stylesheet" href="/i18n.css?v=lang-14">
   <link rel="stylesheet" href="/style.css?v=community-11">
-  <script src="/engine.js?v=copy-20" defer></script><script src="/story-engine.js?v=lang-13" defer></script><script src="/story-ui.js?v=lang-13" defer></script><script src="/wardrobe.js?v=fit-10" defer></script><script src="/styling.js?v=fit-10" defer></script><script src="/app.js?v=scent-19" defer></script>
+  <script src="/engine.js?v=copy-20" defer></script><script src="/story-engine.js?v=lang-13" defer></script><script src="/story-ui.js?v=lang-13" defer></script><script src="/wardrobe.js?v=fit-10" defer></script><script src="/styling.js?v=fit-10" defer></script><script src="/organ.js?v=organ-30" defer></script><script src="/app.js?v=organ-30" defer></script>
   <link rel="stylesheet" href="/feedback.css?v=category-25"><link rel="stylesheet" href="/community.css?v=community-11">
   <script src="/feedback-config.js?v=admin-8" defer></script><script src="/feedback-animals.js?v=gallery-16" defer></script><script src="/visits.js?v=read-15" defer></script><script src="/feedback.js?v=category-25" defer></script>
 <link rel="stylesheet" href="/perfume-game.css?v=play-12"><script src="/perfume-game.js?v=play-12" defer></script>
@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="/runner.css?v=round-27"><script src="/supabase/functions/feedback-wall/runner-engine.js?v=round-27" defer></script><script src="/runner.js?v=round-27" defer></script>
 <link rel="stylesheet" href="/lounge.css?v=solo-28"><script src="/lounge-data.js?v=lounge-23" defer></script><script src="/lounge.js?v=mist-24" defer></script>
 <link rel="stylesheet" href="/announcement.css?v=mist-24"><script src="/announcement.js?v=mist-24" defer></script>
+<link rel="stylesheet" href="/organ.css?v=organ-30">
 </head>
 <body>
 <div class="reservation-topbar"><span>당신의 이야기를, 진짜 향수로 만들어보세요.</span><a href="https://naver.me/FQVGlhlr" target="_blank" rel="noopener noreferrer" data-reservation="top">책과향기 방문 예약 ↗</a></div>
@@ -31,9 +32,9 @@
   <div class="workspace" id="selection" hidden><div class="selection-column">
     <section class="panel"><div class="section-heading"><div><p class="eyebrow">STEP 01 · BASE SCENT</p><h2 id="main-step-title">메인향을 골라주세요</h2></div><span class="count" id="main-total">불러오는 중</span></div><p class="hint" id="main-step-hint">가장 마음에 드는 향 하나가 스타일의 시작이 됩니다.</p><div id="main-choice" hidden></div><div id="selected-scent-community" class="scent-community" hidden></div><div id="main-picker">
       <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="향 이름 또는 번호로 검색" aria-label="메인향 이름 또는 번호 검색" autocomplete="off"></label>
-      <div id="main-list" class="main-list" role="group" aria-label="메인향 한 개 선택"><p class="hint" role="status">향 목록을 불러오고 있어요.</p></div><p class="catalog-note">1~32번 기본 향 · 33~72번 프리미엄 향<br>모든 향은 브랜드 정품이 아닌 공방의 type 향료입니다.</p></div>
+      <div class="organ-caption"><span data-no-i18n>THE PERFUME ORGAN</span><p>선반 위의 병을 골라 나만의 조향을 시작하세요.</p></div><div id="main-list" class="main-list perfume-organ" role="group" aria-label="메인향 한 개 선택"><p class="hint" role="status">향 목록을 불러오고 있어요.</p></div><p class="catalog-note">1~32번 기본 향 · 33~72번 프리미엄 향<br>모든 향은 브랜드 정품이 아닌 공방의 type 향료입니다.</p></div>
     </section>
-    <section class="panel" id="single-selection"><div class="section-heading"><div><p class="eyebrow">STEP 02 · PERSONAL TOUCH</p><h2>나만의 느낌을 더해보세요</h2></div><span class="count" id="single-count">0개 선택</span></div><p class="hint">선택한 메인향 1개에 단일향을 여러 개 더해주세요. 추천된 단일향도 자유롭게 추가·해제할 수 있어요.</p><div id="single-list"></div></section>
+    <section class="panel" id="single-selection"><div class="section-heading"><div><p class="eyebrow">STEP 02 · PERSONAL TOUCH</p><h2>나만의 느낌을 더해보세요</h2></div><span class="count" id="single-count">0개 선택</span></div><p class="hint">선택한 메인향 1개에 단일향을 여러 개 더해주세요. 추천된 단일향도 자유롭게 추가·해제할 수 있어요.</p><p class="organ-instruction">위에서부터 탑 · 미들 · 라스트. 마음에 드는 병을 여러 개 골라보세요.</p><div id="single-list" class="perfume-organ single-organ"></div></section>
   </div>
   <aside class="result-column"><section class="result-shell"><div class="section-heading"><div><p class="eyebrow">YOUR FINISHED BLEND</p><h2>나만의 향을 완성해요</h2></div><span class="sparkle" aria-hidden="true">✳</span></div>
     <div id="selection-summary" class="selection-summary">메인향을 선택하면 여기에 조합이 표시돼요.</div>
