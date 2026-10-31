@@ -8,3 +8,5 @@
 @media(max-width:550px){.runner-identity{padding:13px}.runner-ranking-event{padding:13px;gap:11px}.runner-ranking-event strong{font-size:12px}.runner-ranking-scroll td{padding:10px 8px}.runner-ranking-scroll th{padding:9px 8px}}
 
 .runner-power-tip{font-size:11px;color:#9b884b;line-height:1.9;margin-top:6px;word-break:keep-all}
+
+.runner-challenge-guide{font-size:13px;line-height:1.9;padding:13px 15px;border:1px solid #d4c5dc;background:#f0eaf3;border-radius:8px;color:#735a80;word-break:keep-all}

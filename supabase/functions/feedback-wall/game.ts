@@ -40,6 +40,7 @@ export async function handleGame(req:Request,d:Deps){
  if(!uuid.test(input.id||''))return reply({error:'게임 정보를 확인해주세요.'},400);
  const r=await fetch(`${url}/rest/v1/workshop_game_sessions?id=eq.${input.id}&visitor_hash=eq.${visitor}&day=eq.${day}&select=*&limit=1`,{headers:dbHeaders});if(!r.ok)throw Error('session read');const [session]=await r.json();if(!session)return reply({error:'오늘의 게임을 다시 열어주세요.'},409);
  if(path.endsWith('/checkpoint')){
+  if(input.engineVersion!==Engine.VERSION)return reply({error:'게임이 새로 업데이트됐어요. 화면을 새로고침한 뒤 다시 시작해주세요.'},409);
   if(input.version!==session.version)return reply({error:'다른 창에서 진행 중이거나 연결이 바뀌었어요. 게임을 다시 이어주세요.'},409);
   let state;try{state=Engine.replay(session.state,input.toTick,input.events);}catch{return reply({error:'게임 입력을 확인해주세요. 다시 이어주세요.'},400);}
   const saved=await rpc('workshop_game_checkpoint',{p_id:session.id,p_visitor_hash:visitor,p_version:session.version,p_state:state});
