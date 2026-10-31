@@ -18,4 +18,5 @@ assert.equal((await ctx.handleGame(request('start',{}),deps)).status,400);assert
 assert.equal((await ctx.handleGame(request('start',{nickname:'가'.repeat(13)}),deps)).status,400);
 const started=await ctx.handleGame(request('start',{nickname:' 향기친구 ',total_score:999999,score:999999}),deps);assert.equal(started.status,200);const body=await started.json();assert.equal(body.profile.totalScore,150);assert.equal(body.leaderboard.mine.score,150);assert.deepEqual(JSON.parse(JSON.stringify(calls[0].args)),{p_visitor_hash:'server-hash',p_nickname:'향기친구'});
 const board=await ctx.handleGame(request('leaderboard',{}),deps);assert.equal(board.status,200);assert.equal((await board.json()).mine.place,1);
+assert.equal((await ctx.handleGame(request('checkpoint',{id,version:0,toTick:1,events:[]}),deps)).status,409);
 console.log('Nickname is required and normalized; leaderboard and cumulative totals come only from server RPCs, ignoring supplied scores.');
