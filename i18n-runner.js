@@ -3,9 +3,9 @@
 첫 번째 최고점 기록을 기다려요.|Be the first to set a high score.|期待首个最高分纪录。|最初の最高点記録をお待ちしています。
 선물 결과 확인|Check gift result|查看礼物结果|ギフト結果を確認
 장애물은 폴짝! 쥐·토끼·곰과 하늘의 비둘기·참새를 향기롭게 바꿔주세요.|Jump obstacles and spray rats, rabbits, bears, pigeons and sparrows!|跳过障碍，让鼠、兔、熊和空中的鸽子、麻雀变香！|障害物をジャンプ！ねずみ・うさぎ・くま、空のハトやスズメを香りで笑顔に！
-한 판 2분 완주 + 500점 → 하루 한 번 행운의 향기 선물!|Finish one 2-minute round with 500 points → one daily scent-gift draw!|单局完成2分钟并达到500分 → 每天一次香气礼物抽取！|1回2分を完走して500点で、1日1回の香りギフト抽選！
+한 판 2분 완주 + 180점 → 하루 한 번 행운의 향기 선물!|Finish one 2-minute round with 180 points → one daily scent-gift draw!|单局完成2分钟并达到180分 → 每天一次香气礼物抽取！|1回2分を完走して180点で、1日1回の香りギフト抽選！
 한 판은 최대 2분입니다. 죽으면 이번 판의 점수와 시간은 0으로 초기화돼요. 화면을 닫거나 다른 탭으로 이동하면 일시정지됩니다.|Each round lasts up to 2 minutes. Losing resets that round's score and time to zero. Closing the game or switching tabs pauses play.|每局最多2分钟。失败后该局分数和时间归零。关闭游戏或切换标签页会暂停。|1回は最大2分。やられるとその回の点数と時間は0になります。画面を閉じたりタブを切り替えると一時停止します。
-한 판에서 2분을 완주하고 500점을 채우면 서버에서 한 번 추첨해요. 같은 브라우저에서 한국 시간 기준 하루 한 번 참여할 수 있어요.|Finish 2 minutes in one round with 500 points for one server draw. One draw per browser per Korean calendar day.|单局完成2分钟并达到500分后由服务器抽取一次。同一浏览器按韩国时间每天可参加一次。|1回で2分を完走し500点を獲得するとサーバーで抽選。韓国時間で同じブラウザから1日1回参加できます。
+한 판에서 2분을 완주하고 180점을 채우면 서버에서 한 번 추첨해요. 같은 브라우저에서 한국 시간 기준 하루 한 번 참여할 수 있어요.|Finish 2 minutes in one round with 180 points for one server draw. One draw per browser per Korean calendar day.|单局完成2分钟并达到180分后由服务器抽取一次。同一浏览器按韩国时间每天可参加一次。|1回で2分を完走し180点を獲得するとサーバーで抽選。韓国時間で同じブラウザから1日1回参加できます。
 최고점 랭킹 TOP 20|Single-round Top 20|单局最高分排行榜前20名|1回の最高点 TOP 20
 최고점 랭킹 1위에게 추후 10ml 향수 제공 예정!|A 10ml perfume gift is planned for the future high-score winner!|计划为届时最高分第一名提供10ml香水！|最高点ランキング1位に、後日10mlの香水をプレゼント予定！
 내 최고점|My best score|我的最高分|自分の最高点
@@ -14,13 +14,13 @@
 새 게임에서 서버가 검증한 한 판 최고점으로 순위를 정합니다. 기존 누적 점수는 새 랭킹에 포함하지 않습니다. 같은 브라우저 기준이며, 데이터를 삭제하거나 기기를 바꾸면 기록이 분리됩니다. 동점이면 최고점을 먼저 달성한 순서입니다.|Rankings use the best server-verified single round in the new game. Previous cumulative totals are excluded. Records are per browser; clearing data or changing devices separates them. Ties go to the earlier high score.|按新游戏经服务器验证的单局最高分排名。旧累计分数不计入新排行榜。以同一浏览器为准，清除数据或更换设备会分开记录。同分时先达到最高分者优先。|新ゲームでサーバーが検証した1回の最高点で順位を決めます。以前の累計点は含みません。同じブラウザ単位で、データ削除や端末変更で記録は分かれます。同点は先に達成した順です。
 닉네임과 한 판 최고점은 랭킹에 공개됩니다.|Your nickname and best-round score will be public.|昵称与单局最高分将公开显示。|ニックネームと1回の最高点は公開されます。
 ✦ 아로마 오일을 먹으면 8초 동안 거대화·무적!|✦ Collect aroma oil for 8 seconds of giant invincibility!|✦ 获得芳香精油后，8秒巨大化并无敌！|✦ アロマオイルで8秒間、巨大化＆無敵！
-한 판에서 2분을 완주하고 500점을 채워주세요.|Finish 2 minutes in one round with at least 500 points.|请在单局完成2分钟并达到500分。|1回で2分を完走して500点を獲得してください。
+한 판에서 2분을 완주하고 180점을 채워주세요.|Finish 2 minutes in one round with at least 180 points.|请在单局完成2分钟并达到180分。|1回で2分を完走して180点を獲得してください。
 다시 도전|Try again|再次挑战|再挑戦
 2분 완주!|2-minute round complete!|2分钟完成！|2分間完走！
 다시 도전해볼까요?|Ready to try again?|再挑战一次吗？|もう一度挑戦しましょうか？
 이번 판 점수와 시간은 0부터 다시 시작해요.|This round's score and time restart from zero.|本局分数和时间从零重新开始。|この回の点数と時間は0から再スタートします。
-500점 달성! 선물 결과를 확인해주세요.|500 points reached! Check your gift result.|达到500分！请查看礼物结果。|500点達成！ギフトの結果をご確認ください。
-500점에 도전! 다음 판에서 다시 만나요.|Aim for 500! Try another round.|挑战500分！下一局再试。|500点を目指して、次の回で再挑戦！
+180점 달성! 선물 결과를 확인해주세요.|180 points reached! Check your gift result.|达到180分！请查看礼物结果。|180点達成！ギフトの結果をご確認ください。
+180점에 도전! 다음 판에서 다시 만나요.|Aim for 180! Try another round.|挑战180分！下一局再试。|180点を目指して、次の回で再挑戦！
 아로마 파워! 8초 무적|Aroma power! 8 seconds invincible|芳香力量！8秒无敌|アロマパワー！8秒間無敵
 아로마 무적!|Aroma invincibility!|芳香无敌！|アロマ無敵！
 한 판이 끝났어요. 기록을 저장하고 있어요.|Round finished. Saving your record.|本局结束，正在保存记录。|この回は終了。記録を保存しています。
