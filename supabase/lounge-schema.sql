@@ -3,7 +3,7 @@ create table public.workshop_lounge_applications (
  receipt text not null unique,
  nickname text not null check(char_length(nickname) between 1 and 20),
  contact_type text not null check(contact_type in ('instagram','phone')),
- contact_value text not null check(char_length(contact_value) between 3 and 40),
+ contact_value text not null check(char_length(contact_value) between 1 and 40),
  contact_hash text not null unique,
  message text not null default '' check(char_length(message)<=300),
  status text not null default 'pending' check(status in ('pending','contacted','invited','closed')),

@@ -1,0 +1,2 @@
+alter table public.workshop_lounge_applications drop constraint workshop_lounge_applications_contact_value_check;
+alter table public.workshop_lounge_applications add constraint workshop_lounge_applications_contact_value_check check (char_length(contact_value) between 1 and 40);
