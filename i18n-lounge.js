@@ -1,4 +1,5 @@
 (function(g){const rows=`
+신청서를 접수하지 못했어요. 입력 내용은 유지되니 잠시 후 다시 신청해주세요.|We could not receive your application. Your entries are kept; please try again shortly.|申请暂时未能提交，填写内容已保留，请稍后重试。|申込みを受け付けられませんでした。入力内容は保持されていますので、少し待ってから再度お試しください。
 나이대 · 필수|Age group · required|年龄段 · 必填|年齢層 · 必須
 나이대를 선택해주세요|Please select your age group|请选择年龄段|年齢層を選んでください
 10대 중후반|Mid to late teens|十几岁中后期|10代半ば〜後半

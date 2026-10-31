@@ -24,6 +24,7 @@ assert.equal((await ctx.handleLounge(request('apply',{...input,contactType:'phon
 assert.equal((await ctx.handleLounge(request('apply',null),deps)).status,400);
 for(const patch of [{ageGroup:undefined},{ageGroup:'forged'},{message:''},{message:'   '}])assert.equal((await ctx.handleLounge(request('apply',{...input,...patch}),deps)).status,400);
 const response=await ctx.handleLounge(request('apply',input),deps),body=await response.json();assert.equal(response.status,201);assert.match(body.receipt,/^SOLO-[A-F0-9]{12}$/);assert.equal(saved.contact_value,'scent_friend');assert.equal(saved.age_group,'late_teens');assert.equal(saved.consent_version,'solo-2026-10-v2');assert.equal(saved.status,undefined);assert.equal(saved.expires_at,undefined);assert.equal(JSON.stringify(body).includes('scent_friend'),false);
+for(const contact of ['x','xy']){const shortResponse=await ctx.handleLounge(request('apply',{...input,contact}),deps);assert.equal(shortResponse.status,201);assert.equal(saved.contact_value,contact);}
 admin=true;const listing=await ctx.handleLounge(request('applications'),deps);assert.equal(listing.status,200);assert.equal((await listing.json()).items[0].contact_value,'private_contact');
 assert.equal((await ctx.handleLounge(request('applications/status',{id:'11111111-1111-4111-8111-111111111111',status:'invited',contact_value:'forged'}),deps)).status,200);
 assert.equal((await ctx.handleLounge(request('apply',input),{...deps,limited:async()=>false})).status,429);
