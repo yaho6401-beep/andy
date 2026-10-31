@@ -1,3 +1,4 @@
+import {handleJournal} from './journal.ts';
 import {handleLounge} from './lounge.ts';
 import {handleGalleryEvent} from './gallery-event.ts';
 import {handleGallery} from './gallery.ts';
@@ -55,6 +56,7 @@ Deno.serve(async req=>{
   try{
     const path=new URL(req.url).pathname.replace(/\/$/,'');
     const params=new URL(req.url).searchParams;
+    if(/\/(?:journal\/(?:register|login|logout|records(?:\/(?:update|delete))?)|management\/(?:summary|records(?:\/(?:update|delete))?|memos(?:\/update)?))$/.test(path))return await handleJournal(req,{url,dbHeaders,reply,limited,sessionHash,digest,passwordHash,equalHash,cleanText});
     if(/\/lounge\/(?:apply|applications(?:\/(?:status|delete))?)$/.test(path))return await handleLounge(req,{url,dbHeaders,reply,limited,sessionHash,visitorHash,cleanText});
     if(/\/game\/(?:start|checkpoint|claim|check-coupon|redeem|leaderboard)$/.test(path))return await handleGame(req,{url,dbHeaders,reply,rpc,limited,sessionHash,visitorHash});
     if(/\/scent(?:\/(?:like|review|delete|staff(?:\/delete)?))?$/.test(path))return await handleScent(req,{url,dbHeaders,reply,rpc,limited,sessionHash,visitorHash,passwordHash,equalHash,rateKeyFor,cleanText});
@@ -199,5 +201,5 @@ Deno.serve(async req=>{
     const result=await rpc('submit_feedback_with_edit',{p_id:input.id,p_body:body,p_category:input.category,p_color:input.color,p_animal:input.animal,p_nickname:nickname,p_rate_key:await rateKeyFor(req),p_hash:await passwordHash(input.password,salt),p_salt:salt});
     if(!result.ok){const error=await result.text();if(error.includes('feedback_closed'))return reply({error:'지금은 새 메모 작성을 쉬고 있어요.'},403);if(error.includes('feedback_rate_limit'))return reply({error:'메모가 많이 도착했어요. 잠시 후 다시 남겨주세요.'},429);if(error.includes('feedback_conflict'))return reply({error:'새 메모로 다시 남겨주세요.'},409);throw new Error('write');}
     return reply({item:await result.json()},201);
-  }catch{const lounge=new URL(req.url).pathname.includes('/lounge/');return reply({error:lounge?'신청서를 접수하지 못했어요. 입력 내용은 유지되니 잠시 후 다시 신청해주세요.':'보드와 연결하지 못했어요. 잠시 후 다시 시도해주세요.'},503);}
+  }catch{const lounge=/\/(?:lounge|journal|management)\//.test(new URL(req.url).pathname);return reply({error:lounge?'신청서를 접수하지 못했어요. 입력 내용은 유지되니 잠시 후 다시 신청해주세요.':'보드와 연결하지 못했어요. 잠시 후 다시 시도해주세요.'},503);}
 });
