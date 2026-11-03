@@ -1,1 +1,6 @@
-/.preview/
+
+/archive/node_modules/
+/archive/dist/
+/archive/.local/
+
+/.release/

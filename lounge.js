@@ -23,4 +23,8 @@
  $('solo-admin-filter').addEventListener('change',()=>loadAdmin(1));$('solo-admin-refresh').addEventListener('click',()=>loadAdmin(adminPage));$('solo-admin-prev').addEventListener('click',()=>loadAdmin(Math.max(1,adminPage-1)));$('solo-admin-next').addEventListener('click',()=>loadAdmin(Math.min(adminPages,adminPage+1)));
  function setAdminToken(token){adminToken=token;listVersion++;$('solo-admin-login').hidden=Boolean(token);$('solo-admin-area').hidden=!token;$('solo-admin-password').value='';$('solo-admin-status').textContent='';adminRows=[];$('solo-admin-list').textContent='';$('solo-admin-page').textContent='';if(token&&dialogs[1].open)loadAdmin(1);}
  g.WorkshopLounge={setAdminToken};setAdminToken(adminToken);
+ const params=new URLSearchParams(location.search);if(params.get('solo')==='1'){
+ if(params.get('embed')==='1'){document.body.classList.add('solo-embed');dialogs[1].setAttribute('open','');document.documentElement.style.overflow='auto';}
+ else document.querySelector('[data-lounge="community"]')?.click();
+ }
 })(globalThis);

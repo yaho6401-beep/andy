@@ -1,0 +1,1 @@
+import {chromium} from '@playwright/test';const b=await chromium.launch({channel:'msedge',headless:true});const p=await b.newPage({viewport:{width:390,height:844}});await p.goto('http://127.0.0.1:4173/archive/');await p.waitForFunction(()=>globalThis.ArchiveDiagnostics);await p.waitForTimeout(600);await p.screenshot({path:'.local/demo-entry-final.png'});await b.close();
