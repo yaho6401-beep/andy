@@ -12,7 +12,7 @@ export class ArchiveStore {
  join(id,profile={},send=()=>{}){const m=this.member(id),now=this.clock();if(now<this.meeting.entryAt||now>this.meeting.endsAt||this.meeting.status==='closed')throw Error('입장 가능한 시간이 아닙니다.');if(this.clients.has(id))throw Error('이미 다른 화면에서 접속 중입니다.');if(this.clients.size>=MAX_PEOPLE)throw Error('최대 20명까지 입장할 수 있습니다.');const p={id,nickname:m.nickname,role:m.role,room:'garden',x:0,z:5.5,yaw:0,table:m.table,appearance:appearance(profile),scent:null,book:null,motion:'idle',seat:null,shoutUsed:false,epoch:0,seq:0,correction:0,emote:null,emoteAt:0,lastMove:now,lastInput:0,lastChat:0,lastEmote:0,send};this.clients.set(id,p);this.metrics.peak=Math.max(this.metrics.peak,this.clients.size);this.notify('입장 · '+m.nickname);return this.publicPlayer(p);}
  leave(id){const p=this.clients.get(id);if(!p)return;this.clients.delete(id);this.notify('퇴장 · '+p.nickname);}
  notify(text){this.events.push({id:randomUUID(),text,at:this.clock()});this.events=this.events.slice(-8);}
- publicPlayer(p){const {send,lastInput,lastChat,lastEmote,lastMove,standFrom,...safe}=p;return safe;}
+ publicPlayer(p){const {send,lastInput,lastChat,lastEmote,lastMove,standFrom,lastSeen,lastRequest,lastBatch,lastReceipts,connectionId,moveCredit,...safe}=p;return safe;}
  snapshot(id){updateCafe(this);this.member(id);const p=this.clients.get(id);if(!p)throw Error('먼저 입장해 주세요.');return {type:'snapshot',at:this.clock(),players:[...this.clients.values()].map(x=>this.publicPlayer(x)),meeting:{...this.meeting},myOrder:this.orders.get(id)||null,placedItems:this.placedItems.map(({owner,...item})=>({...item,mine:owner===id})),messages:this.messages.filter(x=>x.scope==='whisper'?x.audience.includes(id):x.room===p.room).slice(-45),events:this.events,notes:this.notes.map(({owner,...note})=>({...note,mine:owner===id})),content:this.content};}
  action(id,input){this.metrics.received++;const m=this.member(id),p=this.clients.get(id),now=this.clock();if(!p)throw Error('입장이 필요합니다.');if(!input||typeof input!=='object')throw Error('요청 형식을 확인해 주세요.');if(input.position&&['order','pickup','place-order','sit'].includes(input.type))this.action(id,{...input.position,type:'move',motion:'idle'});const social=socialAction(this,id,input);if(social)return social;switch(input.type){
  case 'move':{if(p.seat)return {ok:true,seated:true};
@@ -24,7 +24,7 @@ export class ArchiveStore {
   let xx=p.x,zz=p.z,seq=p.seq,length=0,blocked=false;const pending=[];
   for(const point of input.path){if(!Array.isArray(point)||point.length!==3||!Number.isSafeInteger(point[0])||!Number.isFinite(point[1])||!Number.isFinite(point[2]))throw Error('이동 정보를 확인해 주세요.');if(point[0]<=seq)continue;pending.push(point);seq=point[0];}
   for(const point of pending){length+=Math.hypot(point[1]-xx,point[2]-zz);xx=point[1];zz=point[2];}
-  const elapsed=Math.min(3,Math.max(.5,(now-p.lastMove)/1000));if(length>3.5*elapsed+.35){p.correction++;p.seq=seq;return {ok:false,corrected:true};}
+  const credit=Math.min(10.85,(p.moveCredit??2.1)+3.5*Math.max(0,(now-p.lastMove)/1000));if(length>credit){p.correction++;p.seq=seq;p.moveCredit=credit;p.lastMove=now;return {ok:false,corrected:true,cause:'speed'};}p.moveCredit=credit-length;
   xx=p.x;zz=p.z;for(const point of pending){if(!validMove(p.room,xx,zz,point[1],point[2])){blocked=true;break;}xx=point[1];zz=point[2];}
   p.seq=seq;p.x=xx;p.z=zz;p.yaw=yaw;p.lastMove=now;p.motion=input.motion==='walk'?'walk':'idle';if(blocked)p.correction++;return {ok:!blocked,corrected:blocked};
  }

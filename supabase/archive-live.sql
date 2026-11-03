@@ -1,0 +1,11 @@
+create schema if not exists archive_private;
+revoke all on schema archive_private from public, anon, authenticated;
+create table if not exists archive_private.rooms(id text primary key,state jsonb not null default '{}'::jsonb,updated_at timestamptz not null default now());
+create table if not exists archive_private.sessions(token_hash text primary key check(length(token_hash)=64),player_id uuid not null unique,nickname text not null check(char_length(nickname) between 1 and 16),role text not null default 'guest' check(role in ('guest','host')),admin_hash text,expires_at timestamptz not null,created_at timestamptz not null default now());
+create index if not exists archive_sessions_expiry on archive_private.sessions(expires_at);
+create table if not exists archive_private.join_limits(key text primary key,count integer not null default 1,expires_at timestamptz not null);
+alter table archive_private.rooms enable row level security;
+alter table archive_private.sessions enable row level security;
+alter table archive_private.join_limits enable row level security;
+revoke all on all tables in schema archive_private from public,anon,authenticated;
+insert into archive_private.rooms(id) values('community') on conflict do nothing;

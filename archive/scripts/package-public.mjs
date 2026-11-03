@@ -5,4 +5,4 @@ for(const dir of ['assets','data','locales'])await cp(resolve(base,dir),resolve(
 await mkdir(resolve(out,'supabase/functions/feedback-wall'),{recursive:true});await cp(resolve(base,'supabase/functions/feedback-wall/runner-engine.js'),resolve(out,'supabase/functions/feedback-wall/runner-engine.js'));
 await cp(resolve('dist'),resolve(out,'archive'),{recursive:true});
 const configPath=resolve(out,'vercel.json');const config=JSON.parse(await readFile(configPath,'utf8'));config.buildCommand=null;config.outputDirectory='.';await writeFile(configPath,JSON.stringify(config));
-const page=resolve(out,'archive/index.html');let h=await readFile(page,'utf8');h=h.replace('<head>','<head><script>globalThis.ArchiveDemoConfig={mode:"public-demo"};</script>');await writeFile(page,h);console.log('Public static release ready at '+out);
+const page=resolve(out,'archive/index.html');let h=await readFile(page,'utf8');h=h.replace('<head>','<head><script>globalThis.ArchiveDemoConfig={mode:"shared"};</script>');await writeFile(page,h);console.log('Public static release ready at '+out);
