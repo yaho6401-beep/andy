@@ -1,0 +1,6 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {initializeGraphics,graphicsDescription} from '../camp/graphics.js';
+const scene=()=>({children:[],remove(o){this.children=this.children.filter(x=>x!==o);}});
+class Renderer{constructor(args){this.args=args;this.shadowMap={};}setPixelRatio(n){this.ratio=n;}dispose(){this.disposed=true;}forceContextLoss(){this.lost=true;}}
+test('default GPU is tried if the low-power context is unavailable',()=>{const seen=[],s=scene();const r=initializeGraphics({WebGLRenderer:Renderer},()=>({dispose(){}}),s,()=>({getContext:(name,options)=>{seen.push(options.powerPreference);return options.powerPreference==='default'?{}:null;}}));assert.equal(r.mode,'3d');assert.deepEqual(seen,['low-power','default']);assert.equal(r.renderer.ratio,1);});
+test('scene failures are not mislabeled as unsupported WebGL',()=>{const r=initializeGraphics({WebGLRenderer:Renderer},()=>{throw Error('bad model');},scene(),()=>({getContext:()=>({})}));assert.equal(r.reason,'scene-error');assert.match(graphicsDescription(r.mode,r.reason),/준비 중 오류/);const noGl=initializeGraphics({},()=>{},scene(),()=>({getContext:()=>null}));assert.equal(noGl.reason,'webgl-unavailable');});

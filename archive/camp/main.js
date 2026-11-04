@@ -4,10 +4,13 @@ import {appearance} from '../src/protocol.js';
 import {createCamp} from './world.js';
 import {campMove,nearestSeat,CAMP_SEATS} from './layout.js';
 import {CampTransport} from './transport.js';
+import {initializeGraphics,graphicsDescription} from './graphics.js';
+import {installReading} from './reading-ui.js';
 const $=id=>document.getElementById(id),events=new AbortController(),keys=new Set(),axis={x:0,z:0};
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let look={};try{look=appearance(JSON.parse(localStorage.getItem('archive-look')||'{}')||{});}catch{look=appearance();}
+let readingUI;
 let renderer,camp,fallback=false,disposed=false,frameId,last=performance.now(),sample=last,frames=0;
 let joined=false,connecting=false,selfId='solo',snapshot=null,transport=null,seat=null,pointer=null,statusTimer;
 let trail=[],sequence=0,lastSent=0,lastPacket='',lastEpoch=null,lastCorrection=null,lastMessages='',lastPeople='',reportTarget=null;
@@ -20,18 +23,29 @@ function clearInput(){keys.clear();axis.x=axis.z=0;pointer=null;$('thumb').style
 const scene=new T.Scene();scene.background=new T.Color('#344c58');scene.fog=new T.Fog('#344c58',24,48);
 const camera=new T.OrthographicCamera(-10,10,10,-10,.1,90);camera.position.set(12,16,18);camera.lookAt(0,.3,0);
 scene.add(new T.HemisphereLight('#e9e5ef','#7a937f',2.6));const moonlight=new T.DirectionalLight('#ece1cf',1.8);moonlight.position.set(-5,10,7);scene.add(moonlight);
-function buildFallback(){
+function buildFallback(reason='webgl-unavailable'){
  fallback=true;$('scene').classList.add('fallback');
  const trees=Array.from({length:18},(_,i)=>{const a=i*Math.PI/9,x=Math.sin(a)*7.5,z=Math.cos(a)*7;if(z < -4.2)return '';return `<path d="M${x} ${z-.7}l-.5 1h1z" fill="${i%2?'#82a593':'#6f968c'}"/>`;}).join('');
  const seats=CAMP_SEATS.map(s=>`<circle cx="${s.x}" cy="${s.z}" r=".42" fill="#bc9671" stroke="#e5c99d" stroke-width=".08"/>`).join('');
  $('scene').innerHTML=`<svg id="camp-map" viewBox="-9 -10 18 18.5" role="img" aria-label="바다가 보이는 캠핑장 2D 지도. 뒤편 바다와 작은 해변, 중앙 모닥불과 의자 6개, 이동 중인 아바타"><defs><clipPath id="camp-coast-clip"><rect x="-9" y="-6.4" width="18" height="15"/></clipPath></defs><rect x="-9" y="-10" width="18" height="4.2" rx=".6" fill="#477d93"/><rect x="-9" y="-7.7" width="18" height="1.9" fill="#6697a6"/><g class="map-waves" stroke="#b3d5d3" stroke-width=".065" stroke-linecap="round"><path d="M-7-8.7h2.4m3.1-.4h2m3 .6h2.8M-6-7.7h1.4m3.6.5h2.8m3.1-.6h1.2"/></g><text x="0" y="-9.25" text-anchor="middle" font-size=".32" letter-spacing=".12" fill="#dce6dc">별빛 바다</text><ellipse rx="8.5" ry="7.8" fill="#64877a" clip-path="url(#camp-coast-clip)"/><path d="M-7.5-6.4Q0-5.8 7.5-6.4" fill="none" stroke="#d9c8a4" stroke-width=".6" stroke-linecap="round"/><circle r="4.1" fill="#aaa995"/>${trees}${seats}<path d="M-6.4-2.3L-5-5.6l1.4 3.3z" fill="#dab7a4"/><path d="M3.7-2.4L5-5.6l1.3 3.2z" fill="#b8bfd3"/><rect x="2.2" y="-6.2" width="2.8" height=".8" rx=".12" fill="#c2aa7a"/><text x="3.6" y="-5.7" text-anchor="middle" font-size=".3" fill="#435c52">오늘의 한 문장</text><circle r="1" fill="#7e776d"/><path d="M-.55.45Q-.8-.3 0-1Q.7-.1.45.5z" fill="#f3b66c"/><path d="M-.2.4Q-.3 0 .1-.5Q.4.2.2.5z" fill="#ffe8ad"/><g id="map-actors"></g></svg>`;
- const note=document.createElement('p');note.className='fallback-note';note.textContent='3D 미지원 브라우저 · 가벼운 2D 화면으로 함께 쉬어요';document.body.append(note);
+ const note=document.createElement('p');note.className='fallback-note';note.textContent=graphicsDescription('2d',reason);document.body.append(note);
  $('performance').textContent='2D 대체 화면 · 3D FPS 측정 불가';
 }
-try{
- renderer=new T.WebGLRenderer({antialias:false,powerPreference:'low-power'});renderer.setPixelRatio(1);renderer.shadowMap.enabled=false;renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;$('scene').append(renderer.domElement);camp=createCamp(scene);
- listen(renderer.domElement,'webglcontextlost',e=>{e.preventDefault();status('그래픽 연결이 끊겼어요. 새로고침 후 다시 입장해 주세요.',true);transport?.close();});
-}catch(e){renderer?.dispose();renderer?.domElement.remove();renderer=null;buildFallback();}
+const graphics=initializeGraphics(T,createCamp,scene);
+renderer=graphics.renderer||null;camp=graphics.world||null;
+$('graphics-status').textContent=graphicsDescription(graphics.mode,graphics.reason);
+$('graphics-retry').hidden=graphics.mode==='3d';
+if(renderer){
+ $('scene').append(renderer.domElement);
+ listen(renderer.domElement,'webglcontextlost',e=>{
+  e.preventDefault();if(!renderer||disposed)return;
+  const old=renderer;renderer=null;for(const id of [...actors.keys()])dropActor(id);camp?.dispose();camp=null;old.dispose();buildFallback('context-lost');positions();
+  $('graphics-status').textContent=graphicsDescription('2d','context-lost');$('graphics-retry').hidden=false;
+  status('3D 연결이 끊겨 가벼운 화면으로 전환했어요. 대화는 계속할 수 있어요.');
+ });
+}else buildFallback(graphics.reason);
+listen($('graphics-retry'),'click',()=>location.reload());
+
 function resize(){if(disposed||!renderer)return;const aspect=innerWidth/innerHeight,height=Math.max(16,19/aspect);camera.left=-height*aspect/2;camera.right=height*aspect/2;camera.top=height/2;camera.bottom=-height/2;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);}
 resize();status('의자 옆에서 쉬거나, 함께 쉬기를 눌러 대화해 보세요.');
 function dropActor(id){const a=actors.get(id);if(!a)return;if(a.mesh){a.mesh.traverse(o=>o.geometry?.dispose());scene.remove(a.mesh);}a.label?.remove();a.map?.remove();actors.delete(id);}
@@ -59,8 +73,8 @@ function resetSolo(){seat=null;Object.assign(local,{x:0,z:5.8,yaw:Math.PI});solo
 function leave(){transport?.close();transport=null;joined=false;snapshot=null;selfId='solo';lastEpoch=lastCorrection=null;lastMessages=lastPeople='';$('topic').hidden=true;$('connection').textContent='혼자 둘러보기 · 미리보기';$('people-open').innerHTML='<span>♧</span>함께 쉬기';for(const d of document.querySelectorAll('dialog[open]'))d.close();resetSolo();clearInput();status('함께 쉬기를 마쳤어요. 혼자 더 둘러보셔도 좋아요.');}
 listen($('entry-form'),'submit',async e=>{e.preventDefault();if(connecting)return;connecting=true;const form=e.target,button=form.querySelector('[type=submit]');button.disabled=true;$('entry-status').textContent='모닥불에 연결하고 있어요…';const candidate=new CampTransport(receive,s=>{if(!joined)$('entry-status').textContent=s;});candidate.onWelcome=({id})=>{selfId=id;joined=true;$('camp-entry').close();};candidate.onError=text=>status(text);candidate.onKicked=text=>{leave();status(text,true);};candidate.onReceipt=r=>{if(r.action==='report')status('신고가 진행자에게 접수됐어요.');};transport=candidate;try{await candidate.connect({nickname:form.elements.nickname.value,adult:form.elements.adult.checked,hostKey:form.elements.hostKey.value,appearance:look});localStorage.setItem('camp-preview-nickname',form.elements.nickname.value);status('반가워요. 의자 옆에서 앉아 대화해 보세요.');}catch(error){candidate.close();if(transport===candidate)transport=null;joined=false;$('entry-status').textContent=error.message;}finally{connecting=false;button.disabled=false;form.elements.hostKey.value='';}});
 try{$('entry-form').elements.nickname.value=localStorage.getItem('camp-preview-nickname')||'향기 여행자';}catch{}
-function interact(){if(seat){if(joined)send({type:'stand'});else{Object.assign(local,seat.stand);seat=null;}return;}const target=nearestSeat(local.x,local.z);if(target&&target.distance<=1.35){if(joined){const index=CAMP_SEATS.findIndex(s=>s.id===target.id);send({type:'sit',seat:`${me().room}-seat-${index}`,position:movePacket()});}else{seat=target;Object.assign(local,{x:target.x,z:target.z,yaw:target.yaw});}return;}if(Math.hypot(local.x-3.6,local.z+5.8)<2.4)openDialog('quote');}
-listen($('interact'),'click',interact);listen($('quote-open'),'click',()=>openDialog('quote'));listen($('settings-open'),'click',()=>openDialog('settings'));listen($('people-open'),'click',()=>openDialog(joined?'people':'camp-entry'));listen($('chat-open'),'click',()=>openDialog(joined?'chat':'camp-entry'));listen($('leave-camp'),'click',leave);
+function interact(){if(seat){if(joined)send({type:'stand'});else{Object.assign(local,seat.stand);seat=null;}return;}const target=nearestSeat(local.x,local.z);if(target&&target.distance<=1.35){if(joined){const index=CAMP_SEATS.findIndex(s=>s.id===target.id);send({type:'sit',seat:`${me().room}-seat-${index}`,position:movePacket()});}else{seat=target;Object.assign(local,{x:target.x,z:target.z,yaw:target.yaw});}return;}if(Math.hypot(local.x-3.6,local.z+5.8)<2.4)readingUI?.openQuote();}
+listen($('interact'),'click',interact);listen($('quote-open'),'click',()=>readingUI?.openQuote());listen($('settings-open'),'click',()=>openDialog('settings'));listen($('people-open'),'click',()=>openDialog(joined?'people':'camp-entry'));listen($('chat-open'),'click',()=>openDialog(joined?'chat':'camp-entry'));listen($('leave-camp'),'click',leave);
 listen($('reset'),'click',()=>{if(joined){status('함께 쉬기 종료 후 입구로 돌아갈 수 있어요.');openDialog('people');}else resetSolo();});
 for(const button of document.querySelectorAll('[data-close]'))listen(button,'click',()=>$(button.dataset.close).close());
 listen($('quality'),'change',()=>{if(renderer){renderer.setPixelRatio($('quality').value==='standard'?Math.min(devicePixelRatio,1.5):1);resize();}});
@@ -86,5 +100,7 @@ function frame(now){
  if(renderer){camp.update(now/1000,reduced);renderer.render(scene,camera);frames++;if(now-sample>=1000){$('performance').textContent=`${Math.round(frames*1000/(now-sample))} FPS · ${renderer.info.render.calls} draw calls · ${renderer.info.render.triangles.toLocaleString()} triangles`;frames=0;sample=now;}}
 }
 listen(document,'visibilitychange',()=>{clearInput();if(document.hidden){cancelAnimationFrame(frameId);frameId=null;}else if(!disposed&&frameId===null){last=performance.now();sample=last;frames=0;frameId=requestAnimationFrame(frame);}});
-function dispose(){if(disposed)return;disposed=true;transport?.close();cancelAnimationFrame(frameId);clearTimeout(statusTimer);events.abort();for(const id of [...actors.keys()])dropActor(id);avatarMaterials.forEach(m=>m.dispose());camp?.dispose();renderer?.dispose();renderer?.forceContextLoss();labels.remove();}
+function dispose(){if(disposed)return;disposed=true;readingUI?.close();transport?.close();cancelAnimationFrame(frameId);clearTimeout(statusTimer);events.abort();for(const id of [...actors.keys()])dropActor(id);avatarMaterials.forEach(m=>m.dispose());camp?.dispose();renderer?.dispose();renderer?.forceContextLoss();labels.remove();}
 listen(window,'pagehide',dispose);window.addEventListener('pageshow',e=>{if(e.persisted&&disposed)location.reload();});frameId=requestAnimationFrame(frame);
+
+readingUI=installReading({openDialog,getTransport:()=>transport,getNickname:()=>$('entry-form').elements.nickname.value,isJoined:()=>joined,onShare:text=>send({type:'chat',text}),onQuote:q=>camp?.setQuote?.(q.text),onStatus:status});
