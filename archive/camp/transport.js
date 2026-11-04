@@ -6,10 +6,11 @@ export class CampTransport{
  async connect(profile){
  if(navigator.locks)await new Promise((resolve,reject)=>{navigator.locks.request('books-scents-camp-preview-session',{ifAvailable:true},async lock=>{if(!lock){reject(Error('이미 다른 화면에서 라운지에 접속 중이에요.'));return;}resolve();await new Promise(r=>this.releaseLock=r);}).catch(reject);});
  try{
- this.profile=profile;this.connectionId=sessionStorage.getItem('camp-preview-connection-id')||crypto.randomUUID();sessionStorage.setItem('camp-preview-connection-id',this.connectionId);
+ this.profile={nickname:profile.nickname,adult:profile.adult,appearance:profile.appearance};this.connectionId=sessionStorage.getItem('camp-preview-connection-id')||crypto.randomUUID();sessionStorage.setItem('camp-preview-connection-id',this.connectionId);
  this.token=profile.hostKey?null:localStorage.getItem('camp-preview-guest-session');
  let adminToken;
  if(profile.hostKey){const r=await fetch('https://jqlrwwheiwjdrobluifx.supabase.co/functions/v1/feedback-wall/admin/login',{method:'POST',headers:{apikey:apiKey,'Content-Type':'application/json'},body:JSON.stringify({password:profile.hostKey})});const d=await r.json();if(!r.ok)throw Error(d.error||'관리자 로그인을 확인해 주세요.');adminToken=d.token;}
+ this.adminToken=adminToken;
  const d=await this.request('join',{nickname:profile.nickname,adult:profile.adult,appearance:profile.appearance,adminToken});this.token=d.token||this.token;this.id=d.id;
  if(d.snapshot.players.find(p=>p.id===d.id)?.role==='guest')localStorage.setItem('camp-preview-guest-session',this.token);
  this.closed=false;this.batch=0;this.seenReceipt=0;this.pending=null;this.queue=[];this.onWelcome?.({id:this.id});this.deliver(d);this.onStatus('함께 연결됨 · 미리보기');this.lastStart=performance.now();this.schedule(500);
@@ -28,5 +29,5 @@ export class CampTransport{
  finally{this.busy=false;if(!this.closed){const interval=this.failures?Math.min(10000,700*2**Math.min(4,this.failures)):document.hidden?3000:500;this.schedule(Math.max(80,interval-(performance.now()-this.lastStart)));}}
  }
  async admin(){return this.request('admin');}
- close(){if(this.closed){this.releaseLock?.();return;}this.closed=true;clearTimeout(this.timer);window.removeEventListener('pagehide',this.pageHide);fetch(endpoint,{method:'POST',headers:{apikey:apiKey,'Content-Type':'application/json','x-region':'eu-west-1',Authorization:'Bearer '+this.token},body:JSON.stringify({op:'leave',connectionId:this.connectionId}),keepalive:true}).catch(()=>{});this.releaseLock?.();}
+ close(){this.adminToken=null;if(this.closed){this.releaseLock?.();return;}this.closed=true;clearTimeout(this.timer);window.removeEventListener('pagehide',this.pageHide);fetch(endpoint,{method:'POST',headers:{apikey:apiKey,'Content-Type':'application/json','x-region':'eu-west-1',Authorization:'Bearer '+this.token},body:JSON.stringify({op:'leave',connectionId:this.connectionId}),keepalive:true}).catch(()=>{});this.releaseLock?.();}
 }
