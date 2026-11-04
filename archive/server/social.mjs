@@ -12,11 +12,11 @@ export function socialAction(s,id,input){const p=s.clients.get(id),now=s.clock()
   p.x=p.seat.x;p.z=p.seat.z;p.yaw=0;p.motion='idle';p.table=5;p.epoch++;p.seq=0;p.lastMove=now;return {ok:true};
  }
  if(input.type==='sit'){
-  const seat=SEATS.find(x=>x.id===input.seat&&x.room===p.room);if(!seat||Math.hypot(p.x-seat.x,p.z-seat.z)>1.35)throw Error('의자 가까이에서 앉아주세요.');if([...s.clients.values()].some(q=>q.id!==id&&q.seat?.id===seat.id))throw Error('이미 누군가 앉아 있어요.');if(p.seat)return {ok:true};
+  const seat=(s.seatDefinitions||SEATS).find(x=>x.id===input.seat&&x.room===p.room);if(!seat||Math.hypot(p.x-seat.x,p.z-seat.z)>1.35)throw Error('의자 가까이에서 앉아주세요.');if([...s.clients.values()].some(q=>q.id!==id&&q.seat?.id===seat.id))throw Error('이미 누군가 앉아 있어요.');if(p.seat)return {ok:true};
   p.seat={...seat};p.standFrom={x:p.x,z:p.z};p.x=seat.x;p.z=seat.z;p.yaw=seat.yaw;p.motion='sit';p.table=seat.table||0;p.epoch++;p.seq=0;p.lastMove=now;return {ok:true};
  }
  if(input.type==='stand'){
-  if(!p.seat)return {ok:true};const seat=p.seat,candidates=[p.standFrom,seat.stand];for(let radius=.9;radius<2.2;radius+=.3)for(let i=0;i<12;i++)candidates.push({x:seat.x+Math.cos(i*Math.PI/6)*radius,z:seat.z+Math.sin(i*Math.PI/6)*radius});const spot=candidates.find(c=>c&&validPosition(p.room,c.x,c.z));if(!spot)throw Error('잠시 후 다시 일어나 주세요.');p.x=spot.x;p.z=spot.z;p.seat=null;p.standFrom=null;p.table=0;p.motion='idle';p.epoch++;p.seq=0;p.lastMove=now;return {ok:true};
+  if(!p.seat)return {ok:true};const seat=p.seat,candidates=[p.standFrom,seat.stand];for(let radius=.9;radius<2.2;radius+=.3)for(let i=0;i<12;i++)candidates.push({x:seat.x+Math.cos(i*Math.PI/6)*radius,z:seat.z+Math.sin(i*Math.PI/6)*radius});const spot=candidates.find(c=>c&&(s.validPosition||validPosition)(p.room,c.x,c.z));if(!spot)throw Error('잠시 후 다시 일어나 주세요.');p.x=spot.x;p.z=spot.z;p.seat=null;p.standFrom=null;p.table=0;p.motion='idle';p.epoch++;p.seq=0;p.lastMove=now;return {ok:true};
  }
  if(input.type==='order'){
   const npc=NPCS.salon;if(p.room!=='salon'||Math.hypot(p.x-npc.reach.x,p.z-npc.reach.z)>2.4)throw Error('바리스타 카운터에서 주문해 주세요.');const item=MENU.find(m=>m.id===input.item);if(!item)throw Error('메뉴를 확인해 주세요.');const old=s.orders.get(id);if(old&&['preparing','ready','held'].includes(old.status))throw Error('먼저 주문하신 메뉴를 받아 테이블에 놓아주세요.');const order={id:crypto.randomUUID(),item:item.id,name:item.name,nickname:p.nickname,status:'preparing',readyAt:now+30000};s.orders.set(id,order);return {ok:true,order:{...order}};
