@@ -9,6 +9,12 @@
 당신의 이야기를, 진짜 향수로 만들어보세요.|Turn your story into a perfume of your own.|把你的故事，做成专属香水。|あなたの物語を、自分だけの香水に。
 책과향기 방문 예약|Book your atelier visit|预约到店制香|アトリエ来店予約
 나만의 향, 나다운 스타일|Your scent. Your style.|专属香气，独特风格|自分の香り、自分のスタイル
+인스타그램|Instagram|Instagram|Instagram
+책과향기 최신 소식 실시간 업데이트!|The latest from Books & Scents, updated in real time!|实时更新书与香气的最新消息！|本と香りの最新情報をリアルタイムで更新！
+향기로운 이야기와 공방의 순간들|Fragrant stories and moments at our atelier|香气故事与工坊时光|香りの物語とアトリエのひととき
+책과향기 인스타그램|Our Instagram|我们的 Instagram|公式 Instagram
+향수 지속력 높이기 꿀팁!|Make your perfume last longer!|香水持香小妙招！|香りを長持ちさせるコツ！
+게임 잘하면 할인쿠폰 있음!|Play well for a chance at coupons!|游戏挑战有机会获得优惠券！|ゲームでクーポンのチャンス！
 책과향기 유튜브|Our YouTube|我们的 YouTube|公式 YouTube
 향수 뿌리는 법|How to wear perfume|香水喷洒小课堂|香水のつけ方
 당신의 이야기에|Dress your story|为你的故事|あなたの物語に
