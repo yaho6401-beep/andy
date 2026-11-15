@@ -1,3 +1,4 @@
+import {artObject} from './art-library.js';
 import {furnishDetails} from './world-details.js';
 import {CAFE_TABLES,SEATS} from './seats.js';
 import * as T from 'three';
@@ -14,14 +15,14 @@ function label(p,text,x,y,z,width=3,color='#4d5844',font=36){const canvas=docume
 function plant(p,x,z,size=1){mesh(p,cylinder,'#d0b398',x,.3*size,z,.28*size,.6*size,.28*size);for(let i=0;i<6;i++){const a=i*2.4;const leaf=mesh(p,sphere,i%2?'#94ac83':'#afbf99',x+Math.sin(a)*.24*size,(.7+i*.13)*size,z+Math.cos(a)*.2*size,.13*size,.4*size,.18*size);leaf.rotation.z=Math.sin(a)*.7;}}
 function lamp(p,x,z){mesh(p,cylinder,'#ba9d6c',x,1.1,z,.035,2.2,.035, .45);mesh(p,cylinder,'#baa176',x,.06,z,.3,.1,.3);const shade=new T.Mesh(new T.ConeGeometry(.43,.5,16,1,true),material('#f5dfb6'));shade.position.set(x,2.1,z);p.add(shade);mesh(p,sphere,'#fff0c8',x,1.95,z,.12);}
 function rug(p,x,z,w,d,color){const r=mesh(p,roundedGeo(w,d,.035,.15),color,x,.03,z);r.rotation.x=-Math.PI/2;return r;}
-function bench(p,x,z,color='#b49a7c',rotate=0){const g=new T.Group();g.position.set(x,0,z);g.rotation.y=rotate;p.add(g);round(g,color,0,.5,0,2.2,.18,.8);round(g,color,0,.95,-.35,2.2,.65,.16);for(const a of [-.8,.8]){mesh(g,box,'#92785c',a,.25,0,.12,.5,.6);round(g,'#e5d8bc',a,.65,0,.16,.14,.85);}}
+function bench(p,x,z,color='#b49a7c',rotate=0){const upgraded=artObject('bench');if(upgraded){upgraded.position.set(x,0,z);upgraded.rotation.y=rotate;p.add(upgraded);return;}const g=new T.Group();g.position.set(x,0,z);g.rotation.y=rotate;p.add(g);round(g,color,0,.5,0,2.2,.18,.8);round(g,color,0,.95,-.35,2.2,.65,.16);for(const a of [-.8,.8]){mesh(g,box,'#92785c',a,.25,0,.12,.5,.6);round(g,'#e5d8bc',a,.65,0,.16,.14,.85);}}
 function sofa(p,x,z,color){round(p,color,x,.4,z,2.8,.6,1.2,.2);round(p,color,x,.9,z-.48,2.8,.7,.26,.15);for(const a of [-1.25,1.25])round(p,color,x+a,.75,z,.25,.6,1.2,.12);for(const a of [-.6,.6])round(p,'#eee3cf',x+a,.73,z,1.05,.16,.86,.09);}
-function bookcase(p,x,z){round(p,'#a08060',x,1.25,z,3.6,2.5,.6,.06);round(p,'#dfc7a3',x,1.3,z+.3,3.3,2.2,.05,.03);for(let row=0;row<3;row++){const yy=.4+row*.72;mesh(p,box,'#9b7956',x,yy,z+.25,3.4,.09,.6);for(let j=0;j<11;j++){const color=['#bbad8d','#b7bfa5','#d4b5b5','#b0bac7','#ad97b5'][j%5];const h=.36+(j%3)*.09;const b=round(p,color,x-1.45+j*.27,yy+h/2+.06,z+.33,.19,h,.28,.02);b.rotation.z=j%5===0?.12:0;}}}
-function bottle(p,x,y,z,color,scale=1,index=0){const g=new T.Group();g.position.set(x,y,z);g.scale.setScalar(scale);p.add(g);if(index%2){mesh(g,cylinder,color,0,.47,0,.32,.78,.32);}else round(g,color,0,.47,0,.65,.8,.38,.12);round(g,'#fff0d1',0,.48,.22,.35,.3,.02,.02);mesh(g,cylinder,'#c3a363',0,.92,0,.15,.16,.15,.5);round(g,index%2?'#8c7763':'#8a987d',0,1.1,0,.36,.24,.3,.04);return g;}
+function bookcase(p,x,z){const upgraded=artObject('bookcase');if(upgraded){upgraded.position.set(x,0,z);p.add(upgraded);return;}round(p,'#a08060',x,1.25,z,3.6,2.5,.6,.06);round(p,'#dfc7a3',x,1.3,z+.3,3.3,2.2,.05,.03);for(let row=0;row<3;row++){const yy=.4+row*.72;mesh(p,box,'#9b7956',x,yy,z+.25,3.4,.09,.6);for(let j=0;j<11;j++){const color=['#bbad8d','#b7bfa5','#d4b5b5','#b0bac7','#ad97b5'][j%5];const h=.36+(j%3)*.09;const b=round(p,color,x-1.45+j*.27,yy+h/2+.06,z+.33,.19,h,.28,.02);b.rotation.z=j%5===0?.12:0;}}}
+function bottle(p,x,y,z,color,scale=1,index=0){const upgraded=artObject('perfume');if(upgraded){upgraded.position.set(x,y,z);upgraded.scale.setScalar(scale);upgraded.traverse(o=>{if(o.material?.name==='perfume')o.material=material(color);});p.add(upgraded);return upgraded;}const g=new T.Group();g.position.set(x,y,z);g.scale.setScalar(scale);p.add(g);if(index%2){mesh(g,cylinder,color,0,.47,0,.32,.78,.32);}else round(g,color,0,.47,0,.65,.8,.38,.12);round(g,'#fff0d1',0,.48,.22,.35,.3,.02,.02);mesh(g,cylinder,'#c3a363',0,.92,0,.15,.16,.15,.5);round(g,index%2?'#8c7763':'#8a987d',0,1.1,0,.36,.24,.3,.04);return g;}
 function archWindow(p,x,z,color){round(p,'#e6d9c3',x,2.15,z,2.1,3.1,.2,.35);round(p,color,x,2.2,z+.13,1.8,2.75,.05,.33);mesh(p,box,'#f4ead5',x,2.1,z+.17,.07,2.7,.06);mesh(p,box,'#f4ead5',x,2.1,z+.17,1.8,.06,.06);}
 
 function flowers(p,x,z,color='#dc99ae',n=7){for(let i=0;i<n;i++){const a=i*2.4,xx=x+Math.sin(a)*.36,zz=z+Math.cos(a)*.3;mesh(p,cylinder,'#829e70',xx,.28,zz,.018,.5,.018);for(let j=0;j<5;j++){const q=j*Math.PI/2.5;mesh(p,sphere,color,xx+Math.sin(q)*.07,.57,zz+Math.cos(q)*.07,.065,.035,.065);}mesh(p,sphere,'#e4bf70',xx,.59,zz,.035);}}
-function tree(p,x,z){mesh(p,cylinder,'#b79469',x,1.1,z,.15,2.2,.15);for(const [dx,dy,dz,r]of [[0,2.7,0,1.1],[-.6,2.3,.15,.75],[.6,2.4,-.1,.8]])mesh(p,sphere,'#a8c589',x+dx,dy,z+dz,r,r*.9,r);mesh(p,cylinder,'#c2b495',x,.15,z,1.15,.25,1.15);}
+function tree(p,x,z){const model=artObject('tree');if(model){model.position.set(x,0,z);model.scale.setScalar(.9);p.add(model);return;}mesh(p,cylinder,'#b79469',x,1.1,z,.15,2.2,.15);for(const [dx,dy,dz,r]of [[0,2.7,0,1.1],[-.6,2.3,.15,.75],[.6,2.4,-.1,.8]])mesh(p,sphere,'#a8c589',x+dx,dy,z+dz,r,r*.9,r);mesh(p,cylinder,'#c2b495',x,.15,z,1.15,.25,1.15);}
 function portalFrame(p,gate,outdoor=false){const g=new T.Group();g.position.set(gate.x,0,gate.z);if(gate.x)g.rotation.y=gate.x>0?-Math.PI/2:Math.PI/2;else if(gate.z>0)g.rotation.y=Math.PI;p.add(g);const c=outdoor?'#d2b284':'#c7b493';for(const side of [-1,1])round(g,c,side*1.23,1.4,0,.23,2.8,.35,.05);round(g,c,0,2.86,0,2.65,.23,.35,.08);round(g,'#faf2df',0,3.18,0,3.2,.5,.18,.08);label(g,gate.label,0,3.2,.12,3,'#6b6e56',48);rug(g,0,-.3,2.05,1.9,outdoor?'#d8c49a':'#c2c7af');for(const side of [-1,1]){const pane=round(g,outdoor?'#dce6dc':'#d9cbb5',side*1.45,1.32,.18,.42,2.4,.14,.05);pane.rotation.y=side*.5;mesh(g,sphere,'#b99859',side*1.3,1.2,.33,.045);}label(g,'歩いて入る'.replace('歩いて入る','걸어서 들어가기'),0,.17,1.1,2.3,'#8b9578',44).rotation.x=-Math.PI/2;}
 
 export class ArchiveWorld {
@@ -30,7 +31,7 @@ export class ArchiveWorld {
 
  const outdoor=room==='garden';
  round(g,outdoor?'#b9cc93':'#c5ad8d',0,-.22,0,17,.4,17,.15);mesh(g,box,outdoor?'#d0ddac':room==='books'?'#c8a47d':room==='scents'?'#eee4f1':room==='salon'?'#e6cbd0':'#eee2cb',0,-.005,0,16,.05,16);
- if(outdoor){
+ if(outdoor){const building=artObject('library');if(building){building.position.set(0,0,-8.9);g.add(building);round(g,'#cbc9b1',0,-.15,-10,10,.25,7,.12);}
   rug(g,0,0,2.8,15.6,'#e5d4ae');for(let z=-6;z<=6;z+=1)mesh(g,box,'#f5e9cb',0,.065,z,2.4,.06,.8);
   for(const x of [-4.8,4.8]){tree(g,x,-3);bench(g,x,3,'#d7b68e');for(const z of [-5.2,.3,5.7]){round(g,'#eee3c6',x,.16,z,2.6,.3,1.1,.12);flowers(g,x-.6,z,'#d99db2');flowers(g,x+.5,z,'#b5a1d4');}}
   for(const x of [-7.7,7.7]){round(g,'#a7bf85',x,.4,0,.42,.8,15.8,.15);for(let z=-7;z<8;z+=2)round(g,'#f0e6c9',x,.65,z,.22,1.3,.22,.04);}
@@ -89,10 +90,11 @@ export class ArchiveWorld {
  const bg=new T.Group();bg.position.set(-7.1,0,3.8);bg.rotation.y=Math.PI/2;g.add(bg);round(bg,'#ae8b62',0,1.65,0,2.5,1.9,.18,.1);round(bg,'#c9b38a',0,1.65,.11,2.25,1.65,.04,.04);for(let j=0;j<6;j++){const paper=round(bg,['#f1dfaa','#e7c5d4','#c9dbb5'][j%3],-.72+(j%3)*.7,1.95-Math.floor(j/3)*.65,.16,.53,.48,.025,.025);paper.rotation.z=(j%2?.09:-.08);mesh(bg,sphere,'#b39970',-.72+(j%3)*.7,2.12-Math.floor(j/3)*.65,.2,.027);}label(bg,room==='books'?'책갈피 포스트잇':'향기카페 메모',0,2.9,.15,3,'#7d805f',42);this.hotspots.push({x:-7.1,z:3.8,id:'note-wall',title:room==='books'?'책갈피 벽 · 추천과 한줄 메모':'향기카페 · 포스트잇 붙이기',type:'board'});
  }
 
+ if(room==='books'){const portal=new T.Mesh(new T.TorusGeometry(.65,.09,7,32),material('#a7c7b3'));portal.position.set(5.6,1.9,4.85);g.add(portal);label(g,'문장 너머 · 개인 독서 여행',5.6,2.9,4.9,3.4,'#57765f',40);this.hotspots.push({x:5.6,z:4.7,id:'beyond-portal',title:'문장 너머로 · 혼자 읽는 세계',type:'beyond'});}
  furnishDetails(g,room,{mesh,round,label,box,cylinder,sphere,tableData:CAFE_TABLES});
  // Bake static furnishings into one mesh per material for mobile rendering.
  g.updateMatrixWorld(true);const buckets=new Map(),originals=[];
- g.traverse(o=>{if(!o.isMesh||o.material.map||o===this.water)return;const key=o.material.uuid;if(!buckets.has(key))buckets.set(key,{material:o.material,geometries:[]});buckets.get(key).geometries.push(o.geometry.clone().applyMatrix4(o.matrixWorld));originals.push(o);});
+ g.traverse(o=>{if(!o.isMesh||o.material.map||o===this.water)return;const key=o.material.uuid;if(!buckets.has(key))buckets.set(key,{material:o.material,geometries:[]});buckets.get(key).geometries.push((o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone()).applyMatrix4(o.matrixWorld));originals.push(o);});
  for(const o of originals)o.removeFromParent();
  for(const b of buckets.values()){const geometry=mergeGeometries(b.geometries,false);for(const part of b.geometries)part.dispose();if(!geometry)continue;const combined=new T.Mesh(geometry,b.material);combined.castShadow=true;combined.receiveShadow=true;combined.userData.archiveMerged=true;g.add(combined);}
  this.colliders=LAYOUT[room];return this.hotspots;

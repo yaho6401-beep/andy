@@ -4,5 +4,6 @@ for(const f of await readdir(base,{withFileTypes:true})){if(f.isFile()&&/\.(html
 for(const dir of ['assets','data','locales'])await cp(resolve(base,dir),resolve(out,dir),{recursive:true});
 await mkdir(resolve(out,'supabase/functions/feedback-wall'),{recursive:true});await cp(resolve(base,'supabase/functions/feedback-wall/runner-engine.js'),resolve(out,'supabase/functions/feedback-wall/runner-engine.js'));
 await cp(resolve('dist'),resolve(out,'archive'),{recursive:true});
+await cp(resolve('dist/beyond'),resolve(out,'beyond'),{recursive:true});
 const configPath=resolve(out,'vercel.json');const config=JSON.parse(await readFile(configPath,'utf8'));config.buildCommand=null;config.outputDirectory='.';await writeFile(configPath,JSON.stringify(config));
 const page=resolve(out,'archive/index.html');let h=await readFile(page,'utf8');h=h.replace('<head>','<head><script>globalThis.ArchiveDemoConfig={mode:"shared"};</script><script src="/feedback-config.js?v=admin-8" defer></script><script src="/visits.js?v=analytics-47" defer></script>');await writeFile(page,h);console.log('Public static release ready at '+out);

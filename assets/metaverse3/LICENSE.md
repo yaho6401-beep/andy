@@ -1,0 +1,1 @@
+Books & Scents original 3D models. Created for this project, 2026-11-09. Editable source: archive/scripts/create-art.mjs. No third-party artwork or textures.
