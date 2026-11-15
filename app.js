@@ -117,6 +117,7 @@ function showResult(scroll=true){
   renderStylingBoard();updateBlendUrl();
   globalThis.ScentJournal?.setBlend({mainId:main.id,singleIds:currentSingles().map(s=>s.id),sentence:blend.sentence});
   globalThis.BlendComment?.render($('blend-staff-comment'),main,currentSingles());
+  document.dispatchEvent(new CustomEvent('scent:blend-complete',{detail:{mainId:main.id,singleIds:currentSingles().map(s=>s.id)}}));
   if(scroll&&matchMedia('(max-width: 900px)').matches)$('result').scrollIntoView({behavior:'smooth',block:'start'});
 }
 async function init(){
