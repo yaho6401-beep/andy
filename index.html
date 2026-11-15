@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#203c32"><meta name="description" content="당신의 이야기에 향을 입히세요. 책과향기의 향 노트와 어코드를 살펴보고, 나의 스타일에 어울리는 type 향을 찾아보세요.">
+  <meta name="theme-color" content="#171717"><meta name="description" content="당신의 이야기에 향을 입히세요. 책과향기의 향 노트와 어코드를 살펴보고, 나의 스타일에 어울리는 type 향을 찾아보세요.">
   <title>책과향기 · 향을 입다</title>
   <script src="/i18n-data.js?v=header-40" defer></script><script src="/i18n-catalog.js?v=copy-20" defer></script><script src="/i18n-community.js?v=about-17" defer></script><script src="/i18n-scent.js?v=scent-19" defer></script><script src="/i18n-event.js?v=event-22" defer></script><script src="/i18n-runner.js?v=challenge-33" defer></script><script src="/i18n-lounge.js?v=solo-29" defer></script><script src="/i18n-organ.js?v=organ-30" defer></script><script src="/i18n-journal.js?v=journal-31" defer></script><script src="/i18n-challenge.js?v=challenge-33" defer></script><script src="/i18n-ritual.js?v=ritual-34" defer></script><script src="/i18n-longevity.js?v=long-36" defer></script><script src="/i18n-navigation.js?v=44" defer></script><script src="/i18n.js?v=runner-21" defer></script><link rel="stylesheet" href="/i18n.css?v=lang-14">
   <link rel="stylesheet" href="/style.css?v=community-11">
@@ -16,14 +16,15 @@
 <link rel="stylesheet" href="/scent-community.css?v=scent-19"><script src="/scent-community.js?v=challenge-33" defer></script>
 <link rel="stylesheet" href="/runner.css?v=challenge-33"><script src="/supabase/functions/feedback-wall/runner-engine.js?v=challenge-33" defer></script><script src="/runner.js?v=challenge-33" defer></script>
 <link rel="stylesheet" href="/lounge.css?v=camp-entry-38"><script src="/lounge-data.js?v=lounge-23" defer></script><script src="/lounge.js?v=mist-24" defer></script>
-<link rel="stylesheet" href="/announcement.css?v=mist-24"><script src="/announcement.js?v=41" defer></script>
+<link rel="stylesheet" href="/announcement.css?v=mist-24"><script src="/announcement.js?v=45" defer></script>
 <link rel="stylesheet" href="/organ.css?v=blind-shared-37">
 <link rel="stylesheet" href="/journal.css?v=journal-31"><script src="/record-ui.js?v=journal-31" defer></script><script src="/journal.js?v=journal-31" defer></script>
 <link rel="stylesheet" href="/staff.css?v=challenge-33"><script src="/blend-comment.js?v=challenge-33" defer></script>
 <link rel="stylesheet" href="/longevity-tips.css?v=long-36"><script src="/longevity-tips.js?v=long-36" defer></script>
 <link rel="stylesheet" href="/header-tools.css?v=header-40">
 <link rel="stylesheet" href="/site-navigation.css?v=43">
-<script src="/site-navigation.js?v=41" defer></script>
+<script src="/site-navigation.js?v=45" defer></script>
+<link rel="stylesheet" href="/studio.css?v=45">
 </head>
 <body>
 <header class="site-header">
@@ -32,12 +33,37 @@
 </header>
 <main>
 <section id="home" data-site-page aria-label="홈">
-  <section class="hero"><div><p class="eyebrow">YOUR STORY HAS A SCENT</p><h1 id="home-title" tabindex="-1">당신의 이야기에<br><em>향을 입히세요.</em></h1><p class="intro">기억하고 싶은 하루, 전하고 싶은 마음.<br>이야기 속 작은 단어들이 당신만의 향이 됩니다.</p><button type="button" class="about-link" data-about aria-haspopup="dialog" aria-controls="about-dialog">책과향기를 소개합니다 <span aria-hidden="true">↗</span></button><a class="reservation-primary hero-reservation" href="https://naver.me/FQVGlhlr" target="_blank" rel="noopener noreferrer" data-reservation="hero">나만의 향수 만들기 · 방문 예약 <span aria-hidden="true">↗</span></a>
-    <nav class="home-community-links" aria-label="커뮤니티 바로가기">
-      <a href="#gallery"><span>향수 갤러리</span><span class="shortcut-arrow" aria-hidden="true">→</span></a>
-      <a href="#feedback"><span>방명록 메모보드</span><span class="shortcut-arrow" aria-hidden="true">→</span></a>
-    </nav>
-    <a class="home-make-link" href="#make">온라인으로 내 향 찾기 <span aria-hidden="true">→</span></a></div><div class="hero-art product-hero"><div class="orbit" aria-hidden="true"></div><img class="workshop-bottle" src="/assets/workshop-perfume-branded.png?v=brand-3" width="1024" height="1536" fetchpriority="high" alt="책과향기 공방의 투명한 사각 캡과 연보라색 향액, 세로 문구가 있는 향수병"><span class="art-caption" aria-hidden="true">EVERY STORY.<br>A DIFFERENT SCENT.</span><span class="art-number" aria-hidden="true">책과향기 · OUR SIGNATURE BOTTLE</span></div></section>
+  <section class="studio-hero">
+    <div class="studio-hero-copy"><p class="eyebrow">BOOKS &amp; SCENTS · DAEJEON</p>
+      <h1 id="home-title" tabindex="-1">오늘의 기억을,<br>나만의 향으로.</h1>
+      <p class="studio-intro">취향을 발견하고, 향을 고르고, 이야기를 담는 시간.<br>대전 은행동 향수공방 책과향기입니다.</p>
+      <a class="studio-primary" href="https://naver.me/FQVGlhlr" target="_blank" rel="noopener noreferrer" data-reservation="hero">나만의 향수 만들기 · 방문 예약 <span>↗</span></a>
+      <div class="studio-text-links"><a href="#studio">공방 소개 ↗</a><a href="#visit">찾아오는 길 ↗</a></div>
+    </div>
+    <figure class="studio-hero-photo"><img src="/assets/studio-desks.webp" width="1536" height="717" alt="향수와 조향 원료가 가지런히 준비된 책과향기의 조향대" fetchpriority="high"><figcaption><span>THE PERFUME ATELIER</span><span>당신의 취향이 시작되는 자리</span></figcaption></figure>
+  </section>
+  <nav class="studio-home-links" aria-label="주요 바로가기">
+    <a href="#make"><span class="studio-link-number">01 / DISCOVER</span><strong>내 향 찾기</strong><span>나에게 어울리는 향 알아보기 ↗</span></a>
+    <a href="#gallery"><span class="studio-link-number">02 / GALLERY</span><strong>향수 갤러리</strong><span>서로의 향과 이야기 구경하기 ↗</span></a>
+    <a href="#feedback"><span class="studio-link-number">03 / GUESTBOOK</span><strong>방명록 메모보드</strong><span>오늘의 마음 한 줄 남기기 ↗</span></a>
+  </nav>
+</section>
+<section id="studio" data-site-page hidden aria-labelledby="studio-title" class="studio-page">
+  <div class="studio-page-top"><a href="#home">← 홈</a><a href="#visit">찾아오는 길 ↗</a></div>
+  <p class="eyebrow">INSIDE BOOKS &amp; SCENTS</p><h2 id="studio-title" tabindex="-1">향을 만나는 공간,<br>취향을 발견하는 시간.</h2>
+  <p class="studio-lead">가지런히 놓인 향수병 사이에서 좋아하는 향을 천천히 찾아보세요.<br>책과향기는 대전 은행동에서 나만의 향을 만들어 가는 향수공방입니다.</p>
+  <article class="studio-story"><img src="/assets/studio-interior.webp" alt="검은 조향대와 원료 선반이 길게 이어진 책과향기 매장 전경" loading="lazy" width="1000" height="1500"><div><p class="eyebrow">01 / THE SPACE</p><h3>나란히 앉아,<br>각자의 향을 만들어요.</h3><p>함께 온 사람과 취향을 나누고, 서로 다른 향을 비교하는 즐거움. 조향대에 준비된 다양한 향을 만나며 나만의 조합을 찾아가는 공간입니다.</p><a class="studio-inline-link" href="https://naver.me/FQVGlhlr" target="_blank" rel="noopener noreferrer">공방 방문 예약 ↗</a></div></article>
+  <article class="studio-story studio-story-reverse"><img src="/assets/aroma-collection.webp" alt="우드 진열대에 놓인 다양한 아로마 오일과 조향 원료" loading="lazy" width="1000" height="1500"><div><p class="eyebrow">02 / THE COLLECTION</p><h3>작은 병마다,<br>다른 향의 표정.</h3><p>다채로운 향수 시향 컬렉션과 아로마 오일, 조향 원료를 만나보세요. 이름만으로는 알 수 없었던 향을 직접 경험하며 취향의 폭을 넓혀 보세요.</p><a class="studio-inline-link" href="#make">온라인으로 내 향 먼저 찾아보기 ↗</a></div></article>
+  <article class="studio-story"><img src="/assets/studio-sign.webp" alt="따뜻하게 불을 밝힌 책과향기 향수공방 간판" loading="lazy" width="850" height="850"><div><p class="eyebrow">03 / OUR DOOR</p><h3>골목에서 만나는<br>향기로운 쉼표.</h3><p>검은 바탕의 책과향기 간판을 찾으셨다면, 입구로 들어와 2층으로 올라오세요. 일상 속 특별한 향을 만드는 시간이 기다립니다.</p><a class="studio-inline-link" href="#visit">입구 사진과 찾아오는 길 보기 ↗</a></div></article>
+</section>
+<section id="visit" data-site-page hidden aria-labelledby="visit-title" class="studio-page">
+  <div class="studio-page-top"><a href="#home">← 홈</a><a href="#studio">공방 소개 ↗</a></div>
+  <p class="eyebrow">FIND OUR ATELIER</p><h2 id="visit-title" tabindex="-1">책과향기로 오시는 길.</h2>
+  <p class="studio-lead">대전 중구 중앙로156번길 41-10, 2층<br>검은 바탕의 ‘책과향기’ 간판을 찾아주세요.</p>
+  <div class="studio-visit-grid"><div><figure class="studio-route"><svg viewBox="0 0 560 450" role="img" aria-labelledby="route-title route-desc"><title id="route-title">책과향기 입구 안내도</title><desc id="route-desc">지도에서 중앙로156번길 41-10으로 찾아온 뒤 책과향기 간판 아래 입구로 들어가 계단을 따라 2층으로 올라오세요. 실제 도로 배치나 축척을 표현한 지도가 아닌 입구 동선 안내입니다.</desc><rect width="560" height="450" fill="#f4f3f0"/><path d="M0 350H560" stroke="white" stroke-width="72"/><text x="32" y="356" font-size="17" fill="#666">중앙로156번길 41-10</text><rect x="300" y="45" width="215" height="255" fill="#fff" stroke="#ccc"/><rect x="323" y="67" width="170" height="58" fill="#191919"/><text x="408" y="103" text-anchor="middle" font-size="24" fill="white">책과향기</text><text x="408" y="162" text-anchor="middle" font-size="16" fill="#555">간판 아래 입구</text><path d="M356 253h20v-18h20v-18h20v-18h20" fill="none" stroke="#333" stroke-width="3"/><text x="452" y="213" font-size="18" fill="#222">2F</text><path d="M230 350H332V275" fill="none" stroke="#222" stroke-width="3" stroke-dasharray="7 6"/><path d="m326 286 6-12 6 12" fill="none" stroke="#222" stroke-width="3"/><circle cx="230" cy="350" r="6" fill="#222"/><text x="32" y="70" font-size="13" letter-spacing="2" fill="#666">ENTRANCE GUIDE</text><text x="32" y="111" font-size="25" fill="#171717">간판을 찾고,</text><text x="32" y="150" font-size="25" fill="#171717">2층으로 올라오세요.</text><text x="32" y="415" font-size="13" fill="#666">입구 동선 안내 · 실제 도로 배치와 축척은 지도에서 확인</text></svg><figcaption>골목길 경로는 아래 지도에서, 건물 입구는 오른쪽 사진에서 확인하세요.</figcaption></figure>
+  <a class="studio-primary" href="https://map.naver.com/p/search/대전%20책과향기" target="_blank" rel="noopener noreferrer">네이버 지도에서 길 찾기 ↗</a>
+  <ol class="studio-directions"><li>지도에서 <strong>책과향기</strong> 또는 도로명 주소를 검색하세요.</li><li>사진 속 검은 간판과 입구의 <strong>2F</strong> 표시를 확인하세요.</li><li>입구 안 계단을 따라 <strong>2층 공방</strong>으로 올라오세요.</li></ol></div>
+  <figure class="studio-entrance"><img src="/assets/studio-entrance.webp" alt="책과향기 건물 입구 전체 모습. 검은 간판과 2F 표시, 문 안쪽 계단이 보입니다." loading="lazy" width="747" height="1600"><figcaption>이 입구로 들어오시면 됩니다 · 공방은 2층</figcaption></figure></div>
 </section>
 <section id="make" data-site-page aria-labelledby="make-title">
   <div class="site-page-heading"><h2 id="make-title" tabindex="-1">향 만들기</h2><p>어떤 방식으로 나만의 향을 찾아볼까요?</p></div>

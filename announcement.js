@@ -7,5 +7,5 @@
  document.getElementById('solo-announcement-link').addEventListener('click',()=>{goToLounge=true;dialog.close();});
  dialog.querySelectorAll('[data-announcement-close]').forEach(b=>b.addEventListener('click',()=>dialog.close()));
  dialog.addEventListener('close',()=>{if(document.getElementById('solo-announcement-today').checked){try{localStorage.setItem(key,today);}catch{}}document.documentElement.style.overflow=overflow;if(goToLounge){goToLounge=false;document.querySelector('[data-lounge="community"]').click();}});
- setTimeout(open,650);document.addEventListener('visibilitychange',open);
+ // The community entry remains available without interrupting the homepage.
 })();

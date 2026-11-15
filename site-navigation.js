@@ -17,7 +17,7 @@
 
     for (const page of pages) page.hidden = page.id !== pageId;
     for (const link of links) {
-      if (link.hash === '#' + pageId) link.setAttribute('aria-current', 'page');
+      if (link.hash === '#' + (['studio', 'visit'].includes(pageId) ? 'home' : pageId)) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     }
 
