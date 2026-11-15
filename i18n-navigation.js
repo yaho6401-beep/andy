@@ -7,6 +7,6 @@ Object.assign(globalThis.ScentLocaleData, {
   '주요 메뉴': { en: 'Main menu', zh: '主菜单', ja: 'メインメニュー' },
   '커뮤니티 바로가기': { en: 'Community shortcuts', zh: '社区快捷入口', ja: '交流メニュー' },
   '향수 갤러리': { en: 'Perfume gallery', zh: '香水相册', ja: '香水ギャラリー' },
-  '향기 메모 보드': { en: 'Scent note board', zh: '香气留言板', ja: '香りの掲示板' },
+  '방명록 메모보드': { en: 'Guestbook', zh: '访客留言板', ja: 'ゲストブック' },
   '온라인으로 내 향 찾기': { en: 'Find my scent online', zh: '在线寻找我的香气', ja: 'オンラインで香りを探す' }
 });
