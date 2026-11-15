@@ -1,4 +1,5 @@
 import * as T from 'three';
+import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 const materials=new Map();const mat=color=>{if(!materials.has(color))materials.set(color,new T.MeshStandardMaterial({color,roughness:.88}));return materials.get(color);};
 function ball(parent,color,x,y,z,sx,sy= sx,sz=sx){const m=new T.Mesh(new T.SphereGeometry(1,14,10),mat(color));m.position.set(x,y,z);m.scale.set(sx,sy,sz);m.castShadow=true;parent.add(m);return m;}
 export function createAvatar(look={}){
@@ -22,7 +23,10 @@ export function createAvatar(look={}){
  // Original accessories distinguish the eight silhouettes.
  if(variant===1){for(const x of [-.14,.14]){const rim=new T.Mesh(new T.TorusGeometry(.096,.014,6,20),mat('#987d5f'));rim.position.set(x,1.28,.35);hips.add(rim);}const bridge=new T.Mesh(new T.BoxGeometry(.08,.015,.015),mat('#987d5f'));bridge.position.set(0,1.28,.35);hips.add(bridge);}
  if(variant===2){ball(hips,'#e1c48c',.3,1.54,.17,.055,.025,.055);}if(variant===3){const bag=ball(hips,'#aa8568',-.3,.56,.2,.12,.16,.05);bag.rotation.z=-.15;}
- const shadow=new T.Mesh(new T.CircleGeometry(.4,24),new T.MeshBasicMaterial({color:'#705e50',transparent:true,opacity:.15,depthWrite:false}));shadow.rotation.x=-Math.PI/2;shadow.position.y=.012;root.add(shadow);
+ const shadow=new T.Mesh(new T.CircleGeometry(.4,24),new T.MeshBasicMaterial({color:'#705e50',transparent:true,opacity:.15,depthWrite:false}));shadow.material.userData.avatarOwned=true;shadow.rotation.x=-Math.PI/2;shadow.position.y=.012;root.add(shadow);
+ // Merge rigid parts of each animated joint, retaining independent arms and legs.
+ for(const joint of [hips,...arms,...legs]){const batches=new Map();for(const child of [...joint.children]){if(!child.isMesh)continue;child.updateMatrix();if(!batches.has(child.material))batches.set(child.material,[]);batches.get(child.material).push(child.geometry.clone().applyMatrix4(child.matrix));child.geometry.dispose();joint.remove(child);}for(const [material,parts] of batches){const geometry=mergeGeometries(parts,false);parts.forEach(g=>g.dispose());const m=new T.Mesh(geometry,material);m.castShadow=true;joint.add(m);}}
  root.userData={body,hips,arms,legs};root.scale.setScalar(1.08);return root;
 }
+export function disposeAvatar(root){root.traverse(o=>{o.geometry?.dispose();if(o.material?.userData.avatarOwned)o.material.dispose();});root.removeFromParent();}
 export function animateAvatar(root,state,time){const {body,hips,arms,legs}=root.userData,moving=state.motion==='walk',sit=state.motion==='sit',active=time-(state.emoteAt||0)/1000<3.5;body.position.y=sit?-.25:moving?Math.sin(time*12)*.035:Math.sin(time*2)*.015;hips.rotation.x=sit?-.05:0;for(let i=0;i<2;i++){legs[i].rotation.x=sit?-1.2:moving?Math.sin(time*10+i*Math.PI)*.45:0;arms[i].rotation.x=moving?Math.sin(time*10+(i+1)*Math.PI)*.3:0;arms[i].rotation.z=(i===0?1:-1)*.06;}if(active&&state.emote==='wave'){arms[1].rotation.z=2.3+Math.sin(time*13)*.28;}if(active&&state.emote==='clap'){arms[0].rotation.z=-.55;arms[1].rotation.z=.55;arms[0].rotation.x=arms[1].rotation.x=-.9+Math.sin(time*12)*.12;}if(active&&state.emote==='heart'){arms[0].rotation.z=-1;arms[1].rotation.z=1;arms[0].rotation.x=arms[1].rotation.x=-.45;}}

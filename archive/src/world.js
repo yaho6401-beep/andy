@@ -1,3 +1,4 @@
+import {furnishDetails} from './world-details.js';
 import {CAFE_TABLES,SEATS} from './seats.js';
 import * as T from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
@@ -6,12 +7,12 @@ import {SCENTS,BOOKS} from './content.js';
 const materials=new Map(),geometries=new Map();
 const material=(color,metal=0)=>{const k=color+metal;if(!materials.has(k))materials.set(k,new T.MeshStandardMaterial({color,roughness:metal?.38:.86,metalness:metal}));return materials.get(k);};
 function mesh(parent,geo,color,x,y,z,sx=1,sy=sx,sz=sx,metal=0){const m=new T.Mesh(geo,material(color,metal));m.position.set(x,y,z);m.scale.set(sx,sy,sz);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;}
-const sphere=new T.SphereGeometry(1,16,12),box=new T.BoxGeometry(1,1,1),cylinder=new T.CylinderGeometry(1,1,1,24);
+const sphere=new T.SphereGeometry(1,12,8),box=new T.BoxGeometry(1,1,1),cylinder=new T.CylinderGeometry(1,1,1,16);
 function roundedGeo(w,h,d,r=.1){const key=[w,h,d,r].join();if(geometries.has(key))return geometries.get(key);const s=new T.Shape(),x=-w/2,y=-h/2;s.moveTo(x+r,y);s.lineTo(x+w-r,y);s.quadraticCurveTo(x+w,y,x+w,y+r);s.lineTo(x+w,y+h-r);s.quadraticCurveTo(x+w,y+h,x+w-r,y+h);s.lineTo(x+r,y+h);s.quadraticCurveTo(x,y+h,x,y+h-r);s.lineTo(x,y+r);s.quadraticCurveTo(x,y,x+r,y);const g=new T.ExtrudeGeometry(s,{depth:Math.max(.01,d-2*r),bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:r*.5,bevelThickness:r,curveSegments:4});g.center();geometries.set(key,g);return g;}
 function round(p,c,x,y,z,w,h,d,r=.1){return mesh(p,roundedGeo(w,h,d,r),c,x,y,z);}
-function label(p,text,x,y,z,width=3,color='#4d5844',font=36){const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=256;const ctx=canvas.getContext('2d');ctx.clearRect(0,0,1024,256);ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`500 ${font}px Georgia, 'Malgun Gothic', sans-serif`;text.split('\n').forEach((s,i,a)=>ctx.fillText(s,512,128+(i-(a.length-1)/2)*55,960));const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;const m=new T.Mesh(new T.PlaneGeometry(width,width/4),new T.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false}));m.position.set(x,y,z);p.add(m);return m;}
+function label(p,text,x,y,z,width=3,color='#4d5844',font=36){const canvas=document.createElement('canvas');canvas.width=512;canvas.height=128;const ctx=canvas.getContext('2d');ctx.scale(.5,.5);ctx.clearRect(0,0,1024,256);ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`500 ${font}px Georgia, 'Malgun Gothic', sans-serif`;text.split('\n').forEach((s,i,a)=>ctx.fillText(s,512,128+(i-(a.length-1)/2)*55,960));const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;const m=new T.Mesh(new T.PlaneGeometry(width,width/4),new T.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false}));m.position.set(x,y,z);p.add(m);return m;}
 function plant(p,x,z,size=1){mesh(p,cylinder,'#d0b398',x,.3*size,z,.28*size,.6*size,.28*size);for(let i=0;i<6;i++){const a=i*2.4;const leaf=mesh(p,sphere,i%2?'#94ac83':'#afbf99',x+Math.sin(a)*.24*size,(.7+i*.13)*size,z+Math.cos(a)*.2*size,.13*size,.4*size,.18*size);leaf.rotation.z=Math.sin(a)*.7;}}
-function lamp(p,x,z){mesh(p,cylinder,'#ba9d6c',x,1.1,z,.035,2.2,.035, .45);mesh(p,cylinder,'#baa176',x,.06,z,.3,.1,.3);const shade=new T.Mesh(new T.ConeGeometry(.43,.5,24,1,true),material('#f5dfb6'));shade.position.set(x,2.1,z);p.add(shade);mesh(p,sphere,'#fff0c8',x,1.95,z,.12);}
+function lamp(p,x,z){mesh(p,cylinder,'#ba9d6c',x,1.1,z,.035,2.2,.035, .45);mesh(p,cylinder,'#baa176',x,.06,z,.3,.1,.3);const shade=new T.Mesh(new T.ConeGeometry(.43,.5,16,1,true),material('#f5dfb6'));shade.position.set(x,2.1,z);p.add(shade);mesh(p,sphere,'#fff0c8',x,1.95,z,.12);}
 function rug(p,x,z,w,d,color){const r=mesh(p,roundedGeo(w,d,.035,.15),color,x,.03,z);r.rotation.x=-Math.PI/2;return r;}
 function bench(p,x,z,color='#b49a7c',rotate=0){const g=new T.Group();g.position.set(x,0,z);g.rotation.y=rotate;p.add(g);round(g,color,0,.5,0,2.2,.18,.8);round(g,color,0,.95,-.35,2.2,.65,.16);for(const a of [-.8,.8]){mesh(g,box,'#92785c',a,.25,0,.12,.5,.6);round(g,'#e5d8bc',a,.65,0,.16,.14,.85);}}
 function sofa(p,x,z,color){round(p,color,x,.4,z,2.8,.6,1.2,.2);round(p,color,x,.9,z-.48,2.8,.7,.26,.15);for(const a of [-1.25,1.25])round(p,color,x+a,.75,z,.25,.6,1.2,.12);for(const a of [-.6,.6])round(p,'#eee3cf',x+a,.73,z,1.05,.16,.86,.09);}
@@ -55,7 +56,7 @@ export class ArchiveWorld {
   else round(g,t.shape==='bar'?'#dbc4a0':'#bd9672',t.x,t.top-.06,t.z,t.w,.12,t.d,.13);
   if(t.shape==='rectangle')for(const dx of [-t.w/2+.3,t.w/2-.3])for(const dz of [-.48,.48])mesh(g,cylinder,'#8b745f',t.x+dx,t.top/2,t.z+dz,.065,t.top,.065);
   else for(const dx of t.shape==='bar'?[-2.3,2.3]:[0])mesh(g,cylinder,'#9b8066',t.x+dx,t.top/2,t.z,.09,t.top,.09);
-  if(t.shape!=='bar'){flowers(g,t.x,t.z,'#dfaebb',3);label(g,t.capacity+'인 · '+(t.shape==='round'?'ROUND':'TOGETHER'),t.x,1.45,t.z,t.w+1,'#866b77',46);}
+  if(t.shape!=='bar'){label(g,t.capacity+'인 · '+(t.shape==='round'?'ROUND':'TOGETHER'),t.x,1.45,t.z,t.w+1,'#866b77',46);}
   for(const s of SEATS.filter(s=>s.table===t.id)){mesh(g,cylinder,t.id===5?'#8eaa94':t.id===1?'#c8a3b3':'#e0c7c0',s.x,s.height-.1,s.z,.32,.18,.32);for(const dx of [-.19,.19])for(const dz of [-.19,.19])mesh(g,cylinder,'#a98b6e',s.x+dx,(s.height-.2)/2,s.z+dz,.026,s.height-.2,.026);if(t.shape!=='bar'){const chair=new T.Group();chair.position.set(s.x,0,s.z);chair.rotation.y=s.yaw;g.add(chair);round(chair,'#d7bcb2',0,.82,-.27,.6,.5,.1,.1);}}
   this.hotspots.push({x:t.x,z:t.z,id:String(t.id),title:t.label+' · 가까운 빈 의자에 앉기',type:'table'});
  }
@@ -88,6 +89,7 @@ export class ArchiveWorld {
  const bg=new T.Group();bg.position.set(-7.1,0,3.8);bg.rotation.y=Math.PI/2;g.add(bg);round(bg,'#ae8b62',0,1.65,0,2.5,1.9,.18,.1);round(bg,'#c9b38a',0,1.65,.11,2.25,1.65,.04,.04);for(let j=0;j<6;j++){const paper=round(bg,['#f1dfaa','#e7c5d4','#c9dbb5'][j%3],-.72+(j%3)*.7,1.95-Math.floor(j/3)*.65,.16,.53,.48,.025,.025);paper.rotation.z=(j%2?.09:-.08);mesh(bg,sphere,'#b39970',-.72+(j%3)*.7,2.12-Math.floor(j/3)*.65,.2,.027);}label(bg,room==='books'?'책갈피 포스트잇':'향기카페 메모',0,2.9,.15,3,'#7d805f',42);this.hotspots.push({x:-7.1,z:3.8,id:'note-wall',title:room==='books'?'책갈피 벽 · 추천과 한줄 메모':'향기카페 · 포스트잇 붙이기',type:'board'});
  }
 
+ furnishDetails(g,room,{mesh,round,label,box,cylinder,sphere,tableData:CAFE_TABLES});
  // Bake static furnishings into one mesh per material for mobile rendering.
  g.updateMatrixWorld(true);const buckets=new Map(),originals=[];
  g.traverse(o=>{if(!o.isMesh||o.material.map||o===this.water)return;const key=o.material.uuid;if(!buckets.has(key))buckets.set(key,{material:o.material,geometries:[]});buckets.get(key).geometries.push(o.geometry.clone().applyMatrix4(o.matrixWorld));originals.push(o);});
