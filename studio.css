@@ -67,3 +67,5 @@ h1 em{color:var(--ink)}
  .studio-visit-grid{grid-template-columns:1fr;gap:28px}.studio-entrance img{max-height:560px}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+.studio-route img{display:block;width:100%;height:auto}.studio-route>a{display:block}.studio-local-note{padding:18px 20px;border:1px solid var(--line);font-size:14px;line-height:1.9;color:var(--muted)}
