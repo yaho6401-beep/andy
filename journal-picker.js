@@ -1,0 +1,14 @@
+(function(g){
+ 'use strict';
+ const groups=[['top','TOP NOTE','탑 노트','T'],['middle','MIDDLE NOTE','미들 노트','M'],['base','LAST NOTE','라스트 노트','L']];
+ function create(root,catalog,onChange){
+  const esc=g.ScentRecords.esc;
+  root.innerHTML=`<label for="journal-main-scent">메인향 · 1개 선택<select id="journal-main-scent" required><option value="">번호 또는 이름으로 메인향을 골라주세요</option>${[false,true].map(premium=>`<optgroup label="${premium?'프리미엄 향 · 33~72':'기본 향 · 1~32'}">${catalog.mainScents.filter(s=>Boolean(s.premium)===premium).map(s=>`<option value="${esc(s.id)}" data-no-i18n>${esc(s.number+'. '+s.name)}</option>`).join('')}</optgroup>`).join('')}</select></label><div class="journal-picker-heading"><h4>나만의 느낌 더하기</h4><p>단일향은 여러 개 선택할 수 있어요. 이름 대신 코드와 느낌으로 골라보세요.</p></div>${groups.map(([note,en,ko,prefix])=>`<fieldset class="journal-note-group"><legend><span data-no-i18n>${en}</span> · ${ko}</legend><div class="journal-note-grid">${catalog.singleScents.filter(s=>s.note===note).map(s=>{const code=prefix+s.number,hint=g.BlindScents.hint(s);return `<label class="journal-note-choice"><input type="checkbox" name="journal-single" value="${esc(s.id)}" aria-describedby="journal-note-hint"><span data-no-i18n>${code}</span><span class="sr-only">${esc(hint)}</span></label>`;}).join('')}</div></fieldset>`).join('')}<p id="journal-note-hint" class="journal-note-hint" aria-live="polite">코드를 누르면 향의 특징을 살짝 알려드려요.</p>`;
+  const main=root.querySelector('select'),singles=[...root.querySelectorAll('[name="journal-single"]')];
+  function blend(){const scent=catalog.mainScents.find(s=>s.id===main.value);if(!scent)return null;const chosen=catalog.singleScents.filter(s=>singles.some(c=>c.checked&&c.value===s.id));return {mainId:scent.id,singleIds:chosen.map(s=>s.id),sentence:g.ScentStyle.describeBlend(scent,chosen).sentence};}
+  function preview(){const value=blend();if(!value)return '<p class="journal-picker-empty">메인향을 고르면 조합을 기록할 수 있어요.</p>';const scent=catalog.mainScents.find(s=>s.id===value.mainId);return '<div class="record-composition"><strong data-no-i18n>'+esc(scent.number+'. '+scent.name)+'</strong><p data-no-i18n>'+(value.singleIds.length?value.singleIds.map(id=>'<span>'+esc(g.BlindScents.code(catalog.singleScents.find(s=>s.id===id)))+'</span>').join(''):'<span>단일향 없음</span>')+'</p></div>';}
+  root.addEventListener('change',e=>{if(e.target.name==='journal-single'){const s=catalog.singleScents.find(s=>s.id===e.target.value),hint=root.querySelector('#journal-note-hint');hint.textContent=g.BlindScents.code(s)+' · '+g.BlindScents.hint(s);hint.dataset.selected=String(e.target.checked);}onChange(blend(),preview());});
+  return {blend,preview,reset(){main.value='';for(const c of singles)c.checked=false;root.querySelector('#journal-note-hint').textContent='코드를 누르면 향의 특징을 살짝 알려드려요.';}};
+ }
+ g.JournalRecipePicker={create};
+})(globalThis);
