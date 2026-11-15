@@ -147,7 +147,7 @@ async function init(){
     $('single-list').addEventListener('click',e=>{const button=e.target.closest('[data-single]');if(!button)return;const id=button.dataset.single;if(selectedSingles.has(id))selectedSingles.delete(id);else selectedSingles.add(id);button.setAttribute('aria-pressed',String(selectedSingles.has(id)));const hint=button.querySelector('.blind-scent-hint');if(hint)hint.hidden=!selectedSingles.has(id);$('single-count').textContent=selectedSingles.size+'개 선택';updateSummary();});
     $('recommend').addEventListener('click',()=>showResult());
     $('share').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(location.href);$('status').textContent='조합 링크를 복사했어요. 같은 조합과 추천을 열 수 있어요.';}catch{$('status').textContent='주소창의 링크를 복사해주세요. 현재 조합이 링크에 담겨 있어요.';}});
-    $('reset').addEventListener('click',()=>{selectedMain=null;selectedSingles.clear();chosenStyle=null;stylingGender=null;hiddenAccessories.clear();$('search').value='';renderMain();renderSingles();updateSummary();history.replaceState(null,'',location.pathname);$('selection').scrollIntoView({behavior:'smooth'});});
+    $('reset').addEventListener('click',()=>{selectedMain=null;selectedSingles.clear();chosenStyle=null;stylingGender=null;hiddenAccessories.clear();$('search').value='';renderMain();renderSingles();updateSummary();history.replaceState(null,'',location.pathname+'#make');$('selection').scrollIntoView({behavior:'smooth'});});
   }catch(error){$('main-list').innerHTML='<p class="missing-notice">향 목록을 불러오지 못했어요. 네트워크 연결을 확인한 뒤 새로고침해주세요.</p>';$('main-total').textContent='불러오기 실패';}
 }
 init();

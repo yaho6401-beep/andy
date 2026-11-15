@@ -1,0 +1,218 @@
+:root {
+  --site-nav-height: 66px;
+  --site-nav-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+body {
+  padding: 0 env(safe-area-inset-right, 0px)
+    calc(var(--site-nav-height) + var(--site-nav-bottom))
+    env(safe-area-inset-left, 0px);
+}
+
+html {
+  scroll-padding-bottom: calc(var(--site-nav-height) + var(--site-nav-bottom) + 12px);
+}
+
+.site-header {
+  flex-wrap: nowrap;
+  padding: 12px clamp(16px, 4vw, 40px);
+  gap: 16px;
+}
+
+.site-header .brand-logo {
+  width: 78px;
+}
+
+.site-header .language-picker {
+  flex: 0 0 auto;
+}
+
+.site-header .language-label {
+  display: none;
+}
+
+#home .hero {
+  min-height: auto;
+  padding: clamp(24px, 4vw, 46px);
+}
+
+.home-make-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  margin-top: 5px;
+  color: var(--ink);
+  font-weight: 600;
+  text-underline-offset: 4px;
+}
+
+.site-page-heading {
+  margin: 28px clamp(16px, 4vw, 30px) 20px;
+}
+
+.site-page-heading h2 {
+  font-size: clamp(26px, 4vw, 38px);
+}
+
+.site-page-heading p {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+#make .journey-number,
+#make .studio-line {
+  display: none;
+}
+
+#make .journey-choices button {
+  padding-right: 44px;
+}
+
+.community-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 clamp(16px, 4vw, 30px) 20px;
+}
+
+.community-shortcuts a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 6px 14px;
+  border: 1px solid #ced5c4;
+  border-radius: 9px;
+  background: #fffdf6;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.community-shortcuts a[aria-current] {
+  background: #e8eee0;
+  border-color: #648267;
+}
+
+.explore-actions {
+  display: grid;
+  gap: 16px;
+  margin: 0 clamp(16px, 4vw, 30px) 28px;
+}
+
+.explore-actions .header-socials {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.site-navigation {
+  position: fixed;
+  z-index: 20;
+  inset: auto 0 0;
+  display: flex;
+  justify-content: center;
+  padding: 0 env(safe-area-inset-right, 0px) var(--site-nav-bottom) env(safe-area-inset-left, 0px);
+  border-top: 1px solid #d8dfcf;
+  background: #fcfbf5;
+  box-shadow: 0 -5px 22px #253c300c;
+}
+
+.site-navigation > a {
+  position: relative;
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  max-width: 126px;
+  min-width: 0;
+  min-height: var(--site-nav-height);
+  padding: 6px 2px 4px;
+  color: #4f6053;
+  font-size: clamp(11px, 2.85vw, 13px);
+  font-weight: 600;
+  line-height: 1.35;
+  text-align: center;
+  text-decoration: none;
+}
+
+.site-navigation > a[aria-current] {
+  color: #244a35;
+  background: #edf2e7;
+}
+
+.site-navigation > a[aria-current]::before {
+  content: '';
+  position: absolute;
+  inset: 0 23% auto;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: #537a55;
+}
+
+.site-navigation > a:hover {
+  background: #edf2e7;
+}
+
+.site-navigation > a:focus-visible {
+  outline: 2px solid #537a55;
+  outline-offset: -4px;
+}
+
+.site-navigation svg {
+  flex: none;
+  width: 23px;
+  height: 23px;
+}
+
+.site-navigation .naver-reservation-mark,
+.solo-embed .site-navigation {
+  display: none;
+}
+
+body.solo-embed {
+  padding: 0;
+}
+
+@media (max-width: 680px) {
+  #home .hero {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  #home .hero-art {
+    height: clamp(160px, 44vw, 230px);
+  }
+
+  #home .workshop-bottle {
+    height: 86%;
+  }
+
+  #home .intro br {
+    display: none;
+  }
+
+  #home .intro {
+    max-width: 34ch;
+  }
+
+  #home .hero-art .art-caption {
+    top: 22px;
+  }
+
+  #make .journey-choices button {
+    min-height: 78px;
+  }
+
+  #make .journey-choices button i {
+    top: 18px;
+  }
+
+  .explore-actions .header-socials {
+    grid-template-columns: 1fr;
+  }
+}
