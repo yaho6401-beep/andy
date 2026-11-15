@@ -1,3 +1,4 @@
+import {handleAnalytics,attribution,actions} from './analytics.ts';
 import {handleStaff} from './staff.ts';
 import {handleJournal} from './journal.ts';
 import {handleLounge} from './lounge.ts';
@@ -57,6 +58,7 @@ Deno.serve(async req=>{
   try{
     const path=new URL(req.url).pathname.replace(/\/$/,'');
     const params=new URL(req.url).searchParams;
+    if(path.endsWith('/management/analytics'))return await handleAnalytics(req,{reply,rpc,sessionHash});
     if(/\/staff\/(?:roster|login|logout|me|like|comments(?:\/delete)?|admin\/accounts(?:\/update)?)$/.test(path))return await handleStaff(req,{url,dbHeaders,reply,rpc,limited,sessionHash,visitorHash,digest,passwordHash,equalHash,cleanText});
     if(/\/(?:journal\/(?:register|login|logout|records(?:\/(?:update|delete))?)|management\/(?:summary|records(?:\/(?:update|delete))?|memos(?:\/update)?))$/.test(path))return await handleJournal(req,{url,dbHeaders,reply,limited,sessionHash,digest,passwordHash,equalHash,cleanText});
     if(/\/lounge\/(?:apply|applications(?:\/(?:status|delete))?)$/.test(path))return await handleLounge(req,{url,dbHeaders,reply,limited,sessionHash,visitorHash,cleanText});
@@ -170,9 +172,10 @@ Deno.serve(async req=>{
       return reply({item});
     }
     if(path.endsWith('/visit')){
-      if(!input||!uuid.test(input.id||'')||!uuid.test(input.visitor||'')||!['visit','booking'].includes(input.kind))return reply({error:'잘못된 요청입니다.'},400);
+      if(!input||!uuid.test(input.id||'')||!uuid.test(input.visitor||'')||!['visit','booking','action'].includes(input.kind))return reply({error:'잘못된 요청입니다.'},400);
+      if(input.kind==='action'&&!actions.has(input.position))return reply({error:'이용 메뉴를 확인해주세요.'},400);
       if(!await limited(req,'events',1000))return reply({error:'잠시 후 다시 시도해주세요.'},429);
-      const result=await fetch(`${url}/rest/v1/workshop_site_events?on_conflict=id`,{method:'POST',headers:{...dbHeaders,Prefer:'resolution=ignore-duplicates'},body:JSON.stringify({id:input.id,visitor_hash:await visitorHash(input.visitor),kind:input.kind,position:cleanText(input.position).slice(0,40)})});if(!result.ok)throw Error('event');return reply({recorded:true});
+      const result=await fetch(`${url}/rest/v1/workshop_site_events?on_conflict=id`,{method:'POST',headers:{...dbHeaders,Prefer:'resolution=ignore-duplicates'},body:JSON.stringify({id:input.id,visitor_hash:await visitorHash(input.visitor),kind:input.kind,position:cleanText(input.position).slice(0,40),...(uuid.test(input.sessionId||'')?{session_id:input.sessionId,...attribution(input)}:{})})});if(!result.ok)throw Error('event');return reply({recorded:true});
     }
     if(path.endsWith('/heart')){
       if(!input||!uuid.test(input.id||'')||!uuid.test(input.visitor||'')||typeof input.liked!=='boolean')return reply({error:'잘못된 요청입니다.'},400);
@@ -205,3 +208,4 @@ Deno.serve(async req=>{
     return reply({item:await result.json()},201);
   }catch{const lounge=/\/(?:lounge|journal|management)\//.test(new URL(req.url).pathname);return reply({error:new URL(req.url).pathname.includes('/staff/')?'공식 코멘트와 연결하지 못했어요. 잠시 후 다시 시도해주세요.':lounge?'신청서를 접수하지 못했어요. 입력 내용은 유지되니 잠시 후 다시 신청해주세요.':'보드와 연결하지 못했어요. 잠시 후 다시 시도해주세요.'},503);}
 });
+
