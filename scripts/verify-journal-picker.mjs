@@ -21,7 +21,7 @@ try{
   return route.abort();
  });
  const p=await c.newPage();p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:4194/#explore');await p.waitForTimeout(200);if(await p.locator('#solo-announcement').evaluate(e=>e.open))await p.locator('#solo-announcement [data-announcement-close]').first().click();
- assert.equal(await p.locator('.site-navigation a[href="#explore"]').innerText(),'책과향기');
+ assert.equal(await p.locator('.site-navigation a[href="#explore"]').innerText(),'더보기');
  await p.locator('[data-journal-open]').click();await p.locator('#journal-nickname').fill('테스트기록장');await p.locator('#journal-password').fill('test-pass');await p.locator('#journal-login-button').click();await p.locator('#journal-main-scent').waitFor();
  assert.equal(await p.locator('#journal-main-scent option[value^="main-"]').count(),72);assert.equal(await p.locator('[name="journal-single"]').count(),30);
  assert.equal(await p.locator('#journal-picker').getAttribute('disabled'),null);assert.equal(await p.locator('#journal-main-scent').inputValue(),'');
@@ -40,7 +40,7 @@ try{
   await p.locator('#journal-current').click();assert(await p.locator('#journal-picker').evaluate(e=>e.disabled));await p.locator('#journal-save').click();await p.waitForTimeout(100);assert.equal(rows[0].main_id,'main-3');assert.deepEqual(rows[0].single_ids,['single-top-2']);assert.equal(rows[0].sentence,'기존 조합 저장 경로 확인');
  await p.locator('#journal-new-record').click();await p.setViewportSize({width:1440,height:1000});await p.screenshot({path:resolve(root,'.release/journal-picker-desktop.png'),fullPage:true});assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));
  await p.locator('#journal-logout').click();await p.locator('#journal-auth').waitFor();assert.equal(await p.locator('#journal-records').textContent(),'');assert.deepEqual(errors,[]);
- await p.locator('[data-journal-close]').click();await p.locator('#language-select').selectOption('en');assert((await p.locator('.site-navigation a[href="#explore"]').innerText()).includes('Books & Scents'));
+ await p.locator('[data-journal-close]').click();await p.locator('#language-select').selectOption('en');assert((await p.locator('.site-navigation a[href="#explore"]').innerText()).includes('More'));
  console.log('PASS: renamed menu; 72 numbered main scents; 30 blind T/M/L notes; no-name preview; validation; manual save; saved code/name display; metadata edit; all-note selection; stable retry ID; existing blend save; logout isolation; mobile/desktop widths; English navigation.');
  await c.close();
 }finally{await browser.close();await new Promise(r=>server.close(r));}

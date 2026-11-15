@@ -10,3 +10,5 @@ Object.assign(globalThis.ScentLocaleData, {
   '방명록 메모보드': { en: 'Guestbook', zh: '访客留言板', ja: 'ゲストブック' },
   '온라인으로 내 향 찾기': { en: 'Find my scent online', zh: '在线寻找我的香气', ja: 'オンラインで香りを探す' }
 });
+
+Object.assign(globalThis.ScentLocaleData,{"더보기":{"en":"More","zh":"更多","ja":"もっと見る"},"체험 약 60분":{"en":"Approx. 60-minute workshop","zh":"体验约60分钟","ja":"体験は約60分"},"성심당 본점 도보 1분":{"en":"1-min walk from Sungsimdang main store","zh":"距圣心堂总店步行1分钟","ja":"聖心堂本店から徒歩1分"},"누적 200회+ 출강 공방":{"en":"200+ off-site workshops delivered","zh":"累计200余场外出授课","ja":"累計200回以上の出張講座"}});
