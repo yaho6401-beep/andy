@@ -1,0 +1,14 @@
+.metaverse-test-entry{margin:22px 0 28px;padding:26px;border:1px solid #d7d7d5;border-radius:16px;background:#f7f7f4;color:#171717}
+.metaverse-test-entry header{display:flex;align-items:center;gap:12px;margin-bottom:13px}
+.metaverse-test-entry .test-badge{display:inline-block;padding:6px 9px;border:1px solid #383838;border-radius:5px;font:600 11px/1.2 system-ui,sans-serif;letter-spacing:.08em;white-space:nowrap}
+.metaverse-test-entry h3{margin:0;font-size:23px;line-height:1.5;letter-spacing:-.035em;word-break:keep-all}
+.metaverse-test-entry p{margin:0;color:#575753;font-size:15px;line-height:1.8;word-break:keep-all}
+.metaverse-test-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:19px}
+.metaverse-test-actions a{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:52px;padding:14px 19px;border:1px solid #252525;border-radius:8px;background:#202020;color:#fff;text-decoration:none;font-size:16px;font-weight:600;line-height:1.6;word-break:keep-all;transition:background .18s,transform .18s}
+.metaverse-test-actions a+a{background:#fff;color:#202020}
+.metaverse-test-actions a:hover{background:#363636;transform:translateY(-2px)}
+.metaverse-test-actions a+a:hover{background:#ededeb}
+.metaverse-test-actions a:focus-visible{outline:3px solid #70706b;outline-offset:4px}
+.metaverse-test-actions b{font-size:20px;font-weight:400}
+@media(max-width:600px){.metaverse-test-entry{padding:21px 19px;margin:18px 0 24px}.metaverse-test-entry header{align-items:flex-start;flex-direction:column;gap:10px}.metaverse-test-entry h3{font-size:22px}.metaverse-test-actions{display:grid;grid-template-columns:1fr;gap:10px}.metaverse-test-actions a{font-size:16px}}
+@media(prefers-reduced-motion:reduce){.metaverse-test-actions a{transition:none}.metaverse-test-actions a:hover{transform:none}}
