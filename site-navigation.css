@@ -185,11 +185,18 @@ body.solo-embed {
   }
 
   #home .hero-art {
-    height: clamp(160px, 44vw, 230px);
+    height: clamp(210px, 58vw, 280px);
   }
 
   #home .workshop-bottle {
-    height: 86%;
+    position: absolute;
+    top: 10px;
+    left: 12%;
+    width: 54%;
+    height: calc(100% - 30px);
+    max-width: none;
+    object-fit: contain;
+    transform: none;
   }
 
   #home .intro br {
