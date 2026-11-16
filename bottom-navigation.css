@@ -1,0 +1,99 @@
+/* Plum accents for the five primary destinations. */
+:root {
+  --site-nav-height: 83px;
+}
+
+.site-navigation {
+  --nav-plum: #713f67;
+  --nav-plum-hover: #603557;
+  --nav-paper: #f8f3f7;
+  --nav-ink: #62575f;
+  --nav-reservation: #eee2ec;
+  gap: 5px;
+  padding: 8px max(8px, env(safe-area-inset-right, 0px))
+    calc(8px + var(--site-nav-bottom)) max(8px, env(safe-area-inset-left, 0px));
+  border-color: #eaddE7;
+  background: var(--nav-paper);
+  box-shadow: 0 -4px 20px #38223208;
+}
+
+.site-navigation > a {
+  min-height: 66px;
+  gap: 5px;
+  padding: 7px 2px;
+  border-radius: 14px;
+  color: var(--nav-ink);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.4;
+  transition: background-color .16s ease, color .16s ease;
+}
+
+.site-navigation > a > span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.site-navigation > a[data-reservation] {
+  background: var(--nav-reservation);
+  color: #64375b;
+}
+
+.site-navigation > a:hover {
+  color: var(--nav-plum);
+  background: #eadee8;
+}
+
+.site-navigation > a[aria-current] {
+  color: #fff;
+  background: var(--nav-plum);
+}
+
+.site-navigation > a[aria-current]:hover {
+  color: #fff;
+  background: var(--nav-plum-hover);
+}
+
+.site-navigation > a[aria-current]::before {
+  content: none;
+}
+
+.site-navigation > a:focus-visible {
+  outline: 2px solid var(--nav-plum);
+  outline-offset: 2px;
+}
+
+.site-navigation svg {
+  width: 24px;
+  height: 24px;
+}
+
+@media (min-width: 600px) {
+  .site-navigation > a {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 599px) {
+  html:lang(en) {
+    --site-nav-height: 98px;
+  }
+}
+
+@media (max-width: 360px) {
+  .site-navigation > a {
+    font-size: 12px;
+  }
+
+  html:lang(ja) {
+    --site-nav-height: 98px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-navigation > a {
+    transition: none;
+  }
+}
