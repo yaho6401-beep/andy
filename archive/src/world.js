@@ -4,7 +4,7 @@ import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {LAYOUT,PORTALS} from './protocol.js';
 import {SCENTS,BOOKS} from './content.js';
 const materials=new Map(),geometries=new Map();
-const material=(color,metal=0)=>{const k=color+metal;if(!materials.has(k))materials.set(k,new T.MeshStandardMaterial({color,roughness:metal?.38:.86,metalness:metal}));return materials.get(k);};
+const material=(color,metal=0)=>{const k=color+metal;if(!materials.has(k))materials.set(k,new T.MeshStandardMaterial({color,roughness:metal?.32:.78,metalness:metal}));return materials.get(k);};
 function mesh(parent,geo,color,x,y,z,sx=1,sy=sx,sz=sx,metal=0){const m=new T.Mesh(geo,material(color,metal));m.position.set(x,y,z);m.scale.set(sx,sy,sz);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;}
 const sphere=new T.SphereGeometry(1,16,12),box=new T.BoxGeometry(1,1,1),cylinder=new T.CylinderGeometry(1,1,1,24);
 function roundedGeo(w,h,d,r=.1){const key=[w,h,d,r].join();if(geometries.has(key))return geometries.get(key);const s=new T.Shape(),x=-w/2,y=-h/2;s.moveTo(x+r,y);s.lineTo(x+w-r,y);s.quadraticCurveTo(x+w,y,x+w,y+r);s.lineTo(x+w,y+h-r);s.quadraticCurveTo(x+w,y+h,x+w-r,y+h);s.lineTo(x+r,y+h);s.quadraticCurveTo(x,y+h,x,y+h-r);s.lineTo(x,y+r);s.quadraticCurveTo(x,y,x+r,y);const g=new T.ExtrudeGeometry(s,{depth:Math.max(.01,d-2*r),bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:r*.5,bevelThickness:r,curveSegments:4});g.center();geometries.set(key,g);return g;}
@@ -20,7 +20,7 @@ function bottle(p,x,y,z,color,scale=1,index=0){const g=new T.Group();g.position.
 function archWindow(p,x,z,color){round(p,'#e6d9c3',x,2.15,z,2.1,3.1,.2,.35);round(p,color,x,2.2,z+.13,1.8,2.75,.05,.33);mesh(p,box,'#f4ead5',x,2.1,z+.17,.07,2.7,.06);mesh(p,box,'#f4ead5',x,2.1,z+.17,1.8,.06,.06);}
 
 function flowers(p,x,z,color='#dc99ae',n=7){for(let i=0;i<n;i++){const a=i*2.4,xx=x+Math.sin(a)*.36,zz=z+Math.cos(a)*.3;mesh(p,cylinder,'#829e70',xx,.28,zz,.018,.5,.018);for(let j=0;j<5;j++){const q=j*Math.PI/2.5;mesh(p,sphere,color,xx+Math.sin(q)*.07,.57,zz+Math.cos(q)*.07,.065,.035,.065);}mesh(p,sphere,'#e4bf70',xx,.59,zz,.035);}}
-function tree(p,x,z){mesh(p,cylinder,'#b79469',x,1.1,z,.15,2.2,.15);for(const [dx,dy,dz,r]of [[0,2.7,0,1.1],[-.6,2.3,.15,.75],[.6,2.4,-.1,.8]])mesh(p,sphere,'#a8c589',x+dx,dy,z+dz,r,r*.9,r);mesh(p,cylinder,'#c2b495',x,.15,z,1.15,.25,1.15);}
+function tree(p,x,z){mesh(p,cylinder,'#b79469',x,1.1,z,.15,2.2,.15);for(const [dx,dy,dz,r]of [[0,2.7,0,1.1],[-.6,2.3,.15,.75],[.6,2.4,-.1,.8]])mesh(p,sphere,dx<0?'#7f9b70':dx>0?'#a4ba89':'#91ac7b',x+dx,dy,z+dz,r,r*.9,r);mesh(p,cylinder,'#c2b495',x,.15,z,1.15,.25,1.15);}
 function portalFrame(p,gate,outdoor=false){const g=new T.Group();g.position.set(gate.x,0,gate.z);if(gate.x)g.rotation.y=gate.x>0?-Math.PI/2:Math.PI/2;else if(gate.z>0)g.rotation.y=Math.PI;p.add(g);const c=outdoor?'#d2b284':'#c7b493';for(const side of [-1,1])round(g,c,side*1.23,1.4,0,.23,2.8,.35,.05);round(g,c,0,2.86,0,2.65,.23,.35,.08);round(g,'#faf2df',0,3.18,0,3.2,.5,.18,.08);label(g,gate.label,0,3.2,.12,3,'#6b6e56',48);rug(g,0,-.3,2.05,1.9,outdoor?'#d8c49a':'#c2c7af');for(const side of [-1,1]){const pane=round(g,outdoor?'#dce6dc':'#d9cbb5',side*1.45,1.32,.18,.42,2.4,.14,.05);pane.rotation.y=side*.5;mesh(g,sphere,'#b99859',side*1.3,1.2,.33,.045);}label(g,'歩いて入る'.replace('歩いて入る','걸어서 들어가기'),0,.17,1.1,2.3,'#8b9578',44).rotation.x=-Math.PI/2;}
 
 export class ArchiveWorld {
@@ -32,6 +32,7 @@ export class ArchiveWorld {
  if(outdoor){
   rug(g,0,0,2.8,15.6,'#e5d4ae');for(let z=-6;z<=6;z+=1)mesh(g,box,'#f5e9cb',0,.065,z,2.4,.06,.8);
   for(const x of [-4.8,4.8]){tree(g,x,-3);bench(g,x,3,'#d7b68e');for(const z of [-5.2,.3,5.7]){round(g,'#eee3c6',x,.16,z,2.6,.3,1.1,.12);flowers(g,x-.6,z,'#d99db2');flowers(g,x+.5,z,'#b5a1d4');}}
+  for(const x of [-1.48,1.48])for(let z=-6.5;z<6.6;z+=.65)mesh(g,box,'#c9b997',x,.065,z,.12,.08,.5);
   for(const x of [-7.7,7.7]){round(g,'#a7bf85',x,.4,0,.42,.8,15.8,.15);for(let z=-7;z<8;z+=2)round(g,'#f0e6c9',x,.65,z,.22,1.3,.22,.04);}
   for(const x of [-2.85,2.85])round(g,'#f1e5cf',x,1.7,-8,3.1,3.4,.4,.12);for(const x of [-2.8,2.8])archWindow(g,x,-7.73,'#c6dcd6');label(g,'BOOKS & SCENTS ARCHIVE',0,3.85,-7.4,8,'#697b58',44);round(g,'#bcaa83',0,3.6,-7.5,9.3,.25,1.2,.08);
   for(const x of [-1.8,1.8]){plant(g,x,-6.8,.8);flowers(g,x,-6.8,'#d5a0bc',5);}this.hotspots.push({x:4.8,z:3,id:'garden',title:'정원의 오늘 한 문장',type:'today'});
