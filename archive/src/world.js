@@ -6,7 +6,7 @@ import {SCENTS,BOOKS} from './content.js';
 const materials=new Map(),geometries=new Map();
 const material=(color,metal=0)=>{const k=color+metal;if(!materials.has(k))materials.set(k,new T.MeshStandardMaterial({color,roughness:metal?.32:.78,metalness:metal}));return materials.get(k);};
 function mesh(parent,geo,color,x,y,z,sx=1,sy=sx,sz=sx,metal=0){const m=new T.Mesh(geo,material(color,metal));m.position.set(x,y,z);m.scale.set(sx,sy,sz);m.castShadow=true;m.receiveShadow=true;parent.add(m);return m;}
-const sphere=new T.SphereGeometry(1,16,12),box=new T.BoxGeometry(1,1,1),cylinder=new T.CylinderGeometry(1,1,1,24);
+const sphere=new T.SphereGeometry(1,12,8),box=new T.BoxGeometry(1,1,1),cylinder=new T.CylinderGeometry(1,1,1,16);
 function roundedGeo(w,h,d,r=.1){const key=[w,h,d,r].join();if(geometries.has(key))return geometries.get(key);const s=new T.Shape(),x=-w/2,y=-h/2;s.moveTo(x+r,y);s.lineTo(x+w-r,y);s.quadraticCurveTo(x+w,y,x+w,y+r);s.lineTo(x+w,y+h-r);s.quadraticCurveTo(x+w,y+h,x+w-r,y+h);s.lineTo(x+r,y+h);s.quadraticCurveTo(x,y+h,x,y+h-r);s.lineTo(x,y+r);s.quadraticCurveTo(x,y,x+r,y);const g=new T.ExtrudeGeometry(s,{depth:Math.max(.01,d-2*r),bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:r*.5,bevelThickness:r,curveSegments:4});g.center();geometries.set(key,g);return g;}
 function round(p,c,x,y,z,w,h,d,r=.1){return mesh(p,roundedGeo(w,h,d,r),c,x,y,z);}
 function label(p,text,x,y,z,width=3,color='#4d5844',font=36){const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=256;const ctx=canvas.getContext('2d');ctx.clearRect(0,0,1024,256);ctx.fillStyle=color;ctx.textAlign='center';ctx.textBaseline='middle';ctx.font=`500 ${font}px Georgia, 'Malgun Gothic', sans-serif`;text.split('\n').forEach((s,i,a)=>ctx.fillText(s,512,128+(i-(a.length-1)/2)*55,960));const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;const m=new T.Mesh(new T.PlaneGeometry(width,width/4),new T.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false}));m.position.set(x,y,z);p.add(m);return m;}
@@ -21,6 +21,15 @@ function archWindow(p,x,z,color){round(p,'#e6d9c3',x,2.15,z,2.1,3.1,.2,.35);roun
 
 function flowers(p,x,z,color='#dc99ae',n=7){for(let i=0;i<n;i++){const a=i*2.4,xx=x+Math.sin(a)*.36,zz=z+Math.cos(a)*.3;mesh(p,cylinder,'#829e70',xx,.28,zz,.018,.5,.018);for(let j=0;j<5;j++){const q=j*Math.PI/2.5;mesh(p,sphere,color,xx+Math.sin(q)*.07,.57,zz+Math.cos(q)*.07,.065,.035,.065);}mesh(p,sphere,'#e4bf70',xx,.59,zz,.035);}}
 function tree(p,x,z){mesh(p,cylinder,'#b79469',x,1.1,z,.15,2.2,.15);for(const [dx,dy,dz,r]of [[0,2.7,0,1.1],[-.6,2.3,.15,.75],[.6,2.4,-.1,.8]])mesh(p,sphere,dx<0?'#7f9b70':dx>0?'#a4ba89':'#91ac7b',x+dx,dy,z+dz,r,r*.9,r);mesh(p,cylinder,'#c2b495',x,.15,z,1.15,.25,1.15);}
+// Small architectural details reuse existing geometry/materials and are baked below.
+function pergola(p,x,z){
+ for(const dx of [-1.05,1.05])for(const dz of [-.4,.4])round(p,'#806a50',x+dx,1.35,z+dz,.1,2.7,.1,.02);
+ for(const dz of [-.52,.52])round(p,'#806a50',x,2.72,z+dz,2.5,.12,.12,.03);
+ for(let dx=-1.1;dx<=1.11;dx+=.28)round(p,'#bda47b',x+dx,2.83,z,.1,.1,1.32,.02);
+ for(let i=0;i<5;i++){const dx=-.88+i*.44;mesh(p,sphere,'#fff0c8',x+dx,2.52-Math.sin(i*Math.PI/4)*.16,z+.55,.065);}
+ for(const dx of [-1.1,1.1])for(let i=0;i<5;i++)mesh(p,sphere,i%2?'#7f9b70':'#a4ba89',x+dx+i*.04,2.6-i*.12,z-.45,.16,.08,.13);
+}
+function wallArt(p,x,z,color){round(p,'#806a50',x,2.1,z,1.5,1.55,.1,.03);round(p,'#f7efdd',x,2.1,z+.07,1.32,1.37,.04,.02);mesh(p,sphere,color,x,2.2,z+.12,.35,.43,.025);round(p,'#bda47b',x,1.66,z+.12,.8,.04,.03,.01);}
 function portalFrame(p,gate,outdoor=false){const g=new T.Group();g.position.set(gate.x,0,gate.z);if(gate.x)g.rotation.y=gate.x>0?-Math.PI/2:Math.PI/2;else if(gate.z>0)g.rotation.y=Math.PI;p.add(g);const c=outdoor?'#d2b284':'#c7b493';for(const side of [-1,1])round(g,c,side*1.23,1.4,0,.23,2.8,.35,.05);round(g,c,0,2.86,0,2.65,.23,.35,.08);round(g,'#faf2df',0,3.18,0,3.2,.5,.18,.08);label(g,gate.label,0,3.2,.12,3,'#6b6e56',48);rug(g,0,-.3,2.05,1.9,outdoor?'#d8c49a':'#c2c7af');for(const side of [-1,1]){const pane=round(g,outdoor?'#dce6dc':'#d9cbb5',side*1.45,1.32,.18,.42,2.4,.14,.05);pane.rotation.y=side*.5;mesh(g,sphere,'#b99859',side*1.3,1.2,.33,.045);}label(g,'歩いて入る'.replace('歩いて入る','걸어서 들어가기'),0,.17,1.1,2.3,'#8b9578',44).rotation.x=-Math.PI/2;}
 
 export class ArchiveWorld {
@@ -30,6 +39,10 @@ export class ArchiveWorld {
  const outdoor=room==='garden';
  round(g,outdoor?'#b9cc93':'#c5ad8d',0,-.22,0,17,.4,17,.15);mesh(g,box,outdoor?'#d0ddac':room==='books'?'#c8a47d':room==='scents'?'#eee4f1':room==='salon'?'#e6cbd0':'#eee2cb',0,-.005,0,16,.05,16);
  if(outdoor){
+  for(const x of [-4.8,4.8])pergola(g,x,3);
+  // Stepping-stone inlays and planted edges keep the walking plane open.
+  for(const x of [-2.3,2.3])for(let z=-4;z<=5;z+=1.8){const tile=mesh(g,cylinder,'#d6c5a4',x,.055,z,.34,.06,.24);tile.rotation.y=z*.3;}
+  for(const x of [-6.8,6.8])for(const z of [-6,6])flowers(g,x,z,'#e1bd70',5);
   rug(g,0,0,2.8,15.6,'#e5d4ae');for(let z=-6;z<=6;z+=1)mesh(g,box,'#f5e9cb',0,.065,z,2.4,.06,.8);
   for(const x of [-4.8,4.8]){tree(g,x,-3);bench(g,x,3,'#d7b68e');for(const z of [-5.2,.3,5.7]){round(g,'#eee3c6',x,.16,z,2.6,.3,1.1,.12);flowers(g,x-.6,z,'#d99db2');flowers(g,x+.5,z,'#b5a1d4');}}
   for(const x of [-1.48,1.48])for(let z=-6.5;z<6.6;z+=.65)mesh(g,box,'#c9b997',x,.065,z,.12,.08,.5);
@@ -44,6 +57,12 @@ export class ArchiveWorld {
   for(let i=-7;i<=7;i++){if(room==='books')mesh(g,box,'#b28e66',i,.026,0,.023,.005,16);else if(room!=='salon'){mesh(g,box,'#dacebe',i,.026,0,.018,.005,16);mesh(g,box,'#dacebe',0,.026,i,16,.005,.018);}}
   for(const x of [-5,5])archWindow(g,x,-7.8,room==='salon'?'#dec3d5':'#d6e2d7');for(const x of [-7,7]){plant(g,x,-6.5,1.25);lamp(g,x,3.5);}rug(g,0,0,12,10,room==='books'?'#cbb18d':room==='salon'?'#d6aab9':room==='scents'?'#e4d9eb':'#eee5d3');
   const names={lobby:'BOOKS & SCENTS',scents:'SCENT ARCHIVE\n香りの美術館'.replace('香りの美術館','향을 수집하는 박물관'),books:'THE READING GARDEN\n문장과 이야기가 자라는 곳',salon:'SCENT & STORY CAFÉ\n향과 이야기를 마시는 시간'};if(room!=='lobby')label(g,names[room],0,3.15,-7.6,6,'#665c50',40);
+ }
+ if(!outdoor){
+  for(const x of [-5,5]){round(g,'#806a50',x,.24,-7.75,3.3,.12,.1,.02);wallArt(g,x,-7.58,room==='scents'?'#bda4c9':room==='salon'?'#c9918b':'#91ac7b');}
+  // Thin rug border gives the room depth without textures or extra lights.
+  for(const x of [-5.8,5.8])mesh(g,box,'#bda47b',x,.075,0,.025,.008,9.6);
+  for(const z of [-4.8,4.8])mesh(g,box,'#bda47b',0,.075,z,11.6,.008,.025);
  }
  for(const gate of PORTALS[room])portalFrame(g,gate,outdoor);
  if(room==='lobby'){mesh(g,cylinder,'#c3b397',0,.25,0,1.7,.45,1.7);mesh(g,cylinder,'#e8ddc7',0,.5,0,1.55,.18,1.55);this.water=mesh(g,cylinder,'#a9c6bb',0,.605,0,1.35,.035,1.35);mesh(g,cylinder,'#ddc9a2',0,.9,0,.7,.65,.7);bottle(g,0,1.25,0,'#c3b1cf',1.35);for(let i=0;i<10;i++){const a=i*Math.PI/5;mesh(g,sphere,'#c9dfd1',Math.sin(a)*.86,1.1+Math.sin(i)*.15,Math.cos(a)*.86,.045);}
@@ -91,7 +110,7 @@ export class ArchiveWorld {
 
  // Bake static furnishings into one mesh per material for mobile rendering.
  g.updateMatrixWorld(true);const buckets=new Map(),originals=[];
- g.traverse(o=>{if(!o.isMesh||o.material.map||o===this.water)return;const key=o.material.uuid;if(!buckets.has(key))buckets.set(key,{material:o.material,geometries:[]});buckets.get(key).geometries.push(o.geometry.clone().applyMatrix4(o.matrixWorld));originals.push(o);});
+ g.traverse(o=>{if(!o.isMesh||o.material.map||o===this.water)return;const key=o.material.uuid;if(!buckets.has(key))buckets.set(key,{material:o.material,geometries:[]});const baked=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();buckets.get(key).geometries.push(baked.applyMatrix4(o.matrixWorld));originals.push(o);});
  for(const o of originals)o.removeFromParent();
  for(const b of buckets.values()){const geometry=mergeGeometries(b.geometries,false);for(const part of b.geometries)part.dispose();if(!geometry)continue;const combined=new T.Mesh(geometry,b.material);combined.castShadow=true;combined.receiveShadow=true;combined.userData.archiveMerged=true;g.add(combined);}
  this.colliders=LAYOUT[room];return this.hotspots;
