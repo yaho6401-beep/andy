@@ -1,5 +1,23 @@
 // Shared metres for rendering, collision, navigation and authoritative local validation.
 export const GALLERY = {
+  lobby: {
+    width:30, depth:28, height:7.2,
+    fountain:{x:0,z:-1,w:4.8,d:4.8},
+    benches:[-8.5,8.5].map(x=>({x,z:3,w:2.8,d:1.2})),
+    reception:{x:-9,z:-8,w:5,d:1.4},
+    board:{x:-9,z:8,w:3.2,d:.45},
+    exhibit:{x:8.5,z:-8,w:4,d:1.4},
+    campGate:{x:9,z:8.4},
+    doors:[{x:0,z:12.9,label:'햇살 정원',yaw:Math.PI},{x:-13.9,z:0,label:'향기 아카이브',yaw:Math.PI/2},{x:13.9,z:0,label:'책의 정원',yaw:-Math.PI/2},{x:0,z:-12.9,label:'향기카페',yaw:0}]
+  },
+  salon: {
+    width:30,depth:28,height:6,
+    counter:{x:0,z:-10,w:10.5,d:1.7},
+    barista:{x:-1.3,z:-11.3,reach:{x:0,z:-6.5}},
+    cases:[-11,11].map(x=>({x,z:-9,w:2.3,d:1.3})),
+    board:{x:-14,z:4,w:.4,d:3},
+    doors:[{x:0,z:12.9,label:'아트리움 로비',yaw:Math.PI}]
+  },
   scents: {
     width: 28, depth: 24, height: 6.2,
     plinths: [-9,-4.5,0,4.5,9].map((x,i)=>({x,z:i%2?-5:-3.7,w:1.4,d:1.4})),
@@ -23,6 +41,8 @@ export const GALLERY = {
   }
 };
 export const GALLERY_COLLIDERS = {
+  lobby:[GALLERY.lobby.fountain,...GALLERY.lobby.benches,GALLERY.lobby.reception,GALLERY.lobby.board,GALLERY.lobby.exhibit],
+  salon:[GALLERY.salon.counter,...GALLERY.salon.cases,GALLERY.salon.board,{...GALLERY.salon.barista,w:.6,d:.6}],
   scents:[...GALLERY.scents.plinths,GALLERY.scents.organ,GALLERY.scents.notes,GALLERY.scents.desk,...GALLERY.scents.cabinets,{...GALLERY.scents.curator,w:.6,d:.6}],
   books:[...GALLERY.books.shelves,GALLERY.books.side,GALLERY.books.board,...GALLERY.books.benches,GALLERY.books.portal,...GALLERY.books.islands,...GALLERY.books.columns,GALLERY.books.readingTable,...GALLERY.books.readingChairs,
     {x:-4,z:0,w:3,d:1.4},{x:4,z:0,w:3,d:1.4},

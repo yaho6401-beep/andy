@@ -1,6 +1,6 @@
 import * as T from 'three';
 import {GALLERY} from './gallery-layout.js';
-import {SEATS} from './seats.js';
+import {SEATS,CAFE_TABLES} from './seats.js';
 const cache = new Map();
 const cube = new T.BoxGeometry(1,1,1);
 const cylinder = new T.CylinderGeometry(1,1,1,16);
@@ -76,7 +76,7 @@ function artwork(g,x,z,color,w=2.4,h=2.6) {
   for(let i=0;i<3;i++)panel(g,palette.stone,x,2.13-i*.08,z+.12,w*.56,.012,.01);
 }
 function architecture(g,room) {
-  const {width:w,depth:d,height:h}=GALLERY[room],wood=room==='books';
+  const {width:w,depth:d,height:h}=GALLERY[room],wood=room==='books'||room==='salon';
   solid(g,palette.stone,0,-.22,0,w+.8,.42,d+.8);
   solid(g,'#ffffff',0,.005,0,w,.04,d,cube,wood?'wood':'stone');
   // The front wall and roof are cut away; full-height back walls establish scale.
@@ -97,12 +97,130 @@ function architecture(g,room) {
   for(const x of [-w*.32,w*.32])windowPanel(g,x,-d/2+.23,wood?4.5:3.8,wood?1.9:3.5,wood?5.5:3.2);
   if(wood){const sideView=new T.Group();sideView.position.set(-w/2+.08,0,5.5);sideView.rotation.y=Math.PI/2;g.add(sideView);windowPanel(sideView,0,0,7,4.1,3.55);}
   for(const x of [-w/2+.8,w/2-.8])foliage(g,x,-d/2+1);
+  if(room==='lobby'||room==='salon'){
+    for(const door of GALLERY[room].doors)gateway(g,door.x,door.z,door.label,door.yaw);
+    return;
+  }
   const thresholdX=room==='scents'?w/2-.8:-w/2+.8;
   // Both portals keep the lobby's left/right wing relationship.
   const door=new T.Group();door.position.set(thresholdX,0,0);door.rotation.y=room==='scents'?-Math.PI/2:Math.PI/2;g.add(door);
   for(const x of [-1.55,1.55])panel(door,palette.oak,x,1.7,0,.16,3.4,.22);
   panel(door,palette.oak,0,3.43,0,3.3,.16,.22);text(door,'LOBBY · 로비로',0,3.85,.02,3);
   panel(door,palette.brass,0,.05,.1,3.05,.03,.75);
+}
+function gateway(g,x,z,title,yaw=0,camp=false) {
+  const door=new T.Group();door.position.set(x,0,z);door.rotation.y=yaw;g.add(door);
+  for(const side of [-1,1]){
+    panel(door,camp?'#728b7c':palette.oak,side*1.75,2,0,.16,4,.25);
+    panel(door,palette.brass,side*1.64,2,.08,.025,3.85,.04);
+  }
+  panel(door,camp?'#728b7c':palette.oak,0,4.05,0,3.65,.16,.25);
+  text(door,title,0,4.55,.1,4,camp?'#5d7669':palette.dark);
+  panel(door,camp?'#b8c9ba':'#c6baa4',0,.05,0,3.3,.035,2.5);
+  // The threshold remains open. No invisible collider or click is needed.
+  for(const side of [-1,1])panel(door,palette.brass,side*1.6,.072,0,.035,.015,2.3);
+}
+function noteBoard(g,p,title,side=false) {
+  const board=new T.Group();board.position.set(p.x,0,p.z);if(side)board.rotation.y=Math.PI/2;g.add(board);
+  panel(board,palette.oak,0,1.9,0,3.2,2.4,.15);panel(board,'#a8b29a',0,1.9,.09,3,2.2,.03);
+  for(let i=0;i<9;i++){const note=panel(board,['#ece0b8','#dcc8ce','#d7dfc7'][i%3],-.94+(i%3)*.93,2.55-Math.floor(i/3)*.63,.13,.65,.47,.02);note.rotation.z=i%2?.07:-.04;}
+  text(board,title,0,3.55,.1,3.7);
+}
+function lobby(g,content,hotspots) {
+  const r=GALLERY.lobby;
+  // A generous central atrium: low furniture keeps sightlines open to four wings.
+  text(g,'BOOKS & SCENTS ARCHIVE\n향과 문장 사이, 당신의 이야기',0,5.8,-13.77,9.5);
+  panel(g,'#d3c5ac',0,.033,1,7.5,.012,22);
+  for(const x of [-3.7,3.7])panel(g,palette.brass,x,.043,1,.035,.006,21.5);
+  for(const z of [-4.7,7])panel(g,palette.brass,0,.044,z,7.5,.006,.03);
+  const f=r.fountain;
+  shadow(g,f.x,f.z,6.8,6.8);
+  solid(g,palette.stone,f.x,.18,f.z,2.4,.36,2.4,cylinder);
+  solid(g,'#aebfb3',f.x,.37,f.z,2.16,.06,2.16,cylinder);
+  solid(g,palette.ivory,f.x,.68,f.z,.65,1.05,.65,cylinder);
+  solid(g,palette.brass,f.x,1.24,f.z,.74,.08,.74,cylinder,null,.55);
+  bottle(g,f.x,1.31,f.z,'#a5b49b',0,2.25);
+  text(g,'당신의 이야기에 향을 입히세요.',0,.7,1.52,4.8);
+  hotspots.push({x:0,z:2,id:'lobby-today',title:'오늘의 향과 문장',type:'today'});
+  for(const b of r.benches){couch(g,b.x,b.z,b.x<0?'#b0b9a4':'#c5b5bc');shadow(g,b.x,b.z,4.4,2.8);foliage(g,b.x+(b.x<0?-2:2),b.z);}
+  const desk=r.reception;
+  panel(g,palette.oak,desk.x,.65,desk.z,desk.w,1.3,desk.d);
+  panel(g,palette.paper,desk.x,1.34,desk.z,desk.w+.12,.1,desk.d+.1);
+  for(let i=0;i<16;i++)panel(g,'#b89f7e',desk.x-desk.w/2+.2+i*.3,.68,desk.z+.72,.045,1.15,.035);
+  panel(g,palette.dark,desk.x-.7,1.65,desk.z,.65,.45,.04);
+  bottle(g,desk.x+1.3,1.42,desk.z,'#c4b18c',1,.6);
+  text(g,'WELCOME · 천천히 둘러보세요',desk.x,.7,desk.z+.76,4.3);
+  noteBoard(g,r.board,'솔로만 프로젝트 · 참가 안내');
+  hotspots.push({x:r.board.x,z:r.board.z+.8,id:'solo-board',title:'솔로만 프로젝트 참가신청',type:'solo'});
+  panel(g,palette.paper,r.exhibit.x,.6,r.exhibit.z,r.exhibit.w,1.2,r.exhibit.d);
+  for(let i=0;i<5;i++){bottle(g,r.exhibit.x-1.4+i*.7,1.24,r.exhibit.z,['#aab6a3','#c8b28e','#baa9be'][i%3],i,.75);}
+  text(g,'작은 향기 전시 · 오늘의 컬렉션',r.exhibit.x,.64,r.exhibit.z+.73,4);
+  hotspots.push({x:r.exhibit.x,z:r.exhibit.z+1.4,id:'lobby-collection',title:'작은 컬렉션 · 향 조합하기',type:'compose'});
+  for(const x of [-11.8,11.8]){
+    artwork(g,x,-13.76,x<0?'#b6a0ae':'#98ad9d',2.4,2.7);
+    solid(g,palette.stone,x,3.35,-4.5,.24,6.7,.24,cylinder);
+    solid(g,palette.brass,x,.1,-4.5,.34,.2,.34,cylinder,null,.3);
+  }
+  gateway(g,r.campGate.x,r.campGate.z,'별빛 캠핑장 · CAMPFIRE',-.3,true);
+  // A small planted frame suggests the forest awaiting beyond the camp entrance.
+  for(const x of [r.campGate.x-2.1,r.campGate.x+2.1])foliage(g,x,r.campGate.z);
+}
+function cafeChair(g,seat) {
+  const chair=new T.Group();chair.position.set(seat.x,0,seat.z);chair.rotation.y=seat.yaw;g.add(chair);
+  const bar=seat.table===5,y=bar?1:.48;
+  solid(chair,bar?'#b3a08a':'#a1ae99',0,y,0,.31,.13,.31,cylinder);
+  panel(chair,palette.oak,0,y+.27,-.25,.56,.44,.075);
+  for(const x of [-.23,.23])for(const z of [-.23,.23])panel(chair,palette.dark,x,y/2,z,.045,y,.045);
+  if(bar){panel(chair,palette.brass,0,.36,.2,.5,.04,.04);}
+}
+function cafe(g,content,hotspots) {
+  const r=GALLERY.salon,c=r.counter;
+  text(g,'SCENT CAFÉ\n향을 닮은 대화, 잠시의 쉼',0,4.9,-13.77,8);
+  panel(g,'#e4daca',0,2.05,-13.7,11,2.8,.16);
+  for(const x of [-3.8,0,3.8]){
+    panel(g,palette.oak,x,2,-13.5,3.3,.08,.6);
+    for(let i=0;i<5;i++)solid(g,['#c4b89e','#abb69d','#c1a8ae'][i%3],x-1.1+i*.55,2.28,-13.45,.17,.5,.17,cylinder);
+  }
+  text(g,'COFFEE  /  TEA  /  ADE  /  DESSERT',0,3.55,-13.49,7.3);
+  panel(g,palette.oak,c.x,.72,c.z,c.w,1.44,c.d);
+  panel(g,palette.paper,c.x,1.48,c.z,c.w+.16,.14,c.d+.15);
+  for(let i=0;i<31;i++)panel(g,'#b89e7d',c.x-c.w/2+.2+i*.34,.73,c.z+c.d/2+.035,.045,1.3,.045);
+  panel(g,palette.dark,-3,1.83,c.z,1.5,.6,.65);panel(g,palette.brass,-3,1.83,c.z+.34,1.2,.4,.03);
+  for(let i=0;i<3;i++)solid(g,palette.paper,-3.4+i*.4,1.61,c.z+.55,.11,.15,.11,cylinder);
+  panel(g,palette.dark,3.7,1.76,c.z,.6,.4,.06);
+  for(const [i,p] of r.cases.entries()){
+    panel(g,palette.oak,p.x,.55,p.z,p.w,1.1,p.d);
+    panel(g,'#d8dfd1',p.x,1.4,p.z,p.w,.65,p.d);
+    for(let j=0;j<4;j++)panel(g,i?'#a8b799':'#dfc3a0',p.x-.7+j*.45,1.78,p.z,.29,.12,.4);
+    text(g,i?'TEA LIBRARY':'FRESH BAKERY',p.x,.65,p.z+.68,2.2);
+    foliage(g,p.x+(p.x<0?-1.8:1.8),p.z);
+  }
+  for(const t of CAFE_TABLES){
+    if(t.shape!=='bar'){
+      solid(g,t.id%2?'#cfc6b4':'#c9cbbb',t.x,.035,t.z,t.w/2+1.6,.012,t.d/2+1.6,cylinder);
+      shadow(g,t.x,t.z,t.w+3,t.d+3);
+    }
+    const round=t.shape==='round';
+    if(round){solid(g,palette.oak,t.x,t.top-.06,t.z,t.w/2,.12,t.d/2,cylinder);solid(g,palette.dark,t.x,(t.top-.12)/2,t.z,.08,t.top-.12,.08,cylinder);solid(g,palette.dark,t.x,.06,t.z,.38,.08,.38,cylinder);}
+    else{
+      panel(g,palette.oak,t.x,t.top-.06,t.z,t.w,.12,t.d);
+      for(const dx of [-t.w/2+.2,t.w/2-.2])for(const dz of [-t.d/2+.15,t.d/2-.15])panel(g,palette.dark,t.x+dx,(t.top-.12)/2,t.z+dz,.08,t.top-.12,.08);
+    }
+    if(t.id!==5){solid(g,palette.paper,t.x,t.top+.14,t.z,.09,.26,.09,cylinder);solid(g,'#b9a6b1',t.x,t.top+.36,t.z,.18,.14,.18,leaf);}
+    hotspots.push({x:t.x,z:t.z,id:'cafe-table-'+t.id,title:t.label,type:'table'});
+  }
+  for(const seat of SEATS.filter(s=>s.room==='salon'))cafeChair(g,seat);
+  // Pendant shades are geometry only: no additional point lights or shadow maps.
+  for(const x of [-7.5,0,6.5]){
+    panel(g,palette.brass,x,4.8,-1.8,.025,2,.025);
+    solid(g,'#d6c49e',x,3.75,-1.8,.65,.32,.65,new T.ConeGeometry(1,1,12));
+    solid(g,'#f0dfb5',x,3.59,-1.8,.45,.025,.45,cylinder);
+  }
+  const view=new T.Group();view.position.set(-14.8,0,7);view.rotation.y=Math.PI/2;g.add(view);windowPanel(view,0,0,7,3.7,3.1);
+  noteBoard(g,r.board,'향기카페 · 한 줄의 대화',true);
+  hotspots.push({x:r.board.x+1,z:r.board.z,id:'cafe-note-wall',title:'카페 포스트잇 · 이야기 남기기',type:'board'});
+  for(const x of [-12,12])foliage(g,x,10.7);
+  artwork(g,12.6,-13.76,'#9cad98',2.1,2.4);
 }
 function organ(g,x,z,w,rows,cols,colors) {
   panel(g,palette.oak,x,1.65,z,w,3.3,.56);
@@ -221,5 +339,5 @@ function books(g,content,hotspots) {
 }
 export function buildGallery(g,room,content,hotspots) {
   architecture(g,room);
-  if(room==='scents')scents(g,content,hotspots);else books(g,content,hotspots);
+  ({scents,books,lobby,salon:cafe})[room](g,content,hotspots);
 }

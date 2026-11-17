@@ -9,3 +9,5 @@ export const NPCS={salon:{id:'barista',name:'바리스타 모아',x:-1.3,z:-6.9,
 export const THOUGHTS=['무슨 생각 중…?','점심은 뭐 먹지…','저녁은 뭐 먹지…','오늘은 왠지 좋은 일이 생길 것 같아.','이 향, 어디서 맡아봤더라…','잠깐 쉬어 가도 괜찮겠지.'];
 
 NPCS.scents={...NPCS.scents,...GALLERY.scents.curator,reach:{x:GALLERY.scents.curator.x,z:GALLERY.scents.curator.z+1}};
+
+NPCS.salon={...NPCS.salon,...GALLERY.salon.barista};

@@ -9,13 +9,13 @@ try{
  await page.route('**/functions/v1/**',r=>r.abort());await page.goto(base+'/archive/');await page.waitForFunction(()=>globalThis.ArchiveDiagnostics?.state.artLoaded);
  await page.locator('[name=nickname]').fill('전시관 체험');await page.locator('[name=adult]').check();await page.locator('#entry-form [type=submit]').click();await page.waitForFunction(()=>ArchiveDiagnostics.state.joined);
  await expect(page.locator('#online-count')).toContainText('혼자');
- await walk(0,-7.3,'garden','lobby');await walk(-3.2,4,'lobby');await walk(-3.2,0,'lobby');await walk(-7.4,0,'lobby','scents');
+ await walk(0,-7.3,'garden','lobby');await walk(-4,6,'lobby');await walk(-4,0,'lobby');await walk(-13.9,0,'lobby','scents');
  await page.waitForFunction(()=>ArchiveDiagnostics.state.cameraMode==='perspective');await walk(0,0,'scents');await page.waitForTimeout(1000);
  const museum=await state();await page.screenshot({path:out+'/museum-desktop.png'});
  await page.setViewportSize({width:390,height:844});await page.waitForTimeout(500);await page.screenshot({path:out+'/museum-mobile.png'});await page.setViewportSize({width:1200,height:800});
  await walk(0,-1.7,'scents');await page.locator('#interact').click();await expect(page.locator('#detail')).toBeVisible();await page.locator('[data-close=detail]').click();
  await walk(2.2,-1.7,'scents');await walk(12,-1.7,'scents');await walk(13.4,0,'scents','lobby');
- await walk(-3.2,0,'lobby');await walk(-3.2,4,'lobby');await walk(3.2,4,'lobby');await walk(3.2,0,'lobby');await walk(7.4,0,'lobby','books');
+ await walk(-4,0,'lobby');await walk(-4,4.8,'lobby');await walk(4,4.8,'lobby');await walk(4,0,'lobby');await walk(13.9,0,'lobby','books');
  await walk(-7.2,3.7,'books');await walk(0,6.4,'books');await page.waitForTimeout(900);const library=await state();await page.screenshot({path:out+'/library-desktop.png'});
  await page.setViewportSize({width:390,height:844});await page.waitForTimeout(500);await page.screenshot({path:out+'/library-mobile.png'});await page.setViewportSize({width:1200,height:800});
  await walk(-7.2,3.7,'books');await walk(-7.2,7.2,'books');await walk(-9.5,7.05,'books');await page.waitForFunction(()=>ArchiveDiagnostics.state.seat?.startsWith('books-window'));await page.locator('#stand-up').click();await page.waitForFunction(()=>!ArchiveDiagnostics.state.seat);

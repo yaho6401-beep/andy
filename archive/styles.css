@@ -14,3 +14,6 @@
 .dock-row{justify-content:flex-end}
 .dock-button{flex:0 1 51px;min-width:42px}
 .interact{white-space:normal;word-break:keep-all;overflow-wrap:anywhere;line-height:1.5}
+
+/* Readable wayfinding against the camp’s dusk sky. */
+.camp-night .route-hint,.camp-night .movement-hint,.camp-night .joystick>span{color:#f3e8d1;text-shadow:0 1px 4px #203749}
