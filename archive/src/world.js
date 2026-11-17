@@ -1,5 +1,6 @@
 import {artObject} from './art-library.js';
 import {furnishDetails} from './world-details.js';
+import {buildGallery} from './gallery-world.js';
 import {CAFE_TABLES,SEATS} from './seats.js';
 import * as T from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
@@ -27,8 +28,9 @@ function portalFrame(p,gate,outdoor=false){const g=new T.Group();g.position.set(
 
 export class ArchiveWorld {
  constructor(scene){this.scene=scene;this.group=new T.Group();scene.add(this.group);this.hotspots=[];this.room=null;this.water=null;}
- build(room,content={scents:SCENTS,books:BOOKS}){for(const obj of [...this.group.children]){obj.traverse(o=>{if(o.material?.map){o.material.map.dispose();o.material.dispose();o.geometry?.dispose();}else if(o.userData.archiveMerged)o.geometry.dispose();});this.group.remove(obj);}this.hotspots=[];this.water=null;this.room=room;const g=this.group;
+ build(room,content={scents:SCENTS,books:BOOKS}){for(const obj of [...this.group.children]){obj.traverse(o=>{if(o.material?.map&&!o.material.userData.galleryShared){o.material.map.dispose();o.material.dispose();o.geometry?.dispose();}else if(o.userData.archiveMerged)o.geometry.dispose();});this.group.remove(obj);}this.hotspots=[];this.water=null;this.room=room;const g=this.group;
 
+ if(room==='scents'||room==='books'){buildGallery(g,room,content,this.hotspots);this.bake();this.colliders=LAYOUT[room];return this.hotspots;}
  const outdoor=room==='garden';
  round(g,outdoor?'#b9cc93':'#c5ad8d',0,-.22,0,17,.4,17,.15);mesh(g,box,outdoor?'#d0ddac':room==='books'?'#c8a47d':room==='scents'?'#eee4f1':room==='salon'?'#e6cbd0':'#eee2cb',0,-.005,0,16,.05,16);
  if(outdoor){const building=artObject('library');if(building){building.position.set(0,0,-8.9);g.add(building);round(g,'#cbc9b1',0,-.15,-10,10,.25,7,.12);}
@@ -92,12 +94,15 @@ export class ArchiveWorld {
 
  if(room==='books'){const portal=new T.Mesh(new T.TorusGeometry(.65,.09,7,32),material('#a7c7b3'));portal.position.set(5.6,1.9,4.85);g.add(portal);label(g,'문장 너머 · 개인 독서 여행',5.6,2.9,4.9,3.4,'#57765f',40);this.hotspots.push({x:5.6,z:4.7,id:'beyond-portal',title:'문장 너머로 · 혼자 읽는 세계',type:'beyond'});}
  furnishDetails(g,room,{mesh,round,label,box,cylinder,sphere,tableData:CAFE_TABLES});
+ this.bake();
+ this.colliders=LAYOUT[room];return this.hotspots;
+ }
+ bake(){
  // Bake static furnishings into one mesh per material for mobile rendering.
- g.updateMatrixWorld(true);const buckets=new Map(),originals=[];
- g.traverse(o=>{if(!o.isMesh||o.material.map||o===this.water)return;const key=o.material.uuid;if(!buckets.has(key))buckets.set(key,{material:o.material,geometries:[]});buckets.get(key).geometries.push((o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone()).applyMatrix4(o.matrixWorld));originals.push(o);});
+ const g=this.group;g.updateMatrixWorld(true);const buckets=new Map(),originals=[];
+ g.traverse(o=>{if(!o.isMesh||(o.material.map&&!o.material.userData.galleryShared)||o===this.water)return;const key=o.material.uuid;if(!buckets.has(key))buckets.set(key,{material:o.material,geometries:[]});buckets.get(key).geometries.push((o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone()).applyMatrix4(o.matrixWorld));originals.push(o);});
  for(const o of originals)o.removeFromParent();
  for(const b of buckets.values()){const geometry=mergeGeometries(b.geometries,false);for(const part of b.geometries)part.dispose();if(!geometry)continue;const combined=new T.Mesh(geometry,b.material);combined.castShadow=true;combined.receiveShadow=true;combined.userData.archiveMerged=true;g.add(combined);}
- this.colliders=LAYOUT[room];return this.hotspots;
  }
  nearest(x,z){return this.hotspots.map(h=>({...h,distance:Math.hypot(x-h.x,z-h.z)})).filter(h=>h.distance<2.9).sort((a,b)=>a.distance-b.distance)[0];}
  update(t){if(this.water&&this.room==='lobby')this.water.material.color.setHSL(.42,.16,.73+Math.sin(t)*.015);}

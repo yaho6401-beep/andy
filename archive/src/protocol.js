@@ -1,4 +1,5 @@
 import {CAFE_TABLES,SEATS} from './seats.js';
+import {GALLERY,GALLERY_COLLIDERS} from './gallery-layout.js';
 export const MAX_PEOPLE=20,POSITION_HZ=2,SPEED=3.2;
 export const ROOMS=['garden','lobby','scents','books','salon'];
 export const COLORS=['#b7c6a1','#d5a5b8','#a9becb','#c2aed4','#d7bf8c'];
@@ -10,7 +11,11 @@ export const LAYOUT={garden:[{x:-4.8,z:-3,w:2.6,d:3},{x:4.8,z:-3,w:2.6,d:3},{x:-
  books:[{x:-7.3,z:-3.2,w:.6,d:3.6},{x:-3.9,z:2.1,w:1.4,d:.9},{x:3.9,z:2.1,w:1.4,d:.9},{x:5.6,z:4.7,w:1.5,d:.65},{x:-7.1,z:3.8,w:.65,d:2.5},...[-5,0,5].map(x=>({x,z:-6.5,w:3.7,d:1.1})),{x:-4,z:0,w:3,d:1.4},{x:4,z:0,w:3,d:1.4},{x:0,z:3,w:2,d:2}],
  salon:[...CAFE_TABLES.map(t=>({x:t.x,z:t.z,w:t.w,d:t.d})),...SEATS.filter(s=>s.room==='salon').map(s=>({x:s.x,z:s.z,w:.55,d:.55})),{x:0,z:-5.8,w:6.8,d:1.6},{x:6.8,z:-5.5,w:.8,d:1.8},{x:-7.1,z:3.8,w:.65,d:2.5},{x:0,z:-6.5,w:3,d:1}]
 };
-export function validPosition(room,x,z){return ROOMS.includes(room)&&Number.isFinite(x)&&Number.isFinite(z)&&Math.abs(x)<7.8&&Math.abs(z)<7.8&&!LAYOUT[room].some(o=>Math.abs(x-o.x)<o.w/2+.28&&Math.abs(z-o.z)<o.d/2+.28);}
+LAYOUT.scents=GALLERY_COLLIDERS.scents;LAYOUT.books=GALLERY_COLLIDERS.books;
+export const ROOM_BOUNDS=Object.fromEntries(ROOMS.map(room=>[room,GALLERY[room]?{x:GALLERY[room].width/2-.2,z:GALLERY[room].depth/2-.2}:{x:7.8,z:7.8}]));
+PORTALS.scents[0].x=13.2;PORTALS.books[0].x=-14.2;
+PORTALS.lobby.find(p=>p.to==='scents').spawn.x=12;PORTALS.lobby.find(p=>p.to==='books').spawn.x=-13;
+export function validPosition(room,x,z){const bounds=ROOM_BOUNDS[room];return !!bounds&&Number.isFinite(x)&&Number.isFinite(z)&&Math.abs(x)<bounds.x&&Math.abs(z)<bounds.z&&!LAYOUT[room].some(o=>Math.abs(x-o.x)<o.w/2+.28&&Math.abs(z-o.z)<o.d/2+.28);}
 // Swept validation stops a fast or lagged packet passing through a cabinet.
 export function validMove(room,x0,z0,x1,z1){if(!validPosition(room,x1,z1))return false;const steps=Math.max(1,Math.ceil(Math.hypot(x1-x0,z1-z0)/.12));for(let i=1;i<=steps;i++)if(!validPosition(room,x0+(x1-x0)*i/steps,z0+(z1-z0)*i/steps))return false;return true;}
 export function appearance(input={}){return {kind:Math.max(0,Math.min(7,Number.isInteger(input.kind)?input.kind:0)),hairStyle:Math.max(0,Math.min(2,Number.isInteger(input.hairStyle)?input.hairStyle:0)),hair:HAIR.includes(input.hair)?input.hair:HAIR[0],color:COLORS.includes(input.color)?input.color:COLORS[0]};}
