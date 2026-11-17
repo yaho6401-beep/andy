@@ -10,3 +10,12 @@
 @media(max-width:800px){#make .journey-choices{grid-template-columns:1fr;gap:12px}#make .journey-choices button{grid-template-columns:minmax(0,1fr) 106px;grid-template-rows:auto auto;align-content:center;column-gap:16px;row-gap:6px;padding:22px 20px;min-height:140px}#make .journey-choices .journey-art{grid-column:2;grid-row:1/3;width:106px;height:94px;margin:0;align-self:center}#make .journey-choices button strong{grid-column:1;grid-row:1;font-size:22px;align-self:end}#make .journey-choices button>span:last-of-type{grid-column:1;grid-row:2;align-self:start;font-size:13px}#make .journey-choices button i{font-size:17px;top:9px;right:13px}}
 @media(max-width:360px){#make .journey-choices button{grid-template-columns:minmax(0,1fr) 78px;column-gap:10px;padding:19px 15px;min-height:132px}#make .journey-choices .journey-art{width:78px;height:86px}#make .journey-choices button strong{font-size:20px}#make .journey-choices button>span:last-of-type{font-size:12px}}
 @media(prefers-reduced-motion:reduce){#make .journey-choices button{transition:none}#make .journey-choices button:hover{transform:none}}
+
+#make .make-heading-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+#make .make-journal-entry{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:9px 14px;border:1px solid #d9c7d5;border-radius:12px;background:#f6eef4;color:#713f67;font-size:14px;font-weight:500;line-height:1.5;white-space:nowrap}
+#make .make-journal-entry svg{width:20px;height:20px;flex:none}
+#make .make-journal-entry:hover{background:#eee2ec;border-color:#b99bb0}
+#make .make-journal-entry:focus-visible{outline:2px solid #713f67;outline-offset:3px}
+#explore .header-tool-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:700px){#make .make-journal-entry{font-size:13px;padding:9px 11px}#explore .header-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#explore .header-tool-grid>button:last-child{grid-column:1/-1;min-height:150px!important}}
+@media(max-width:370px){#explore .header-tool-grid{grid-template-columns:1fr}}
