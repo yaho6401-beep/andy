@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {CAMP} from '../camp/layout.js';
 import assert from 'node:assert/strict';
 import {GALLERY} from '../src/gallery-layout.js';
 import {PORTALS,validPosition,validMove} from '../src/protocol.js';
@@ -25,5 +26,5 @@ test('lobby ↔ camp changes rooms under server doorway validation and preserves
  Object.assign(p,{room:'lobby',x:9,z:7});const id=p.id,look={...p.appearance};
  store.action('host',{type:'room',room:'camp'});assert.equal(p.room,'camp');assert.equal(p.id,id);assert.deepEqual(p.appearance,look);assert.ok(validPosition('camp',p.x,p.z));
  assert.throws(()=>store.action('host',{type:'room',room:'books'}),/문/);
- Object.assign(p,{x:0,z:5.3});store.action('host',{type:'room',room:'lobby'});assert.equal(p.room,'lobby');assert.equal(p.shoutUsed,false);assert.ok(validPosition('lobby',p.x,p.z));
+ Object.assign(p,{x:CAMP.gate.x,z:CAMP.gate.z-.9});store.action('host',{type:'room',room:'lobby'});assert.equal(p.room,'lobby');assert.equal(p.shoutUsed,false);assert.ok(validPosition('lobby',p.x,p.z));
 });

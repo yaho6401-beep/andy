@@ -1,3 +1,4 @@
+import {CAMP} from '../camp/layout.js';
 import {ArchiveStore} from '../server/room-store.mjs';
 import {validPosition} from './protocol.js';
 // Isolated, single-visitor simulation. Never claims remote participants or staff authorization.
@@ -6,7 +7,7 @@ export class PublicDemoTransport{
  async connect({nickname,adult,appearance}){
  if(!adult)throw Error('이용 동의를 확인해 주세요.');
  this.store=new ArchiveStore();this.id='visitor';this.store.seed(this.id,nickname.slice(0,16));this.store.join(this.id,appearance);
- if(this.startRoom){const point={scents:{x:0,z:0},books:{x:0,z:5.5},lobby:{x:0,z:8},salon:{x:0,z:9.5},camp:{x:0,z:4}}[this.startRoom];if(validPosition(this.startRoom,point.x,point.z)){const p=this.store.clients.get(this.id);Object.assign(p,{room:this.startRoom,...point,epoch:p.epoch+1});}}
+ if(this.startRoom){const point={scents:{x:0,z:0},books:{x:0,z:5.5},lobby:{x:0,z:8},salon:{x:0,z:9.5},camp:{...CAMP.spawn}}[this.startRoom];if(validPosition(this.startRoom,point.x,point.z)){const p=this.store.clients.get(this.id);Object.assign(p,{room:this.startRoom,...point,epoch:p.epoch+1});}}
  this.onStatus('혼자 체험 중');this.onWelcome?.({id:this.id});this.emit();this.timer=setInterval(()=>this.emit(),500);return {id:this.id,mode:'public-demo'};
  }
  emit(){if(this.store)this.onSnapshot(this.store.snapshot(this.id));}

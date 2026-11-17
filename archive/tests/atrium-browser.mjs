@@ -1,3 +1,4 @@
+import {CAMP} from '../camp/layout.js';
 import {chromium,expect} from '@playwright/test';
 import {mkdir,writeFile} from 'node:fs/promises';
 const base=process.env.GALLERY_BASE||'http://127.0.0.1:4184',out='.local/atrium-review';await mkdir(out,{recursive:true});
@@ -14,7 +15,7 @@ try{
  // Actually approach a log, auto-sit, keep private thoughts local, then walk back.
  await walk(1,3.6,'camp');await tap(.25,3.5);await page.waitForFunction(()=>ArchiveDiagnostics.state.seat?.startsWith('camp-main'),null,{timeout:8000});
  await expect(page.locator('.private-thought').first()).toBeVisible();await page.locator('#stand-up').click();await page.waitForFunction(()=>!ArchiveDiagnostics.state.seat);
- await walk(0,6.2,'camp','lobby');expect((await state()).id).toBe(originalId);
+ await walk(CAMP.gate.x,CAMP.gate.z,'camp','lobby');expect((await state()).id).toBe(originalId);
  await walk(4,5.5,'lobby');await walk(4,-10.7,'lobby');await walk(0,-12.9,'lobby','salon');await walk(0,4.5,'salon');await shots('salon');
  // A real order, real 30-second preparation and pickup at the relocated bar.
  await walk(0,-5.5,'salon');await expect(page.locator('[data-menu-item=coffee-0]')).toBeVisible({timeout:4000});await page.locator('[data-menu-item=coffee-0]').click();await page.waitForFunction(()=>ArchiveDiagnostics.state.orderStatus==='preparing');

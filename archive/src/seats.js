@@ -17,6 +17,6 @@ for(const t of CAFE_TABLES){
 for(const side of [-1,1])for(const i of [-1,1])seats.push({id:'books-window-'+side+'-'+i,room:'books',x:side*10+i*.55,z:6.16,yaw:0,height:.78,group:'books-window-'+side,label:'창가 독서 소파',stand:{x:side*10+i*.55,z:7.18}});
 GALLERY.books.readingChairs.forEach((p,i)=>seats.push({id:'books-reading-'+i,room:'books',x:p.x,z:p.z,yaw:p.side>0?Math.PI:0,height:.48,group:'books-reading-table',label:'함께 읽는 긴 독서 테이블',stand:{x:p.x,z:p.z+p.side*.9}}));
 export const SEATS=seats;
-seats.push(...CAMP_SEATS.map(s=>({...s,room:'camp',height:.72,group:'campfire-main',label:'모닥불 통나무 의자'})));
+seats.push(...CAMP_SEATS.map(s=>({...s,room:'camp'})));
 export function tableReach(t,p){return Math.hypot(Math.max(0,Math.abs(p.x-t.x)-t.w/2),Math.max(0,Math.abs(p.z-t.z)-t.d/2));}
 export function menuSpot(t,n){if(t.shape==='bar')return {x:t.x-2.1+n*1.4,z:t.z+.08,y:t.top+.05};if(t.shape==='rectangle'){const count=t.capacity/2;return {x:t.x+(n%count-(count-1)/2)*.75,z:t.z+(n<count?-.4:.4),y:t.top+.05};}const a=n*2*Math.PI/t.capacity;return {x:t.x+Math.sin(a)*t.w*.26,z:t.z+Math.cos(a)*t.d*.26,y:t.top+.05};}

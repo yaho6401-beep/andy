@@ -2,6 +2,7 @@ import {artObject} from './art-library.js';
 import {furnishDetails} from './world-details.js';
 import {buildGallery} from './gallery-world.js';
 import {createCamp} from '../camp/world.js';
+import {CAMP} from '../camp/layout.js';
 import {GALLERY} from './gallery-layout.js';
 import {CAFE_TABLES,SEATS} from './seats.js';
 import * as T from 'three';
@@ -35,7 +36,8 @@ export class ArchiveWorld {
  if(room==='camp'){
   this.camp=createCamp(g);this.camp.setQuote('오늘의 이야기를 모닥불 곁에 잠시 내려놓아요.');
   portalFrame(g,PORTALS.camp[0],true);g.children.at(-1).rotation.y=0;
-  this.hotspots.push({x:3.6,z:-5.1,id:'camp-sentence',title:'모닥불 곁 · 오늘의 한 문장',type:'camp-story'},{x:-4.8,z:2.5,id:'camp-books',title:'별빛 책장 · 책 이야기',type:'book'});
+  this.hotspots.push({x:CAMP.board.x,z:CAMP.board.z+.8,id:'camp-sentence',title:'모닥불 곁 · 오늘의 한 문장',type:'camp-story'},{x:CAMP.bookshelf.x,z:CAMP.bookshelf.z+.5,id:'camp-books',title:'별빛 책장 · 책 이야기',type:'book'});
+  this.hotspots.push(...CAMP.tents.map(t=>({x:t.x,z:t.z+1,id:'tent-'+t.id,title:t.name+' · 책과 문장',type:'book'})));
   this.colliders=LAYOUT.camp;return this.hotspots;
  }
  if(GALLERY[room]){buildGallery(g,room,content,this.hotspots);this.bake();this.colliders=LAYOUT[room];return this.hotspots;}
@@ -113,5 +115,5 @@ export class ArchiveWorld {
  for(const b of buckets.values()){const geometry=mergeGeometries(b.geometries,false);for(const part of b.geometries)part.dispose();if(!geometry)continue;const combined=new T.Mesh(geometry,b.material);combined.castShadow=true;combined.receiveShadow=true;combined.userData.archiveMerged=true;g.add(combined);}
  }
  nearest(x,z){return this.hotspots.map(h=>({...h,distance:Math.hypot(x-h.x,z-h.z)})).filter(h=>h.distance<2.9).sort((a,b)=>a.distance-b.distance)[0];}
- update(t){this.camp?.update(t,globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches);if(this.water&&this.room==='lobby')this.water.material.color.setHSL(.42,.16,.73+Math.sin(t)*.015);}
+ update(t,viewer){this.camp?.update(t,globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches,viewer);if(this.water&&this.room==='lobby')this.water.material.color.setHSL(.42,.16,.73+Math.sin(t)*.015);}
 }
