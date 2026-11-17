@@ -17,3 +17,13 @@
 
 /* Readable wayfinding against the camp’s dusk sky. */
 .camp-night .route-hint,.camp-night .movement-hint,.camp-night .joystick>span{color:#f3e8d1;text-shadow:0 1px 4px #203749}
+
+/* Museum reading stays beside the world and away from the movement controls. */
+.museum-guide{position:absolute;z-index:5;left:20px;right:20px;bottom:188px;border:1px solid #c9c2b2;border-radius:15px;background:#fffdf4f2;box-shadow:0 8px 30px #343e2d18;max-height:35dvh;overflow:hidden;color:#485744;backdrop-filter:blur(8px)}
+.museum-guide-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 13px;border-bottom:1px solid #e3dfd1}
+.museum-guide-head b{font-size:14px;font-weight:500}.museum-guide-head button{border:0;background:#eaeadd;color:#67775e;border-radius:8px;padding:6px 9px;font-size:11px}
+.museum-guide-body{max-height:14dvh;overflow:auto;padding:12px 14px;overscroll-behavior:contain}.museum-guide-body h2{font-size:21px;margin:3px 0 7px}.museum-guide-body>p{font-size:13px;line-height:1.85;margin:5px 0;word-break:keep-all;overflow-wrap:anywhere}
+.museum-guide-body .tiny{font-size:9px}.museum-character{font-weight:500;color:#617655}.museum-memory{color:#8e7b61}.museum-guide-open{display:block;width:100%;border:0;border-top:1px solid #ddd9c9;background:#e5e9da;padding:10px 14px;font-size:13px;color:#53664b;text-align:left}
+.museum-guide-body .public-post{margin:4px 0 13px;transform:none;border-radius:3px}.museum-guide-body .public-post p{font-size:13px!important}.public-post p{overflow-wrap:anywhere}.museum-pairs{padding:12px;background:#eceee3;border-radius:9px;font-size:13px!important}
+@media(min-width:800px){.museum-guide{left:190px;right:auto;bottom:48px;width:370px;max-height:49dvh}.museum-guide-body{max-height:36dvh}.museum-guide-body>p{font-size:14px}}
+@media(max-width:380px){.museum-guide{bottom:183px;max-height:29dvh}.museum-guide-body{max-height:13dvh}}

@@ -1,6 +1,8 @@
 import * as T from 'three';
 import {GALLERY} from './gallery-layout.js';
 import {SEATS,CAFE_TABLES} from './seats.js';
+import {INGREDIENTS} from './scent-exhibits.js';
+import {publicBoardSurface} from './board-art.js';
 const cache = new Map();
 const cube = new T.BoxGeometry(1,1,1);
 const cylinder = new T.CylinderGeometry(1,1,1,16);
@@ -120,10 +122,11 @@ function gateway(g,x,z,title,yaw=0,camp=false) {
   // The threshold remains open. No invisible collider or click is needed.
   for(const side of [-1,1])panel(door,palette.brass,side*1.6,.072,0,.035,.015,2.3);
 }
-function noteBoard(g,p,title,side=false) {
+function noteBoard(g,p,title,side=false,live=false) {
   const board=new T.Group();board.position.set(p.x,0,p.z);if(side)board.rotation.y=Math.PI/2;g.add(board);
   panel(board,palette.oak,0,1.9,0,3.2,2.4,.15);panel(board,'#a8b29a',0,1.9,.09,3,2.2,.03);
-  for(let i=0;i<9;i++){const note=panel(board,['#ece0b8','#dcc8ce','#d7dfc7'][i%3],-.94+(i%3)*.93,2.55-Math.floor(i/3)*.63,.13,.65,.47,.02);note.rotation.z=i%2?.07:-.04;}
+  if(live)publicBoardSurface(board,0,1.9,.13,3,2.2);
+  else for(let i=0;i<9;i++){const note=panel(board,['#ece0b8','#dcc8ce','#d7dfc7'][i%3],-.94+(i%3)*.93,2.55-Math.floor(i/3)*.63,.13,.65,.47,.02);note.rotation.z=i%2?.07:-.04;}
   text(board,title,0,3.55,.1,3.7);
 }
 function lobby(g,content,hotspots) {
@@ -217,7 +220,7 @@ function cafe(g,content,hotspots) {
     solid(g,'#f0dfb5',x,3.59,-1.8,.45,.025,.45,cylinder);
   }
   const view=new T.Group();view.position.set(-14.8,0,7);view.rotation.y=Math.PI/2;g.add(view);windowPanel(view,0,0,7,3.7,3.1);
-  noteBoard(g,r.board,'향기카페 · 한 줄의 대화',true);
+  noteBoard(g,r.board,'향기카페 · 실제로 남긴 이야기',true,true);
   hotspots.push({x:r.board.x+1,z:r.board.z,id:'cafe-note-wall',title:'카페 포스트잇 · 이야기 남기기',type:'board'});
   for(const x of [-12,12])foliage(g,x,10.7);
   artwork(g,12.6,-13.76,'#9cad98',2.1,2.4);
@@ -261,6 +264,44 @@ function scents(g,content,hotspots) {
   text(g,'T1–10  /  M1–10  /  L1–10',notes.x,.64,notes.z+.78,3.2);
   hotspots.push({x:notes.x,z:notes.z,id:'blend-organ',title:'블라인드 단일향 30개 · 조합하기',type:'compose'});
   text(g,'SCENT AS MEMORY',-6.4,5.25,-11.78,3.4);text(g,'A PERSONAL ARCHIVE',6.4,5.25,-11.78,3.7);
+  ingredientGallery(g,r.exhibits,hotspots);
+  noteBoard(g,r.board,'책과향기 · 함께 남긴 이야기',false,true);
+  hotspots.push({x:r.board.x,z:r.board.z+.75,id:'museum-public-board',title:'실제 게시글 · 공방 방명록',type:'board'});
+}
+function exhibitAtlas(){
+  if(cache.has('ingredientAtlas'))return cache.get('ingredientAtlas');
+  const canvas=document.createElement('canvas');canvas.width=canvas.height=1024;const c=canvas.getContext('2d');
+  INGREDIENTS.forEach((s,i)=>{const x=(i%4)*256,y=Math.floor(i/4)*128;c.fillStyle='#f0eadf';c.fillRect(x,y,256,128);c.fillStyle='#a58a5e';c.fillRect(x+18,y+15,26,3);c.textAlign='center';c.fillStyle='#4d5446';c.font='500 24px Malgun Gothic,sans-serif';c.fillText(s.code,x+128,y+38);c.font='500 25px Malgun Gothic,sans-serif';c.fillText(s.name,x+128,y+77,240);c.fillStyle='#8b887a';c.font='15px Georgia,sans-serif';c.fillText(s.english,x+128,y+109,235);});
+  const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;
+  const material=new T.MeshBasicMaterial({map:texture});material.userData.galleryShared=true;cache.set('ingredientAtlas',material);return material;
+}
+function ingredientGallery(g,exhibits,hotspots){
+  const labels=exhibitAtlas();
+  for(const [i,s] of exhibits.entries()){
+    const height=1.05+(i%3)*.07;
+    panel(g,palette.stone,s.x,.1,s.z,s.w,.2,s.d);
+    panel(g,palette.ivory,s.x,height/2+.15,s.z,s.w-.12,height,s.d-.12);
+    panel(g,s.color,s.x,height+.18,s.z,s.w+.03,.045,s.d+.03);
+    bottle(g,s.x,height+.22,s.z,s.color,i,.82);
+    const plaque=new T.PlaneGeometry(1.45,.725),uv=plaque.getAttribute('uv'),col=i%4,row=Math.floor(i/4);
+    for(let j=0;j<uv.count;j++)uv.setXY(j,(col+uv.getX(j))/4,1-(row+1-uv.getY(j))/8);
+    const card=new T.Mesh(plaque,labels);card.position.set(s.x,.72,s.z+s.d/2+.04);g.add(card);
+    // Original little botanical study objects accompany each numbered bottle.
+    if(s.note==='top'){
+      solid(g,s.color,s.x+.26,height+.31,s.z-.22,.14,.13,.14,leaf);
+      const sprig=solid(g,palette.green,s.x+.31,height+.43,s.z-.22,.055,.13,.04,leaf);sprig.rotation.z=-.7;
+    }else if(s.note==='middle'){
+      for(let j=0;j<5;j++){const a=j*Math.PI*2/5;solid(g,s.color,s.x+.28+Math.sin(a)*.08,height+.28,s.z-.2+Math.cos(a)*.08,.08,.035,.08,leaf);}
+      solid(g,palette.brass,s.x+.28,height+.3,s.z-.2,.035,.025,.035,leaf);
+    }else{
+      const study=solid(g,palette.oak,s.x+.26,height+.29,s.z-.2,.06,.34,.06,cylinder);study.rotation.z=1.1;
+      solid(g,s.color,s.x+.17,height+.3,s.z-.16,.11,.045,.13,leaf);
+    }
+    hotspots.push({x:s.x,z:s.z,id:s.id,title:s.code+' · '+s.name+' 전시 해설',type:'ingredient',reach:2.15});
+  }
+  text(g,'TOP · T1–T10\n첫인상이 피어나는 곳',-10,3.7,-10.7,3.7);
+  text(g,'MIDDLE · M1–M10\n이야기의 중심이 되는 향',10,3.7,-10.7,3.7);
+  text(g,'LAST · L1–L10 · 오래 남는 여운',0,3.3,11.2,8);
 }
 function shelf(g,x,z,w,rows=5) {
   const height=rows*.76+.4;
@@ -329,7 +370,7 @@ function books(g,content,hotspots) {
   hotspots.push({x:0,z:-5,id:'reading-island',title:'오늘의 추천 도서 · 책 이야기',type:'book'});
   const wall=new T.Group();wall.position.set(r.board.x,0,r.board.z);wall.rotation.y=Math.PI/2;g.add(wall);
   panel(wall,palette.oak,0,1.85,0,3,2.3,.12);panel(wall,'#c7bca4',0,1.85,.08,2.8,2.1,.04);
-  for(let i=0;i<9;i++){const note=panel(wall,['#e8dba9','#c8d5be','#d8c4ce'][i%3],-.86+(i%3)*.86,2.45-Math.floor(i/3)*.62,.12,.64,.47,.015);note.rotation.z=i%2?.04:-.04;}
+  publicBoardSurface(wall,0,1.85,.13,2.8,2.1);
   text(wall,'책갈피 벽 · 한 줄의 마음',0,3.5,.1,3.5);
   hotspots.push({x:r.board.x,z:r.board.z,id:'note-wall',title:'책갈피 벽 · 추천과 한줄 메모',type:'board'});
   const gate=new T.Mesh(new T.TorusGeometry(.85,.06,6,32),mat('#90ab9c',null,.4));gate.position.set(r.portal.x,1.7,r.portal.z);g.add(gate);

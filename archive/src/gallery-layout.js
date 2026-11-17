@@ -1,3 +1,4 @@
+import {MUSEUM_EXHIBITS} from './museum-layout.js';
 // Shared metres for rendering, collision, navigation and authoritative local validation.
 export const GALLERY = {
   lobby: {
@@ -25,7 +26,9 @@ export const GALLERY = {
     notes:{x:-7.6,z:5.4,w:3.3,d:1.5},
     desk:{x:0,z:4.5,w:4.8,d:1.8},
     curator:{x:-9.6,z:1.5},
-    cabinets:[{x:-11,z:-8.9,w:1.9,d:.8},{x:11,z:-8.9,w:1.9,d:.8}]
+    cabinets:[{x:-7.2,z:-8.9,w:1.9,d:.8},{x:7.2,z:-8.9,w:1.9,d:.8}],
+    board:{x:7,z:4.9,w:3.2,d:.4},
+    exhibits:MUSEUM_EXHIBITS
   },
   books: {
     width: 30, depth: 26, height: 6.8,
@@ -43,7 +46,7 @@ export const GALLERY = {
 export const GALLERY_COLLIDERS = {
   lobby:[GALLERY.lobby.fountain,...GALLERY.lobby.benches,GALLERY.lobby.reception,GALLERY.lobby.board,GALLERY.lobby.exhibit],
   salon:[GALLERY.salon.counter,...GALLERY.salon.cases,GALLERY.salon.board,{...GALLERY.salon.barista,w:.6,d:.6}],
-  scents:[...GALLERY.scents.plinths,GALLERY.scents.organ,GALLERY.scents.notes,GALLERY.scents.desk,...GALLERY.scents.cabinets,{...GALLERY.scents.curator,w:.6,d:.6}],
+  scents:[...GALLERY.scents.plinths,GALLERY.scents.organ,GALLERY.scents.notes,GALLERY.scents.desk,...GALLERY.scents.cabinets,{...GALLERY.scents.curator,w:.6,d:.6},GALLERY.scents.board,...MUSEUM_EXHIBITS.map(({x,z,w,d})=>({x,z,w,d}))],
   books:[...GALLERY.books.shelves,GALLERY.books.side,GALLERY.books.board,...GALLERY.books.benches,GALLERY.books.portal,...GALLERY.books.islands,...GALLERY.books.columns,GALLERY.books.readingTable,...GALLERY.books.readingChairs,
     {x:-4,z:0,w:3,d:1.4},{x:4,z:0,w:3,d:1.4},
     {x:-3.9,z:2.1,w:1.4,d:.9},{x:3.9,z:2.1,w:1.4,d:.9},{x:0,z:3,w:2,d:2},{x:0,z:-5,w:5,d:1.2}]

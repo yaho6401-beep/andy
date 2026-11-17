@@ -114,6 +114,6 @@ export class ArchiveWorld {
  for(const o of originals)o.removeFromParent();
  for(const b of buckets.values()){const geometry=mergeGeometries(b.geometries,false);for(const part of b.geometries)part.dispose();if(!geometry)continue;const combined=new T.Mesh(geometry,b.material);combined.castShadow=true;combined.receiveShadow=true;combined.userData.archiveMerged=true;g.add(combined);}
  }
- nearest(x,z){return this.hotspots.map(h=>({...h,distance:Math.hypot(x-h.x,z-h.z)})).filter(h=>h.distance<2.9).sort((a,b)=>a.distance-b.distance)[0];}
+ nearest(x,z){return this.hotspots.map(h=>({...h,distance:Math.hypot(x-h.x,z-h.z)})).filter(h=>h.distance<(h.reach||2.9)).sort((a,b)=>a.distance-b.distance)[0];}
  update(t,viewer){this.camp?.update(t,globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches,viewer);if(this.water&&this.room==='lobby')this.water.material.color.setHSL(.42,.16,.73+Math.sin(t)*.015);}
 }
