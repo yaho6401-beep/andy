@@ -11,8 +11,14 @@ try{
  await page.goto(base+'/archive/?start=scents');await page.waitForFunction(()=>globalThis.ArchiveDiagnostics?.state.artLoaded);await page.locator('[name=nickname]').fill('향기박물관 관람');await page.locator('[name=adult]').check();await page.locator('#entry-form [type=submit]').click();await page.waitForFunction(()=>ArchiveDiagnostics.state.joined&&ArchiveDiagnostics.state.space==='scents');await page.waitForTimeout(900);await shot('museum-entry');
  const visited=[];
  for(const s of MUSEUM_EXHIBITS){
-  await route(s.approach);await page.waitForFunction(id=>ArchiveDiagnostics.state.nearbyExhibit===id,s.id);await expect(page.locator('#museum-guide')).toBeVisible();await expect(page.locator('.museum-guide-head')).toContainText(s.code+' · '+s.name);await expect(page.locator('.museum-guide-body')).toContainText(s.description);
-  if(s.code==='T1'){await shot('T1-bergamot');await shot('T1-bergamot-mobile',true);await page.locator('[data-read-ingredient]').click();await expect(page.locator('#detail-content')).toContainText(s.blending);await page.locator('[data-close=detail]').click();}
+  await route(s.approach);await page.waitForFunction(id=>ArchiveDiagnostics.state.nearbyExhibit===id,s.id);await expect(page.locator('#museum-guide')).toBeVisible();await expect(page.locator('.museum-guide-head b')).toHaveText(s.code);await expect(page.locator('.museum-guide-body')).toContainText(s.blind.description);await expect(page.locator('#museum-guide')).not.toContainText(s.name);await expect(page.locator('#museum-guide')).not.toContainText(s.english);
+  if(s.code==='T1'){
+   await shot('T1-blind');await shot('T1-blind-mobile',true);await page.locator('[data-read-ingredient]').click();await expect(page.locator('#detail-content')).toContainText(s.blind.blending);await expect(page.locator('#detail-content')).not.toContainText(s.name);
+   await page.locator('#detail-content [data-reveal-ingredient]').click();await expect(page.locator('#detail-content')).toContainText(s.name);await expect(page.locator('#detail-content')).toContainText(s.english);await expect(page.locator('#detail-content')).toContainText(s.blending);await page.locator('[data-close=detail]').click();await expect(page.locator('#museum-guide .ingredient-answer')).toContainText(s.name);await shot('T1-revealed');
+  }
+  if(s.code==='T5'){
+   await shot('T5-fruit-blind');await page.setViewportSize({width:390,height:844});await page.waitForTimeout(450);const reveal=page.locator('#museum-guide [data-reveal-ingredient]');await expect(reveal).toBeInViewport();await reveal.click();await expect(page.locator('#museum-guide .ingredient-answer')).toContainText(s.name);await shot('T5-fruit-revealed-mobile');await page.setViewportSize({width:1200,height:800});await page.waitForTimeout(350);
+  }
   if(s.code==='M1'||s.code==='L10')await shot(s.code+'-exhibition');visited.push(s.code);
  }
  expect(await page.locator('#museum-guide').count()).toBe(1);
@@ -23,5 +29,5 @@ try{
  let nextPage=false;if(real.pages>1){await page.locator('[data-public-page="2"]').click();await expect(page.locator('#detail-content .note-pages')).toContainText('2 / '+real.pages);nextPage=true;}
  await shot('real-board-pages');await page.locator('[data-close=detail]').click();
  expect((await state()).corrections).toBe(0);expect(errors).toEqual([]);expect(writes).toEqual([]);
- const result={base,visited,uniqueExhibits:visited.length,fullExhibitionCopy:true,mobileViewport:'390×844',realPublishedPosts:real.total,pagination:nextPage,noProductionWrites:true,oneGuideOnly:true,final:await state(),errors};await writeFile(out+'/browser-result.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));
+ const result={base,visited,uniqueExhibits:visited.length,blindUntilExplicitReveal:true,fullCardAlsoBlind:true,mobileRevealButtonInViewport:true,mobileViewport:'390×844',realPublishedPosts:real.total,pagination:nextPage,noProductionWrites:true,oneGuideOnly:true,final:await state(),errors};await writeFile(out+'/browser-result.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result));
 }catch(error){await page.screenshot({path:out+'/failure.png'});console.log(JSON.stringify({state:await state(),errors,writes,guide:await page.locator('#museum-guide').textContent()}));throw error;}finally{await browser.close();}

@@ -1,3 +1,4 @@
+import {BLIND_COPY} from './blind-exhibit-copy.js';
 // Sensory exhibition copy written for Books & Scents, not supplier formula claims.
 const rows=[
  ['T1','버가못','Bergamot','쌉쌀한 껍질, 가벼운 햇살','감귤 껍질을 살짝 비볐을 때처럼 산뜻하면서도 은근히 쌉쌀한 인상이에요. 달콤함만 앞세우기보다 초록빛과 가벼운 차의 분위기가 함께 떠오릅니다.','향의 첫 장면을 밝게 열고, 꽃이나 나무의 무게를 가볍게 정리하는 느낌으로 만나보세요.','햇살이 스며드는 아침, 새 노트의 첫 페이지',['M7','L5']],
@@ -31,4 +32,4 @@ const rows=[
  ['L9','베이비 파우더','Baby Powder','보송보송한 부드러운 마무리','고운 파우더를 떠올리는 보송한 결이 중심인 인상이에요. 시원한 초록이나 물의 장면과 비교하면 부드럽고 아늑한 잔향의 방향을 느껴보기 좋습니다.','수수한 꽃을 곁에 두고 꽃잎의 부드러움과 파우더의 보송함을 구별해보세요.','폭신한 담요, 마음이 느긋해지는 작은 쉼',['M2','M1']],
  ['L10','밤부','Bamboo','맑고 가벼운 초록빛 여운','곧게 뻗은 대나무와 바람이 통하는 초록 공간을 연상시키는 인상이에요. 무거운 나무 향보다 맑고 가벼운 여백을 떠올리며 만나보세요.','촉촉한 과일이나 물의 분위기와 함께 두고 싱그러움이 어떻게 이어지는지 살펴보세요.','그늘진 대나무 길, 바람이 지나는 오후',['T7','M5']]
 ];
-export const INGREDIENTS=rows.map(([code,name,english,character,description,blending,memory,pairs])=>({id:`single-${{T:'top',M:'middle',L:'base'}[code[0]]}-${code.slice(1)}`,code,name,english,character,description,blending,memory,pairs,note:{T:'top',M:'middle',L:'base'}[code[0]],zone:{T:'TOP · 첫인상',M:'MIDDLE · 중심',L:'LAST · 여운'}[code[0]],color:{T:'#b5bd91',M:'#c4a4b5',L:'#bda782'}[code[0]],source:'책과향기 전시 해설'}));
+export const INGREDIENTS=rows.map(([code,name,english,character,description,blending,memory,pairs])=>({id:`single-${{T:'top',M:'middle',L:'base'}[code[0]]}-${code.slice(1)}`,code,name,english,character,description,blending,memory,pairs,blind:{description:BLIND_COPY[code][0],blending:BLIND_COPY[code][1],memory:BLIND_COPY[code][2]},note:{T:'top',M:'middle',L:'base'}[code[0]],zone:{T:'TOP · 첫인상',M:'MIDDLE · 중심',L:'LAST · 여운'}[code[0]],color:{T:'#b5bd91',M:'#c4a4b5',L:'#bda782'}[code[0]],source:'책과향기 전시 해설'}));

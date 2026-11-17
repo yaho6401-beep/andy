@@ -2,6 +2,7 @@ import * as T from 'three';
 import {GALLERY} from './gallery-layout.js';
 import {SEATS,CAFE_TABLES} from './seats.js';
 import {INGREDIENTS} from './scent-exhibits.js';
+import {createIngredientObject} from './ingredient-objects.js';
 import {publicBoardSurface} from './board-art.js';
 const cache = new Map();
 const cube = new T.BoxGeometry(1,1,1);
@@ -271,7 +272,7 @@ function scents(g,content,hotspots) {
 function exhibitAtlas(){
   if(cache.has('ingredientAtlas'))return cache.get('ingredientAtlas');
   const canvas=document.createElement('canvas');canvas.width=canvas.height=1024;const c=canvas.getContext('2d');
-  INGREDIENTS.forEach((s,i)=>{const x=(i%4)*256,y=Math.floor(i/4)*128;c.fillStyle='#f0eadf';c.fillRect(x,y,256,128);c.fillStyle='#a58a5e';c.fillRect(x+18,y+15,26,3);c.textAlign='center';c.fillStyle='#4d5446';c.font='500 24px Malgun Gothic,sans-serif';c.fillText(s.code,x+128,y+38);c.font='500 25px Malgun Gothic,sans-serif';c.fillText(s.name,x+128,y+77,240);c.fillStyle='#8b887a';c.font='15px Georgia,sans-serif';c.fillText(s.english,x+128,y+109,235);});
+  INGREDIENTS.forEach((s,i)=>{const x=(i%4)*256,y=Math.floor(i/4)*128;c.fillStyle='#f0eadf';c.fillRect(x,y,256,128);c.fillStyle='#a58a5e';c.fillRect(x+108,y+22,40,2);c.textAlign='center';c.fillStyle='#4d5446';c.font='500 44px Georgia,sans-serif';c.fillText(s.code,x+128,y+85);});
   const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;
   const material=new T.MeshBasicMaterial({map:texture});material.userData.galleryShared=true;cache.set('ingredientAtlas',material);return material;
 }
@@ -282,22 +283,11 @@ function ingredientGallery(g,exhibits,hotspots){
     panel(g,palette.stone,s.x,.1,s.z,s.w,.2,s.d);
     panel(g,palette.ivory,s.x,height/2+.15,s.z,s.w-.12,height,s.d-.12);
     panel(g,s.color,s.x,height+.18,s.z,s.w+.03,.045,s.d+.03);
-    bottle(g,s.x,height+.22,s.z,s.color,i,.82);
+    const study=createIngredientObject(s.code);study.position.set(s.x,height+.21,s.z);study.rotation.y=(i%3-1)*.18;g.add(study);
     const plaque=new T.PlaneGeometry(1.45,.725),uv=plaque.getAttribute('uv'),col=i%4,row=Math.floor(i/4);
     for(let j=0;j<uv.count;j++)uv.setXY(j,(col+uv.getX(j))/4,1-(row+1-uv.getY(j))/8);
     const card=new T.Mesh(plaque,labels);card.position.set(s.x,.72,s.z+s.d/2+.04);g.add(card);
-    // Original little botanical study objects accompany each numbered bottle.
-    if(s.note==='top'){
-      solid(g,s.color,s.x+.26,height+.31,s.z-.22,.14,.13,.14,leaf);
-      const sprig=solid(g,palette.green,s.x+.31,height+.43,s.z-.22,.055,.13,.04,leaf);sprig.rotation.z=-.7;
-    }else if(s.note==='middle'){
-      for(let j=0;j<5;j++){const a=j*Math.PI*2/5;solid(g,s.color,s.x+.28+Math.sin(a)*.08,height+.28,s.z-.2+Math.cos(a)*.08,.08,.035,.08,leaf);}
-      solid(g,palette.brass,s.x+.28,height+.3,s.z-.2,.035,.025,.035,leaf);
-    }else{
-      const study=solid(g,palette.oak,s.x+.26,height+.29,s.z-.2,.06,.34,.06,cylinder);study.rotation.z=1.1;
-      solid(g,s.color,s.x+.17,height+.3,s.z-.16,.11,.045,.13,leaf);
-    }
-    hotspots.push({x:s.x,z:s.z,id:s.id,title:s.code+' · '+s.name+' 전시 해설',type:'ingredient',reach:2.15});
+    hotspots.push({x:s.x,z:s.z,id:s.id,title:s.code+' · 어떤 향일까요?',type:'ingredient',reach:2.15});
   }
   text(g,'TOP · T1–T10\n첫인상이 피어나는 곳',-10,3.7,-10.7,3.7);
   text(g,'MIDDLE · M1–M10\n이야기의 중심이 되는 향',10,3.7,-10.7,3.7);
