@@ -1,6 +1,8 @@
 import {appearance,clean,COLORS,HAIR} from './protocol.js';
 import {readRecord,readStored,writeStored} from './client-state.js';
 export const IDENTITY_KEY='books-scents-identity-v1';
+// JSONB/network objects need not preserve property order.
+export function appearanceKey(value){return JSON.stringify(appearance(value));}
 const adjectives=['햇살','달빛','별빛','포근한','다정한','산뜻한','느긋한','반짝이는'];
 const friends=['너구리','토끼','여우','독서가','조향사','고양이','산책가','여행자'];
 let memory;
