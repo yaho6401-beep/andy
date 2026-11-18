@@ -8,7 +8,6 @@ export const GALLERY = {
     reception:{x:-9,z:-8,w:5,d:1.4},
     board:{x:-9,z:8,w:3.2,d:.45},
     exhibit:{x:8.5,z:-8,w:4,d:1.4},
-    campGate:{x:9,z:8.4},
     doors:[{x:0,z:12.9,label:'햇살 정원',yaw:Math.PI},{x:-13.9,z:0,label:'향기 아카이브',yaw:Math.PI/2},{x:13.9,z:0,label:'책의 정원',yaw:-Math.PI/2},{x:0,z:-12.9,label:'향기카페',yaw:0}]
   },
   salon: {

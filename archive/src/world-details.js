@@ -1,3 +1,4 @@
+import {GARDEN} from './garden-layout.js';
 // All decorations sit on existing furniture, walls or planting beds.
 // They are baked with the room, so no additional per-frame object work is needed.
 export function furnishDetails(g,room,{mesh,round,label,box,cylinder,sphere,tableData}){
@@ -6,12 +7,12 @@ export function furnishDetails(g,room,{mesh,round,label,box,cylinder,sphere,tabl
   // An airy pergola, stone edging and alternating leaves around the sunny path.
   for(const x of [-2.85,2.85]){round(g,wood,x,3.5,-7.6,.13,.2,1.55,.03);for(let j=0;j<5;j++)round(g,'#c4ad85',x-1.25+j*.62,3.65,-7.5,.1,.15,1.3,.02);}
   for(const x of [-1.45,1.45])for(let z=-6.5;z<7;z+=.64)mesh(g,box,'#cfbf9d',x,.06,z,.11,.08,.5);
-  for(const x of [-4.8,4.8]){
+  for(const {x,z} of GARDEN.trees){
    // Trunk rings, tiny pebbles and flowering shrubs within the tree beds.
-   for(let j=0;j<9;j++){const a=j*2.4,r=.82;mesh(g,sphere,j%2?'#b1b99c':'#d6ccad',x+Math.sin(a)*r,.16,-3+Math.cos(a)*r,.14,.08,.1);}
-   for(const z of [-5.2,.3,5.7])for(const dx of [-.9,.95])mesh(g,sphere,'#8da976',x+dx,.34,z,.3,.23,.26);
-   for(const dx of [-.65,.65])round(g,'#b69571',x+dx,.61,3,.07,.02,.72,.01);
+   for(let j=0;j<9;j++){const a=j*2.4,r=.82;mesh(g,sphere,j%2?'#b1b99c':'#d6ccad',x+Math.sin(a)*r,.16,z+Math.cos(a)*r,.14,.08,.1);}
   }
+  for(const {x,z} of GARDEN.beds)for(const dx of [-.9,.95])mesh(g,sphere,'#8da976',x+dx,.34,z,.3,.23,.26);
+  for(const {x,z} of GARDEN.benches)for(const dx of [-.65,.65])round(g,'#b69571',x+dx,.61,z,.07,.02,.72,.01);
   label(g,'A MOMENT IN THE SUN',0,.13,4.9,2.3,ink,32).rotation.x=-Math.PI/2;
   return;
  }

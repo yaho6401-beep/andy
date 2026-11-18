@@ -165,9 +165,6 @@ function lobby(g,content,hotspots) {
     solid(g,palette.stone,x,3.35,-4.5,.24,6.7,.24,cylinder);
     solid(g,palette.brass,x,.1,-4.5,.34,.2,.34,cylinder,null,.3);
   }
-  gateway(g,r.campGate.x,r.campGate.z,'별빛 캠핑장 · CAMPFIRE',-.3,true);
-  // A small planted frame suggests the forest awaiting beyond the camp entrance.
-  for(const x of [r.campGate.x-2.1,r.campGate.x+2.1])foliage(g,x,r.campGate.z);
 }
 function cafeChair(g,seat) {
   const chair=new T.Group();chair.position.set(seat.x,0,seat.z);chair.rotation.y=seat.yaw;g.add(chair);

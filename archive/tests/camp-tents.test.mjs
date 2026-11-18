@@ -10,7 +10,8 @@ test('expanded coast is walkable beyond old bounds and all shared destinations s
  assert.deepEqual(ROOM_BOUNDS.camp,CAMP.bounds);
  for(const [x,z] of [[12,5],[-12,5],[0,-11.5],[13,-8]])assert.ok(campPosition(x,z));
  assert.ok(!campPosition(CAMP.bounds.x,0));assert.ok(!campPosition(0,-CAMP.bounds.z));
- assert.deepEqual(PORTALS.lobby.find(p=>p.to==='camp').spawn,CAMP.spawn);
+ const spawn=PORTALS.garden.find(p=>p.to==='camp').spawn;
+ assert.deepEqual({x:spawn.x,z:spawn.z},CAMP.spawn);assert.equal(spawn.yaw,Math.PI);
  route(CAMP.spawn,CAMP.gate);
 });
 test('both tents admit a real walk through the opening and block side, back and front-wing shortcuts',()=>{

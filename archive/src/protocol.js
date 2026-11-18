@@ -1,24 +1,25 @@
 import {CAFE_TABLES,SEATS} from './seats.js';
 import {GALLERY,GALLERY_COLLIDERS} from './gallery-layout.js';
+import {GARDEN,GARDEN_COLLIDERS} from './garden-layout.js';
 import {CAMP,CAMP_OBSTACLES,campPosition} from '../camp/layout.js';
 export const MAX_PEOPLE=20,POSITION_HZ=2,SPEED=3.2;
 export const ROOMS=['garden','lobby','scents','books','salon','camp'];
 export const COLORS=['#b7c6a1','#d5a5b8','#a9becb','#c2aed4','#d7bf8c'];
 export const HAIR=['#554239','#97704e','#302d32','#a78069','#8b697e'];
 export const PORTALS={
- garden:[{to:'lobby',x:0,z:-7.2,label:'아트리움 로비',spawn:{x:0,z:11}}],
+ garden:[{to:'lobby',x:0,z:-7.2,label:'아트리움 로비',spawn:{x:0,z:11}},
+ {to:'camp',...GARDEN.campGate,label:'별빛 캠핑장',spawn:{...CAMP.spawn,yaw:Math.PI}}],
  lobby:[{to:'garden',x:0,z:12.9,label:'햇살 정원',spawn:{x:0,z:-6.4}},
  {to:'scents',x:-13.9,z:0,label:'향기 아카이브',spawn:{x:12,z:0}},
  {to:'books',x:13.9,z:0,label:'책의 정원',spawn:{x:-13,z:0}},
- {to:'salon',x:0,z:-12.9,label:'향기카페',spawn:{x:0,z:11}},
- {to:'camp',...GALLERY.lobby.campGate,label:'별빛 캠핑장',spawn:{...CAMP.spawn}}],
+ {to:'salon',x:0,z:-12.9,label:'향기카페',spawn:{x:0,z:11}}],
  scents:[{to:'lobby',x:13.2,z:0,label:'아트리움 로비',spawn:{x:-12,z:0}}],
  books:[{to:'lobby',x:-14.2,z:0,label:'아트리움 로비',spawn:{x:12,z:0}}],
  salon:[{to:'lobby',x:0,z:12.9,label:'아트리움 로비',spawn:{x:0,z:-11}}],
- camp:[{to:'lobby',...CAMP.gate,label:'아트리움 로비',spawn:{x:9,z:5.5}}]
+ camp:[{to:'garden',...CAMP.gate,yaw:Math.PI,label:'햇살 정원',spawn:{...GARDEN.campReturn}}]
 };
 export const LAYOUT={
- garden:[{x:-4.8,z:-3,w:2.6,d:3},{x:4.8,z:-3,w:2.6,d:3},{x:-4.8,z:3,w:2.4,d:1.3},{x:4.8,z:3,w:2.4,d:1.3}],
+ garden:GARDEN_COLLIDERS,
  ...GALLERY_COLLIDERS,
  salon:[...GALLERY_COLLIDERS.salon,...CAFE_TABLES.map(t=>({x:t.x,z:t.z,w:t.w,d:t.d})),...SEATS.filter(s=>s.room==='salon').map(s=>({x:s.x,z:s.z,w:.6,d:.6}))],
  camp:CAMP_OBSTACLES.map(o=>({...o,w:o.w||o.r*2,d:o.d||o.r*2}))
