@@ -5,7 +5,7 @@ await context.addInitScript(()=>{try{localStorage.setItem('books-scents-analytic
 page.on('pageerror',e=>errors.push(e.stack||e.message));page.on('request',r=>{if(!['GET','HEAD','OPTIONS'].includes(r.method())&&/\/api\/|\/functions\/v1\//.test(r.url())&&!/\/api\/production-disabled\/|\/feedback-wall\/visit(?:\?|$)/.test(r.url()))writes.push({method:r.method(),url:r.url()});});
 async function choose(p,code){await p.locator('.scent-choice').filter({has:p.locator('input[value="'+code+'"]')}).click();}
 async function fillRecipe(p){for(const code of ['T1','M1','L5'])await choose(p,code);await p.locator('#drops-T1').fill('25');await p.locator('#drops-M1').fill('25');await p.locator('#drops-L5').fill('20');}
-async function shot(name,fullPage=false){await page.screenshot({path:out+'/'+name+'.png',fullPage});}
+async function shot(name,fullPage=false){if(fullPage)await page.locator('input:focus').evaluateAll(inputs=>inputs.forEach(input=>input.blur()));await page.screenshot({path:out+'/'+name+'.png',fullPage});}
 try{
  await page.goto(base+'/workshop/');await expect(page.locator('.scent-choice')).toHaveCount(30);await expect(page.locator('#blend-button')).toBeDisabled();
  for(const code of ['T1','T2','T3','T4','T5','T6','T7','T8','T9'])await choose(page,code);await expect(page.locator('#selected-count')).toHaveText('8 / 8개');await expect(page.locator('input[value=T9]')).not.toBeChecked();await expect(page.locator('#selection-status')).toContainText('최대 8개');
