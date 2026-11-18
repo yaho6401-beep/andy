@@ -10,6 +10,14 @@ import {validPosition,MAX_PEOPLE} from '../src/protocol.js';
 import {randomIdentity,identityValue,moveRelativeToCamera} from '../src/identity.js';
 import {CAMP_SEATS} from '../camp/layout.js';
 import {FIRE} from '../camp/fire-state.js';
+import {readFileSync} from 'node:fs';
+import vm from 'node:vm';
+test('public engagement translations execute and retain the existing catalog in all three languages',()=>{
+ const context={ScentLocaleData:{}};
+ new vm.Script(readFileSync(new URL('../../i18n-engagement.js',import.meta.url),'utf8')).runInNewContext(context);
+ assert.ok(Object.keys(context.ScentLocaleData).length>30);
+ for(const key of ['별빛캠핑장 바로가기','바로 입장 · 프로필은 나중에'])for(const language of ['en','zh','ja'])assert.ok(context.ScentLocaleData[key][language]);
+});
 test('public auto-entry is guest-only and never substitutes for approved adult meetings',()=>{
  const s=new ArchiveStore({publicLounge:true});s.seed('visitor','산책자','guest',{publicVisitor:true,adultConfirmed:false});s.join('visitor');
  assert.throws(()=>s.action('visitor',{type:'like',target:'host',consent:true}),/성인|승인/);
