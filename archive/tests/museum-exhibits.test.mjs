@@ -5,9 +5,9 @@ import * as T from 'three';import {createIngredientObject,INGREDIENT_OBJECT_CODE
 import {ingredientPhotoHTML} from '../src/ingredient-photos.js';
 const catalog=JSON.parse(readFileSync(new URL('../../data/fragrance-catalog.json',import.meta.url),'utf8'));
 test('photo atlas cells match all 30 codes and preserve the blind identity boundary',()=>{
- for(const s of INGREDIENTS){const h=ingredientPhotoHTML(s);assert.ok(h.includes('AI 연출 이미지'));assert.ok(!h.includes(s.name));assert.ok(!h.includes(s.english));assert.ok(ingredientPhotoHTML(s,true,true).includes(s.name));assert.ok(s.code==='T1'?h.includes('t1-soft-v2.jpg')&&h.includes('background-size:cover'):h.includes('background-position:'+((Number(s.code.slice(1))-1)%5)*25+'%'));}
+ for(const s of INGREDIENTS){const h=ingredientPhotoHTML(s);assert.ok(h.includes('AI 연출 이미지'));assert.ok(!h.includes(s.name));assert.ok(!h.includes(s.english));assert.ok(ingredientPhotoHTML(s,true,true).includes(s.name));assert.ok(s.code==='T1'?h.includes('t1-natural-v3.jpg')&&h.includes('background-size:cover'):h.includes('background-position:'+((Number(s.code.slice(1))-1)%5)*25+'%'));}
  for(const zone of ['top','middle','base'])assert.ok(readFileSync(new URL('../../assets/ingredient-photos/'+zone+'-materials.jpg',import.meta.url)).length>10000);
- assert.ok(readFileSync(new URL('../../assets/ingredient-photos/t1-soft-v2.jpg',import.meta.url)).length>10000);
+ assert.ok(readFileSync(new URL('../../assets/ingredient-photos/t1-natural-v3.jpg',import.meta.url)).length>10000);
  assert.equal(ingredientPhotoHTML({code:'T11'}),'');
 });
 test('30 museum notes match every original store ID and keep T/M/L numbering',()=>{
