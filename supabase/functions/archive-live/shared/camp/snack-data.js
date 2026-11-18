@@ -11,3 +11,5 @@ export const HARVESTS=[
  {id:'sweet-south',kind:'sweetpotato',x:1.3,z:11.9}
 ];
 export const PACK_LIMIT=3,HARVEST_PAUSE=300000,SERVICE_PAUSE=60000,PACK_TTL=7200000;
+export const SHARE_TTL=600000;
+export function biteLine(kind){return kind==='marshmallow'?'말랑한 한입, 마음까지 달달해진다…':'호호, 한입. 속까지 따뜻해진다…';}
