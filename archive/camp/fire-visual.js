@@ -31,6 +31,6 @@ export function createFireVisual(parent){
    if(branch.visible){const t=Math.max(0,age/(FIRE.flightMs/1000)),ease=t;branch.position.set(throwEvent.x*(1-ease),.95*(1-t)+.25*t+Math.sin(Math.PI*t)*1.25,throwEvent.z*(1-ease));branch.rotation.set(t*3.5,age*2,.3+t*2);}
    sparks.visible=!reduced;for(let i=0;i<48;i++){const life=(time*(.24+(i%5)*.025)+i*.618)%1,a=i*2.39996+Math.sin(time+i)*.2,r=(.12+life*.4)*(burst?.9:1);sparkPositions[i*3]=Math.sin(a)*r;sparkPositions[i*3+1]=.4+life*(1.05+heat+burst*.8);sparkPositions[i*3+2]=Math.cos(a)*r;if(i>12+Math.floor(heat*16+burst*18))sparkPositions[i*3+1]=-10;}sparkGeo.attributes.position.needsUpdate=true;sparks.material.opacity=.25+heat*.25+burst*.2;
   },
-  dispose(){disposed=true;root.removeFromParent();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
+  dispose(){disposed=true;root.removeFromParent();coals.dispose();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
  };
 }
