@@ -1,6 +1,11 @@
 (function(g){
   const rows=`
 책과향기|Books & Scents|书与香气|本と香り
+나는 조향사!|I’m a perfumer!|我是调香师！|私は調香師！
+직접 조향하기|Blend your own fragrance|亲手调香|自分で調香する
+공방에서도, 출강에서도|At the atelier or in class|工坊体验与外出课程均可使用|アトリエでも出張レッスンでも
+향 선택 · 방울 수 입력 · 나의 조향 기록|Choose scents · Add drops · Save your recipe|选择香气 · 输入滴数 · 保存配方|香りを選ぶ・滴数を入力・レシピを保存
+조향 시작하기|Start blending|开始调香|調香を始める
 책과향기 · 향을 입다|Books & Scents · Wear Your Story|书与香气 · 为故事赋香|本と香り · 物語を香りに
 언어 선택|Language|语言|言語
 누적 조회|All-time views|累计浏览|累計閲覧
