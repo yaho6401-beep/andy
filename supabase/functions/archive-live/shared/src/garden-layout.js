@@ -5,9 +5,11 @@ export const GARDEN={
  trees:[{x:-4.8,z:-3},{x:3.8,z:-3}],
  benches:[{x:-4.8,z:3},{x:4.8,z:3}],
  beds:[...[-5.2,.3,5.7].map(z=>({x:-4.8,z})),...[-5.2,.3].map(z=>({x:3.2,z})),{x:4.8,z:5.7}],
+ wayfinder:{x:2.7,z:4.8,w:3,d:.35},
  trail:{x:5.6,junctionZ:1.5}
 };
 export const GARDEN_COLLIDERS=[
+ GARDEN.wayfinder,
  ...GARDEN.trees.map(t=>({...t,w:2.6,d:3})),
  ...GARDEN.benches.map(b=>({...b,w:2.4,d:1.3}))
 ];

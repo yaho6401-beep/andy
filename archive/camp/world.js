@@ -1,10 +1,11 @@
 import * as T from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {CAMP,CAMP_SEATS,tentAt,tentTable} from './layout.js';
+import {createFireVisual} from './fire-visual.js';
 
 // Expanded from the original camp scene in afd9cef. One scene, no extra renderer.
 export function createCamp(scene){
- const root=new T.Group(),materials=new Map(),geometries=[],flames=[],waves=[],cloth=[];
+ const root=new T.Group(),materials=new Map(),geometries=[],waves=[],cloth=[];
  scene.add(root);
  const mat=(color,glow=false)=>{
   const key=color+glow;
@@ -115,7 +116,7 @@ export function createCamp(scene){
   const log=add(cylinder,'#a58065',s.x,.43,s.z,.33,1.25,.33);log.rotation.z=Math.PI/2;log.rotation.y=s.yaw;
   for(const side of [-1,1])add(cylinder,'#d7b796',s.x+Math.cos(s.yaw)*side*.63,.43,s.z-Math.sin(s.yaw)*side*.63,.28,.03,.28).quaternion.copy(log.quaternion);
  }
- for(let i=0;i<3;i++){const f=add(sphere,['#f9b969','#ffe2a1','#f0a16a'][i],(i-1)*.2,.65,0,.3,.62-i*.1,.3,true);f.userData.base=f.scale.y;flames.push(f);}
+
 
  const b=CAMP.board;
  panel('#aa8d71',b.x,1.6,b.z,b.w+.2,1.8,.14);panel('#4e6f6c',b.x,1.6,b.z+.1,b.w,1.6,.06);
@@ -137,22 +138,24 @@ export function createCamp(scene){
  // Merge flat-color furniture; only cloth, flame, stars and water stay dynamic.
  root.updateMatrixWorld(true);const buckets=new Map(),originals=[];
  root.traverse(o=>{
-  if(!o.isMesh||o.material.map||flames.includes(o)||waves.includes(o)||cloth.some(c=>c.mesh===o||c.wallMesh===o))return;
+  if(!o.isMesh||o.material.map||waves.includes(o)||cloth.some(c=>c.mesh===o||c.wallMesh===o))return;
   const part=(o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone()).applyMatrix4(o.matrixWorld);part.deleteAttribute('uv');
   const key=o.material.uuid;if(!buckets.has(key))buckets.set(key,{mat:o.material,parts:[]});buckets.get(key).parts.push(part);originals.push(o);
  });
  originals.forEach(o=>o.removeFromParent());
  for(const bucket of buckets.values()){const geo=mergeGeometries(bucket.parts,false);bucket.parts.forEach(g=>g.dispose());if(!geo)throw Error('Camp geometry merge failed');root.add(new T.Mesh(geo,bucket.mat));}
- const glow=new T.PointLight('#ffb66d',5,6,2);glow.position.set(0,1.1,0);root.add(glow);
+ const fire=createFireVisual(root);
  let previous=0;
  return {
+  setFireState:value=>fire.setState(value),
+  get fireDiagnostics(){return fire.diagnostics;},
   get cutaway(){return cloth.map(c=>({id:c.tent.id,opacity:c.mesh.material.opacity,wallOpacity:c.wallMesh.material.opacity}));},
   setQuote(text){ctx.clearRect(0,0,512,256);ctx.fillStyle='#f8ead1';ctx.textAlign='center';ctx.font='24px sans-serif';ctx.fillText('오늘의 한 문장',256,60);ctx.font='18px sans-serif';const chars=[...text];ctx.fillText(chars.slice(0,23).join(''),256,115);ctx.fillText(chars.slice(23,46).join('')+(chars.length>46?'…':''),256,148);ctx.font='14px sans-serif';ctx.fillText('가까이에서 칠판 살펴보기',256,205);quoteTex.needsUpdate=true;},
   update(time,reduced=false,viewer){
    const dt=previous?Math.min(.05,Math.max(0,time-previous)):.05;previous=time;
-   for(let i=0;i<flames.length;i++)flames[i].scale.y=flames[i].userData.base*(reduced?1:1+Math.sin(time*3.5+i*2)*.1);
+   fire.update(time,reduced);
    for(let i=0;i<waves.length;i++)waves[i].position.x=waves[i].userData.baseX+(reduced?0:Math.sin(time*.45+i)*.18);
-   glow.intensity=reduced?5:5+Math.sin(time*4)*.3;
+
    const near=viewer?tentAt(viewer.x,viewer.z,1.15):null;
    const inside=viewer?tentAt(viewer.x,viewer.z):null;
    for(const c of cloth){
@@ -160,6 +163,6 @@ export function createCamp(scene){
     c.sign.visible=inside?.id!==c.tent.id;
    }
   },
-  dispose(){const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
+  dispose(){fire.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
  };
 }

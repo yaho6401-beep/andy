@@ -3,6 +3,7 @@ import {furnishDetails} from './world-details.js';
 import {buildGallery} from './gallery-world.js';
 import {createCamp} from '../camp/world.js';
 import {CAMP} from '../camp/layout.js';
+import {campSign} from '../camp/signage.js';
 import {GALLERY} from './gallery-layout.js';
 import {GARDEN} from './garden-layout.js';
 import {CAFE_TABLES,SEATS} from './seats.js';
@@ -28,7 +29,7 @@ function archWindow(p,x,z,color){round(p,'#e6d9c3',x,2.15,z,2.1,3.1,.2,.35);roun
 
 function flowers(p,x,z,color='#dc99ae',n=7){for(let i=0;i<n;i++){const a=i*2.4,xx=x+Math.sin(a)*.36,zz=z+Math.cos(a)*.3;mesh(p,cylinder,'#829e70',xx,.28,zz,.018,.5,.018);for(let j=0;j<5;j++){const q=j*Math.PI/2.5;mesh(p,sphere,color,xx+Math.sin(q)*.07,.57,zz+Math.cos(q)*.07,.065,.035,.065);}mesh(p,sphere,'#e4bf70',xx,.59,zz,.035);}}
 function tree(p,x,z){const model=artObject('tree');if(model){model.position.set(x,0,z);model.scale.setScalar(.9);p.add(model);return;}mesh(p,cylinder,'#b79469',x,1.1,z,.15,2.2,.15);for(const [dx,dy,dz,r]of [[0,2.7,0,1.1],[-.6,2.3,.15,.75],[.6,2.4,-.1,.8]])mesh(p,sphere,'#a8c589',x+dx,dy,z+dz,r,r*.9,r);mesh(p,cylinder,'#c2b495',x,.15,z,1.15,.25,1.15);}
-function portalFrame(p,gate,outdoor=false){const g=new T.Group();g.position.set(gate.x,0,gate.z);if(Number.isFinite(gate.yaw))g.rotation.y=gate.yaw;else if(gate.x)g.rotation.y=gate.x>0?-Math.PI/2:Math.PI/2;else if(gate.z>0)g.rotation.y=Math.PI;p.add(g);const forest=outdoor&&gate.to!=='lobby',c=forest?'#a58b69':outdoor?'#d2b284':'#c7b493';for(const side of [-1,1])round(g,c,side*1.23,1.4,0,.23,2.8,.35,.05);round(g,c,0,2.86,0,2.65,.23,.35,.08);round(g,'#faf2df',0,3.18,0,3.2,.5,.18,.08);label(g,gate.label,0,3.2,.12,3,'#6b6e56',48);if(forest)label(g,gate.label,0,3.2,-.12,3,'#6b6e56',48).rotation.y=Math.PI;rug(g,0,-.3,2.05,1.9,outdoor?'#d8c49a':'#c2c7af');if(!forest)for(const side of [-1,1]){const pane=round(g,outdoor?'#dce6dc':'#d9cbb5',side*1.45,1.32,.18,.42,2.4,.14,.05);pane.rotation.y=side*.5;mesh(g,sphere,'#b99859',side*1.3,1.2,.33,.045);}label(g,forest?'숲길 따라 걷기':'걸어서 들어가기',0,.17,1.1,2.3,'#8b9578',44).rotation.x=-Math.PI/2;}
+function portalFrame(p,gate,outdoor=false){const g=new T.Group();g.position.set(gate.x,0,gate.z);if(Number.isFinite(gate.yaw))g.rotation.y=gate.yaw;else if(gate.x)g.rotation.y=gate.x>0?-Math.PI/2:Math.PI/2;else if(gate.z>0)g.rotation.y=Math.PI;p.add(g);const forest=outdoor&&gate.to!=='lobby',c=forest?'#a58b69':outdoor?'#d2b284':'#c7b493';for(const side of [-1,1])round(g,c,side*1.23,1.4,0,.23,2.8,.35,.05);round(g,c,0,2.86,0,2.65,.23,.35,.08);if(forest){round(g,'#6a7658',0,3.45,0,4.1,1.35,.23,.1);campSign(g,{title:gate.label,subtitle:gate.to==='camp'?'??? ? ?? ? ?? ?':'?? ???? ????',width:3.96,height:1.2,y:3.45,z:.14});campSign(g,{title:gate.label,subtitle:gate.to==='camp'?'??? ? ?? ? ?? ?':'?? ???? ????',width:3.96,height:1.2,y:3.45,z:-.14,back:true});}else{round(g,'#faf2df',0,3.18,0,3.2,.5,.18,.08);label(g,gate.label,0,3.2,.12,3,'#6b6e56',48);}rug(g,0,-.3,2.05,1.9,outdoor?'#d8c49a':'#c2c7af');if(!forest)for(const side of [-1,1]){const pane=round(g,outdoor?'#dce6dc':'#d9cbb5',side*1.45,1.32,.18,.42,2.4,.14,.05);pane.rotation.y=side*.5;mesh(g,sphere,'#b99859',side*1.3,1.2,.33,.045);}label(g,forest?'숲길 따라 걷기':'걸어서 들어가기',0,.17,1.1,2.3,'#8b9578',44).rotation.x=-Math.PI/2;}
 
 export class ArchiveWorld {
  constructor(scene){this.scene=scene;this.group=new T.Group();scene.add(this.group);this.hotspots=[];this.room=null;this.water=null;}
@@ -37,6 +38,7 @@ export class ArchiveWorld {
  if(room==='camp'){
   this.camp=createCamp(g);this.camp.setQuote('오늘의 이야기를 모닥불 곁에 잠시 내려놓아요.');
   portalFrame(g,PORTALS.camp[0],true);
+  this.hotspots.push({x:0,z:0,id:'campfire',title:'모닥불 가까이 · 불멍하기',type:'campfire',reach:5.5});
   this.hotspots.push({x:CAMP.board.x,z:CAMP.board.z+.8,id:'camp-sentence',title:'모닥불 곁 · 오늘의 한 문장',type:'camp-story'},{x:CAMP.bookshelf.x,z:CAMP.bookshelf.z+.5,id:'camp-books',title:'별빛 책장 · 책 이야기',type:'book'});
   this.hotspots.push(...CAMP.tents.map(t=>({x:t.x,z:t.z+1,id:'tent-'+t.id,title:t.name+' · 책과 문장',type:'book'})));
   this.colliders=LAYOUT.camp;return this.hotspots;
@@ -50,6 +52,9 @@ export class ArchiveWorld {
   for(const b of GARDEN.benches)bench(g,b.x,b.z,'#d7b68e');
   for(const b of GARDEN.beds){round(g,'#eee3c6',b.x,.16,b.z,2.6,.3,1.1,.12);flowers(g,b.x-.6,b.z,'#d99db2');flowers(g,b.x+.5,b.z,'#b5a1d4');}
   // A northbound garden trail meets the campground's south entrance.
+  const sign=GARDEN.wayfinder,signGroup=new T.Group();signGroup.position.set(sign.x,0,sign.z);g.add(signGroup);
+  for(const x of [-1.22,1.22])round(signGroup,'#927959',x,.96,0,.12,1.92,.18,.035);
+  round(signGroup,'#627255',0,1.93,0,3.12,1.2,.24,.1);campSign(signGroup,{width:3,height:1.05,y:1.93,z:.15,subtitle:'오른편 숲길로, 잠시 쉬어가요',direction:true});
   const trail=GARDEN.trail;
   rug(g,trail.x/2,trail.junctionZ,trail.x+1.2,1.1,'#e5d4ae');
   rug(g,trail.x,(trail.junctionZ+GARDEN.campGate.z)/2,1.25,trail.junctionZ-GARDEN.campGate.z,'#e5d4ae');
