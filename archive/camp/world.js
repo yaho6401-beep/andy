@@ -111,7 +111,7 @@ export function createCamp(scene){
 
  // Existing six fire-circle seats keep their IDs and positions.
  for(let i=0;i<12;i++){const a=i*Math.PI/6;add(sphere,'#8a9094',Math.sin(a)*.95,.22,Math.cos(a)*.95,.27,.2,.23);}
- for(let i=0;i<3;i++){const log=add(cylinder,'#8d6c58',0,.22+i*.04,0,.16,1.6,.16);log.rotation.z=Math.PI/2;log.rotation.y=i*Math.PI/3;}
+ for(let i=0;i<3;i++){const log=add(cylinder,'#49372e',0,.22+i*.04,0,.16,1.6,.16);log.rotation.z=Math.PI/2;log.rotation.y=i*Math.PI/3;}
  for(const s of CAMP_SEATS.filter(s=>s.group==='campfire-main')){
   const log=add(cylinder,'#a58065',s.x,.43,s.z,.33,1.25,.33);log.rotation.z=Math.PI/2;log.rotation.y=s.yaw;
   for(const side of [-1,1])add(cylinder,'#d7b796',s.x+Math.cos(s.yaw)*side*.63,.43,s.z-Math.sin(s.yaw)*side*.63,.28,.03,.28).quaternion.copy(log.quaternion);
