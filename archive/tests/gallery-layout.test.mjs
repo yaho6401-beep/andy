@@ -6,7 +6,7 @@ import {SEATS} from '../src/seats.js';
 import {findWalkPath} from '../src/navigation.js';
 function reachable(room,start,target){const path=findWalkPath(room,start,target);assert.ok(path.length,room+' route to '+JSON.stringify(target));let p=start;for(const q of path){assert.ok(validMove(room,p.x,p.z,q.x,q.z));p=q;}return p;}
 test('larger rooms retain clear doorways, swept collisions and reachable exhibition approaches',()=>{
-  assert.equal(GALLERY.scents.width*GALLERY.scents.depth/256,2.625);
+  assert.ok(GALLERY.scents.width*GALLERY.scents.depth/(28*24)>=2);
   for(const room of ['scents','books']){
     const start=PORTALS.lobby.find(p=>p.to===room).spawn;
     assert.ok(validPosition(room,start.x,start.z));

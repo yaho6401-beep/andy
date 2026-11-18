@@ -1,8 +1,12 @@
 import {ArchiveStore} from './room-store.mjs';
+import {validPosition,PORTALS} from '../src/protocol.js';
 const maps=['members','clients','orders','choices'];
 export function restoreStore(data,clock=()=>Date.now()){
  const s=new ArchiveStore({clock});s.members.clear();if(data?.meeting){for(const k of maps)s[k]=new Map((data[k]||[]).map(([id,p])=>[id,k==='clients'?{...p,send:()=>{}}:p]));for(const k of ['meeting','messages','notes','events','reports','placedItems','metrics','content','campfire'])if(data[k]!==undefined)s[k]=data[k];}
  else{s.meeting.name='책과향기 커뮤니티 라운지';s.meeting.id='community';s.meeting.endsAt=253402214400000;s.meeting.ageCondition='성인 이용 동의 · 공용 라운지';}
+ // A layout upgrade can put an old live position inside a moved plinth.
+ // Re-seat only that ephemeral position; preserve identity, records and roles.
+ for(const p of s.clients.values())if(p.room==='scents'&&!validPosition('scents',p.x,p.z))Object.assign(p,{...PORTALS.lobby.find(g=>g.to==='scents').spawn,seat:null,motion:'idle',epoch:(p.epoch||0)+1,correction:(p.correction||0)+1,seq:0,lastMove:clock()});
  return s;
 }
 export function serializeStore(s){const data={};for(const k of maps)data[k]=[...s[k]].map(([id,p])=>{if(k!=='clients')return [id,p];const {send,...safe}=p;return [id,safe];});for(const k of ['meeting','messages','notes','events','reports','placedItems','metrics','content','campfire'])data[k]=s[k];return data;}

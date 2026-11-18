@@ -19,14 +19,15 @@ export const GALLERY = {
     doors:[{x:0,z:12.9,label:'아트리움 로비',yaw:Math.PI}]
   },
   scents: {
-    width: 28, depth: 24, height: 6.2,
-    plinths: [-9,-4.5,0,4.5,9].map((x,i)=>({x,z:i%2?-5:-3.7,w:1.4,d:1.4})),
-    organ:{x:0,z:-10.3,w:8.6,d:1.1},
-    notes:{x:-7.6,z:5.4,w:3.3,d:1.5},
-    desk:{x:0,z:4.5,w:4.8,d:1.8},
-    curator:{x:-9.6,z:1.5},
-    cabinets:[{x:-7.2,z:-8.9,w:1.9,d:.8},{x:7.2,z:-8.9,w:1.9,d:.8}],
-    board:{x:7,z:4.9,w:3.2,d:.4},
+    width:40, depth:34, height:7.2,
+    entrance:{x:19.2,z:0,spawn:{x:17.2,z:0},clearToX:0,clearHalfWidth:2.7},
+    plinths:[-7.6,-3.8,0,3.8,7.6].map((x,i)=>({x,z:i%2?-7.6:-9.3,w:1.4,d:1.4})),
+    organ:{x:0,z:-15.5,w:9.8,d:1.1},
+    notes:{x:-6.5,z:9,w:3.3,d:1.5},
+    desk:{x:0,z:4.5,w:5.2,d:1.6},
+    curator:{x:-6.5,z:-1.5},
+    cabinets:[{x:-7.5,z:-14.8,w:1.9,d:.8},{x:7.5,z:-14.8,w:1.9,d:.8}],
+    board:{x:6.5,z:9,w:3.2,d:.4},
     exhibits:MUSEUM_EXHIBITS
   },
   books: {

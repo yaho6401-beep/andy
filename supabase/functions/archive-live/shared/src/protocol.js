@@ -10,10 +10,10 @@ export const PORTALS={
  garden:[{to:'lobby',x:0,z:-7.2,label:'아트리움 로비',spawn:{x:0,z:11}},
  {to:'camp',...GARDEN.campGate,label:'별빛 캠핑장',spawn:{...CAMP.spawn,yaw:Math.PI}}],
  lobby:[{to:'garden',x:0,z:12.9,label:'햇살 정원',spawn:{x:0,z:-6.4}},
- {to:'scents',x:-13.9,z:0,label:'향기 아카이브',spawn:{x:12,z:0}},
+ {to:'scents',x:-13.9,z:0,label:'향기 아카이브',spawn:{...GALLERY.scents.entrance.spawn}},
  {to:'books',x:13.9,z:0,label:'책의 정원',spawn:{x:-13,z:0}},
  {to:'salon',x:0,z:-12.9,label:'향기카페',spawn:{x:0,z:11}}],
- scents:[{to:'lobby',x:13.2,z:0,label:'아트리움 로비',spawn:{x:-12,z:0}}],
+ scents:[{to:'lobby',x:GALLERY.scents.entrance.x,z:0,label:'아트리움 로비',spawn:{x:-12,z:0}}],
  books:[{to:'lobby',x:-14.2,z:0,label:'아트리움 로비',spawn:{x:12,z:0}}],
  salon:[{to:'lobby',x:0,z:12.9,label:'아트리움 로비',spawn:{x:0,z:-11}}],
  camp:[{to:'garden',...CAMP.gate,yaw:Math.PI,label:'햇살 정원',spawn:{...GARDEN.campReturn}}]

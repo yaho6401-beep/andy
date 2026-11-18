@@ -1,0 +1,50 @@
+/* Quiet, readable exhibition cards. Movement controls keep their own space. */
+.museum-guide[data-kind=ingredient]{max-height:none;background:#fffdf7f7;border-color:#d7cbb8;box-shadow:0 12px 42px #3d382222}
+.museum-guide[data-kind=ingredient] .museum-guide-body{max-height:none;overflow:visible;padding:16px 18px}
+.museum-guide[data-kind=ingredient] .ingredient-photo-brief{width:112px;margin:2px 15px 8px 0}
+.museum-guide[data-kind=ingredient] .museum-guide-body [data-ingredient-card]>p{font-size:14px;line-height:1.85;margin:7px 0}
+.museum-guide[data-kind=ingredient] .museum-guide-head{padding:12px 16px}
+.museum-guide[data-kind=ingredient] .museum-guide-head b{font-size:17px;letter-spacing:.06em}
+.museum-guide[data-kind=ingredient] .museum-guide-actions>button{font-size:14px;min-height:48px}
+#detail.ingredient-detail{width:min(960px,calc(100% - 24px));max-height:calc(100dvh - 24px);padding:22px 26px;background:#fbf8f1;color:#4e5147;border-color:#cfc4b2}
+#detail.ingredient-detail>.dialog-heading{margin-bottom:12px;align-items:center}
+#detail.ingredient-detail>.dialog-heading>button{min-height:40px;min-width:40px}
+.ingredient-reader{display:grid;grid-template-columns:minmax(230px,.85fr) minmax(0,1.15fr);grid-template-areas:'photo heading' 'photo tabs' 'photo reading' 'photo actions' 'source source';gap:14px 30px;align-items:start}
+.ingredient-reader .ingredient-photo{grid-area:photo;float:none;width:100%;max-width:350px;margin:0;align-self:center}
+.ingredient-reader .ingredient-photo>div{border-radius:14px}
+.ingredient-reader .ingredient-photo figcaption{margin-top:5px;font-size:10px}
+.ingredient-heading{grid-area:heading}
+#detail .ingredient-heading h2{font-size:28px;line-height:1.4;margin:7px 0 10px;letter-spacing:-.035em}
+#detail .ingredient-heading .museum-character{font-size:16px;line-height:1.6;margin:0;color:#82725c}
+.ingredient-tabs{grid-area:tabs;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;padding:4px;background:#ebe5da;border-radius:10px}
+.ingredient-tabs button{min-height:44px;border:0;border-radius:7px;padding:8px 4px;color:#877d6c;background:transparent;font-size:14px;word-break:keep-all}
+.ingredient-tabs button[aria-selected=true]{background:#fffdf8;color:#4f5f49;box-shadow:0 1px 5px #6d62461c;font-weight:600}
+.ingredient-reading{grid-area:reading;min-height:175px}
+#detail .ingredient-reading h3{font-size:16px;line-height:1.5;margin:3px 0 10px;color:#6e775c}
+#detail .ingredient-reading p{font-size:16px;line-height:1.9;margin:0;word-break:keep-all;overflow-wrap:anywhere}
+#detail .ingredient-reading .museum-pairs{margin-top:14px;padding:10px 12px;font-size:13px!important;background:#efeee5}
+.ingredient-reader-actions{grid-area:actions;display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid #e1d9ca;padding-top:14px}
+.ingredient-reader-actions button,.ingredient-reader-actions a{flex:1;min-width:130px;min-height:46px;border-radius:9px;padding:12px 10px;text-align:center;font-size:14px;line-height:1.5;text-decoration:none;word-break:keep-all}
+.ingredient-reader-actions a{border:1px solid #cfc7b7;color:#796951;background:#f4eee3}
+.ingredient-revealed{flex:1;font-size:13px;line-height:1.7;color:#788166}
+#detail .ingredient-reader-source{grid-area:source;font-size:10px;line-height:1.6;color:#9a907e;margin:0}
+@media(min-width:800px){.museum-guide[data-kind=ingredient]{width:460px;bottom:44px}.ingredient-reader .ingredient-photo>div{aspect-ratio:1}.ingredient-heading{padding-top:8px}}
+@media(max-width:799px){
+ .museum-guide[data-kind=ingredient]{bottom:188px}
+ #detail.ingredient-detail{padding:15px 18px;border-radius:18px}
+ .ingredient-reader{grid-template-columns:100px minmax(0,1fr);grid-template-areas:'photo heading' 'tabs tabs' 'reading reading' 'actions actions' 'source source';gap:16px 15px}
+ .ingredient-reader .ingredient-photo{align-self:start}.ingredient-reader .ingredient-photo figcaption{font-size:8px;text-align:left}
+ #detail .ingredient-heading h2{font-size:23px;margin:5px 0 8px}
+ #detail .ingredient-heading .museum-character{font-size:14px;line-height:1.65}
+ .ingredient-tabs button{font-size:14px}.ingredient-reading{min-height:160px}
+ #detail .ingredient-reading p{font-size:15px;line-height:1.9}
+ .ingredient-reader-actions{gap:8px;padding-top:13px}
+ .ingredient-reader-actions button,.ingredient-reader-actions a{min-width:0;font-size:13px;padding:11px 7px}
+}
+@media(max-width:380px){.museum-guide[data-kind=ingredient] .ingredient-photo-brief{width:82px;margin-right:12px}.museum-guide[data-kind=ingredient] .museum-guide-body{padding:12px 14px}.museum-guide[data-kind=ingredient] .museum-guide-body [data-ingredient-card]>p{font-size:13px;line-height:1.75}.ingredient-reader{grid-template-columns:82px minmax(0,1fr);gap:13px 12px}#detail .ingredient-heading h2{font-size:20px}#detail .ingredient-heading .museum-character{font-size:13px}.ingredient-reading{min-height:155px}}
+@media(max-height:640px){.museum-guide[data-kind=ingredient] .museum-guide-body{display:none}.museum-guide[data-kind=ingredient]{bottom:170px}#detail.ingredient-detail{padding:10px 16px}.ingredient-reader{gap:10px 14px}.ingredient-reader .ingredient-photo{max-width:145px}#detail .ingredient-reading p{font-size:14px;line-height:1.75}.ingredient-reading{min-height:130px}#detail .ingredient-heading h2{font-size:21px;margin:4px 0}.ingredient-reader-actions{padding-top:9px}}
+@media(max-height:500px) and (min-width:650px){.museum-guide[data-kind=ingredient]{left:180px;bottom:35px;width:360px}#detail.ingredient-detail>.dialog-heading{margin-bottom:5px}.ingredient-reader{grid-template-columns:170px minmax(0,1fr);grid-template-areas:'photo heading' 'photo tabs' 'photo reading' 'actions actions' 'source source';gap:6px 18px}.ingredient-reader .ingredient-photo{max-width:170px}#detail .ingredient-heading .museum-character{font-size:13px;line-height:1.5}.ingredient-heading .tiny{font-size:8px}.ingredient-tabs button{min-height:36px;padding:5px}.ingredient-reading{min-height:95px}#detail .ingredient-reading h3{display:none}#detail .ingredient-reading p{font-size:13px;line-height:1.65}.ingredient-reader-actions{padding-top:7px}.ingredient-reader-actions button,.ingredient-reader-actions a{min-height:38px;padding:8px}.ingredient-reader .ingredient-photo>div{aspect-ratio:1.2}#detail .ingredient-reader-source{font-size:9px}}
+/* The selected tab already labels its passage. Keep room for the text itself. */
+#detail .ingredient-reading h3{display:none}
+@media(max-height:640px){.ingredient-reading{min-height:0}#detail .ingredient-heading h2{font-size:18px}#detail .ingredient-heading .tiny{margin:2px 0;font-size:8px}#detail .ingredient-heading .museum-character{font-size:13px;line-height:1.55}#detail .ingredient-reading .museum-pairs{padding:8px 10px;margin-top:8px;font-size:12px!important;line-height:1.5}.ingredient-reader-source{font-size:9px!important}.ingredient-tabs button{font-size:13px;min-height:40px}}
+@media(max-height:500px) and (min-width:650px){.ingredient-reader{grid-template-columns:160px minmax(0,1fr);grid-template-areas:'photo heading' 'photo tabs' 'photo reading' 'photo actions' 'source source';gap:8px 18px}.ingredient-reader .ingredient-photo{max-width:160px}.ingredient-reader .ingredient-photo>div{aspect-ratio:1}.ingredient-answer small{display:inline;margin-left:10px}#detail .ingredient-heading h2{font-size:21px;margin:3px 0}#detail .ingredient-heading .tiny{margin:0}#detail .ingredient-reading p{font-size:14px;line-height:1.65}.ingredient-reader-actions{padding-top:8px}}

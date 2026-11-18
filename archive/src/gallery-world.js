@@ -1,3 +1,4 @@
+import {MUSEUM_REACH} from './museum-layout.js';
 import * as T from 'three';
 import {GALLERY} from './gallery-layout.js';
 import {SEATS,CAFE_TABLES} from './seats.js';
@@ -107,9 +108,9 @@ function architecture(g,room) {
   const thresholdX=room==='scents'?w/2-.8:-w/2+.8;
   // Both portals keep the lobby's left/right wing relationship.
   const door=new T.Group();door.position.set(thresholdX,0,0);door.rotation.y=room==='scents'?-Math.PI/2:Math.PI/2;g.add(door);
-  for(const x of [-1.55,1.55])panel(door,palette.oak,x,1.7,0,.16,3.4,.22);
-  panel(door,palette.oak,0,3.43,0,3.3,.16,.22);text(door,'LOBBY · 로비로',0,3.85,.02,3);
-  panel(door,palette.brass,0,.05,.1,3.05,.03,.75);
+  const span=room==='scents'?2.85:1.55,doorHeight=room==='scents'?4.4:3.4;for(const x of [-span,span])panel(door,palette.oak,x,doorHeight/2,0,.16,doorHeight,.22);
+  panel(door,palette.oak,0,doorHeight+.03,0,span*2+.2,.16,.22);text(door,'LOBBY · 로비로',0,doorHeight+.45,.02,3.8);
+  panel(door,palette.brass,0,.05,.1,span*2-.1,.03,1.2);
 }
 function gateway(g,x,z,title,yaw=0,camp=false) {
   const door=new T.Group();door.position.set(x,0,z);door.rotation.y=yaw;g.add(door);
@@ -233,11 +234,11 @@ function organ(g,x,z,w,rows,cols,colors) {
 }
 function scents(g,content,hotspots) {
   const r=GALLERY.scents;
-  shadow(g,0,-10.2,10,2.6);shadow(g,r.desk.x,r.desk.z,6.3,3.1);shadow(g,r.notes.x,r.notes.z,4.4,2.7);
-  text(g,'BOOKS & SCENTS\nTHE SCENT MUSEUM',0,5.05,-11.78,7.6);
+  shadow(g,r.organ.x,r.organ.z,11.2,2.6);shadow(g,r.desk.x,r.desk.z,6.3,3.1);shadow(g,r.notes.x,r.notes.z,4.4,2.7);
+  text(g,'BOOKS & SCENTS\nTHE SCENT MUSEUM',0,5.7,-r.depth/2+.22,8.5);
   organ(g,r.organ.x,r.organ.z,r.organ.w,6,12,['#b2bba4','#cbb18a','#b7a5bc','#a2b8bf']);
-  text(g,'72 MAIN SCENTS',0,3.75,-9.6,4.3);
-  hotspots.push({x:0,z:-9.3,id:'main-organ',title:'메인향 72개 · 나만의 향 조합하기',type:'compose'});
+  text(g,'72 MAIN SCENTS',r.organ.x,3.75,r.organ.z+.7,4.3);
+  hotspots.push({x:r.organ.x,z:r.organ.z+1.5,id:'main-organ',title:'메인향 72개 · 나만의 향 조합하기',type:'compose'});
   content.scents.slice(0,5).forEach((s,i)=>{
     const p=r.plinths[i],height=1.05+(i%2)*.22;
     shadow(g,p.x,p.z,2.6,2.6);
@@ -248,7 +249,7 @@ function scents(g,content,hotspots) {
     text(g,String(i+1).padStart(2,'0')+'  /  '+s.family,p.x,.73,p.z+.76,1.8);
     hotspots.push({x:p.x,z:p.z,id:s.id,title:s.name,type:'scent'});
   });
-  for(const [i,c] of r.cabinets.entries()){organ(g,c.x,c.z,c.w,3,3,['#b8a5bc','#c7af88','#a2b9ac']);artwork(g,c.x,-11.78,i?'#a2b9ac':'#b8a5bc',2.4,2.5);}
+  for(const [i,c] of r.cabinets.entries()){organ(g,c.x,c.z,c.w,3,3,['#b8a5bc','#c7af88','#a2b9ac']);artwork(g,c.x,-r.depth/2+.22,i?'#a2b9ac':'#b8a5bc',2.4,2.5);}
   const {desk,notes}=r;
   for(const x of [-desk.w/2+.25,desk.w/2-.25])panel(g,palette.dark,x,.56,desk.z,.15,1.12,desk.d-.1);
   panel(g,palette.oak,desk.x,1.17,desk.z,desk.w,.18,desk.d);
@@ -261,8 +262,8 @@ function scents(g,content,hotspots) {
   for(let row=0;row<3;row++){panel(g,palette.stone,notes.x,1.3+row*.23,notes.z-.38+row*.21,notes.w-.2,.08,.31);for(let j=0;j<10;j++)bottle(g,notes.x-1.3+j*.29,1.35+row*.23,notes.z-.38+row*.21,['#c2b8a2','#b4bda9','#c6b0c4'][row],j,.26);}
   text(g,'T1–10  /  M1–10  /  L1–10',notes.x,.64,notes.z+.78,3.2);
   hotspots.push({x:notes.x,z:notes.z,id:'blend-organ',title:'블라인드 단일향 30개 · 조합하기',type:'compose'});
-  text(g,'SCENT AS MEMORY',-6.4,5.25,-11.78,3.4);text(g,'A PERSONAL ARCHIVE',6.4,5.25,-11.78,3.7);
-  ingredientGallery(g,r.exhibits,hotspots);
+  text(g,'SCENT AS MEMORY',-8,5.7,-r.depth/2+.22,4);text(g,'A PERSONAL ARCHIVE',8,5.7,-r.depth/2+.22,4.2);
+  ingredientGallery(g,r.exhibits,hotspots);museumLighting(g,r.exhibits);
   noteBoard(g,r.board,'책과향기 · 함께 남긴 이야기',false,true);
   hotspots.push({x:r.board.x,z:r.board.z+.75,id:'museum-public-board',title:'실제 게시글 · 공방 방명록',type:'board'});
 }
@@ -272,6 +273,19 @@ function exhibitAtlas(){
   INGREDIENTS.forEach((s,i)=>{const x=(i%4)*256,y=Math.floor(i/4)*128;c.fillStyle='#f0eadf';c.fillRect(x,y,256,128);c.fillStyle='#a58a5e';c.fillRect(x+108,y+22,40,2);c.textAlign='center';c.fillStyle='#4d5446';c.font='500 44px Georgia,sans-serif';c.fillText(s.code,x+128,y+85);});
   const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;
   const material=new T.MeshBasicMaterial({map:texture});material.userData.galleryShared=true;cache.set('ingredientAtlas',material);return material;
+}
+// Three real, shadow-free washes plus batched soft pools and tiny track fixtures.
+// Avoid thirty realtime shadow maps on visitors' phones.
+function museumLighting(g,exhibits){
+ if(!cache.has('museumPool')){const canvas=document.createElement('canvas');canvas.width=canvas.height=128;const c=canvas.getContext('2d'),gradient=c.createRadialGradient(64,64,3,64,64,63);gradient.addColorStop(0,'rgba(255,232,183,.55)');gradient.addColorStop(.4,'rgba(255,238,202,.22)');gradient.addColorStop(1,'rgba(255,244,219,0)');c.fillStyle=gradient;c.fillRect(0,0,128,128);const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;const m=new T.MeshBasicMaterial({map:texture,transparent:true,depthWrite:false,opacity:.72});m.userData.galleryShared=true;cache.set('museumPool',m);}
+ if(!cache.has('museumBulb')){const m=new T.MeshStandardMaterial({color:'#fff0cc',emissive:'#ffe2a6',emissiveIntensity:.5,roughness:.6});m.userData.galleryShared=true;cache.set('museumBulb',m);}
+ for(const s of exhibits){
+  const pool=new T.Mesh(contactPlane,cache.get('museumPool'));pool.name='museum-light-pool';pool.rotation.x=-Math.PI/2;pool.position.set(s.x,.065,s.z);pool.scale.set(3.1,3.1,1);g.add(pool);
+  const head=new T.Group();head.position.set(s.x,4.8,s.z+.5);head.rotation.x=.15;g.add(head);solid(head,palette.dark,0,0,0,.1,.28,.1,cylinder);const bulb=new T.Mesh(cylinder,cache.get('museumBulb'));bulb.position.y=-.145;bulb.scale.set(.08,.012,.08);head.add(bulb);
+ }
+ for(const x of [-16,-11,11,16])panel(g,palette.dark,x,5.02,-2,.045,.04,25);
+ panel(g,palette.dark,0,5.02,14.8,34,.04,.045);
+ for(const [x,z]of [[-13.5,-2.6],[13.5,-2.6],[0,13.5]]){const light=new T.SpotLight('#fff0d6',95,32,1.13,1,1.2);light.name='museum-soft-wash';light.castShadow=false;light.position.set(x,6.4,z);light.target.position.set(x,1,z);g.add(light,light.target);}
 }
 function ingredientGallery(g,exhibits,hotspots){
   const labels=exhibitAtlas();
@@ -284,11 +298,11 @@ function ingredientGallery(g,exhibits,hotspots){
     const plaque=new T.PlaneGeometry(1.45,.725),uv=plaque.getAttribute('uv'),col=i%4,row=Math.floor(i/4);
     for(let j=0;j<uv.count;j++)uv.setXY(j,(col+uv.getX(j))/4,1-(row+1-uv.getY(j))/8);
     const card=new T.Mesh(plaque,labels);card.position.set(s.x,.72,s.z+s.d/2+.04);g.add(card);
-    hotspots.push({x:s.x,z:s.z,id:s.id,title:s.code+' · 어떤 향일까요?',type:'ingredient',reach:2.15});
+    hotspots.push({x:s.x,z:s.z,id:s.id,title:s.code+' · 어떤 향일까요?',type:'ingredient',reach:MUSEUM_REACH});
   }
-  text(g,'TOP · T1–T10\n첫인상이 피어나는 곳',-10,3.7,-10.7,3.7);
-  text(g,'MIDDLE · M1–M10\n이야기의 중심이 되는 향',10,3.7,-10.7,3.7);
-  text(g,'LAST · L1–L10 · 오래 남는 여운',0,3.3,11.2,8);
+  text(g,'TOP · T1–T10\n첫인상이 피어나는 곳',-13.5,4.4,-15.65,4.8);
+  text(g,'MIDDLE · M1–M10\n이야기의 중심이 되는 향',13.5,4.4,-15.65,4.8);
+  text(g,'LAST · L1–L10 · 오래 남는 여운',0,3.5,15.8,9);
 }
 function shelf(g,x,z,w,rows=5) {
   const height=rows*.76+.4;
