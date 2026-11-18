@@ -1,6 +1,7 @@
 import postgres from 'npm:postgres@3.4.8';
 import {restoreStore,serializeStore,expirePlayers} from './shared/server/persistence.mjs';
 import {clean} from './shared/src/protocol.js';
+import {directEntry} from './shared/src/room-entry.js';
 const createSql=()=>postgres(Deno.env.get('SUPABASE_DB_URL')!,{max:1,idle_timeout:2,connect_timeout:10,prepare:false,ssl:'require',connection:{application_name:'books_scents_archive'}});
 const keys=new Set([...Object.values(JSON.parse(Deno.env.get('SUPABASE_PUBLISHABLE_KEYS')||'{}')),Deno.env.get('SUPABASE_ANON_KEY')].filter(Boolean));
 const allowedOrigin=(o:string)=>o==='https://andy-plum.vercel.app'||/^https:\/\/andy-[a-z0-9-]+-asdf-15dc\.vercel\.app$/.test(o)||o==='http://127.0.0.1:4174';
@@ -45,7 +46,7 @@ Deno.serve(async req=>{
  if(s.members.get(id)?.blocked)throw fail('진행자가 이 라운지의 입장을 제한했어요.',403);
  if(op==='join'){
   const active=s.clients.get(id);if(active&&active.connectionId!==input.connectionId)throw fail('이미 다른 화면에서 접속 중이에요.',409);
-  if(!active){const guests=[...s.clients.values()].filter(p=>p.role==='guest').length;if(session.role==='guest'&&guests>=19)throw fail('손님 좌석이 가득 찼어요. 잠시 후 입장해 주세요.',409);s.seed(id,session.nickname,session.role);s.join(id,input.appearance);}
+  if(!active){const guests=[...s.clients.values()].filter(p=>p.role==='guest').length;if(session.role==='guest'&&guests>=19)throw fail('손님 좌석이 가득 찼어요. 잠시 후 입장해 주세요.',409);s.seed(id,session.nickname,session.role);s.join(id,input.appearance);const entry=directEntry(input.startRoom);if(entry){const entrant=s.clients.get(id);Object.assign(entrant,entry,{epoch:entrant.epoch+1});}}
   const p=s.clients.get(id);p.connectionId=clean(input.connectionId,60);p.lastSeen=now;p.lastRequest=now;p.lastBatch=0;p.lastReceipts=[];
  }else{
   const p=s.clients.get(id);if(!p)throw fail('연결이 오래 끊겼어요. 다시 입장해 주세요.',410);

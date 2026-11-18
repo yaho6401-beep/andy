@@ -1,4 +1,4 @@
-export const SPACES={garden:'햇살 향기 정원',lobby:'향기박물관 로비',scents:'향기 아카이브',books:'책의 정원',salon:'향기카페'};
+export const SPACES={garden:'햇살 향기 정원',lobby:'향기박물관 로비',scents:'향기 아카이브',books:'책의 정원',salon:'향기카페',camp:'별빛 캠핑장'};
 export const SCENTS=[
  {id:'citrus',name:'햇살의 시트러스',family:'시트러스',color:'#e6c871',notes:'베르가모트 · 레몬 · 그린',mood:'산뜻함 · 활기',story:'낯선 도시의 아침. 가방을 가볍게 들고 골목으로 나서는 순간처럼 밝고 경쾌한 인상입니다.'},
  {id:'floral',name:'편지 속의 장미',family:'플로럴',color:'#d7a1b5',notes:'장미 · 피오니 · 소프트 머스크',mood:'다정함 · 설렘',story:'오래 접어 둔 편지를 펼칠 때처럼, 조심스럽게 마음을 건네는 꽃의 분위기입니다.'},

@@ -3,7 +3,7 @@ import '../../engine.js';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let catalogPromise,mainId=null,singleIds=new Set(),tab='main',note='top',query='',complete=false,lastHint='';
 function dialog(title){let d=document.getElementById('archive-activity');if(d){d.close();d.remove();}d=document.createElement('dialog');d.id='archive-activity';d.className='activity-dialog';d.innerHTML='<header><h2>'+esc(title)+'</h2><button aria-label="창 닫기">×</button></header><div id="archive-activity-body"></div>';d.querySelector('header button').onclick=()=>d.close();d.addEventListener('close',()=>d.remove());document.body.append(d);d.showModal();return d;}
-export function openSoloApplication(){const d=dialog('솔로만 프로젝트 참가신청');const frame=document.createElement('iframe');frame.title='실제 솔로만 프로젝트 참가신청서';frame.src='/?solo=1&embed=1';d.lastElementChild.append(frame);}
+export function openSoloApplication(){const d=dialog('솔로만 프로젝트 참가신청');if(globalThis.ArchiveDemoConfig?.mode==='gallery-review'){d.lastElementChild.innerHTML='<p>전시관 테스트에서는 신청서를 전송하지 않아요.</p><p>실제 참가 신청은 책과향기 홈페이지에서 이어가실 수 있어요.</p><a class="primary" href="https://andy-plum.vercel.app/?solo=1" target="_blank" rel="noopener noreferrer">운영 홈페이지에서 참가 신청하기 ↗</a>';return;}const frame=document.createElement('iframe');frame.title='실제 솔로만 프로젝트 참가신청서';frame.src='/?solo=1&embed=1';d.lastElementChild.append(frame);}
 export async function openArchiveBlend(){
  const d=dialog('나의 이야기에 향을 입히세요');const body=d.lastElementChild;body.innerHTML='<p>공방의 향료를 준비하고 있어요…</p>';
  try{catalogPromise??=fetch('/data/fragrance-catalog.json').then(r=>{if(!r.ok)throw Error();return r.json();});const catalog=await catalogPromise;if(!d.isConnected)return;
