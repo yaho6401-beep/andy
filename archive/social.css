@@ -4,3 +4,4 @@
 .public-demo .local-banner{display:block!important;top:auto;bottom:0;left:0;right:0;transform:none;max-width:none;text-align:center;font-size:9px;pointer-events:none;padding:4px;background:#fff8e8dd}.public-demo .privacy-note{word-break:keep-all;line-height:1.8}
 
 .shared-lounge .local-banner{display:block!important;top:auto;bottom:0;left:0;right:0;transform:none;max-width:none;text-align:center;font-size:9px;pointer-events:none;padding:4px;background:#fff8e8dd}
+.cafe-order-chip{top:212px;max-width:min(270px,calc(100% - 40px))}.cafe-order-chip button{font-size:12px;min-height:42px;padding:8px 12px}.cafe-menu-tabs{flex-wrap:wrap}.cafe-menu-tabs button{min-width:48px;min-height:42px;font-size:12px}.cafe-menu-item small{font-size:11px}

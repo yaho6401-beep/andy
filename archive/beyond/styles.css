@@ -4,3 +4,5 @@ header>div>a{font-size:12px}#intro{top:115px}#intro h1{margin:10px 0}#tools{bott
 #loading{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);font-size:13px;z-index:12;background:#fff8e9e8;padding:15px 24px;border-radius:20px}
 
 #tools{max-width:calc(100vw - 162px)}#tools button{max-width:100%;word-break:keep-all;line-height:1.5}#hint{max-width:calc(100vw - 24px);overflow:hidden;text-overflow:ellipsis}#interact{word-break:keep-all;line-height:1.6}@media(max-height:550px){#tools{max-width:calc(100vw - 160px);flex-wrap:wrap;justify-content:flex-end;gap:6px}#tools button{padding:8px 10px}#joystick{left:20px;bottom:25px}}
+/* Explicitly opt in while a reading session is open. */
+#reading-awake{width:100%;min-height:44px;margin:10px 0;border:1px solid #99aa92;border-radius:12px;background:#f2f4eb;color:#40543d;font:inherit}#reading-awake[aria-pressed=true]{background:#465c45;color:#fff3da}

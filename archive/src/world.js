@@ -5,6 +5,7 @@ import {createCamp} from '../camp/world.js';
 import {CAMP} from '../camp/layout.js';
 import {campSign} from '../camp/signage.js';
 import {GALLERY} from './gallery-layout.js';
+import {HARVESTS} from '../camp/snack-data.js';
 import {GARDEN} from './garden-layout.js';
 import {CAFE_TABLES,SEATS} from './seats.js';
 import * as T from 'three';
@@ -46,7 +47,13 @@ export class ArchiveWorld {
  if(GALLERY[room]){buildGallery(g,room,content,this.hotspots);this.bake();this.colliders=LAYOUT[room];return this.hotspots;}
  const outdoor=room==='garden';
  round(g,outdoor?'#b9cc93':'#c5ad8d',0,-.22,0,outdoor?29:17,.4,outdoor?27:17,.15);mesh(g,box,outdoor?'#d0ddac':room==='books'?'#c8a47d':room==='scents'?'#eee4f1':room==='salon'?'#e6cbd0':'#eee2cb',0,-.005,0,outdoor?28:16,.05,outdoor?26:16);
- if(outdoor){const building=artObject('library');if(building){building.position.set(0,0,-8.9);g.add(building);round(g,'#cbc9b1',0,-.15,-10,10,.25,7,.12);}
+ if(outdoor){
+  // Low, walk-through vegetable beds: no invisible walls on the garden paths.
+  round(g,'#b29a76',0,.015,11.25,5.2,.07,2.45,.1);round(g,'#77593c',0,.065,11.25,4.8,.04,2.15,.08);
+  for(const z of [10.2,11.25,12.3])round(g,'#c0a47d',0,.09,z,5,.13,.12,.03);
+  for(const h of HARVESTS){for(let i=0;i<5;i++){const a=i*2.4;const leaf=mesh(g,sphere,i%2?'#6f9657':'#92ae68',h.x+Math.sin(a)*.16,.19,h.z+Math.cos(a)*.13,.21,.035,.11);leaf.rotation.y=a;}mesh(g,sphere,h.kind==='potato'?'#c6a473':'#a5666a',h.x,.1,h.z,.17,.08,.12);}
+  label(g,'작은 밭 · 모닥불 간식 찾기',0,.65,12.4,3.8,'#675e41',46);this.hotspots.push(...HARVESTS.map(h=>({...h,type:'harvest',title:'밭에서 발견한 작은 간식',reach:1.5})));
+  const building=artObject('library');if(building){building.position.set(0,0,-8.9);g.add(building);round(g,'#cbc9b1',0,-.15,-10,10,.25,7,.12);}
   rug(g,0,0,2.8,15.6,'#e5d4ae');for(let z=-6;z<=6;z+=1)mesh(g,box,'#f5e9cb',0,.065,z,2.4,.06,.8);
   for(const t of GARDEN.trees)tree(g,t.x,t.z);
   for(const b of GARDEN.benches)bench(g,b.x,b.z,'#d7b68e');

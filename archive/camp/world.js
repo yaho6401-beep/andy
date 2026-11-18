@@ -110,7 +110,7 @@ export function createCamp(scene){
  }
 
  // Existing six fire-circle seats keep their IDs and positions.
- for(let i=0;i<12;i++){const a=i*Math.PI/6;add(sphere,'#8a9094',Math.sin(a)*.95,.22,Math.cos(a)*.95,.27,.2,.23);}
+ for(let i=0;i<12;i++){const a=i*Math.PI/6;add(sphere,'#897564',Math.sin(a)*.95,.22,Math.cos(a)*.95,.27,.2,.23);}
  for(let i=0;i<3;i++){const log=add(cylinder,'#49372e',0,.22+i*.04,0,.16,1.6,.16);log.rotation.z=Math.PI/2;log.rotation.y=i*Math.PI/3;}
  for(const s of CAMP_SEATS.filter(s=>s.group==='campfire-main')){
   const log=add(cylinder,'#a58065',s.x,.43,s.z,.33,1.25,.33);log.rotation.z=Math.PI/2;log.rotation.y=s.yaw;
@@ -147,7 +147,7 @@ export function createCamp(scene){
  const fire=createFireVisual(root);
  let previous=0;
  return {
-  setFireState:value=>fire.setState(value),
+  setFireState:value=>fire.setState(value),setSnacks:value=>fire.setSnacks(value),
   get fireDiagnostics(){return fire.diagnostics;},
   get cutaway(){return cloth.map(c=>({id:c.tent.id,opacity:c.mesh.material.opacity,wallOpacity:c.wallMesh.material.opacity}));},
   setQuote(text){ctx.clearRect(0,0,512,256);ctx.fillStyle='#f8ead1';ctx.textAlign='center';ctx.font='24px sans-serif';ctx.fillText('오늘의 한 문장',256,60);ctx.font='18px sans-serif';const chars=[...text];ctx.fillText(chars.slice(0,23).join(''),256,115);ctx.fillText(chars.slice(23,46).join('')+(chars.length>46?'…':''),256,148);ctx.font='14px sans-serif';ctx.fillText('가까이에서 칠판 살펴보기',256,205);quoteTex.needsUpdate=true;},
