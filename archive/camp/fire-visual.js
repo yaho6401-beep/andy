@@ -33,11 +33,11 @@ export function createFireVisual(parent){
    if(disposed)return;
    const now=Date.now()+offset,heat=heatAt(fire,now),age=throwEvent?(now-throwEvent.at)/1000:99,burst=age<1.1?0:Math.max(0,1-(age-1.1)/4.6);energy=.45+heat*1.25+burst*.8;
    timeUniform.value=reduced?3.7:time;heatUniform.value=heat;burstUniform.value=burst;
-   flame.material.uniforms.uHeight.value=energy*.92;flame.material.uniforms.uWidth.value=1.65+heat*.35+burst*.12;
+   flame.material.uniforms.uHeight.value=Math.min(2.7,energy)*.92;flame.material.uniforms.uWidth.value=1.65+heat*.35+burst*.12;
    smoke.material.uniforms.uHeight.value=2+heat*.55+burst*.3;smoke.visible=!reduced;
    halo.material.uniforms.uHeight.value=1.7+heat*.6+burst*.25;
    const flicker=reduced?0:Math.sin(time*7.3)*.1+Math.sin(time*11.7+1)*.07+Math.sin(time*2.4)*.12;
-   light.intensity=2.6+heat*3.3+burst*2+flicker;light.position.x=reduced?0:Math.sin(time*2.7)*.07;light.position.z=reduced?0:Math.cos(time*3.2)*.05;
+   light.intensity=Math.min(9.2,2.6+heat*3.3+burst*2+flicker);light.position.x=reduced?0:Math.sin(time*2.7)*.07;light.position.z=reduced?0:Math.cos(time*3.2)*.05;
    branch.visible=age>=0&&age<FIRE.flightMs/1000;
    if(branch.visible){const t=Math.max(0,age/(FIRE.flightMs/1000));branch.position.set(throwEvent.x*(1-t),1.25*(1-t)+.25*t+Math.sin(Math.PI*t)*1.1,throwEvent.z*(1-t));branch.rotation.set(t*3.5,age*2,.3+t*2);}
    sparks.visible=!reduced;

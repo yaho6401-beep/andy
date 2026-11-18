@@ -12,3 +12,5 @@
 @media(min-width:800px){.campfire-invite{bottom:40px}.campfire-caption{top:12%}.campfire-controls{bottom:22px}}
 @media(max-width:430px){.campfire-view>header{padding-left:16px;padding-right:16px}.campfire-view>header>span{font-size:9px;letter-spacing:.1em}.campfire-caption{top:15%;left:14px;right:14px}.campfire-caption p{font-size:13px}.campfire-invite small{font-size:11px}.campfire-sound{gap:9px}}
 @media(max-height:600px) and (orientation:landscape){.campfire-caption{top:26%;right:54%;left:20px}.campfire-caption h2{font-size:21px}.campfire-controls{left:auto;right:20px;transform:none;width:280px;bottom:12px}.campfire-branch{min-height:65px}.campfire-view>header{padding-top:10px}.campfire-sound{margin-top:5px}.campfire-controls nav{margin-top:0}.campfire-invite{bottom:20px;width:340px}}
+
+.campfire-branches{display:block;margin-top:4px;font:10px/1.4 system-ui,sans-serif;color:#796c56;letter-spacing:.04em}.campfire-branch{padding:9px 0}

@@ -12,3 +12,5 @@
 .metaverse-test-actions b{font-size:20px;font-weight:400}
 @media(max-width:600px){.metaverse-test-entry{padding:21px 19px;margin:18px 0 24px}.metaverse-test-entry header{align-items:flex-start;flex-direction:column;gap:10px}.metaverse-test-entry h3{font-size:22px}.metaverse-test-actions{display:grid;grid-template-columns:1fr;gap:10px}.metaverse-test-actions a{font-size:16px}}
 @media(prefers-reduced-motion:reduce){.metaverse-test-actions a{transition:none}.metaverse-test-actions a:hover{transform:none}}
+
+.metaverse-test-actions{display:grid;grid-template-columns:1fr 1fr;align-items:start}.metaverse-test-actions [data-metaverse-test=village]{grid-column:1;grid-row:1}.metaverse-test-actions [data-metaverse-test=camp]{grid-column:1;grid-row:2;background:#f4efe4;color:#4c563f;border-color:#d6ceba;font-size:14px;min-height:46px}.metaverse-test-actions [data-metaverse-test=beyond]{grid-column:2;grid-row:1/3;align-self:stretch}@media(max-width:600px){.metaverse-test-actions{grid-template-columns:1fr}.metaverse-test-actions [data-metaverse-test=beyond]{grid-column:1;grid-row:3}}

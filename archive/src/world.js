@@ -29,7 +29,7 @@ function archWindow(p,x,z,color){round(p,'#e6d9c3',x,2.15,z,2.1,3.1,.2,.35);roun
 
 function flowers(p,x,z,color='#dc99ae',n=7){for(let i=0;i<n;i++){const a=i*2.4,xx=x+Math.sin(a)*.36,zz=z+Math.cos(a)*.3;mesh(p,cylinder,'#829e70',xx,.28,zz,.018,.5,.018);for(let j=0;j<5;j++){const q=j*Math.PI/2.5;mesh(p,sphere,color,xx+Math.sin(q)*.07,.57,zz+Math.cos(q)*.07,.065,.035,.065);}mesh(p,sphere,'#e4bf70',xx,.59,zz,.035);}}
 function tree(p,x,z){const model=artObject('tree');if(model){model.position.set(x,0,z);model.scale.setScalar(.9);p.add(model);return;}mesh(p,cylinder,'#b79469',x,1.1,z,.15,2.2,.15);for(const [dx,dy,dz,r]of [[0,2.7,0,1.1],[-.6,2.3,.15,.75],[.6,2.4,-.1,.8]])mesh(p,sphere,'#a8c589',x+dx,dy,z+dz,r,r*.9,r);mesh(p,cylinder,'#c2b495',x,.15,z,1.15,.25,1.15);}
-function portalFrame(p,gate,outdoor=false){const g=new T.Group();g.position.set(gate.x,0,gate.z);if(Number.isFinite(gate.yaw))g.rotation.y=gate.yaw;else if(gate.x)g.rotation.y=gate.x>0?-Math.PI/2:Math.PI/2;else if(gate.z>0)g.rotation.y=Math.PI;p.add(g);const forest=outdoor&&gate.to!=='lobby',c=forest?'#a58b69':outdoor?'#d2b284':'#c7b493';for(const side of [-1,1])round(g,c,side*1.23,1.4,0,.23,2.8,.35,.05);round(g,c,0,2.86,0,2.65,.23,.35,.08);if(forest){round(g,'#6a7658',0,3.45,0,4.1,1.35,.23,.1);campSign(g,{title:gate.label,subtitle:gate.to==='camp'?'??? ? ?? ? ?? ?':'?? ???? ????',width:3.96,height:1.2,y:3.45,z:.14});campSign(g,{title:gate.label,subtitle:gate.to==='camp'?'??? ? ?? ? ?? ?':'?? ???? ????',width:3.96,height:1.2,y:3.45,z:-.14,back:true});}else{round(g,'#faf2df',0,3.18,0,3.2,.5,.18,.08);label(g,gate.label,0,3.2,.12,3,'#6b6e56',48);}rug(g,0,-.3,2.05,1.9,outdoor?'#d8c49a':'#c2c7af');if(!forest)for(const side of [-1,1]){const pane=round(g,outdoor?'#dce6dc':'#d9cbb5',side*1.45,1.32,.18,.42,2.4,.14,.05);pane.rotation.y=side*.5;mesh(g,sphere,'#b99859',side*1.3,1.2,.33,.045);}label(g,forest?'숲길 따라 걷기':'걸어서 들어가기',0,.17,1.1,2.3,'#8b9578',44).rotation.x=-Math.PI/2;}
+function portalFrame(p,gate,outdoor=false){const g=new T.Group();g.position.set(gate.x,0,gate.z);if(Number.isFinite(gate.yaw))g.rotation.y=gate.yaw;else if(gate.x)g.rotation.y=gate.x>0?-Math.PI/2:Math.PI/2;else if(gate.z>0)g.rotation.y=Math.PI;p.add(g);const forest=outdoor&&gate.to!=='lobby',c=forest?'#a58b69':outdoor?'#d2b284':'#c7b493';for(const side of [-1,1])round(g,c,side*1.23,1.4,0,.23,2.8,.35,.05);round(g,c,0,2.86,0,2.65,.23,.35,.08);if(forest){round(g,'#6a7658',0,3.45,0,4.1,1.35,.23,.1);campSign(g,{title:gate.label,kind:gate.to==='beyond'?'book':'camp',subtitle:gate.to==='camp'?'모닥불 · 불멍 · 작은 쉼':gate.to==='beyond'?'숲과 바다 · 개인 독서 산책':'햇살 정원으로 돌아가기',width:3.96,height:1.2,y:3.45,z:.14});campSign(g,{title:gate.label,kind:gate.to==='beyond'?'book':'camp',subtitle:gate.to==='camp'?'모닥불 · 불멍 · 작은 쉼':gate.to==='beyond'?'숲과 바다 · 개인 독서 산책':'햇살 정원으로 돌아가기',width:3.96,height:1.2,y:3.45,z:-.14,back:true});}else{round(g,'#faf2df',0,3.18,0,3.2,.5,.18,.08);label(g,gate.label,0,3.2,.12,3,'#6b6e56',48);}rug(g,0,-.3,2.05,1.9,outdoor?'#d8c49a':'#c2c7af');if(!forest)for(const side of [-1,1]){const pane=round(g,outdoor?'#dce6dc':'#d9cbb5',side*1.45,1.32,.18,.42,2.4,.14,.05);pane.rotation.y=side*.5;mesh(g,sphere,'#b99859',side*1.3,1.2,.33,.045);}label(g,forest?'숲길 따라 걷기':'걸어서 들어가기',0,.17,1.1,2.3,'#8b9578',44).rotation.x=-Math.PI/2;}
 
 export class ArchiveWorld {
  constructor(scene){this.scene=scene;this.group=new T.Group();scene.add(this.group);this.hotspots=[];this.room=null;this.water=null;}
@@ -45,22 +45,22 @@ export class ArchiveWorld {
  }
  if(GALLERY[room]){buildGallery(g,room,content,this.hotspots);this.bake();this.colliders=LAYOUT[room];return this.hotspots;}
  const outdoor=room==='garden';
- round(g,outdoor?'#b9cc93':'#c5ad8d',0,-.22,0,17,.4,17,.15);mesh(g,box,outdoor?'#d0ddac':room==='books'?'#c8a47d':room==='scents'?'#eee4f1':room==='salon'?'#e6cbd0':'#eee2cb',0,-.005,0,16,.05,16);
+ round(g,outdoor?'#b9cc93':'#c5ad8d',0,-.22,0,outdoor?29:17,.4,outdoor?27:17,.15);mesh(g,box,outdoor?'#d0ddac':room==='books'?'#c8a47d':room==='scents'?'#eee4f1':room==='salon'?'#e6cbd0':'#eee2cb',0,-.005,0,outdoor?28:16,.05,outdoor?26:16);
  if(outdoor){const building=artObject('library');if(building){building.position.set(0,0,-8.9);g.add(building);round(g,'#cbc9b1',0,-.15,-10,10,.25,7,.12);}
   rug(g,0,0,2.8,15.6,'#e5d4ae');for(let z=-6;z<=6;z+=1)mesh(g,box,'#f5e9cb',0,.065,z,2.4,.06,.8);
   for(const t of GARDEN.trees)tree(g,t.x,t.z);
   for(const b of GARDEN.benches)bench(g,b.x,b.z,'#d7b68e');
   for(const b of GARDEN.beds){round(g,'#eee3c6',b.x,.16,b.z,2.6,.3,1.1,.12);flowers(g,b.x-.6,b.z,'#d99db2');flowers(g,b.x+.5,b.z,'#b5a1d4');}
-  // A northbound garden trail meets the campground's south entrance.
-  const sign=GARDEN.wayfinder,signGroup=new T.Group();signGroup.position.set(sign.x,0,sign.z);g.add(signGroup);
-  for(const x of [-1.22,1.22])round(signGroup,'#927959',x,.96,0,.12,1.92,.18,.035);
-  round(signGroup,'#627255',0,1.93,0,3.12,1.2,.24,.1);campSign(signGroup,{width:3,height:1.05,y:1.93,z:.15,subtitle:'오른편 숲길로, 잠시 쉬어가요',direction:true});
-  const trail=GARDEN.trail;
-  rug(g,trail.x/2,trail.junctionZ,trail.x+1.2,1.1,'#e5d4ae');
-  rug(g,trail.x,(trail.junctionZ+GARDEN.campGate.z)/2,1.25,trail.junctionZ-GARDEN.campGate.z,'#e5d4ae');
-  for(let z=1;z>GARDEN.campGate.z+.2;z-=.85)mesh(g,box,'#f5e9cb',trail.x,.065,z,1.05,.06,.58);
-  label(g,'CAMPFIRE ↑',trail.x,.13,-.3,1.6,'#6b795e',48).rotation.x=-Math.PI/2;
-  for(const x of [-7.7,7.7]){round(g,'#a7bf85',x,.4,0,.42,.8,15.8,.15);for(let z=-7;z<8;z+=2)round(g,'#f0e6c9',x,.65,z,.22,1.3,.22,.04);}
+  // Two wooded paths share the garden, with physical signs and proximity-only hints.
+  for(const [key,sign,gate]of [['camp',GARDEN.wayfinder,GARDEN.campGate],['beyond',GARDEN.beyondWayfinder,GARDEN.beyondGate]]){
+   const sg=new T.Group();sg.position.set(sign.x,0,sign.z);g.add(sg);for(const x of [-1.22,1.22])round(sg,'#927959',x,.96,0,.12,1.92,.18,.035);round(sg,'#627255',0,1.93,0,3.12,1.2,.24,.1);
+   campSign(sg,{title:key==='camp'?'별빛 캠핑장':'문장 너머',kind:key==='camp'?'camp':'book',width:3,height:1.05,y:1.93,z:.15,subtitle:key==='camp'?'오른편 숲길 · 모닥불과 쉼':'왼편 숲길 · 나만의 독서 산책',direction:true});
+   rug(g,gate.x/2,1.5,Math.abs(gate.x)+1.2,1.15,'#e5d4ae');rug(g,gate.x,(1.5+gate.z)/2,1.5,1.5-gate.z,'#e5d4ae');for(let z=1;z>gate.z+.2;z-=.85)mesh(g,box,'#f5e9cb',gate.x,.065,z,1.18,.06,.58);
+  }
+  portalFrame(g,{to:'beyond',...GARDEN.beyondGate,label:'문장 너머'},true);this.hotspots.push({...GARDEN.beyondGate,id:'garden-beyond',title:'문장 너머 · 개인 산책',type:'beyond'});
+  rug(g,0,9,14,1.3,'#e5d4ae');for(const x of [-13.7,13.7]){round(g,'#a7bf85',x,.4,0,.42,.8,25.8,.15);for(let z=-12;z<13;z+=2.5)round(g,'#f0e6c9',x,.65,z,.22,1.3,.22,.04);}
+  for(const b of GARDEN.beds){for(let i=0;i<3;i++){const x=b.x-1+i*.8;flowers(g,x,b.z+.32,['#e8bbcb','#e7d496','#c4b4de'][i],4);}plant(g,b.x,b.z,.5);}
+  for(const x of [-7,7]){lamp(g,x,7);flowers(g,x,7.7,'#e8d4a2',7);}
   for(const x of [-2.85,2.85])round(g,'#f1e5cf',x,1.7,-8,3.1,3.4,.4,.12);for(const x of [-2.8,2.8])archWindow(g,x,-7.73,'#c6dcd6');label(g,'BOOKS & SCENTS ARCHIVE',0,3.85,-7.4,8,'#697b58',44);round(g,'#bcaa83',0,3.6,-7.5,9.3,.25,1.2,.08);
   for(const x of [-1.8,1.8]){plant(g,x,-6.8,.8);flowers(g,x,-6.8,'#d5a0bc',5);}this.hotspots.push({x:4.8,z:3,id:'garden',title:'정원의 오늘 한 문장',type:'today'});
  }else{

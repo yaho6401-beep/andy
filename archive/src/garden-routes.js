@@ -1,0 +1,8 @@
+import {GARDEN} from './garden-layout.js';
+export class GardenRoutes{
+ constructor(api){this.api=api;document.body.insertAdjacentHTML('beforeend','<button id="camp-garden-marker" class="garden-destination-marker" hidden><span>별빛 캠핑장 <b aria-hidden="true">↗</b></span><small>오른편 숲길 · 모닥불과 쉼</small></button><button id="beyond-garden-marker" class="garden-destination-marker" hidden><span>문장 너머 <b aria-hidden="true">↖</b></span><small>왼편 숲길 · 나만의 독서 산책</small></button>');for(const key of ['camp','beyond'])document.getElementById(key+'-garden-marker').onclick=()=>api.walkTo(GARDEN[key==='camp'?'campGate':'beyondGate']);}
+ frame(){const state=this.api.state(),shown=state.joined&&state.room==='garden'&&!document.querySelector('dialog[open]')&&document.getElementById('chat-panel').hidden;const mobile=innerWidth<=600,width=mobile?(innerWidth/2-18):188;
+  for(const [key,point]of [['camp',GARDEN.wayfinder],['beyond',GARDEN.beyondWayfinder]]){const node=document.getElementById(key+'-garden-marker');const nearby=state.position&&Math.hypot(state.position.x-point.x,state.position.z-point.z)<4.6;node.hidden=!shown||!nearby;if(node.hidden)continue;const p=this.api.project(point.x,2.75,point.z);node.hidden=!p.visible;if(!p.visible)continue;const lo=mobile?(key==='camp'?innerWidth/2+width/2+5:width/2+10):width/2+12,hi=mobile?(key==='beyond'?innerWidth/2-width/2-5:innerWidth-width/2-10):innerWidth-width/2-12;node.style.left=Math.max(lo,Math.min(hi,p.x))+'px';node.style.top=Math.max(innerHeight<550?130:235,Math.min(innerHeight-230,p.y))+'px';}
+ }
+ dispose(){for(const key of ['camp','beyond'])document.getElementById(key+'-garden-marker')?.remove();}
+}
