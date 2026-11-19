@@ -3,7 +3,7 @@ export function clockAngles(date=new Date()){
  const seconds=date.getSeconds()+date.getMilliseconds()/1000,minutes=date.getMinutes()+seconds/60;
  return {hour:-(date.getHours()%12+minutes/60)*Math.PI/6,minute:-minutes*Math.PI/30,second:-seconds*Math.PI/30};
 }
-export const WATCH_HAND_ASSET='/assets/camp/wrist-left-relaxed.png';
+export const WATCH_HAND_ASSET='/assets/camp/wrist-left-relaxed-world-v2.png';
 // The arm points right; the independently mounted dial keeps twelve at the top.
 export function watchPose(camera,{width=390,height=844}={}){
  const landscape=width>height*1.4,short=!landscape&&height<650,depth=1.8;
@@ -14,7 +14,7 @@ export function watchPose(camera,{width=390,height=844}={}){
 export function createWristwatch(parent){
  const root=new T.Group(),arm=new T.Group();root.name='my-analogue-wristwatch';root.visible=false;root.add(arm);parent.add(root);
  const geometries=[],materials=[],textures=[],own=g=>(geometries.push(g),g),mat=o=>{const m=new T.MeshStandardMaterial(o);materials.push(m);return m;};
- const steel=mat({color:'#b7bbb9',metalness:.7,roughness:.29}),rim=mat({color:'#d6d5ce',metalness:.6,roughness:.26}),strap=mat({color:'#454e48',roughness:.95}),box=own(new T.BoxGeometry(1,1,1));
+ const steel=mat({color:'#a4aca4',metalness:.3,roughness:.58}),rim=mat({color:'#c5c7b9',metalness:.25,roughness:.6}),strap=mat({color:'#556252',roughness:1}),box=own(new T.BoxGeometry(1,1,1));
  function piece(geo,material,x,y,z,sx=1,sy=sx,sz=sx){const m=new T.Mesh(geo,material);m.position.set(x,y,z);m.scale.set(sx,sy,sz);arm.add(m);return m;}
  const photoMat=new T.MeshBasicMaterial({transparent:true,alphaTest:.72,depthWrite:false,toneMapped:false,color:'#eadccf'});materials.push(photoMat);
  const photo=piece(own(new T.PlaneGeometry(1,1)),photoMat,-.042,.028,0,1.2,.8,1);photo.visible=false;
@@ -40,5 +40,5 @@ export function createWristwatch(parent){
   amount=reduced?target:T.MathUtils.lerp(amount,target,.14);root.visible=amount>.015;if(!root.visible)return;
   root.position.copy(camera.position);root.quaternion.copy(camera.quaternion);pose=watchPose(camera,{width:globalThis.innerWidth||390,height:globalThis.innerHeight||844});arm.position.set(pose.x-(1-amount)*.32,pose.y-(1-amount)*.5,pose.z);arm.scale.setScalar(pose.scale);arm.rotation.z=reduced?0:Math.sin(time*.8)*.006;
   angles=clockAngles(date);hands[0].rotation.z=angles.hour;hands[1].rotation.z=angles.minute;hands[2].rotation.z=angles.second;
- },get diagnostics(){return {visible:root.visible,active:!!target,angles,amount,handDirection:'right',dial:'round',numerals:12,handLoaded:loaded,diameter:pose?.diameter||0};},dispose(){disposed=true;root.removeFromParent();textures.forEach(t=>t.dispose());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
+ },get diagnostics(){return {visible:root.visible,active:!!target,angles,amount,handDirection:'right',handStyle:'soft-3d',handAsset:WATCH_HAND_ASSET,dial:'round',numerals:12,handLoaded:loaded,diameter:pose?.diameter||0};},dispose(){disposed=true;root.removeFromParent();textures.forEach(t=>t.dispose());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
 }
