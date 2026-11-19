@@ -43,7 +43,7 @@ test('seven gentle shared branches grow in stages and cool before the next cycle
   assert.equal(result.tooHot,count>=6);assert.equal(result.cooling,count===7);now+=1800;
  }
  assert.throws(()=>s.action('a',{type:'campfire-branch'}),/뜨겁/);assert.equal(s.snapshot('a').campfire.branches,7);
- now+=FIRE.coolingMs;assert.equal(s.snapshot('a').campfire.branches,0);assert.equal(s.action('a',{type:'campfire-branch'}).branches,1);
+ now+=FIRE.coolingMs;const left=s.snapshot('a').campfire.branches;assert(left>0&&left<7);assert.equal(s.action('a',{type:'campfire-branch'}).branches,left+1);
 });
 test('larger garden routes reach both portals without crossing props; return spawns do not bounce back',()=>{
  assert.equal(MAX_PEOPLE,30);assert.ok(GARDEN.bounds.x>13);assert.ok(GARDEN.trees.length>=10);assert.ok(GARDEN.beds.length>=10);

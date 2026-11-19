@@ -25,6 +25,7 @@
 
 /* Fuel stays in the existing bottom activity row, leaving the flames open. */
 .campfire-controls nav{gap:12px;flex-wrap:nowrap}
+#camp-drink-tools:has(button:not([hidden])),#camp-oil-tools:has(button:not([hidden])){display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}#camp-drink-tools button,#camp-oil-tools button{min-height:42px;padding:8px 11px;border:1px solid #c4aa7e80;border-radius:10px;background:#544735;color:#f8e9cf;font-size:12px;line-height:1.5}#camp-drink-tools small{margin-left:6px;color:#d7c5a4}#camp-oil-tools button{flex:1;background:#464434}#camp-oil-tools #camp-lavender{background:#4b4055}.museum-oil-gift{display:flex;align-items:center;gap:12px;margin-top:10px;flex-wrap:wrap}.museum-oil-gift small{max-width:280px;color:#716977;font:11px/1.7 system-ui,sans-serif;word-break:keep-all}
 .campfire-controls nav .campfire-log{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:36px;padding:5px 10px;border:1px solid #c5aa796b;border-radius:10px;background:#332c23c9;color:#f1dfbd;font-size:12px;white-space:nowrap}
 .campfire-log small{font:11px/1.4 system-ui,sans-serif;color:#d2b989}
 .campfire-controls nav .campfire-log:disabled{opacity:.5;cursor:default}
@@ -33,3 +34,6 @@
 .camp-snack-box[data-stage=burnt]>summary{border-color:#a88064;background:#352a23ed}
 .camp-snack-box[data-stage=scorching] progress,.camp-snack-box[data-stage=burnt] progress{accent-color:#b77b4f}
 @media(max-width:359px){.campfire-controls nav{gap:8px}.campfire-controls nav button{font-size:12px}.campfire-controls nav .campfire-log{padding:5px 8px;gap:5px}}
+
+/* Four small choices share the same pack; no extra button covers the fire. */
+.camp-snack-choices{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.camp-snack-choices #camp-snack-buttons{display:contents}.camp-snack-choices #camp-snack-buttons[hidden]{display:none}.camp-snack-choices #camp-drink-tools{display:contents}.camp-snack-choices #campfire-sip{display:grid;gap:3px;justify-items:center;min-height:65px;border:1px solid #d4b88766;border-radius:10px;background:#544535;color:#fff0d6;padding:6px 2px;font-size:11px}.camp-snack-choices #campfire-sip span{font-size:20px}.camp-snack-choices #campfire-sip b{font-weight:500}.camp-snack-choices #campfire-sip small{font-size:11px;margin:0}.camp-snack-choices #campfire-sip[hidden]{display:none}

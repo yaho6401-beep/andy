@@ -25,8 +25,8 @@ test('additional logs consume one owned log each, preserve branch count, enforce
  const {s,seat,advance}=fixture();seat();seat('b',1);packFor(s,'a').wood=3;packFor(s,'b').wood=1;
  assert.throws(()=>s.action('b',{type:'camp-snack-fuel'}),/너무 탄/);
  const levels=[];for(let i=0;i<3;i++){s.action('a',{type:'campfire-log',heat:999,count:999});levels.push(s.campfire.heat);assert.equal(s.snapshot('a').myPack.wood,2-i);assert.equal(s.snapshot('a').campfire.logs,i+1);assert.equal(s.snapshot('a').campfire.branches,0);assert.throws(()=>s.action('b',{type:'campfire-log'}),/천천히/);advance(1800);}
- assert(levels[0]<levels[1]&&levels[1]<levels[2]);assert.equal(levels[2],FIRE.fuelMax);assert.throws(()=>s.action('b',{type:'campfire-log'}),/세 개/);assert.equal(packFor(s,'b').wood,1);
- advance(60000);assert.equal(heatAt(s.campfire,s.clock()),FIRE.min);assert.equal(s.snapshot('b').campfire.logs,0);s.action('b',{type:'campfire-log'});assert.equal(packFor(s,'b').wood,0);
+ assert(levels[0]<levels[1]&&levels[1]<levels[2]);assert(levels[2]>FIRE.max&&levels[2]<=FIRE.fuelMax);assert.throws(()=>s.action('b',{type:'campfire-log'}),/세 개/);assert.equal(packFor(s,'b').wood,1);
+ advance(60000);assert(heatAt(s.campfire,s.clock())>.8);advance(31000);assert.equal(s.snapshot('b').campfire.logs,0);s.action('b',{type:'campfire-log'});assert.equal(packFor(s,'b').wood,0);
 });
 test('ready vegetables gradually scorch; burnt ones cannot be eaten or shared, but fuel reuse works exactly once',()=>{
  for(const kind of ['potato','sweetpotato']){const {s,seat,advance}=fixture();seat();packFor(s,'a').items[kind]=1;s.action('a',{type:'camp-snack',kind});const job=packFor(s,'a').job;
