@@ -60,3 +60,6 @@ body.campfire-focus.camp-watch-active .campfire-invite.is-focused{left:14px;righ
 
 #campfire-flip,#campfire-hands{touch-action:manipulation;min-height:40px!important}#campfire-flip:disabled{opacity:.6;cursor:default}
 .campfire-controls nav:has(#campfire-flip:not([hidden])) #campfire-log{display:flex;flex-direction:column;gap:0;line-height:1.15}.campfire-controls nav:has(#campfire-flip:not([hidden])) #campfire-chat{font-size:9px}
+
+/* A contextual prop action, kept at the right edge and clear of the fire. */
+.camp-can-pour{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:calc(190px + env(safe-area-inset-bottom));max-width:132px;min-height:44px;padding:8px 12px;border:1px solid #d8c9a56b;border-radius:16px;background:#283a3ded;color:#f7ead4;box-shadow:0 4px 18px #101a2233;pointer-events:auto;touch-action:manipulation;font:12px/1.4 system-ui,sans-serif;z-index:4}.camp-can-pour small{display:block;font-size:9px;color:#cfbea1}.camp-can-pour[hidden]{display:none}.camp-can-pour:disabled{opacity:.5}@media(max-height:600px) and (orientation:landscape){.camp-can-pour{top:70px;bottom:auto;right:14px}}

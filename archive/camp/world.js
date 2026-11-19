@@ -1,3 +1,4 @@
+import {createCampScenery,campTexture} from './scenery.js';
 import {createObservingSky} from './sky-visual.js';
 import {createMoon} from './moon.js';
 import {createWristwatch} from './wristwatch.js';
@@ -14,7 +15,7 @@ import {createMeteors} from './meteors.js';
 
 // Expanded from the original camp scene in afd9cef. One scene, no extra renderer.
 export function createCamp(scene){
- const root=new T.Group(),materials=new Map(),geometries=[],waves=[],cloth=[];
+ const root=new T.Group(),materials=new Map(),geometries=[],waves=[],cloth=[],canvasTex=campTexture('canvas');
  scene.add(root);
  const mat=(color,glow=false)=>{
   const key=color+glow;
@@ -45,8 +46,8 @@ export function createCamp(scene){
  panel('#cebfa0',0,-.15,-13.3,31,.22,3.2);
  panel('#e0d0ae',0,-.02,-12.6,29,.035,.7);
  panel('#617e76',0,-.43,0,32,.8,28);
- panel('#8faaa0',0,-.05,0,30,.1,26);
- add(cylinder,'#b4b19b',0,.025,0,4.3,.035,4.3);
+ const groundTex=campTexture('earth');groundTex.repeat.set(14,12);const clearing=panel('#8faaa0',0,-.05,0,30,.1,26);const clearingMat=new T.MeshLambertMaterial({color:'#9fac96',map:groundTex});materials.set('clearing-texture',clearingMat);clearing.material=clearingMat;
+
  for(let i=0;i<8;i++){
   const x=-13+(i%4)*8,z=-15-Math.floor(i/4)*5-(i%2)*.9;
   const line=panel(i%2?'#9cc3c6':'#7da9b7',x,-.48,z,3.2,.012,.06);line.userData.baseX=x;waves.push(line);
@@ -76,7 +77,7 @@ export function createCamp(scene){
  for(const t of CAMP.tents){
   const {x,z,w,d,h,door}=t,half=w/2,back=z-d/2,front=z+d/2,eave=1.4;
   panel('#777d7d',x,.025,z,w,.05,d);
-  panel(t.rug,x,.063,z+.35,w-.55,.018,d-1);
+  const rug=panel(t.rug,x,.063,z+.35,w-.55,.018,d-1);const rugMat=new T.MeshLambertMaterial({color:t.rug,map:canvasTex});materials.set('rug-'+t.id,rugMat);rug.material=rugMat;
   for(let j=0;j<8;j++)panel('#d9c3ac',x-w/2+.4+j*.74,.075,z+.35,.025,.004,d-1.2);
   const vertices=[],wallVertices=[];
   const tri=(a,b,c)=>vertices.push(...a,...b,...c);
@@ -92,10 +93,10 @@ export function createCamp(scene){
   const openingTop=eave+(h-eave)*(1-door/w);
   quad([left,0,front],[x-door/2,0,front],[x-door/2,openingTop,front],[left,eave,front]);
   quad([x+door/2,0,front],[right,0,front],[right,eave,front],[x+door/2,openingTop,front]);
-  const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(vertices,3));geo.computeVertexNormals();geometries.push(geo);
-  const fabric=new T.MeshLambertMaterial({color:t.color,side:T.DoubleSide,transparent:true,opacity:1,depthWrite:true});
+  const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(vertices,3));geo.setAttribute('uv',new T.Float32BufferAttribute(vertices.flatMap((v,i)=>i%3===0?[v*.4+vertices[i+2]*.2,vertices[i+1]*.45+vertices[i+2]*.35]:[]),2));geo.computeVertexNormals();geometries.push(geo);
+  const fabric=new T.MeshLambertMaterial({color:t.color,map:canvasTex,side:T.DoubleSide,transparent:true,opacity:1,depthWrite:true});
   const mesh=new T.Mesh(geo,fabric);root.add(mesh);
-  const wallGeo=new T.BufferGeometry();wallGeo.setAttribute('position',new T.Float32BufferAttribute(wallVertices,3));wallGeo.computeVertexNormals();geometries.push(wallGeo);
+  const wallGeo=new T.BufferGeometry();wallGeo.setAttribute('position',new T.Float32BufferAttribute(wallVertices,3));wallGeo.setAttribute('uv',new T.Float32BufferAttribute(wallVertices.flatMap((v,i)=>i%3===0?[v*.4+wallVertices[i+2]*.2,wallVertices[i+1]*.45+wallVertices[i+2]*.35]:[]),2));wallGeo.computeVertexNormals();geometries.push(wallGeo);
   const wallMesh=new T.Mesh(wallGeo,fabric.clone());root.add(wallMesh);
   for(const zz of [back,front]){
    tube('#ead8b4',[left,0,zz],[left,eave,zz]);tube('#ead8b4',[left,eave,zz],[x,h,zz]);tube('#ead8b4',[x,h,zz],[right,eave,zz]);tube('#ead8b4',[right,eave,zz],[right,0,zz]);
@@ -103,6 +104,15 @@ export function createCamp(scene){
   tube('#ead8b4',[x,h,back],[x,h,front]);
   for(const side of [-1,1])tube('#ead8b4',[x+side*door/2,0,front],[x+side*door/2,openingTop,front],.065);
   panel('#b8a285',x,.04,front+.5,door+.25,.04,1.1);
+  // Rolled doorway, seams, tension ropes and stakes stay clear of the walking entrance.
+  const roll=add(cylinder,t.color,x,openingTop+.03,front+.05,.105,door+.14,.105);roll.rotation.z=Math.PI/2;
+  for(const side of [-1,1]){
+   const xx=x+side*(half-.2),pegX=x+side*(half+.48);
+   tube('#a99b83',[xx,eave+.1,back+.45],[pegX,.08,back+.12],.012);
+   tube('#5c5850',[pegX,.02,back+.12],[pegX,.19,back+.12],.028);
+   for(let j=0;j<12;j++)panel('#b3a28b',x+side*(door/2+.09),.14+j*(openingTop-.25)/12,front+.015,.018,.045,.012);
+   panel('#8d8374',x+side*.8,openingTop+.03,front+.16,.04,.15,.025);
+  }
   const sign=label(t.name+'\n걸어서 들어오세요',x,3.4,front+.05,3.5);
   cloth.push({tent:t,mesh,wallMesh,sign});
   for(const seat of CAMP_SEATS.filter(s=>s.group==='camp-tent-'+t.id)){
@@ -119,7 +129,7 @@ export function createCamp(scene){
  }
 
  // Existing six fire-circle seats keep their IDs and positions.
- for(let i=0;i<12;i++){const a=i*Math.PI/6;add(sphere,'#897564',Math.sin(a)*.95,.22,Math.cos(a)*.95,.27,.2,.23);}
+
 
 
  const b=CAMP.board;
@@ -142,7 +152,7 @@ export function createCamp(scene){
  });
  originals.forEach(o=>o.removeFromParent());
  for(const bucket of buckets.values()){const geo=mergeGeometries(bucket.parts,false);bucket.parts.forEach(g=>g.dispose());if(!geo)throw Error('Camp geometry merge failed');root.add(new T.Mesh(geo,bucket.mat));}
- const landscape=createCampLandscape(root),weather=createCampWeather(root),hands=createWarmingHands(root),watch=createWristwatch(root);
+ const scenery=createCampScenery(root),landscape=createCampLandscape(root),weather=createCampWeather(root),hands=createWarmingHands(root),watch=createWristwatch(root);
  const meteors=createMeteors(root),moon=createMoon(root),sky=createObservingSky(root);
  const fire=createFireVisual(root);
  const seatWood=createWoodKit(),woodRoot=new T.Group();woodRoot.name='natural-log-seats';root.add(woodRoot);
@@ -153,8 +163,8 @@ export function createCamp(scene){
  for(const spot of WOOD_FINDS)for(let i=0;i<3;i++){const wood=seatWood.log(.07,.54);wood.position.set(spot.x+(i-1)*.13,.12+i*.035,spot.z);wood.rotation.set(.13,i*.4,Math.PI/2);woodRoot.add(wood);}
  let previous=0;
  return {
-  setSkyMode:mode=>sky.setMode(mode),setSky:active=>{sky.set(active);moon.setSky(active);decorativeStars.visible=!active;},pickMoon:ray=>moon.pick(ray),get skyTarget(){return sky.target;},setFocus:active=>moon.setFocus(active),setWatch:active=>watch.set(active),groundPoint:ray=>landscape.groundPoint(ray),setHands:(...args)=>hands.set(...args),setWeather:value=>weather.setState(value),setFireState:value=>fire.setState(value),setSnacks:value=>fire.setSnacks(value),pickWood:ray=>fire.pickWood(ray),stirWood:(...args)=>fire.stir(...args),
-  get fireDiagnostics(){return {...fire.diagnostics,sky:sky.diagnostics,moon:moon.diagnostics,meteor:meteors.diagnostics,weather:weather.diagnostics,hands:hands.diagnostics,watch:watch.diagnostics,landscape:landscape.diagnostics};},
+  setCanPack:pack=>scenery.setPack(pack),setSkyMode:mode=>sky.setMode(mode),setSky:active=>{sky.set(active);moon.setSky(active);decorativeStars.visible=!active;},pickMoon:ray=>moon.pick(ray),get skyTarget(){return sky.target;},setFocus:active=>moon.setFocus(active),setWatch:active=>watch.set(active),groundPoint:ray=>landscape.groundPoint(ray),setHands:(...args)=>hands.set(...args),setWeather:value=>weather.setState(value),setFireState:value=>fire.setState(value),setSnacks:value=>fire.setSnacks(value),pickWood:ray=>fire.pickWood(ray),stirWood:(...args)=>fire.stir(...args),
+  get fireDiagnostics(){return {...fire.diagnostics,scenery:scenery.diagnostics,sky:sky.diagnostics,moon:moon.diagnostics,meteor:meteors.diagnostics,weather:weather.diagnostics,hands:hands.diagnostics,watch:watch.diagnostics,landscape:landscape.diagnostics};},
   get cutaway(){return cloth.map(c=>({id:c.tent.id,opacity:c.mesh.material.opacity,wallOpacity:c.wallMesh.material.opacity}));},
   setQuote(text){ctx.clearRect(0,0,512,256);ctx.fillStyle='#f8ead1';ctx.textAlign='center';ctx.font='24px sans-serif';ctx.fillText('오늘의 한 문장',256,60);ctx.font='18px sans-serif';const chars=[...text];ctx.fillText(chars.slice(0,23).join(''),256,115);ctx.fillText(chars.slice(23,46).join('')+(chars.length>46?'…':''),256,148);ctx.font='14px sans-serif';ctx.fillText('가까이에서 칠판 살펴보기',256,205);quoteTex.needsUpdate=true;},
   update(time,reduced=false,viewer,camera){
@@ -169,6 +179,6 @@ export function createCamp(scene){
     c.sign.visible=inside?.id!==c.tent.id;
    }
   },
-  dispose(){sky.dispose();moon.dispose();landscape.dispose();weather.dispose();hands.dispose();watch.dispose();meteors.dispose();fire.dispose();woodRoot.removeFromParent();seatWood.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
+  dispose(){scenery.dispose();canvasTex.dispose();sky.dispose();moon.dispose();landscape.dispose();weather.dispose();hands.dispose();watch.dispose();meteors.dispose();fire.dispose();woodRoot.removeFromParent();seatWood.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
  };
 }
