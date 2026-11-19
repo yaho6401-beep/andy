@@ -1,3 +1,4 @@
+import {mallowState} from './marshmallow-state.js';
 // Shared by the garden renderer and the authoritative room server.
 export const SNACKS={
  potato:{name:'감자',emoji:'🥔',seconds:25,color:'#c29a64',done:'포슬포슬한 감자가 익었어요. 잠시 식혀 한입 드세요.'},
@@ -15,6 +16,7 @@ export const SHARE_TTL=600000;
 // A calm twenty-second serving window, then gradual scorching. Shared food is off the fire.
 export const ROAST={graceMs:20000,scorchMs:30000};
 export function roastState(job,now){
+ if(job.kind==='marshmallow'&&job.roast&&!job.shared)return mallowState(job,now);
  const progress=Math.max(0,Math.min(1,(now-job.startedAt)/Math.max(1,job.readyAt-job.startedAt)));
  const scorch=job.shared||job.kind==='marshmallow'?0:Math.max(0,Math.min(1,(now-job.readyAt-ROAST.graceMs)/ROAST.scorchMs));
  return {progress,scorch,ready:now>=job.readyAt,burnt:scorch>=1,stage:now<job.readyAt?'cooking':scorch>=1?'burnt':scorch>0?'scorching':'ready'};

@@ -1,0 +1,33 @@
+import test from 'node:test';import assert from 'node:assert/strict';import * as T from 'three';
+import {ArchiveStore} from '../server/room-store.mjs';import {packFor} from '../server/snacks.mjs';import {serializeStore,restoreStore} from '../server/persistence.mjs';import {CAMP_SEATS} from '../camp/layout.js';
+import {newMallow,advanceMallow,mallowState} from '../camp/marshmallow-state.js';import {roastState} from '../camp/snack-data.js';import {createRoastingVisual} from '../camp/roast-visual.js';import {FireCaptions} from '../camp/fire-captions.js';import {FireAudio,HAPPY_MELODY} from '../camp/fire-audio.js';
+function fixture(){let now=100000;const s=new ArchiveStore({clock:()=>now});for(const [i,id]of ['a','b'].entries()){s.seed(id,id);s.join(id);const seat=CAMP_SEATS[i];Object.assign(s.clients.get(id),{room:'camp',x:seat.stand.x,z:seat.stand.z});s.action(id,{type:'sit',seat:seat.id});}packFor(s,'a').items.marshmallow=3;s.action('a',{type:'camp-snack',kind:'marshmallow'});const job=packFor(s,'a').job;return {s,job,advance:ms=>now+=ms,adjust:control=>s.action('a',{type:'camp-snack-adjust',jobId:job.id,control})};}
+test('turning four faces produces an edible golden marshmallow; moving off heat preserves it for sharing',()=>{
+ const {s,job,advance,adjust}=fixture();assert.throws(()=>s.action('a',{type:'camp-snack-take',readyAt:0}),/네 면/);
+ for(let i=0;i<6;i++){advance(5000);s.snapshot('a');if(roastState(job,s.clock()).ready)break;adjust('turn');}
+ assert(roastState(job,s.clock()).ready);for(let i=0;i<2;i++){advance(300);adjust('higher');}const faces=[...job.roast.faces];advance(60000);s.snapshot('a');assert.deepEqual(job.roast.faces,faces);const d=s.action('a',{type:'camp-snack-take',share:true});assert(d.finished&&d.shared);assert.equal(s.sharedSnacks.length,1);assert.equal(s.action('b',{type:'camp-snack-share-take',id:s.sharedSnacks[0].id}).received,true);assert.throws(()=>s.action('a',{type:'camp-snack-take'}),/없어요/);
+});
+test('too close ignites, lifting extinguishes, leaving a face unattended burns and cannot be eaten',()=>{
+ const {s,job,advance,adjust}=fixture();advance(300);adjust('closer');advance(11000);s.snapshot('a');assert(roastState(job,s.clock()).onFire);assert.throws(()=>s.action('a',{type:'camp-snack-take'}),/불이 붙/);
+ adjust('higher');advance(300);adjust('higher');advance(1500);s.snapshot('a');assert(!roastState(job,s.clock()).onFire);assert(!roastState(job,s.clock()).burnt);
+ advance(60000);s.snapshot('a');assert(roastState(job,s.clock()).burnt);for(const share of [false,true])assert.throws(()=>s.action('a',{type:'camp-snack-take',share}),/너무 타/);s.action('a',{type:'camp-snack-fuel'});assert.equal(packFor(s,'a').job,null);
+});
+test('controls validate owner, active job, seat, rate and enum; saved heat and face state survive restore',()=>{
+ const {s,job,advance,adjust}=fixture();assert.throws(()=>s.action('b',{type:'camp-snack-adjust',jobId:job.id,control:'turn'}),/확인/);assert.throws(()=>s.action('a',{type:'camp-snack-adjust',jobId:'stale',control:'higher'}),/확인/);assert.throws(()=>adjust('__proto__'),/조작/);adjust('turn');assert.throws(()=>adjust('turn'),/천천히/);advance(1000);adjust('higher');assert.equal(job.roast.level,2);assert.equal(job.roast.face,1);const restored=restoreStore(JSON.parse(JSON.stringify(serializeStore(s))),s.clock);assert.deepEqual(restored.snapshot('a').myPack.job,job);s.clients.get('a').seat=null;assert.throws(()=>adjust('turn'),/앉아/);
+});
+test('long unobserved intervals, high fire and alternate tick sizes remain finite and bounded',()=>{
+ let job={startedAt:0,roast:newMallow(0)};job.roast.level=0;const all=advanceMallow(job,30000,2),short={...job};for(let t=250;t<=30000;t+=250)short.roast=advanceMallow(short,t,2);assert.deepEqual(all,short.roast);assert(mallowState({...job,roast:all},30000).burnt);const long=advanceMallow(job,1e10,4.1);assert(long.faces.every(v=>Number.isFinite(v)&&v<=2.5));assert.equal(long.char,1);
+});
+test('a lifted skewer extinguishes and stops charring after leaving the fire',()=>{
+ const job={startedAt:0,roast:{...newMallow(0),level:3,faces:[1.6,1,.9,.8],flame:.8,char:.2}};job.roast=advanceMallow(job,2000,2);assert.equal(job.roast.flame,0);const char=job.roast.char;job.roast=advanceMallow(job,62000,2);assert.equal(job.roast.char,char);
+});
+test('legacy ready marshmallows safely migrate off heat, keeping old packs and other food behavior',()=>{
+ const {s,advance}=fixture();packFor(s,'a').job={id:'legacy',kind:'marshmallow',startedAt:1,readyAt:1000,seat:CAMP_SEATS[0].id};advance(1000);const snap=s.snapshot('a');assert.equal(snap.myPack.job.roast.level,3);assert(roastState(snap.myPack.job,s.clock()).ready);assert(s.action('a',{type:'camp-snack-take'}).finished);
+});
+test('skewer height, spin, per-face color and ignition are visible with reusable and disposed geometry',()=>{
+ const parent=new T.Group(),visual=createRoastingVisual(parent),job={id:'m',kind:'marshmallow',seat:CAMP_SEATS[0].id,startedAt:0,roast:{...newMallow(0),level:2,turns:1,faces:[.3,.6,.8,1]}};visual.setJobs([job]);for(let i=0;i<40;i++)visual.update(0,i/60);const a=visual.diagnostics.food[0];assert(a.height>1.6&&a.turn>1.5);const root=parent.children[0],meshes=[];root.traverse(o=>{if(o.geometry)meshes.push(o);});const count=meshes.length;visual.setJobs([{...job,roast:{...job.roast,flame:1}}]);visual.update(0,1);assert(visual.diagnostics.food[0].flaming);for(let i=0;i<200;i++)visual.update(0,i/60);const after=[];root.traverse(o=>{if(o.geometry)after.push(o);});assert.equal(after.length,count);let disposed=0;const personal=meshes.find(o=>o.geometry.attributes.color);personal.geometry.addEventListener('dispose',()=>disposed++);visual.setJobs([]);assert.equal(disposed,1);visual.dispose();assert.equal(parent.children.length,0);
+});
+test('gentle captions occupy one slot, pause for chat and use long intervals; happy melody is three seconds and respects mute',()=>{
+ const element={hidden:true,textContent:'',offsetWidth:0,classList:{remove(){},add(){}}},c=new FireCaptions(element,()=>.5);c.open(0);assert(!element.hidden);c.tick(4000,{active:true});assert(element.hidden);c.tick(18000,{active:true,paused:true});assert(element.hidden);c.tick(19000,{active:true});assert.match(element.textContent,/장작/);const count=c.count;c.tick(20000,{active:true});assert.equal(c.count,count);c.show('한입의 행복',21000,3000,3);c.show('낮은 우선순위',22000,3000,0);assert.equal(element.textContent,'한입의 행복');c.tick(25000,{active:false});assert(element.hidden);
+ assert.equal(Math.max(...HAPPY_MELODY.map(n=>n.at+n.length)),3);const audio=new FireAudio();assert.equal(audio.happy(),false);assert.equal(audio.context,null);assert.equal(audio.melodyVoices.size,0);audio.dispose();
+});

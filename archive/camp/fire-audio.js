@@ -1,8 +1,9 @@
 import {FIRE,clampHeat} from './fire-state.js';
+export const HAPPY_MELODY=[{at:0,note:523.25,length:.55},{at:.38,note:659.25,length:.6},{at:.78,note:783.99,length:.62},{at:1.2,note:880,length:.6},{at:1.62,note:783.99,length:.65},{at:2.1,note:1046.5,length:.9}];
 export function fireSoundProfile(heat){const h=Math.min(1.18,(clampHeat(heat)-FIRE.min)/(FIRE.max-FIRE.min));return {roar:.15+h*1.1,filter:800+h*2400,crackle:.055+h*.33,interval:Math.max(65,850-h*770)};}
 // Original procedural fire sound. No downloaded audio, microphone or autoplay.
 export class FireAudio{
- constructor(){this.context=null;this.enabled=false;this.volume=.32;this.heat=.7;this.generation=0;this.voices=new Set;}
+ constructor(){this.context=null;this.enabled=false;this.volume=.32;this.heat=.7;this.generation=0;this.voices=new Set;this.melodyVoices=new Set;this.melodyCount=0;this.lastMelodyAt=-10;}
  async start(){
   const generation=++this.generation,AudioContext=globalThis.AudioContext||globalThis.webkitAudioContext;
   if(!AudioContext)throw Error('이 브라우저에서는 소리를 켤 수 없어요. 화면으로 편히 쉬어가세요.');
@@ -22,8 +23,14 @@ export class FireAudio{
  setHeat(heat){this.heat=clampHeat(heat);if(this.context&&this.roar){const p=fireSoundProfile(this.heat),t=this.context.currentTime;this.roar.gain.setTargetAtTime(p.roar,t,.25);this.filter.frequency.setTargetAtTime(p.filter,t,.25);}}
  crackle(boost=false,delay=0,strength=1){if(!this.enabled||this.context?.state!=='running'||this.voices.size>=12)return;const c=this.context,source=c.createBufferSource(),gain=c.createGain(),filter=c.createBiquadFilter(),profile=fireSoundProfile(this.heat);source.buffer=this.crackleBuffer;source.playbackRate.value=boost?.6+Math.random()*.3:.7+Math.random()*.9;filter.type='bandpass';filter.frequency.value=boost?420+Math.random()*350:700+Math.random()*1800;filter.Q.value=.7;gain.gain.value=(boost?.24+profile.crackle:profile.crackle*(.45+Math.random()))*strength;source.connect(filter);filter.connect(gain);gain.connect(this.compressor);const voice={source,gain,filter};this.voices.add(voice);source.onended=()=>{source.disconnect();gain.disconnect();filter.disconnect();this.voices.delete(voice);};source.start(c.currentTime+delay);}
  stir(strength,big=false){const boost=big?1.3:1;this.crackle(true,0,(.3+strength*.65)*boost);this.crackle(false,.055+Math.random()*.07,(.4+strength*.5)*boost);if(big){this.crackle(false,.13,.55+strength*.6);this.crackle(false,.22,.4+strength*.45);}}
+ happy(){
+  if(!this.enabled||!this.volume||this.context?.state!=='running'||this.context.currentTime-this.lastMelodyAt<3)return false;
+  const c=this.context,now=c.currentTime;this.lastMelodyAt=now;this.melodyCount++;
+  for(const n of HAPPY_MELODY){const source=c.createOscillator(),gain=c.createGain(),t=now+n.at;source.type='sine';source.frequency.value=n.note;gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(.075,t+.018);gain.gain.exponentialRampToValueAtTime(.0001,t+n.length);source.connect(gain);gain.connect(this.master);const voice={source,gain};this.melodyVoices.add(voice);source.onended=()=>{source.disconnect();gain.disconnect();this.melodyVoices.delete(voice);};source.start(t);source.stop(t+n.length);}
+  return true;
+ }
  schedule(){clearTimeout(this.timer);if(!this.enabled)return;this.crackle();this.timer=setTimeout(()=>this.schedule(),fireSoundProfile(this.heat).interval*(.65+Math.random()*.7));}
- stop(){++this.generation;this.enabled=false;clearTimeout(this.timer);if(this.context){this.setVolume(this.volume);const generation=this.generation;clearTimeout(this.suspendTimer);this.suspendTimer=setTimeout(()=>{if(generation===this.generation&&!this.enabled)this.context?.suspend().catch(()=>{});},350);}}
+ stop(){++this.generation;this.enabled=false;clearTimeout(this.timer);for(const v of this.melodyVoices){try{v.source.stop();}catch{}v.source.disconnect();v.gain.disconnect();}this.melodyVoices.clear();if(this.context){this.setVolume(this.volume);const generation=this.generation;clearTimeout(this.suspendTimer);this.suspendTimer=setTimeout(()=>{if(generation===this.generation&&!this.enabled)this.context?.suspend().catch(()=>{});},350);}}
  get state(){return this.context?.state||'not-started';}
  dispose(){this.stop();clearTimeout(this.suspendTimer);for(const voice of this.voices){try{voice.source.stop();}catch{}}this.voices.clear();try{this.bed?.stop();}catch{}this.context?.close().catch(()=>{});this.context=null;}
 }
