@@ -41,8 +41,7 @@ export class ArchiveWorld {
   portalFrame(g,PORTALS.camp[0],true);
   this.hotspots.push(...WOOD_FINDS.map(h=>({...h,type:'harvest',title:'나무 아래 · 마른 장작 찾기',reach:1.5})));
   this.hotspots.push({x:0,z:0,id:'campfire',title:'모닥불 가까이 · 불멍하기',type:'campfire',reach:5.5});
-  this.hotspots.push({x:CAMP.board.x,z:CAMP.board.z+.8,id:'camp-sentence',title:'모닥불 곁 · 오늘의 한 문장',type:'camp-story'},{x:CAMP.bookshelf.x,z:CAMP.bookshelf.z+.5,id:'camp-books',title:'별빛 책장 · 책 이야기',type:'book'});
-  this.hotspots.push(...CAMP.tents.map(t=>({x:t.x,z:t.z+1,id:'tent-'+t.id,title:t.name+' · 책과 문장',type:'book'})));
+  this.hotspots.push({x:CAMP.board.x,z:CAMP.board.z+.8,id:'camp-sentence',title:'모닥불 곁 · 오늘의 한 문장',type:'camp-story'});
   this.colliders=LAYOUT.camp;return this.hotspots;
  }
  if(GALLERY[room]){buildGallery(g,room,content,this.hotspots);this.bake();this.colliders=LAYOUT[room];return this.hotspots;}

@@ -1,8 +1,9 @@
+import {recordChat} from './chat-history.mjs';
 import {serviceAvailable,takeService} from './snacks.mjs';
 import {MENU,NPCS} from '../src/cafe-data.js';
 import {SEATS,CAFE_TABLES,tableReach,menuSpot} from '../src/seats.js';
 import {validPosition} from '../src/protocol.js';
-export function updateCafe(s){const now=s.clock();for(const [id,o]of s.orders){if(o.status==='preparing'&&now>=o.readyAt)o.status='ready';if(o.status==='ready'&&!o.announced&&s.clients.get(id)?.room==='salon'){o.announced=true;s.messages.push({id:'order-ready-'+o.id,from:'barista',nickname:'바리스타 모아',text:o.nickname+'님, '+o.name+' 준비됐어요! 카운터에서 받아가세요.',room:'salon',scope:'public',table:0,at:now});s.messages=s.messages.slice(-200);}}}
+export function updateCafe(s){const now=s.clock();for(const [id,o]of s.orders){if(o.status==='preparing'&&now>=o.readyAt)o.status='ready';if(o.status==='ready'&&!o.announced&&s.clients.get(id)?.room==='salon'){o.announced=true;recordChat(s,{id:'order-ready-'+o.id,from:'barista',nickname:'바리스타 모아',text:o.nickname+'님, '+o.name+' 준비됐어요! 카운터에서 받아가세요.',room:'salon',scope:'public',table:0,at:now});s.messages=s.messages.slice(-200);}}}
 export function socialAction(s,id,input){const p=s.clients.get(id),now=s.clock();
  if(input.type==='barista-duty'){
   s.host(id);if(p.room!=='salon')throw Error('향기카페에 들어온 후 바리스타 자리로 이동해 주세요.');
@@ -37,5 +38,5 @@ export function socialAction(s,id,input){const p=s.clients.get(id),now=s.clock()
 export function baristaReply(s,p,audience,text){
  if(p.seat?.group!=='cafe-bar'||[...s.clients.values()].some(q=>q.room==='salon'&&q.seat?.staff))return;
  const reply=/커피|아메리카노|라테/.test(text)?'커피의 고소한 향처럼 편안한 시간이 되면 좋겠어요. 평소 어떤 커피를 좋아하세요?':/차|티|얼그레이/.test(text)?'차 한 잔과 어울리는 책 이야기도 좋겠네요. 요즘 마음에 남은 이야기가 있나요?':/안녕|반가/.test(text)?'어서 오세요! 저는 모아예요. 이 바에 함께 앉은 분들과만 조용히 이야기할 수 있어요.':/향|향수/.test(text)?'오늘의 기분을 향으로 표현하면 어떤 향일까요? 저는 포근한 나무 향이 떠올라요.':'들려주셔서 고마워요. 이곳에서 잠시 쉬어가세요. 오늘 하루 마음에 남은 순간이 있었나요?';
- s.messages.push({id:crypto.randomUUID(),from:'barista',nickname:'바리스타 모아 · NPC',text:reply,room:'salon',scope:'whisper',audience:[...audience],table:5,at:s.clock()});
+ recordChat(s,{id:crypto.randomUUID(),from:'barista',nickname:'바리스타 모아 · NPC',text:reply,room:'salon',scope:'whisper',audience:[...audience],table:5,at:s.clock()});
 }

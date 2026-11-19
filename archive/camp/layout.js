@@ -3,7 +3,6 @@ export const CAMP={
  width:30,depth:26,bounds:{x:14.5,z:12.3},
  gate:{x:0,z:11.2},spawn:{x:0,z:8.5},
  board:{x:4.8,z:-9.8,w:2.8,d:.6},
- bookshelf:{x:-5.4,z:6.4,w:1.7,d:.6},
  tents:[
   {id:'amber',name:'문장의 텐트',x:-8,z:-3.3,w:6,d:6.4,h:4.2,door:2.6,color:'#d8b6a7',rug:'#bd9a85'},
   {id:'lavender',name:'달빛 텐트',x:8,z:-3.3,w:6,d:6.4,h:4.2,door:2.6,color:'#b6bdcd',rug:'#9fa6bb'}
@@ -26,7 +25,7 @@ export function tentWalls(t){
 }
 export function tentTable(t){return {x:t.x,z:t.z-1.85,w:1.6,d:.75};}
 export const CAMP_OBSTACLES=[
- {x:0,z:0,r:1.12},CAMP.board,CAMP.bookshelf,
+ {x:0,z:0,r:1.12},CAMP.board,
  ...CAMP.tents.flatMap(t=>[...tentWalls(t),tentTable(t)]),
  ...CAMP_SEATS.map(s=>({x:s.x,z:s.z,r:s.id.startsWith('camp-tent')?.44:.5}))
 ];

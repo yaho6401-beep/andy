@@ -122,12 +122,6 @@ export function createCamp(scene){
  const canvas=document.createElement('canvas');canvas.width=512;canvas.height=256;const ctx=canvas.getContext('2d');
  const quoteTex=new T.CanvasTexture(canvas);quoteTex.colorSpace=T.SRGBColorSpace;
  const quoteLabel=new T.Mesh(new T.PlaneGeometry(2.65,1.35),new T.MeshBasicMaterial({map:quoteTex,transparent:true}));quoteLabel.position.set(b.x,1.65,b.z+.14);root.add(quoteLabel);
- const shelf=CAMP.bookshelf;
- panel('#a98e77',shelf.x,.75,shelf.z,shelf.w,1.5,.5);
- for(let row=0;row<2;row++){
-  panel('#d2b99a',shelf.x,.28+row*.65,shelf.z+.31,shelf.w,.08,.55);
-  for(let i=0;i<6;i++)panel(['#e1c3b4','#b5c8bb','#c6bed5'][i%3],shelf.x-.65+i*.25,.56+row*.65,shelf.z+.3,.17,.45,.22);
- }
  for(const [x,z] of [[-3.8,5],[3.8,5],[-8,2.2],[8,2.2],[-2.1,10.3],[2.1,10.3]])lantern(x,z);
  const coords=[];for(let i=0;i<100;i++){const a=i*2.39996,r=21+(i%5)*1.5;coords.push(Math.sin(a)*r,11+(i%11)*.8,Math.cos(a)*r);}
  const starGeo=new T.BufferGeometry();starGeo.setAttribute('position',new T.Float32BufferAttribute(coords,3));root.add(new T.Points(starGeo,new T.PointsMaterial({color:'#fff1d3',size:.07,sizeAttenuation:true})));
