@@ -102,7 +102,7 @@ attribute float aSize;
 varying float vFade;
 void main(){
  vFade=aFade;vec4 mv=modelViewMatrix*vec4(position,1.0);
- gl_PointSize=clamp(aSize*160.0/max(1.0,-mv.z),1.0,3.2);
+ gl_PointSize=clamp(aSize*160.0/max(1.0,-mv.z),1.0,3.68);
  gl_Position=projectionMatrix*mv;
 }`;
 export const sparkFragment=/* glsl */`

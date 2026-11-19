@@ -1,5 +1,5 @@
 import {FIRE,clampHeat} from './fire-state.js';
-export function fireSoundProfile(heat){const h=(clampHeat(heat)-FIRE.min)/(FIRE.max-FIRE.min);return {roar:.15+h*1.1,filter:800+h*2400,crackle:.055+h*.33,interval:850-h*770};}
+export function fireSoundProfile(heat){const h=Math.min(1.18,(clampHeat(heat)-FIRE.min)/(FIRE.max-FIRE.min));return {roar:.15+h*1.1,filter:800+h*2400,crackle:.055+h*.33,interval:Math.max(65,850-h*770)};}
 // Original procedural fire sound. No downloaded audio, microphone or autoplay.
 export class FireAudio{
  constructor(){this.context=null;this.enabled=false;this.volume=.32;this.heat=.7;this.generation=0;this.voices=new Set;}

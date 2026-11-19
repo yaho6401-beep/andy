@@ -5,7 +5,7 @@ import {createCamp} from '../camp/world.js';
 import {CAMP} from '../camp/layout.js';
 import {campSign} from '../camp/signage.js';
 import {GALLERY} from './gallery-layout.js';
-import {HARVESTS} from '../camp/snack-data.js';
+import {HARVESTS,WOOD_FINDS} from '../camp/snack-data.js';
 import {GARDEN} from './garden-layout.js';
 import {CAFE_TABLES,SEATS} from './seats.js';
 import * as T from 'three';
@@ -39,6 +39,7 @@ export class ArchiveWorld {
  if(room==='camp'){
   this.camp=createCamp(g);this.camp.setQuote('오늘의 이야기를 모닥불 곁에 잠시 내려놓아요.');
   portalFrame(g,PORTALS.camp[0],true);
+  this.hotspots.push(...WOOD_FINDS.map(h=>({...h,type:'harvest',title:'나무 아래 · 마른 장작 찾기',reach:1.5})));
   this.hotspots.push({x:0,z:0,id:'campfire',title:'모닥불 가까이 · 불멍하기',type:'campfire',reach:5.5});
   this.hotspots.push({x:CAMP.board.x,z:CAMP.board.z+.8,id:'camp-sentence',title:'모닥불 곁 · 오늘의 한 문장',type:'camp-story'},{x:CAMP.bookshelf.x,z:CAMP.bookshelf.z+.5,id:'camp-books',title:'별빛 책장 · 책 이야기',type:'book'});
   this.hotspots.push(...CAMP.tents.map(t=>({x:t.x,z:t.z+1,id:'tent-'+t.id,title:t.name+' · 책과 문장',type:'book'})));
@@ -136,5 +137,5 @@ export class ArchiveWorld {
  for(const b of buckets.values()){const geometry=mergeGeometries(b.geometries,false);for(const part of b.geometries)part.dispose();if(!geometry)continue;const combined=new T.Mesh(geometry,b.material);combined.castShadow=true;combined.receiveShadow=true;combined.userData.archiveMerged=true;g.add(combined);}
  }
  nearest(x,z){return this.hotspots.map(h=>({...h,distance:Math.hypot(x-h.x,z-h.z)})).filter(h=>h.distance<(h.reach||2.9)).sort((a,b)=>a.distance-b.distance)[0];}
- update(t,viewer){this.camp?.update(t,globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches,viewer);if(this.water&&this.room==='lobby')this.water.material.color.setHSL(.42,.16,.73+Math.sin(t)*.015);}
+ update(t,viewer,camera){this.camp?.update(t,globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches,viewer,camera);if(this.water&&this.room==='lobby')this.water.material.color.setHSL(.42,.16,.73+Math.sin(t)*.015);}
 }

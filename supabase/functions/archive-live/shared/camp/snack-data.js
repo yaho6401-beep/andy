@@ -12,4 +12,16 @@ export const HARVESTS=[
 ];
 export const PACK_LIMIT=3,HARVEST_PAUSE=300000,SERVICE_PAUSE=60000,PACK_TTL=7200000;
 export const SHARE_TTL=600000;
+// A calm twenty-second serving window, then gradual scorching. Shared food is off the fire.
+export const ROAST={graceMs:20000,scorchMs:30000};
+export function roastState(job,now){
+ const progress=Math.max(0,Math.min(1,(now-job.startedAt)/Math.max(1,job.readyAt-job.startedAt)));
+ const scorch=job.shared||job.kind==='marshmallow'?0:Math.max(0,Math.min(1,(now-job.readyAt-ROAST.graceMs)/ROAST.scorchMs));
+ return {progress,scorch,ready:now>=job.readyAt,burnt:scorch>=1,stage:now<job.readyAt?'cooking':scorch>=1?'burnt':scorch>0?'scorching':'ready'};
+}
+export const WOOD_FINDS=[
+ {id:'camp-east-wood',kind:'firewood',room:'camp',x:13.6,z:6},
+ {id:'camp-west-wood',kind:'firewood',room:'camp',x:-13.6,z:6},
+ {id:'camp-north-wood',kind:'firewood',room:'camp',x:-13.6,z:-9}
+];
 export function biteLine(kind){return kind==='marshmallow'?'말랑한 한입, 마음까지 달달해진다…':'호호, 한입. 속까지 따뜻해진다…';}

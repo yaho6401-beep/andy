@@ -23,7 +23,7 @@ export class EmberPool{
   for(let j=0;j<n;j++){
    const i=this.cursor++%this.capacity,a=r()*Math.PI*2,v=.12+r()*.55,isHeart=j>=event.count;
    this.born[i]=time;this.life[i]=isHeart?2.75:1.1+r()*1.25;this.x[i]=(r()-.5)*.58;this.z[i]=(r()-.5)*.58;
-   this.vx[i]=Math.cos(a)*v;this.vz[i]=Math.sin(a)*v;this.vy[i]=(.85+r()*1.2)*(.55+s*.65);this.size[i]=(.055+r()*.045)*(.65+s*.35);
+   this.vx[i]=Math.cos(a)*v;this.vz[i]=Math.sin(a)*v;this.vy[i]=(.85+r()*1.2)*(.55+s*.65);this.size[i]=(.055+r()*.045)*(.65+s*.35)*1.15;
    this.heart[i]=isHeart?1:0;this.height[i]=event.height||1.65;this.rightX[i]=right.x;this.rightZ[i]=right.z;
    const t=(j-event.count)/Math.max(1,event.heartCount)*Math.PI*2+(r()-.5)*.065;
    this.hx[i]=Math.pow(Math.sin(t),3)*(.47+s*.12)+(r()-.5)*.025;
@@ -42,7 +42,7 @@ export class EmberPool{
     y+=(this.height[i]+this.hy[i]-y)*ease+scatter*.4;
    }
    this.positions[i*3]=x;this.positions[i*3+1]=Math.max(.22,y);this.positions[i*3+2]=z;
-   this.fades[i]=reduced?0:Math.min(1,age/.09)*Math.min(1,(life-age)/.8)*(.4+this.vy[i]*.17);
+   this.fades[i]=reduced?0:Math.min(1,age/.09)*Math.min(1,(life-age)/.8)*(.4+this.vy[i]*.17)*1.15;
    this.sizes[i]=this.size[i];
   }
   this.active=active;

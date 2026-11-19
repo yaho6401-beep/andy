@@ -1,6 +1,6 @@
 import * as T from 'three';
 import {createFire,heatAt,FIRE} from './fire-state.js';
-import {CAMP_SEATS} from './layout.js';
+import {createRoastingVisual} from './roast-visual.js';
 import {EmberPool} from './ember-touch.js';
 import {createWoodKit} from './wood.js';
 import {billboardVertex,flameFragment,smokeFragment,haloFragment,sparkVertex,sparkFragment,coalVertex,coalFragment} from './fire-shaders.js';
@@ -25,11 +25,7 @@ export function createFireVisual(parent){
  const fireWood=createWoodKit(true),logs=[];
  for(let i=0;i<6;i++){const log=fireWood.log(.115+(i%2)*.02,1.2+(i%3)*.13);log.rotation.set(.1,i*1.047+.35,Math.PI/2+(i>2?.48:0));log.position.set(Math.sin(i*2.4)*.13,.3+(i>2?.2:0)+(i%3)*.035,Math.cos(i*2.4)*.13);root.add(log);logs.push({mesh:log,y:log.position.y,z:log.rotation.z,yaw:log.rotation.y});}
  const hit=new T.Mesh(own(new T.BoxGeometry(1.5,.8,1.5)),material(new T.MeshBasicMaterial({visible:false})));hit.position.y=.47;hit.name='touchable-firewood';root.add(hit);
- const snackRoot=new T.Group();snackRoot.name='slow-roasting-snacks';root.add(snackRoot);
- const snackGeo=own(new T.SphereGeometry(1,12,8)),mallowGeo=own(new T.CylinderGeometry(.13,.13,.21,16)),rodGeo=own(new T.CylinderGeometry(.013,.018,1.1,6));
- const halfGeo=own(new T.SphereGeometry(1,12,8,0,Math.PI)),cutGeo=own(new T.CircleGeometry(1,16)),plateGeo=own(new T.CylinderGeometry(.34,.3,.04,18)),fleshMat=material(new T.MeshLambertMaterial({color:'#f4cf80',side:T.DoubleSide}));
- const rodMat=material(new T.MeshLambertMaterial({color:'#a37a4b'})),foilMat=material(new T.MeshStandardMaterial({color:'#c8bda9',metalness:.65,roughness:.43})),snackModels=new Map();
- function removeSnack(model){model.root.removeFromParent();model.material.dispose();}
+ const roasting=createRoastingVisual(root);
  const light=new T.PointLight('#ffad55',5,8,2);light.position.set(0,.75,0);root.add(light);
  const sparkCount=40,sparkPositions=new Float32Array(sparkCount*3),sparkFades=new Float32Array(sparkCount),sparkSizes=new Float32Array(sparkCount),sparkGeo=own(new T.BufferGeometry());
  for(let i=0;i<sparkCount;i++)sparkSizes[i]=.035+(i%4)*.009;
@@ -39,28 +35,32 @@ export function createFireVisual(parent){
  const touchEmbers=new T.Points(touchGeo,sparks.material);touchEmbers.name='touched-wood-embers';touchEmbers.frustumCulled=false;touchEmbers.renderOrder=12;root.add(touchEmbers);
  const branch=new T.Group(),wood=material(new T.MeshLambertMaterial({color:'#986a43'})),cut=material(new T.MeshLambertMaterial({color:'#d4b17f'})),stickGeo=own(new T.CylinderGeometry(.035,.05,.75,7));
  const stem=new T.Mesh(stickGeo,wood);stem.rotation.z=Math.PI/2;branch.add(stem);const fork=new T.Mesh(stickGeo,wood);fork.scale.set(.65,.5,.65);fork.rotation.z=.5;fork.position.set(.06,.12,0);branch.add(fork);const end=new T.Mesh(own(new T.CylinderGeometry(.049,.049,.012,7)),cut);end.rotation.z=Math.PI/2;end.position.x=.38;branch.add(end);branch.visible=false;root.add(branch);
+ const thrownLog=fireWood.log(.13,.9);thrownLog.visible=false;root.add(thrownLog);
+ const burntThrow=new T.Mesh(own(new T.SphereGeometry(.2,10,7)),material(new T.MeshLambertMaterial({color:'#29231d'})));burntThrow.visible=false;root.add(burntThrow);
  let fire=createFire(Date.now()),offset=0,sequence=0,throwEvent=null,energy=1,disposed=false,stirTime=-100,stirStrength=0,stirSerial=0;
  return {
   pickWood(ray){root.updateMatrixWorld(true);return ray.intersectObject(hit,false).length>0;},
   stir(event,time,right){if(disposed)return;stirTime=time;stirStrength=event.strength;stirSerial++;emberPool.emit(event,time,right);},
-  setSnacks(jobs){const ids=new Set(jobs.map(j=>j.id));for(const [id,model]of snackModels)if(!ids.has(id)){removeSnack(model);snackModels.delete(id);}for(const job of jobs){if(snackModels.has(job.id))continue;const seat=CAMP_SEATS.find(s=>s.id===job.seat&&s.group==='campfire-main');if(!seat)continue;const g=new T.Group();g.rotation.y=Math.atan2(seat.x,seat.z);snackRoot.add(g);const marsh=job.kind==='marshmallow',sweet=job.kind==='sweetpotato',mat=new T.MeshStandardMaterial({color:marsh?'#fff4e3':sweet?'#99535f':'#c4a16e',roughness:.85});const food=new T.Mesh(marsh?mallowGeo:job.shared?halfGeo:snackGeo,mat);food.position.set(0,marsh?.72:.28,marsh?.9:1.02);if(job.shared){food.position.set(0,.3,1.24);food.scale.set(marsh?1:.22,marsh?.5:.13,marsh?1:sweet?.34:.24);food.rotation.y=Math.PI;const plate=new T.Mesh(plateGeo,rodMat);plate.position.set(0,.18,1.24);g.add(plate);if(!marsh){const cut=new T.Mesh(cutGeo,fleshMat);cut.scale.set(.22,.13,1);cut.position.set(0,.3,1.242);g.add(cut);}}else if(marsh){food.rotation.x=Math.PI/2;const stick=new T.Mesh(rodGeo,rodMat);stick.rotation.x=Math.PI/2;stick.position.set(0,.72,1.45);g.add(stick);}else{food.scale.set(.22,.12,sweet?.34:.24);food.rotation.y=.25;const foil=new T.Mesh(snackGeo,foilMat);foil.scale.set(.27,.055,sweet?.38:.29);foil.position.set(0,.18,1.02);g.add(foil);}g.add(food);snackModels.set(job.id,{root:g,food,material:mat,job,start:new T.Color(marsh?'#fff4e3':sweet?'#99535f':'#c4a16e'),end:new T.Color(marsh?'#bd7e38':sweet?'#bd7554':'#aa7944')});}},
+  setSnacks:jobs=>roasting.setJobs(jobs),
   setState(value){if(!value)return;fire=value;offset=value.at-Date.now();if(value.lastThrow?.sequence>sequence){sequence=value.lastThrow.sequence;throwEvent=value.lastThrow;}},
-  get diagnostics(){return {style:'layered-wood-fire',roasting:[...snackModels.values()].filter(m=>!m.job.shared).length,sharedPortions:[...snackModels.values()].filter(m=>m.job.shared).length,heat:heatAt(fire,Date.now()+offset),sequence,branchVisible:branch.visible,energy,sparks:sparks.visible,smoke:smoke.visible,stirs:stirSerial,touchParticles:emberPool.active,particleCapacity:emberPool.capacity,flameHeight:flame.material.uniforms.uHeight.value};},
+  get diagnostics(){return {style:'layered-wood-fire',...roasting.diagnostics,heat:heatAt(fire,Date.now()+offset),sequence,branchVisible:branch.visible||thrownLog.visible||burntThrow.visible,energy,sparks:sparks.visible,smoke:smoke.visible,stirs:stirSerial,touchParticles:emberPool.active,particleCapacity:emberPool.capacity,flameHeight:flame.material.uniforms.uHeight.value};},
   update(time,reduced=false){
    if(disposed)return;
    const now=Date.now()+offset,heat=heatAt(fire,now),age=throwEvent?(now-throwEvent.at)/1000:99,burst=age<1.1?0:Math.max(0,1-(age-1.1)/2.8),stirAge=time-stirTime,stir=reduced?0:Math.max(0,1-stirAge/.65)*stirStrength;energy=.45+heat*1.25+burst*.8;
-   timeUniform.value=reduced?3.7:time;heatUniform.value=heat;burstUniform.value=burst+stir*.14;
-   for(let i=0;i<logs.length;i++){const log=logs[i],wiggle=Math.sin(stirAge*21+i*1.7)*Math.exp(-Math.max(0,stirAge)*7)*(stirAge>=0&&stirAge<1?1:0);log.mesh.rotation.z=log.z+wiggle*.035;log.mesh.rotation.y=log.yaw+wiggle*.026;log.mesh.position.y=log.y+Math.abs(wiggle)*.012;}
-   for(const model of snackModels.values()){const progress=T.MathUtils.clamp((now-model.job.startedAt)/(model.job.readyAt-model.job.startedAt),0,1);model.material.color.lerpColors(model.start,model.end,progress);if(model.job.kind==='marshmallow'&&!model.job.shared)model.food.rotation.z=reduced?0:Math.sin(time*.7)*.18;}
-   flame.material.uniforms.uHeight.value=.12+Math.pow(Math.max(0,heat-FIRE.min),.92)*1.72+burst*.18+stir*.05;flame.material.uniforms.uWidth.value=1.12+heat*.72+burst*.12;
+   timeUniform.value=reduced?3.7:time;heatUniform.value=Math.max(.46,heat);burstUniform.value=burst+stir*.14;
+   for(let i=0;i<logs.length;i++){const log=logs[i],wiggle=Math.sin(stirAge*21+i*1.7)*Math.exp(-Math.max(0,stirAge)*7)*(stirAge>=0&&stirAge<1?1:0);log.mesh.rotation.z=log.z+wiggle*.04025;log.mesh.rotation.y=log.yaw+wiggle*.0299;log.mesh.position.y=log.y+Math.abs(wiggle)*.0138;}
+   roasting.update(now,time,reduced);
+   flame.material.uniforms.uHeight.value=Math.max(.95,.22+Math.pow(Math.max(.18,heat-FIRE.min),.92)*1.82)+burst*.22+stir*.0575;flame.material.uniforms.uWidth.value=1.12+heat*.72+burst*.12;
    innerFlame.material.uniforms.uHeight.value=flame.material.uniforms.uHeight.value*.62;innerFlame.material.uniforms.uWidth.value=flame.material.uniforms.uWidth.value*.88;
    fireWood.materials[0].emissiveIntensity=.45+heat*.3+stir*.15;
    smoke.material.uniforms.uHeight.value=1.6+heat*1.05+burst*.3;smoke.material.uniforms.uWidth.value=1.5+heat*.5;smoke.visible=!reduced;
    halo.material.uniforms.uHeight.value=.6+heat*.95+burst*.25;
    const flicker=reduced?0:Math.sin(time*7.3)*.1+Math.sin(time*11.7+1)*.07+Math.sin(time*2.4)*.12;
    light.intensity=Math.min(12,.8+heat*4+burst+flicker*heat);light.position.x=reduced?0:Math.sin(time*2.7)*.07;light.position.z=reduced?0:Math.cos(time*3.2)*.05;
-   branch.visible=age>=0&&age<FIRE.flightMs/1000;
-   if(branch.visible){const t=Math.max(0,age/(FIRE.flightMs/1000));branch.position.set(throwEvent.x*(1-t),1.25*(1-t)+.25*t+Math.sin(Math.PI*t)*1.1,throwEvent.z*(1-t));branch.rotation.set(t*3.5,age*2,.3+t*2);}
+   const flying=age>=0&&age<FIRE.flightMs/1000;
+   const prop=throwEvent?.kind==='wood'?thrownLog:throwEvent?.kind==='burnt'?burntThrow:branch;
+   branch.visible=flying&&prop===branch;thrownLog.visible=flying&&prop===thrownLog;burntThrow.visible=flying&&prop===burntThrow;
+   if(flying){const t=Math.max(0,age/(FIRE.flightMs/1000));prop.position.set(throwEvent.x*(1-t),1.25*(1-t)+.25*t+Math.sin(Math.PI*t)*1.1,throwEvent.z*(1-t));prop.rotation.set(t*3.5,age*2,.3+t*2);}
    sparks.visible=!reduced;
    for(let i=0;i<sparkCount;i++){
     const life=(time*(.18+(i%7)*.019)+i*.618)%1,a=i*2.39996,r=.1+life*.42;
@@ -70,6 +70,6 @@ export function createFireVisual(parent){
    sparkGeo.attributes.position.needsUpdate=true;sparkGeo.attributes.aFade.needsUpdate=true;
    emberPool.update(time,reduced);touchEmbers.visible=!reduced&&emberPool.active>0;for(const attribute of Object.values(touchGeo.attributes))attribute.needsUpdate=true;
   },
-  dispose(){if(disposed)return;disposed=true;for(const model of snackModels.values())removeSnack(model);snackModels.clear();root.removeFromParent();fireWood.dispose();coals.dispose();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
+  dispose(){if(disposed)return;disposed=true;roasting.dispose();root.removeFromParent();fireWood.dispose();coals.dispose();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
  };
 }
