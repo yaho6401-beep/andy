@@ -1,10 +1,11 @@
 import {SCENTS,GROUPS,FAMILIES,DEFAULT_TARGET,MAX_SCENTS,validateRecipe,blendRecipe,createRecord,readRecords,saveRecord,deleteRecord,RECORD_KEY} from './model.js';
+import {Account} from '../member-account.js';
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const selected=new Map();let result=null,records=[],savedId=null,saving=false,deleteArmed=null;
 const recipe=()=>({version:1,kind:'individual',base:null,targetTotal:$('target-total').value,ingredients:[...selected].map(([code,drops])=>({code,drops}))});
 const pct=(n,total)=>Math.round(n/total*1000)/10;
-function storageError(error){return /기록|형식|200개/.test(error.message)?error.message:'이 브라우저의 저장 공간을 사용할 수 없어요. 저장 설정이나 남은 공간을 확인해주세요.';}
-function refreshRecords(){try{records=readRecords(localStorage);$('records-status').textContent='';$('record-count').textContent=records.length;}catch(error){$('records-status').textContent=storageError(error);$('record-count').textContent='—';}renderRecords();}
+function storageError(error){return error.message||'저장하지 못했어요. 잠시 후 다시 시도해 주세요.';}
+async function refreshRecords(){if(!Account.profile){records=[];$('record-count').textContent='0';renderRecords();return;}try{records=await Account.records('blending');$('records-status').textContent='';$('record-count').textContent=records.length;}catch(error){$('records-status').textContent=storageError(error);$('record-count').textContent='—';}renderRecords();}
 function drawChoices(){
  $('scent-groups').innerHTML=GROUPS.map(g=>`<fieldset class="scent-group"><legend><b>${g.label}</b> ${g.title}</legend><p>${g.description}</p><div class="scent-grid">${SCENTS.filter(s=>s.note===g.note).map(s=>`<label class="scent-choice"><input type="checkbox" value="${s.code}" aria-label="${s.code} 선택"><strong>${s.code}</strong><span>선택하기</span></label>`).join('')}</div></fieldset>`).join('');
 }
@@ -13,8 +14,8 @@ function drawDropRows(){
  updateTotal();
 }
 function updateTotal(){const v=validateRecipe(recipe());$('selected-count').textContent=v.count+' / 8개';$('total-output').textContent=v.total+' / '+(v.target??'—')+' 방울';$('total-progress').max=v.target||1;$('total-progress').value=Math.min(v.target||1,v.total);document.querySelector('.mix-footer').classList.toggle('is-over',v.target!==null&&v.total>v.target);$('blend-button').disabled=!v.valid;$('recipe-status').textContent=v.valid?'딱 맞아요. 이제 나의 향을 상상해볼까요?':v.errors[0];}
-function showView(view,focus=true){
- const saved=view==='records';$('mix-view').hidden=saved;$('records-view').hidden=!saved;$('mix-tab').setAttribute('aria-pressed',String(!saved));$('records-tab').setAttribute('aria-pressed',String(saved));
+async function showView(view,focus=true){
+ const saved=view==='records';if(saved&&!await Account.require('나의 조향 기록은 로그인 후 열 수 있어요.'))return;$('mix-view').hidden=saved;$('records-view').hidden=!saved;$('mix-tab').setAttribute('aria-pressed',String(!saved));$('records-tab').setAttribute('aria-pressed',String(saved));
  if(saved)refreshRecords();if(focus){const target=saved?$('records-title'):result&&!$('result').hidden?$('result-title'):$('choose-title');target.focus({preventScroll:true});target.scrollIntoView({block:'start',behavior:'smooth'});}
  if((location.hash==='#records')!==saved)history.replaceState(null,'',saved?'#records':location.pathname);
 }
@@ -37,14 +38,16 @@ $('mix-tab').onclick=()=>showView('mix');$('records-tab').onclick=()=>showView('
 $('new-recipe').onclick=()=>{selected.clear();$('target-total').value=DEFAULT_TARGET;document.querySelectorAll('.scent-choice input').forEach(input=>{input.checked=false;input.closest('label').querySelector('span').textContent='선택하기';});drawDropRows();editRecipe();};
 $('name-form').addEventListener('submit',async event=>{
  event.preventDefault();if(!result||saving||$('save-button').disabled)return;saving=true;$('save-button').disabled=true;
- try{const record=createRecord(result,$('perfume-name').value,savedId?{id:savedId}:{});savedId=record.id;records=saveRecord(localStorage,record);$('record-count').textContent=records.length;$('save-status').textContent='저장했어요. 나의 조향 기록에서 다시 볼 수 있어요.';$('save-button').innerHTML='저장 완료 <span>✓</span>';$('perfume-name').readOnly=true;}
+ try{const record=createRecord(result,$('perfume-name').value,savedId?{id:savedId}:{});savedId=record.id;const stored=await Account.save('blending',record);records=[stored,...records.filter(r=>r.id!==stored.id)];$('record-count').textContent=records.length;$('save-status').textContent='저장했어요. 나의 조향 기록에서 다시 볼 수 있어요.';$('save-button').innerHTML='저장 완료 <span>✓</span>';$('perfume-name').readOnly=true;}
  catch(error){$('save-status').textContent=storageError(error);$('save-button').disabled=false;}finally{saving=false;}
 });
-$('record-list').addEventListener('click',event=>{
+$('record-list').addEventListener('click',async event=>{
  if(event.target.closest('[data-first-recipe]')){showView('mix');return;}
  const reuse=event.target.closest('[data-reuse-record]'),remove=event.target.closest('[data-delete-record]');
  if(reuse){const record=records.find(r=>r.id===reuse.dataset.reuseRecord);if(!record)return;selected.clear();for(const s of record.ingredients)selected.set(s.code,String(s.drops));$('target-total').value=record.targetTotal;document.querySelectorAll('.scent-choice input').forEach(input=>{input.checked=selected.has(input.value);input.closest('label').querySelector('span').textContent=input.checked?'선택했어요':'선택하기';});drawDropRows();editRecipe();}
- if(remove){const id=remove.dataset.deleteRecord;if(deleteArmed!==id){deleteArmed=id;renderRecords();document.querySelector(`[data-delete-record="${CSS.escape(id)}"]`)?.focus({preventScroll:true});return;}try{records=deleteRecord(localStorage,id);deleteArmed=null;$('record-count').textContent=records.length;$('records-status').textContent='기록을 삭제했어요.';renderRecords();}catch(error){$('records-status').textContent=storageError(error);}}
+ if(remove){const id=remove.dataset.deleteRecord;if(deleteArmed!==id){deleteArmed=id;renderRecords();document.querySelector(`[data-delete-record="${CSS.escape(id)}"]`)?.focus({preventScroll:true});return;}try{await Account.remove('blending',id);records=records.filter(r=>r.id!==id);deleteArmed=null;$('record-count').textContent=records.length;$('records-status').textContent='기록을 삭제했어요.';renderRecords();}catch(error){$('records-status').textContent=storageError(error);}}
 });
 window.addEventListener('storage',event=>{if(event.key===RECORD_KEY)refreshRecords();});window.addEventListener('hashchange',()=>showView(location.hash==='#records'?'records':'mix',false));
+Account.subscribe(()=>refreshRecords());
+const legacyImport=document.createElement('button');legacyImport.type='button';legacyImport.className='text-button';legacyImport.textContent='이 기기의 이전 조향 기록 가져오기 ↗';$('records-status').before(legacyImport);legacyImport.onclick=async()=>{try{if(!await Account.require())return;const ids=new Set(records.map(r=>r.id)),old=readRecords(localStorage).filter(r=>!ids.has(r.id)).slice(0,20);if(!old.length){$('records-status').textContent='가져올 이전 기록이 없어요.';return;}if(!confirm('이 기기의 이전 조향 기록 '+old.length+'개를 내 계정에 가져올까요? 본인 기록인지 확인해 주세요.'))return;for(const r of old)await Account.save('blending',r);await refreshRecords();$('records-status').textContent='이전 기록을 가져왔어요. 원본은 이 기기에 그대로 남아 있습니다.';}catch(e){$('records-status').textContent=e.message;}};
 drawChoices();drawDropRows();refreshRecords();showView(location.hash==='#records'?'records':'mix',false);

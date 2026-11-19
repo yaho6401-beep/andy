@@ -1,4 +1,5 @@
 import {readPublicBoard} from '../../api/archive-public-board.mjs';
+import {accountProxy} from '../../api/workshop-account.mjs';
 import http from 'node:http';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {resolve,extname,sep} from 'node:path';
@@ -19,6 +20,7 @@ const reply=(res,status,body)=>{res.writeHead(status,{'Content-Type':'applicatio
 async function body(req){let s='';for await(const chunk of req){s+=chunk;if(s.length>16384)throw Error('요청이 너무 큽니다.');}return JSON.parse(s);}
 const server=http.createServer(async(req,res)=>{try{
  const u=new URL(req.url,'http://localhost');if(req.headers.origin&&!allowedOrigins.includes(req.headers.origin))return reply(res,403,{error:'허용되지 않은 출처입니다.'});
+ if(u.pathname==='/api/workshop-account'&&req.method==='POST'){const result=await accountProxy({method:req.method,headers:req.headers,body:await body(req)});if(result.cookie)res.setHeader('Set-Cookie',result.cookie);return reply(res,result.status,result.body);}
  if(u.pathname==='/api/archive-public-board'&&req.method==='GET'){try{return reply(res,200,await readPublicBoard(u.searchParams.get('page')));}catch{return reply(res,502,{error:'게시글을 불러오지 못했어요.'});}}
  if(u.pathname==='/api/archive/session'&&req.method==='POST'){const b=await body(req);if(b.adult!==true&&b.publicEntry!==true)return reply(res,400,{error:'공개 체험 입장을 확인해 주세요.'});const isHost=b.hostKey===hostKey;if(b.hostKey&&!isHost)return reply(res,403,{error:'로컬 진행자 키가 올바르지 않습니다.'});const id=isHost?'host':'dev-'+clean(b.id,60);if(!store.members.has(id))store.seed(id,clean(b.nickname,16),'guest',{adultConfirmed:b.adult===true,publicVisitor:true});store.members.get(id).nickname=clean(b.nickname,16);store.members.get(id).startRoom=b.startRoom;return reply(res,200,{token:store.session(id),id,mode:'local',meeting:store.meeting});}
  if(u.pathname==='/api/archive/admin'){const id=store.identity(req.headers.authorization?.replace(/^Bearer /,''));return reply(res,200,store.admin(id));}

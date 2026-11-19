@@ -1,9 +1,10 @@
 import {readStored,writeStored} from './client-state.js';
+import {Account} from '../../member-account.js';
 const endpoint='https://jqlrwwheiwjdrobluifx.supabase.co/functions/v1/archive-live?forceFunctionRegion=eu-west-1';
 const apiKey='sb_publishable_jQ8AERL_i5ecVFbM0NgX_g_rAxIBPTb';
 export class SharedTransport{
  constructor(onSnapshot,onStatus,{startRoom}={}){this.onSnapshot=onSnapshot;this.onStatus=onStatus;this.startRoom=['scents','books','lobby','salon','camp','garden-beyond'].includes(startRoom)?startRoom:null;this.shared=true;this.queue=[];this.batch=0;this.seenReceipt=0;this.closed=true;this.failures=0;this.cache={};this.generation=0;}
- async request(op,data={},token=this.token){const r=await fetch(endpoint,{method:'POST',headers:{apikey:apiKey,'Content-Type':'application/json','x-region':'eu-west-1',...(token?{Authorization:'Bearer '+token}:{})},body:JSON.stringify({op,connectionId:this.connectionId,...data}),signal:AbortSignal.timeout(12000)});const d=await r.json();if(!r.ok)throw Object.assign(Error(d.error||'라운지 연결을 확인해 주세요.'),{status:r.status});return d;}
+ async request(op,data={},token=this.token){const memberTicket=Account.profile?await Account.ticket():null;const r=await fetch(endpoint,{method:'POST',headers:{apikey:apiKey,'Content-Type':'application/json','x-region':'eu-west-1',...(token?{Authorization:'Bearer '+token}:{})},body:JSON.stringify({op,connectionId:this.connectionId,...data,memberTicket}),signal:AbortSignal.timeout(12000)});const d=await r.json();if(!r.ok)throw Object.assign(Error(d.error||'라운지 연결을 확인해 주세요.'),{status:r.status});return d;}
  async connect(profile){
  if(this.connecting||!this.closed)throw Error('이미 입장 중이에요. 잠시 기다려 주세요.');this.connecting=true;const generation=++this.generation;
  try{

@@ -2,6 +2,7 @@ import postgres from 'npm:postgres@3.4.8';
 import {restoreStore,serializeStore,expirePlayers} from './shared/server/persistence.mjs';
 import {clean,appearance} from './shared/src/protocol.js';
 import {directEntry} from './shared/src/room-entry.js';
+import {MEMBER_ACTIONS} from './shared/src/member-policy.js';
 const createSql=()=>postgres(Deno.env.get('SUPABASE_DB_URL')!,{max:1,idle_timeout:2,connect_timeout:10,prepare:false,ssl:'require',connection:{application_name:'books_scents_archive'}});
 const keys=new Set([...Object.values(JSON.parse(Deno.env.get('SUPABASE_PUBLISHABLE_KEYS')||'{}')),Deno.env.get('SUPABASE_ANON_KEY')].filter(Boolean));
 const allowedOrigin=(o:string)=>o==='https://andy-plum.vercel.app'||/^https:\/\/andy-[a-z0-9-]+-asdf-15dc\.vercel\.app$/.test(o)||o==='http://127.0.0.1:4174';
@@ -42,7 +43,7 @@ Deno.serve(async req=>{
  if(!session)throw fail('입장 세션이 만료됐어요. 다시 입장해 주세요.',401);
  if(session.role==='host'){const valid=await q('select token_hash from public.workshop_feedback_sessions where token_hash=$1 and expires_at>now()',[session.admin_hash]);if(!valid.length)throw fail('관리자 인증이 만료됐어요.',403);}
  const row=(await q("select state from archive_private.rooms where id='community' for update"))[0];
- const now=Date.now(),s=restoreStore(typeof row.state==='string'?JSON.parse(row.state):row.state),id=session.player_id;s.publicLounge=true;expirePlayers(s,now);
+ const now=Date.now(),s=restoreStore(typeof row.state==='string'?JSON.parse(row.state):row.state),id=session.player_id;s.publicLounge=true;s.enforceMembers=true;expirePlayers(s,now);
  if(s.members.get(id)?.blocked||s.members.has(id)&&s.members.get(id).status!=='approved')throw fail('진행자가 이 라운지의 입장을 제한했어요.',403);
  if(op==='join'){
   const active=s.clients.get(id);if(active&&active.connectionId!==input.connectionId)throw fail('이미 다른 화면에서 접속 중이에요.',409);
@@ -54,6 +55,15 @@ Deno.serve(async req=>{
   if(op==='tick'&&now-(p.lastRequest||0)<180)throw fail('요청이 너무 빠릅니다.',429);p.lastRequest=now;p.lastSeen=now;
  }
  const p=s.clients.get(id);let out:any;
+ // Membership is independent of admission, adult approval and host authorization.
+ // Only short-lived, server-issued tickets bind an account; never client member IDs.
+ const ticket=typeof input.memberTicket==='string'&&/^[a-f0-9]{64}$/.test(input.memberTicket)?input.memberTicket:'',ticketHash=ticket?await digest(ticket):'';
+ const protectedAction=op==='tick'&&Array.isArray(input.actions)&&input.actions.some(a=>MEMBER_ACTIONS.has(a?.type));
+ if(op==='join'||protectedAction||ticketHash!==p.memberTicketHash||now>=(p.memberTicketUntil||0)){
+  const account=ticketHash?(await q('select m.id,m.nickname,t.expires_at from workshop_private.member_tickets t join workshop_private.member_sessions ms on ms.token_hash=t.session_hash join workshop_private.members m on m.id=ms.member_id where t.token_hash=$1 and t.expires_at>now() and ms.expires_at>now()',[ticketHash]))[0]:null;
+  const changed=account?.id!==p.memberId;p.memberId=account?.id||null;p.memberTicketHash=ticketHash;p.memberTicketUntil=account?new Date(account.expires_at).getTime():now+30000;
+  if(account&&changed){p.nickname=account.nickname;s.members.get(id).nickname=account.nickname;}
+ }
  if(op==='leave'){s.leave(id);out={ok:true};}
  else if(op==='admin'){s.host(id);out=s.admin(id);}
  else{
