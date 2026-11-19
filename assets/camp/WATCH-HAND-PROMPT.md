@@ -1,0 +1,10 @@
+# Horizontal left wrist — original generated asset
+
+Asset: `wrist-left-relaxed.png` (1536 × 1024, transparent PNG).
+Mode: built-in image_gen, transparent_background=true. No input photographs or copied person/model. Original generated cutout copied into this project; dial/case/live clock hands are rendered separately in Three.js. The hand points right and twelve remains at the top of the dial.
+
+## Final prompt
+
+Use case: photorealistic-natural. Asset type: transparent cutout of a human LEFT forearm and relaxed half-closed left hand for a first-person wristwatch overlay in a peaceful 3D campfire website. Produce one anatomically accurate adult left forearm entering horizontally from the LEFT edge, left hand pointing horizontally to the RIGHT edge, dorsal/back of the hand facing the viewer. The thumb is on the LOWER side of the image. Fingers are gently curled halfway into a loose relaxed fist: neither a tight clenched fist nor a spread open palm. Slim ordinary human proportions, natural knuckles, tendons, finger joints and fine skin texture; no swollen balloon shapes. Warm neutral medium-light skin, short clean nails. The lower forearm has a simple muted charcoal-sage cotton sleeve near the left edge. Bare wrist at exactly 55 percent of image width and 50 percent height, so a circular watch can later be drawn over that wrist; NO watch, NO bracelet, NO jewelry. Forearm horizontal across the middle, palm to its right, fingertips near 90 percent width. Orthographic close-up photograph, broad soft neutral light from upper-left, no dramatic perspective, sharp natural edges. Landscape 3:2 canvas, generous transparent space above and below the slender arm. Fully transparent background, no scenery, no text, no props, no floating shadow, no watermark. Only ONE LEFT arm and hand, five anatomically correct fingers. Keep the silhouette continuous and softly taper the forearm into the wrist.
+
+The actual workshop photograph used for the “나는 조향사!” entry is the pre-existing `assets/studio-desks.webp`, already used as the site's workshop hero. It is not this generated asset.

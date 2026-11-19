@@ -3,25 +3,42 @@ export function clockAngles(date=new Date()){
  const seconds=date.getSeconds()+date.getMilliseconds()/1000,minutes=date.getMinutes()+seconds/60;
  return {hour:-(date.getHours()%12+minutes/60)*Math.PI/6,minute:-minutes*Math.PI/30,second:-seconds*Math.PI/30};
 }
-// Original quiet analogue watch, with a small retro steel case and a fabric strap.
+export const WATCH_HAND_ASSET='/assets/camp/wrist-left-relaxed.png';
+// The arm points right; the independently mounted dial keeps twelve at the top.
+export function watchPose(camera,{width=390,height=844}={}){
+ const landscape=width>height*1.4,short=!landscape&&height<650,depth=1.8;
+ const half=Math.tan(T.MathUtils.degToRad(camera.fov||58)/2)*depth/(camera.zoom||1),diameter=landscape?86:short?76:90;
+ const x=width*(landscape?.28:.39),y=height*(landscape?.72:short?.63:.72);
+ return {x:(x/width*2-1)*half*(width/height),y:(1-y/height*2)*half,z:-depth,scale:diameter/height*half*2/.23,diameter};
+}
 export function createWristwatch(parent){
  const root=new T.Group(),arm=new T.Group();root.name='my-analogue-wristwatch';root.visible=false;root.add(arm);parent.add(root);
- const geometries=[],materials=[],own=g=>(geometries.push(g),g),mat=o=>{const m=new T.MeshStandardMaterial(o);materials.push(m);return m;};
- const skin=mat({color:'#e2b48e',roughness:.82}),sleeve=mat({color:'#8fa7b2',roughness:1}),steel=mat({color:'#b7b9b5',metalness:.65,roughness:.3}),strap=mat({color:'#434c48',roughness:.95});
- const ball=own(new T.SphereGeometry(1,14,9)),box=own(new T.BoxGeometry(1,1,1));
- function piece(geo,material,x,y,z,sx,sy,sz){const m=new T.Mesh(geo,material);m.position.set(x,y,z);m.scale.set(sx,sy,sz);arm.add(m);return m;}
- piece(ball,sleeve,.065,-.29,-.025,.105,.24,.085);piece(ball,skin,.018,-.11,0,.089,.17,.067);piece(ball,skin,-.018,.105,.005,.106,.13,.05);
- for(let i=0;i<4;i++)piece(ball,skin,-.084+i*.049,.224-(i===0||i===3?.015:0),.006,.025,.085,.032);
- const thumb=piece(ball,skin,.11,.065,.005,.035,.085,.04);thumb.rotation.z=-.45;
- piece(box,strap,0,-.035,.064,.145,.37,.027);for(let i=0;i<5;i++)piece(box,steel,0,-.23-i*.018,.066,.14,.009,.024);
- const shape=new T.Shape(),w=.112,h=.127,r=.025;shape.moveTo(-w+r,-h);shape.lineTo(w-r,-h);shape.quadraticCurveTo(w,-h,w,-h+r);shape.lineTo(w,h-r);shape.quadraticCurveTo(w,h,w-r,h);shape.lineTo(-w+r,h);shape.quadraticCurveTo(-w,h,-w,h-r);shape.lineTo(-w,-h+r);shape.quadraticCurveTo(-w,-h,-w+r,-h);
- const caseGeo=own(new T.ExtrudeGeometry(shape,{depth:.028,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:.009,bevelThickness:.008}));piece(caseGeo,steel,0,0,.086,1,1,1);piece(box,steel,.124,0,.10,.02,.036,.028);
- const canvas=document.createElement('canvas');canvas.width=canvas.height=256;const ctx=canvas.getContext('2d');ctx.fillStyle='#f3efdf';ctx.fillRect(0,0,256,256);ctx.translate(128,128);
- for(let i=0;i<60;i++){const a=i*Math.PI/30;ctx.save();ctx.rotate(a);ctx.strokeStyle=i%5?'#9b9b92':'#35423f';ctx.lineWidth=i%5?1.4:4;ctx.beginPath();ctx.moveTo(0,-(i%5?109:102));ctx.lineTo(0,-116);ctx.stroke();ctx.restore();}
- ctx.fillStyle='#42504d';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='20px sans-serif';for(const [n,x,y]of [['12',0,-78],['3',81,0],['6',0,79],['9',-81,0]])ctx.fillText(n,x,y);ctx.font='9px sans-serif';ctx.fillText('BOOKS & SCENTS',0,-42);ctx.font='8px sans-serif';ctx.fillText('A LITTLE PAUSE',0,44);
- const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;const faceMat=new T.MeshBasicMaterial({map:texture});materials.push(faceMat);piece(own(new T.PlaneGeometry(.20,.225)),faceMat,0,0,.124,1,1,1);
- const dark=mat({color:'#334440',roughness:.5}),red=mat({color:'#aa645b',roughness:.7}),hands=[];
- for(const [length,width,z,material]of [[.055,.009,.132,dark],[.082,.006,.137,dark],[.091,.002,.142,red]]){const pivot=new T.Group(),needle=new T.Mesh(box,material);needle.position.y=length/2-.012;needle.scale.set(width,length,.003);pivot.position.z=z;pivot.add(needle);arm.add(pivot);hands.push(pivot);}piece(ball,steel,0,0,.147,.012,.012,.005);
- let target=0,amount=0,angles={hour:0,minute:0,second:0};const offset=new T.Vector3();
- return {set(active){target=active?1:0;},update(time,camera,reduced=false,date=new Date()){amount=reduced?target:T.MathUtils.lerp(amount,target,.14);root.visible=amount>.015;if(!root.visible)return;root.position.copy(camera.position);root.quaternion.copy(camera.quaternion);const landscape=camera.aspect>1.4,short=!landscape&&(globalThis.innerHeight||844)<650;offset.set(landscape?-.66:short?-.30:-.28,(short?-.12:-.36)-(1-amount)*.7,-1.8);arm.position.copy(offset);arm.scale.setScalar(landscape?.88:short?.80:1);arm.rotation.z=.10+(reduced?0:Math.sin(time*.8)*.009);angles=clockAngles(date);hands[0].rotation.z=angles.hour;hands[1].rotation.z=angles.minute;hands[2].rotation.z=angles.second;},get diagnostics(){return {visible:root.visible,active:!!target,angles,amount};},dispose(){root.removeFromParent();texture.dispose();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
+ const geometries=[],materials=[],textures=[],own=g=>(geometries.push(g),g),mat=o=>{const m=new T.MeshStandardMaterial(o);materials.push(m);return m;};
+ const steel=mat({color:'#b7bbb9',metalness:.7,roughness:.29}),rim=mat({color:'#d6d5ce',metalness:.6,roughness:.26}),strap=mat({color:'#454e48',roughness:.95}),box=own(new T.BoxGeometry(1,1,1));
+ function piece(geo,material,x,y,z,sx=1,sy=sx,sz=sx){const m=new T.Mesh(geo,material);m.position.set(x,y,z);m.scale.set(sx,sy,sz);arm.add(m);return m;}
+ const photoMat=new T.MeshBasicMaterial({transparent:true,alphaTest:.72,depthWrite:false,toneMapped:false,color:'#eadccf'});materials.push(photoMat);
+ const photo=piece(own(new T.PlaneGeometry(1,1)),photoMat,-.042,.028,0,1.2,.8,1);photo.visible=false;
+ let disposed=false,loading=false,loaded=false,handTexture;
+ function loadHand(){if(loading||disposed)return;loading=true;handTexture=new T.TextureLoader().load(WATCH_HAND_ASSET,t=>{if(disposed){t.dispose();return;}t.colorSpace=T.SRGBColorSpace;photo.scale.y=1.2/(t.image.width/t.image.height);photoMat.map=t;photoMat.needsUpdate=true;photo.visible=true;loaded=true;},undefined,()=>{loading=false;});textures.push(handTexture);}
+ // A simple, original round steel analogue case, without a copied brand mark.
+ piece(box,strap,0,0,.012,.132,.285,.022);
+ for(const side of [-1,1]){piece(box,steel,side*.072,.105,.025,.021,.065,.028);piece(box,steel,side*.072,-.105,.025,.021,.065,.028);}
+ const body=piece(own(new T.CylinderGeometry(.113,.113,.031,64)),steel,0,0,.032);body.rotation.x=Math.PI/2;
+ piece(own(new T.TorusGeometry(.103,.008,8,64)),rim,0,0,.052);piece(box,steel,.124,0,.034,.019,.028,.026);
+ const canvas=document.createElement('canvas');canvas.width=canvas.height=512;const ctx=canvas.getContext('2d');ctx.fillStyle='#f8f5e8';ctx.fillRect(0,0,512,512);ctx.translate(256,256);
+ for(let i=0;i<60;i++){ctx.save();ctx.rotate(i*Math.PI/30);ctx.strokeStyle=i%5?'#8d958f':'#263a35';ctx.lineWidth=i%5?2:5;ctx.beginPath();ctx.moveTo(0,-(i%5?226:215));ctx.lineTo(0,-239);ctx.stroke();ctx.restore();}
+ ctx.fillStyle='#172c25';ctx.textAlign='center';ctx.textBaseline='middle';for(let n=1;n<=12;n++){const angle=n*Math.PI/6;ctx.font=(n%3?'600 43px':'700 46px')+' Arial,sans-serif';ctx.fillText(String(n),Math.sin(angle)*178,-Math.cos(angle)*178);}
+ ctx.font='14px Arial,sans-serif';ctx.fillStyle='#607067';ctx.fillText('BOOKS & SCENTS',0,-86);ctx.font='12px Arial,sans-serif';ctx.fillText('A LITTLE PAUSE',0,101);
+ const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;textures.push(texture);const faceMat=new T.MeshBasicMaterial({map:texture,toneMapped:false});materials.push(faceMat);piece(own(new T.CircleGeometry(.097,64)),faceMat,0,0,.055);
+ const dark=new T.MeshBasicMaterial({color:'#233b34',toneMapped:false}),red=new T.MeshBasicMaterial({color:'#a54f40',toneMapped:false});materials.push(dark,red);const hands=[];
+ for(const [length,width,z,material]of [[.052,.008,.060,dark],[.075,.005,.064,dark],[.086,.002,.068,red]]){const pivot=new T.Group(),needle=new T.Mesh(box,material);needle.position.y=length/2-.011;needle.scale.set(width,length,.002);pivot.position.z=z;pivot.add(needle);arm.add(pivot);hands.push(pivot);}
+ piece(own(new T.SphereGeometry(1,10,6)),steel,0,0,.073,.009,.009,.004);
+ // Composite the first-person wrist after world particles, preserving layer order.
+ for(const m of materials){m.transparent=true;m.depthTest=false;m.depthWrite=false;}let layer=900;arm.traverse(o=>{if(o.isMesh)o.renderOrder=layer++;});
+ let target=0,amount=0,angles={hour:0,minute:0,second:0},pose=null;
+ return {set(active){target=active?1:0;if(active)loadHand();},update(time,camera,reduced=false,date=new Date()){
+  amount=reduced?target:T.MathUtils.lerp(amount,target,.14);root.visible=amount>.015;if(!root.visible)return;
+  root.position.copy(camera.position);root.quaternion.copy(camera.quaternion);pose=watchPose(camera,{width:globalThis.innerWidth||390,height:globalThis.innerHeight||844});arm.position.set(pose.x-(1-amount)*.32,pose.y-(1-amount)*.5,pose.z);arm.scale.setScalar(pose.scale);arm.rotation.z=reduced?0:Math.sin(time*.8)*.006;
+  angles=clockAngles(date);hands[0].rotation.z=angles.hour;hands[1].rotation.z=angles.minute;hands[2].rotation.z=angles.second;
+ },get diagnostics(){return {visible:root.visible,active:!!target,angles,amount,handDirection:'right',dial:'round',numerals:12,handLoaded:loaded,diameter:pose?.diameter||0};},dispose(){disposed=true;root.removeFromParent();textures.forEach(t=>t.dispose());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
 }

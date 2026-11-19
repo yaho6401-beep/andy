@@ -6,6 +6,7 @@ Object.assign(globalThis.ScentLocaleData,{
   "오늘은 어디로 떠날까요?":{"en":"Where shall we wander today?","zh":"今天想去哪里？","ja":"今日はどこへ出かけましょう？"},
   "향기마을":{"en":"Scent Village","zh":"香气村","ja":"香りの村"},
   "별빛 캠핑장":{"en":"Starlight Camp","zh":"星光营地","ja":"星明かりキャンプ場"},
+  "별빛 캠핑장에서 1분 불멍하기":{"en":"A minute by the fire at Starlight Camp","zh":"在星光营地静看篝火一分钟","ja":"星明かりキャンプ場で1分間の焚き火時間"},
   "문장 너머":{"en":"Beyond the Page","zh":"文字彼岸","ja":"文章の向こう"},
   "정원과 박물관, 카페에서 만나요.":{"en":"Meet in the garden, museum and cafe.","zh":"在花园、博物馆和咖啡馆相遇。","ja":"庭や博物館、カフェで出会いましょう。"},
   "별빛 아래, 모닥불 곁에서 쉬어요.":{"en":"Unwind by the fire beneath the stars.","zh":"星空下，在篝火旁歇一会儿。","ja":"星空の下、焚き火のそばでひと休み。"},
