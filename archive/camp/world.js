@@ -4,6 +4,9 @@ import {CAMP,CAMP_SEATS,tentAt,tentTable} from './layout.js';
 import {createFireVisual} from './fire-visual.js';
 import {createWoodKit} from './wood.js';
 import {WOOD_FINDS} from './snack-data.js';
+import {createCampLandscape} from './landscape.js';
+import {createCampWeather} from './weather-visual.js';
+import {createWarmingHands} from './warming-hands.js';
 import {createMeteors} from './meteors.js';
 
 // Expanded from the original camp scene in afd9cef. One scene, no extra renderer.
@@ -39,7 +42,7 @@ export function createCamp(scene){
  panel('#cebfa0',0,-.15,-13.3,31,.22,3.2);
  panel('#e0d0ae',0,-.02,-12.6,29,.035,.7);
  panel('#617e76',0,-.43,0,32,.8,28);
- panel('#8faaa0',0,-.05,0,CAMP.width,.1,CAMP.depth);
+ panel('#8faaa0',0,-.05,0,30,.1,26);
  add(cylinder,'#b4b19b',0,.025,0,4.3,.035,4.3);
  for(let i=0;i<8;i++){
   const x=-13+(i%4)*8,z=-15-Math.floor(i/4)*5-(i%2)*.9;
@@ -136,6 +139,7 @@ export function createCamp(scene){
  });
  originals.forEach(o=>o.removeFromParent());
  for(const bucket of buckets.values()){const geo=mergeGeometries(bucket.parts,false);bucket.parts.forEach(g=>g.dispose());if(!geo)throw Error('Camp geometry merge failed');root.add(new T.Mesh(geo,bucket.mat));}
+ const landscape=createCampLandscape(root),weather=createCampWeather(root),hands=createWarmingHands(root);
  const meteors=createMeteors(root);
  const fire=createFireVisual(root);
  const seatWood=createWoodKit(),woodRoot=new T.Group();woodRoot.name='natural-log-seats';root.add(woodRoot);
@@ -146,22 +150,22 @@ export function createCamp(scene){
  for(const spot of WOOD_FINDS)for(let i=0;i<3;i++){const wood=seatWood.log(.07,.54);wood.position.set(spot.x+(i-1)*.13,.12+i*.035,spot.z);wood.rotation.set(.13,i*.4,Math.PI/2);woodRoot.add(wood);}
  let previous=0;
  return {
-  setFireState:value=>fire.setState(value),setSnacks:value=>fire.setSnacks(value),pickWood:ray=>fire.pickWood(ray),stirWood:(...args)=>fire.stir(...args),
-  get fireDiagnostics(){return {...fire.diagnostics,meteor:meteors.diagnostics};},
+  groundPoint:ray=>landscape.groundPoint(ray),setHands:(...args)=>hands.set(...args),setWeather:value=>weather.setState(value),setFireState:value=>fire.setState(value),setSnacks:value=>fire.setSnacks(value),pickWood:ray=>fire.pickWood(ray),stirWood:(...args)=>fire.stir(...args),
+  get fireDiagnostics(){return {...fire.diagnostics,meteor:meteors.diagnostics,weather:weather.diagnostics,hands:hands.diagnostics,landscape:landscape.diagnostics};},
   get cutaway(){return cloth.map(c=>({id:c.tent.id,opacity:c.mesh.material.opacity,wallOpacity:c.wallMesh.material.opacity}));},
   setQuote(text){ctx.clearRect(0,0,512,256);ctx.fillStyle='#f8ead1';ctx.textAlign='center';ctx.font='24px sans-serif';ctx.fillText('오늘의 한 문장',256,60);ctx.font='18px sans-serif';const chars=[...text];ctx.fillText(chars.slice(0,23).join(''),256,115);ctx.fillText(chars.slice(23,46).join('')+(chars.length>46?'…':''),256,148);ctx.font='14px sans-serif';ctx.fillText('가까이에서 칠판 살펴보기',256,205);quoteTex.needsUpdate=true;},
   update(time,reduced=false,viewer,camera){
    const dt=previous?Math.min(.05,Math.max(0,time-previous)):.05;previous=time;
-   fire.update(time,reduced);meteors.update(time,camera,reduced);
+   weather.update(time,viewer,reduced);hands.update(time,camera,reduced);landscape.update(time,viewer,!!viewer&&Math.hypot(viewer.x-(this.lastX??viewer.x),viewer.z-(this.lastZ??viewer.z))>.001,reduced,camera);this.lastX=viewer?.x;this.lastZ=viewer?.z;fire.update(time,reduced);meteors.update(time,camera,reduced);
    for(let i=0;i<waves.length;i++)waves[i].position.x=waves[i].userData.baseX+(reduced?0:Math.sin(time*.45+i)*.18);
 
    const near=viewer?tentAt(viewer.x,viewer.z,1.15):null;
    const inside=viewer?tentAt(viewer.x,viewer.z):null;
-   for(const c of cloth){
+   for(const c of cloth){c.baseRotation??=c.mesh.rotation.z;c.mesh.rotation.z=c.baseRotation+(reduced?0:Math.sin(time*2+c.tent.x)*weather.wind*.018);
     for(const [mesh,faded] of [[c.mesh,.1],[c.wallMesh,.72]]){const material=mesh.material,target=near?.id === c.tent.id ? faded : 1;material.opacity=reduced?target:T.MathUtils.damp(material.opacity,target,9,dt);material.depthWrite=material.opacity>.98;}
     c.sign.visible=inside?.id!==c.tent.id;
    }
   },
-  dispose(){meteors.dispose();fire.dispose();woodRoot.removeFromParent();seatWood.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
+  dispose(){landscape.dispose();weather.dispose();hands.dispose();meteors.dispose();fire.dispose();woodRoot.removeFromParent();seatWood.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
  };
 }

@@ -1,9 +1,10 @@
+import {weatherAt,weatherHeat} from '../camp/weather-state.js';
 import {SNACKS,HARVESTS,WOOD_FINDS,roastState,PACK_LIMIT,HARVEST_PAUSE,SERVICE_PAUSE,SHARE_TTL} from '../camp/snack-data.js';
 import {addCampFuel} from '../camp/fire-state.js';
 import {newMallow,advanceMallow} from '../camp/marshmallow-state.js';
 import {heatAt} from '../camp/fire-state.js';
 export function updateRoasts(s){for(const pack of s.packs.values())settleMallow(s,pack.job);}
-function settleMallow(s,job){if(job?.kind!=='marshmallow')return;const now=s.clock();if(!job.roast){const p=Math.min(1,Math.max(0,(now-job.startedAt)/Math.max(1,job.readyAt-job.startedAt)));job.roast={...newMallow(now),faces:Array(4).fill(p*.85),level:p>=1?3:1};}job.roast=advanceMallow(job,now,t=>heatAt(s.campfire,t));}
+function settleMallow(s,job){if(job?.kind!=='marshmallow')return;const now=s.clock();if(!job.roast){const p=Math.min(1,Math.max(0,(now-job.startedAt)/Math.max(1,job.readyAt-job.startedAt)));job.roast={...newMallow(now),faces:Array(4).fill(p*.85),level:p>=1?3:1};}job.roast=advanceMallow(job,now,t=>weatherHeat(heatAt(s.campfire,t),s.publicLounge?weatherAt(t):null));}
 export function availableShares(s){s.sharedSnacks=s.sharedSnacks.filter(item=>item.expiresAt>s.clock());return s.sharedSnacks;}
 export function packFor(s,id){let pack=s.packs.get(id);if(!pack){pack={items:{potato:0,sweetpotato:0,marshmallow:0},wood:0,harvested:{},serviceAt:null,job:null,updatedAt:s.clock()};s.packs.set(id,pack);}pack.wood??=0;return pack;}
 export function serviceAvailable(s,id){const pack=packFor(s,id);if(pack.items.marshmallow>=PACK_LIMIT)throw Error('마시멜로는 세 개까지 챙길 수 있어요. 먼저 캠핑장에서 구워보세요.');if(pack.serviceAt!==null&&s.clock()-pack.serviceAt<SERVICE_PAUSE)throw Error('서비스 마시멜로는 잠시 뒤 다시 준비해 드릴게요.');return pack;}

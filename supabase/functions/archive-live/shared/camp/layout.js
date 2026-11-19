@@ -1,6 +1,6 @@
 // Metres shared by scene geometry, walking, authoritative validation and seating.
 export const CAMP={
- width:30,depth:26,bounds:{x:14.5,z:12.3},
+ width:64,depth:60,bounds:{x:31,z:29},
  gate:{x:0,z:11.2},spawn:{x:0,z:8.5},
  board:{x:4.8,z:-9.8,w:2.8,d:.6},
  tents:[
@@ -24,7 +24,11 @@ export function tentWalls(t){
  ];
 }
 export function tentTable(t){return {x:t.x,z:t.z-1.85,w:1.6,d:.75};}
+export function campHeight(x,z){const ramp=Math.max(0,Math.min(1,(z-13)/12));return ramp*ramp*(3-2*ramp)*(1.5+1.6*Math.exp(-Math.pow((x-19)/12,2)));}
+export const FOREST_TREES=Array.from({length:64},(_,i)=>({x:(i%2?1:-1)*(16+(i%7)*2),z:i<30?-8+Math.floor(i/2)*1.7:14+(i%15)*1.05}));
 export const CAMP_OBSTACLES=[
+ {x:0,z:-22,w:66,d:14},
+ ...FOREST_TREES.map(p=>({...p,r:.2})),
  {x:0,z:0,r:1.12},CAMP.board,
  ...CAMP.tents.flatMap(t=>[...tentWalls(t),tentTable(t)]),
  ...CAMP_SEATS.map(s=>({x:s.x,z:s.z,r:s.id.startsWith('camp-tent')?.44:.5}))

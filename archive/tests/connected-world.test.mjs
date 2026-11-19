@@ -35,14 +35,14 @@ test('profile edits change only the authenticated player with a bounded canonica
  assert.throws(()=>s.action('a',{type:'identity',nickname:'가',appearance:null}),/캐릭터/);
  const restored=restoreStore(JSON.parse(JSON.stringify(serializeStore(s))),s.clock);assert.equal(restored.members.get('a').nickname,'달빛 독서가');
 });
-test('five gentle shared branches grow in stages and cool before the next cycle',()=>{
+test('seven gentle shared branches grow in stages and cool before the next cycle',()=>{
  let now=100000;const s=new ArchiveStore({clock:()=>now});s.seed('a','불멍');s.join('a');const p=s.clients.get('a'),seat=CAMP_SEATS[0];Object.assign(p,{room:'camp',x:seat.stand.x,z:seat.stand.z});s.action('a',{type:'sit',seat:seat.id});
- let previous=0;for(let count=1;count<=5;count++){
+ let previous=0;for(let count=1;count<=7;count++){
   const result=s.action('a',{type:'campfire-branch'}),state=s.snapshot('a').campfire;
   assert.equal(state.branches,count);assert.ok(state.heat>previous);previous=state.heat;
-  assert.equal(result.tooHot,count>=4);assert.equal(result.cooling,count===5);now+=1800;
+  assert.equal(result.tooHot,count>=6);assert.equal(result.cooling,count===7);now+=1800;
  }
- assert.throws(()=>s.action('a',{type:'campfire-branch'}),/뜨겁/);assert.equal(s.snapshot('a').campfire.branches,5);
+ assert.throws(()=>s.action('a',{type:'campfire-branch'}),/뜨겁/);assert.equal(s.snapshot('a').campfire.branches,7);
  now+=FIRE.coolingMs;assert.equal(s.snapshot('a').campfire.branches,0);assert.equal(s.action('a',{type:'campfire-branch'}).branches,1);
 });
 test('larger garden routes reach both portals without crossing props; return spawns do not bounce back',()=>{

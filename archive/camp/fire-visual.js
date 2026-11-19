@@ -37,16 +37,16 @@ export function createFireVisual(parent){
  const stem=new T.Mesh(stickGeo,wood);stem.rotation.z=Math.PI/2;branch.add(stem);const fork=new T.Mesh(stickGeo,wood);fork.scale.set(.65,.5,.65);fork.rotation.z=.5;fork.position.set(.06,.12,0);branch.add(fork);const end=new T.Mesh(own(new T.CylinderGeometry(.049,.049,.012,7)),cut);end.rotation.z=Math.PI/2;end.position.x=.38;branch.add(end);branch.visible=false;root.add(branch);
  const thrownLog=fireWood.log(.13,.9);thrownLog.visible=false;root.add(thrownLog);
  const burntThrow=new T.Mesh(own(new T.SphereGeometry(.2,10,7)),material(new T.MeshLambertMaterial({color:'#29231d'})));burntThrow.visible=false;root.add(burntThrow);
- let fire=createFire(Date.now()),offset=0,sequence=0,throwEvent=null,energy=1,disposed=false,stirTime=-100,stirStrength=0,stirMotion=1,bigStirs=0,stirSerial=0;
+ let fire=createFire(Date.now()),offset=0,sequence=0,throwEvent=null,energy=1,disposed=false,stirTime=-100,stirStrength=0,stirMotion=1,bigStirs=0,stirSerial=0,displayHeat=FIRE.initial,previousTime=null;
  return {
   pickWood(ray){root.updateMatrixWorld(true);return ray.intersectObject(hit,false).length>0;},
   stir(event,time,right){if(disposed)return;stirTime=time;stirStrength=event.strength;stirMotion=event.motion||1;if(event.big)bigStirs++;stirSerial++;emberPool.emit(event,time,right);},
   setSnacks:jobs=>roasting.setJobs(jobs),
   setState(value){if(!value)return;fire=value;offset=value.at-Date.now();if(value.lastThrow?.sequence>sequence){sequence=value.lastThrow.sequence;throwEvent=value.lastThrow;}},
-  get diagnostics(){return {style:'layered-wood-fire',...roasting.diagnostics,heat:heatAt(fire,Date.now()+offset),sequence,branchVisible:branch.visible||thrownLog.visible||burntThrow.visible,energy,sparks:sparks.visible,smoke:smoke.visible,stirs:stirSerial,bigStirs,stirMotion,touchParticles:emberPool.active,particleCapacity:emberPool.capacity,flameHeight:flame.material.uniforms.uHeight.value};},
+  get diagnostics(){return {style:'layered-wood-fire',...roasting.diagnostics,heat:heatAt(fire,Date.now()+offset),sequence,branchVisible:branch.visible||thrownLog.visible||burntThrow.visible,energy,displayHeat,targetHeat:heatAt(fire,Date.now()+offset),sparks:sparks.visible,smoke:smoke.visible,stirs:stirSerial,bigStirs,stirMotion,touchParticles:emberPool.active,particleCapacity:emberPool.capacity,flameHeight:flame.material.uniforms.uHeight.value};},
   update(time,reduced=false){
    if(disposed)return;
-   const now=Date.now()+offset,heat=heatAt(fire,now),age=throwEvent?(now-throwEvent.at)/1000:99,burst=age<1.1?0:Math.max(0,1-(age-1.1)/2.8),stirAge=time-stirTime,stir=reduced?0:Math.max(0,1-stirAge/.65)*stirStrength;energy=.45+heat*1.25+burst*.8;
+   const now=Date.now()+offset,targetHeat=throwEvent&&now-throwEvent.at<FIRE.flightMs?displayHeat:heatAt(fire,now),dt=previousTime===null?0:Math.min(.05,Math.max(0,time-previousTime));previousTime=time;displayHeat=T.MathUtils.damp(displayHeat,targetHeat,1.35,dt);const heat=displayHeat,age=throwEvent?(now-throwEvent.at)/1000:99,burst=age<1.1?0:Math.max(0,1-(age-1.1)/2.8),stirAge=time-stirTime,stir=reduced?0:Math.max(0,1-stirAge/.65)*stirStrength;energy=.45+heat*1.25+burst*.8;
    timeUniform.value=reduced?3.7:time;heatUniform.value=Math.max(.46,heat);burstUniform.value=burst+stir*.14;
    for(let i=0;i<logs.length;i++){const log=logs[i],wiggle=(reduced?0:stirMotion)*Math.sin(stirAge*21+i*1.7)*Math.exp(-Math.max(0,stirAge)*7)*(stirAge>=0&&stirAge<1?1:0);log.mesh.rotation.z=log.z+wiggle*.04025;log.mesh.rotation.y=log.yaw+wiggle*.0299;log.mesh.position.y=log.y+Math.abs(wiggle)*.0138;}
    roasting.update(now,time,reduced);

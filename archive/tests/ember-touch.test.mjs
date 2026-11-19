@@ -42,10 +42,10 @@ test('wood geometry and shared texture maps stay small, finite and dispose once'
  const k=createWoodKit();assert.ok(k.geometry.attributes.position.count<250);assert.ok(k.geometry.attributes.position.array.every(Number.isFinite));assert.equal(k.geometry.groups.length,2);
  assert.equal(k.materials[0].map.image.width,128);const resources=new Set([k.geometry,...k.materials,k.materials[0].map,k.materials[1].map]);let n=0;resources.forEach(r=>r.addEventListener('dispose',()=>n++));k.dispose();assert.equal(n,resources.size);
 });
-test('five branches become a large fire, settle in ten seconds, then expose embers',()=>{
+test('seven branches become a large fire, settle in ten seconds, then expose embers',()=>{
  let now=100000;const player={id:'a',room:'camp',x:0,z:2.55,seat:{group:'campfire-main'}},store={clients:new Map([['a',player]]),campfire:createFire(now),clock:()=>now};
- const levels=[];for(let i=0;i<5;i++){addBranch(store,'a');levels.push(store.campfire.heat);if(i<4)now+=1800;}
- assert.ok(levels[0]<levels[1]&&levels[1]<levels[2]&&levels[2]<levels[3]&&levels[3]<levels[4]);assert.equal(levels[4],FIRE.max);
+ const levels=[];for(let i=0;i<7;i++){addBranch(store,'a');levels.push(store.campfire.heat);if(i<6)now+=1800;}
+ assert.ok(levels[0]<levels[1]&&levels[1]<levels[2]&&levels[2]<levels[3]&&levels[3]<levels[4]);assert.equal(levels[6],FIRE.max);
  const end=now;assert.throws(()=>addBranch(store,'a'),/뜨겁/);now+=9999;assert.equal(publicFire(store.campfire,player,now).cooling,true);now++;
  assert.equal(publicFire(store.campfire,player,now).branches,0);assert.ok(heatAt(store.campfire,now)<1.1);assert.equal(heatAt(store.campfire,end+60000),FIRE.min);
  assert.doesNotThrow(()=>addBranch(store,'a'));
