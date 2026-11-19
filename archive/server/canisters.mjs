@@ -22,7 +22,7 @@ export function canisterAction(s,id,input){
  if(kind==='fuel'&&fuelLocked(fire,now))throw Error('불이 한참 타오르고 있어요. 잦아들 때까지 기다려주세요.');
  if(kind==='fuel'){fire.heat=OIL_HEAT;fire.oilUntil=now+OIL_HOLD_MS;fire.holdUntil=Math.max(fire.holdUntil||0,fire.oilUntil);}
  else{fire.heat=FIRE.min;fire.branchLoad=0;fire.branches=0;fire.logs=0;fire.logCycleUntil=0;fire.holdUntil=0;fire.oilUntil=0;fire.readyAt=now+1800;fire.lastThrow=null;}
- fire.pouredAt=now;fire.pourSequence=(fire.pourSequence||0)+1;fire.pourKind=kind;fire.at=now;
+ fire.pourFrom={x:p.x,z:p.z};fire.pouredAt=now;fire.pourSequence=(fire.pourSequence||0)+1;fire.pourKind=kind;fire.at=now;
  pack.can=null;pack.updatedAt=now;p.emote='toss';p.emoteAt=now;
  return {ok:true,kind,poured:true};
 }

@@ -53,7 +53,7 @@ test('legacy cooling snapshots shorten the old pause without losing the shared s
  const fire={...createFire(100),version:2,heat:1.68,sequence:17,branches:5,coolingUntil:35100,readyAt:35100,cycleUntil:35100,lastThrow:{at:100,branches:5,sequence:17}};
  const result=publicFire(fire,{},10101);assert.equal(result.cooling,false);assert.equal(result.branches,0);assert.equal(result.sequence,17);assert.equal(result.readyAt,10100);
 });
-test('hot flames have denser stronger crackles, while muted touch never starts audio',()=>{
- const cold=fireSoundProfile(FIRE.min),hot=fireSoundProfile(FIRE.max);assert.ok(hot.interval<cold.interval/4);assert.ok(hot.crackle>cold.crackle*4);assert.ok(hot.roar>cold.roar*4);
+test('hot flames stay richer but softly bounded, while muted touch never starts audio',()=>{
+ const cold=fireSoundProfile(FIRE.min),hot=fireSoundProfile(FIRE.max);assert.ok(hot.interval<cold.interval);assert.ok(hot.interval>=360);assert.ok(hot.crackle>cold.crackle&&hot.crackle<cold.crackle*2.3);assert.ok(hot.roar>cold.roar&&hot.roar<cold.roar*2);
  const audio=new FireAudio();audio.stir(1);assert.equal(audio.context,null);assert.equal(audio.voices.size,0);audio.setVolume(4);assert.equal(audio.volume,.7);audio.dispose();
 });

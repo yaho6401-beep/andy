@@ -18,8 +18,8 @@ export function createWristwatch(parent){
  function piece(geo,material,x,y,z,sx=1,sy=sx,sz=sx){const m=new T.Mesh(geo,material);m.position.set(x,y,z);m.scale.set(sx,sy,sz);arm.add(m);return m;}
  const photoMat=new T.MeshBasicMaterial({transparent:true,alphaTest:.72,depthWrite:false,toneMapped:false,color:'#eadccf'});materials.push(photoMat);
  const photo=piece(own(new T.PlaneGeometry(1,1)),photoMat,-.042,.028,0,1.2,.8,1);photo.visible=false;
- let disposed=false,loading=false,loaded=false,handTexture;
- function loadHand(){if(loading||disposed)return;loading=true;handTexture=new T.TextureLoader().load(WATCH_HAND_ASSET,t=>{if(disposed){t.dispose();return;}t.colorSpace=T.SRGBColorSpace;photo.scale.y=1.2/(t.image.width/t.image.height);photoMat.map=t;photoMat.needsUpdate=true;photo.visible=true;loaded=true;},undefined,()=>{loading=false;});textures.push(handTexture);}
+ let disposed=false,loading=false,loaded=false,failed=false,handTexture;
+ function loadHand(){if(loading||loaded||failed||disposed)return;loading=true;handTexture=new T.TextureLoader().load(WATCH_HAND_ASSET,t=>{if(disposed){t.dispose();return;}t.colorSpace=T.SRGBColorSpace;photo.scale.y=1.2/(t.image.width/t.image.height);photoMat.map=t;photoMat.needsUpdate=true;photo.visible=true;loaded=true;},undefined,()=>{loading=false;failed=true;});textures.push(handTexture);}
  // A simple, original round steel analogue case, without a copied brand mark.
  piece(box,strap,0,0,.012,.132,.285,.022);
  for(const side of [-1,1]){piece(box,steel,side*.072,.105,.025,.021,.065,.028);piece(box,steel,side*.072,-.105,.025,.021,.065,.028);}
@@ -35,10 +35,10 @@ export function createWristwatch(parent){
  piece(own(new T.SphereGeometry(1,10,6)),steel,0,0,.073,.009,.009,.004);
  // Composite the first-person wrist after world particles, preserving layer order.
  for(const m of materials){m.transparent=true;m.depthTest=false;m.depthWrite=false;}let layer=900;arm.traverse(o=>{if(o.isMesh)o.renderOrder=layer++;});
- let target=0,amount=0,angles={hour:0,minute:0,second:0},pose=null;
- return {set(active){target=active?1:0;if(active)loadHand();},update(time,camera,reduced=false,date=new Date()){
-  amount=reduced?target:T.MathUtils.lerp(amount,target,.14);root.visible=amount>.015;if(!root.visible)return;
+ let target=0,amount=0,previousTime=null,angles={hour:0,minute:0,second:0},pose=null;
+ return {set(active){if(active&&!target&&failed)failed=false;target=active?1:0;if(active)loadHand();},update(time,camera,reduced=false,date=new Date()){
+  const dt=previousTime===null?0:Math.min(.05,Math.max(0,time-previousTime));previousTime=time;const ready=loaded?target:0;amount=reduced?ready:T.MathUtils.damp(amount,ready,9,dt);root.visible=loaded&&amount>.015;if(!root.visible)return;
   root.position.copy(camera.position);root.quaternion.copy(camera.quaternion);pose=watchPose(camera,{width:globalThis.innerWidth||390,height:globalThis.innerHeight||844});arm.position.set(pose.x-(1-amount)*.32,pose.y-(1-amount)*.5,pose.z);arm.scale.setScalar(pose.scale);arm.rotation.z=reduced?0:Math.sin(time*.8)*.006;
   angles=clockAngles(date);hands[0].rotation.z=angles.hour;hands[1].rotation.z=angles.minute;hands[2].rotation.z=angles.second;
- },get diagnostics(){return {visible:root.visible,active:!!target,angles,amount,handDirection:'right',handStyle:'soft-3d',handAsset:WATCH_HAND_ASSET,dial:'round',numerals:12,handLoaded:loaded,diameter:pose?.diameter||0};},dispose(){disposed=true;root.removeFromParent();textures.forEach(t=>t.dispose());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
+ },get diagnostics(){return {visible:root.visible,active:!!target,angles,amount,handDirection:'right',handStyle:'soft-3d',handAsset:WATCH_HAND_ASSET,dial:'round',numerals:12,handLoaded:loaded,handFailed:failed,diameter:pose?.diameter||0};},dispose(){disposed=true;root.removeFromParent();textures.forEach(t=>t.dispose());geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}};
 }
