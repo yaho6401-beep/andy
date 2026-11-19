@@ -2,11 +2,12 @@
 // Three noise octaves keep the close-up light enough for mobile WebGL.
 const noiseGLSL=/* glsl */`
 float hash21(vec2 p){
+ p=mod(p,289.0);
  p=fract(p*vec2(123.34,345.45));p+=dot(p,p+34.345);
  return fract(p.x*p.y);
 }
 float noise21(vec2 p){
- vec2 i=floor(p),f=fract(p);f=f*f*(3.0-2.0*f);
+ vec2 i=floor(p),f=fract(p);f=f*f*f*(f*(f*6.0-15.0)+10.0);
  return mix(mix(hash21(i),hash21(i+vec2(1.0,0.0)),f.x),mix(hash21(i+vec2(0.0,1.0)),hash21(i+vec2(1.0)),f.x),f.y);
 }
 float flowNoise(vec2 p){
@@ -37,9 +38,9 @@ varying vec2 vUv;
 ${noiseGLSL}
 void main(){
  float y=vUv.y,x=vUv.x*2.0-1.0,t=uTime+uPhase;
- float n=flowNoise(vec2(x*4.8+sin(y*5.0-t)*0.4,y*3.8-t*1.65));
- float detail=noise21(vec2(x*16.0+0.25*t,y*8.2-t*3.4));
- float curl=sin(y*8.0-t*2.1)*0.18*y+(n-0.5)*0.75*y;
+ float n=flowNoise(vec2(x*3.8+sin(y*4.0-t*.8)*0.32,y*3.4-t*1.28));
+ float detail=noise21(vec2(x*10.0+0.2*t,y*6.2-t*1.9));
+ float curl=sin(y*7.0-t*1.65)*0.15*y+(n-0.5)*0.62*y;
  float center=0.42*pow(max(0.0,1.0-y),1.15)-abs(x+curl)+(n-0.5)*(0.17+y*0.38)*pow(1.0-y,0.65);
  float leftHeight=0.65+sin(t*2.3+0.8)*0.12+sin(t*4.1)*0.035;
  float rightHeight=0.73+sin(t*1.9+2.4)*0.11+sin(t*5.3)*0.025;
@@ -50,11 +51,14 @@ void main(){
  float wispL=0.13*pow(max(0.0,1.0-y/0.48),1.1)-abs(x+0.58+curl*.8)+(detail-0.5)*.085;
  float wispR=0.15*pow(max(0.0,1.0-y/0.56),1.2)-abs(x-0.57+curl*.7)+(n-0.5)*.12;
  float field=max(max(center,max(left,right)),max(wispL,wispR));
- float alpha=smoothstep(-0.012,0.045,field);
+ // Screen-space coverage keeps moving tips smooth at low mobile resolutions.
+ // MSAA alone does not anti-alias a procedural alpha silhouette.
+ float edge=max(fwidth(field)*1.35,0.009);
+ float alpha=smoothstep(-edge,0.035+edge,field);
  alpha*=smoothstep(0.0,0.055,y)*(1.0-smoothstep(0.86,1.0,y));
  // Moving translucent folds break up the solid, candle-like silhouette.
- float fold=flowNoise(vec2(x*7.5+curl*3.0,y*6.0-t*2.2));
- alpha*=mix(0.12,1.0,smoothstep(0.24,0.66,fold))*(0.7+detail*0.3);
+ float fold=flowNoise(vec2(x*5.8+curl*2.3,y*4.8-t*1.55));
+ alpha*=mix(0.36,1.0,smoothstep(0.20,0.73,fold))*(0.84+detail*0.16);
  float temperature=clamp(field*1.6+(1.0-y)*0.48+(fold-0.5)*0.65,0.0,1.2);
  vec3 color=mix(vec3(0.73,0.035,0.002),vec3(1.0,0.25,0.008),smoothstep(0.0,0.40,temperature));
  color=mix(color,vec3(1.0,0.68,0.10),smoothstep(0.35,0.78,temperature));
@@ -63,7 +67,7 @@ void main(){
  float core=smoothstep(0.52,0.96,temperature)*(1.0-smoothstep(0.36,0.68,y));
  alpha=mix(alpha,0.98,core*0.80);
  alpha*=smoothstep(0.14,0.44,uHeat);
- if(alpha<0.008)discard;
+ // Fade wisps continuously instead of snapping fragments on/off at an alpha cut.
  gl_FragColor=vec4(color,alpha);
  #include <colorspace_fragment>
 }`;

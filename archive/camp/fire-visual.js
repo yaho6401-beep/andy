@@ -12,7 +12,7 @@ export function createFireVisual(parent){
  const quad=own(new T.PlaneGeometry(1,1));
  function veil(name,fragment,width,height,y,order,additive=false){
   const uniforms={uTime:timeUniform,uPhase:{value:0},uHeat:heatUniform,uBurst:burstUniform,uWidth:{value:width},uHeight:{value:height}};
-  const mat=material(new T.ShaderMaterial({uniforms,vertexShader:billboardVertex,fragmentShader:fragment,transparent:true,depthWrite:false,side:T.DoubleSide,toneMapped:false,blending:additive?T.AdditiveBlending:T.NormalBlending}));
+  const mat=material(new T.ShaderMaterial({uniforms,vertexShader:billboardVertex,fragmentShader:fragment,transparent:true,depthWrite:false,side:T.DoubleSide,forceSinglePass:true,toneMapped:false,blending:additive?T.AdditiveBlending:T.NormalBlending}));
   const mesh=new T.Mesh(quad,mat);mesh.name=name;mesh.position.y=y;mesh.renderOrder=order;mesh.frustumCulled=false;root.add(mesh);return mesh;
  }
  const smoke=veil('campfire-soft-smoke',smokeFragment,2.5,2.5,.72,8);
