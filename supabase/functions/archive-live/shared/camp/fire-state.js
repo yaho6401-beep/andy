@@ -23,7 +23,7 @@ export function addCampFuel(store,id,kind){
  if(kind==='wood'&&logs>=FIRE.maxLogs)throw Error('장작 세 개가 타고 있어요. 불길이 가라앉으면 다시 보태주세요.');
  if(kind!=='wood'&&heatAt(fire,now)>3.6)throw Error('불길이 아주 뜨거워요. 조금 가라앉은 뒤 보태주세요.');
  if(kind==='wood'){fire.logs=logs+1;fire.logCycleUntil=now+FIRE.logCycleMs;}
- fire.heat=clampHeat(Math.max(heatAt(fire,now)+(kind==='wood'?.95:.85),kind==='wood'?[0,2.7,3.4,4.1][fire.logs]:1.85));fire.at=now;fire.sequence=(fire.sequence||0)+1;
+ fire.heat=clampHeat(Math.max(heatAt(fire,now)+(kind==='wood'?.95:.26),kind==='wood'?[0,2.7,3.4,4.1][fire.logs]:.68));fire.at=now;fire.sequence=(fire.sequence||0)+1;
  fire.readyAt=Math.max(fire.readyAt||0,now+FIRE.settleMs);
  fire.lastThrow={sequence:fire.sequence,at:now,x:p.x,z:p.z,playerId:p.id,nickname:p.nickname,branches:branchCount(fire,now),kind};
  p.lastCampfireAt=now;p.emote='toss';p.emoteAt=now;

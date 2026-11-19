@@ -30,14 +30,14 @@ test('additional logs consume one owned log each, preserve branch count, enforce
 });
 test('ready vegetables gradually scorch; burnt ones cannot be eaten or shared, but fuel reuse works exactly once',()=>{
  for(const kind of ['potato','sweetpotato']){const {s,seat,advance}=fixture();seat();packFor(s,'a').items[kind]=1;s.action('a',{type:'camp-snack',kind});const job=packFor(s,'a').job;
-  assert.equal(roastState(job,s.clock()).stage,'cooking');advance(SNACKS[kind].seconds*1000);assert.equal(roastState(job,s.clock()).stage,'ready');assert.throws(()=>s.action('a',{type:'camp-snack-fuel',burnt:true}),/너무 탄/);
-  advance(ROAST.graceMs+ROAST.scorchMs/2);assert.equal(roastState(job,s.clock()).stage,'scorching');assert.equal(roastState(job,s.clock()).scorch,.5);
-  advance(ROAST.scorchMs/2);assert.equal(roastState(job,s.clock()).stage,'burnt');for(const share of [false,true])assert.throws(()=>s.action('a',{type:'camp-snack-take',share,readyAt:0}),/너무 타/);
-  assert.equal(s.sharedSnacks.length,0);assert.throws(()=>s.action('b',{type:'camp-snack-fuel',owner:'a'}),/앉아/);const heat=heatAt(s.campfire,s.clock());s.action('a',{type:'camp-snack-fuel'});assert(s.campfire.heat>heat+.8);assert.equal(packFor(s,'a').job,null);assert.equal(s.snapshot('a').campfire.branches,0);assert.throws(()=>s.action('a',{type:'camp-snack-fuel'}),/너무 탄/);
+  assert.equal(roastState(job,s.clock()).stage,'cooking');for(let i=0;i<150&&!roastState(job,s.clock()).ready;i++){advance(1000);s.snapshot('a');}assert.equal(roastState(job,s.clock()).stage,'ready');assert.throws(()=>s.action('a',{type:'camp-snack-fuel',burnt:true}),/너무 탄/);
+  for(let i=0;i<150&&roastState(job,s.clock()).scorch<.4;i++){advance(1000);s.snapshot('a');}assert.equal(roastState(job,s.clock()).stage,'scorching');assert(roastState(job,s.clock()).scorch>=.4&&roastState(job,s.clock()).scorch<1);
+  for(let i=0;i<150&&!roastState(job,s.clock()).burnt;i++){advance(1000);s.snapshot('a');}assert.equal(roastState(job,s.clock()).stage,'burnt');for(const share of [false,true])assert.throws(()=>s.action('a',{type:'camp-snack-take',share,readyAt:0}),/너무 타/);
+  assert.equal(s.sharedSnacks.length,0);assert.throws(()=>s.action('b',{type:'camp-snack-fuel',owner:'a'}),/앉아/);const heat=heatAt(s.campfire,s.clock());s.action('a',{type:'camp-snack-fuel'});assert(s.campfire.heat>heat+.2&&s.campfire.heat<heat+.6);assert.equal(packFor(s,'a').job,null);assert.equal(s.snapshot('a').campfire.branches,0);assert.throws(()=>s.action('a',{type:'camp-snack-fuel'}),/너무 탄/);
  }
 });
 test('burned food remains burned after reconnect, while served halves stay edible off the heat',()=>{
- const {s,seat,advance}=fixture();seat();packFor(s,'a').items.potato=1;s.action('a',{type:'camp-snack',kind:'potato'});advance(100000);const restored=restoreStore(JSON.parse(JSON.stringify(serializeStore(s))),s.clock);assert.throws(()=>restored.action('a',{type:'camp-snack-take'}),/너무 타/);
+ const {s,seat,advance}=fixture();seat();packFor(s,'a').items.potato=1;s.action('a',{type:'camp-snack',kind:'potato'});advance(180000);const restored=restoreStore(JSON.parse(JSON.stringify(serializeStore(s))),s.clock);assert.throws(()=>restored.action('a',{type:'camp-snack-take'}),/너무 타/);
  const j={kind:'potato',startedAt:0,readyAt:1000,shared:true};assert.equal(roastState(j,1e9).scorch,0);
 });
 test('new visual baseline retains small flames and roasting changes colors without accumulating scene props',()=>{

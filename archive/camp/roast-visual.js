@@ -1,3 +1,4 @@
+import {createVegetableKit} from './vegetables.js';
 import * as T from 'three';
 import {CAMP_SEATS} from './layout.js';
 import {roastState} from './snack-data.js';
@@ -5,6 +6,7 @@ import {billboardVertex,flameFragment} from './fire-shaders.js';
 
 export function createRoastingVisual(parent){
  const root=new T.Group();root.name='slow-roasting-snacks';parent.add(root);
+ const vegetables=createVegetableKit();
  const geo=new T.SphereGeometry(1,14,9),mallow=new T.CylinderGeometry(.16,.16,.25,16),rod=new T.CylinderGeometry(.013,.018,1.1,6),half=new T.SphereGeometry(1,12,8,0,Math.PI),cut=new T.CircleGeometry(1,16),plate=new T.CylinderGeometry(.34,.3,.04,16),flameGeo=new T.PlaneGeometry(1,1);
  const p=geo.attributes.position;
  for(let i=0;i<p.count;i++){const x=p.getX(i),y=p.getY(i),z=p.getZ(i),d=1+.026*Math.sin(x*18+y*9)*Math.sin(z*17-y*7);p.setXYZ(i,x*d,y*d,z*d);}
@@ -17,8 +19,8 @@ export function createRoastingVisual(parent){
    if(models.has(job.id)){models.get(job.id).job=job;continue;}
    const seat=CAMP_SEATS.find(s=>s.id===job.seat&&s.group==='campfire-main');if(!seat)continue;
    const g=new T.Group();g.rotation.y=Math.atan2(seat.x,seat.z);root.add(g);
-   const marsh=job.kind==='marshmallow',sweet=job.kind==='sweetpotato',start=new T.Color(marsh?'#fff4e3':sweet?'#99535f':'#bda078'),end=new T.Color(marsh?'#bd7e38':sweet?'#b86e40':'#e0ab5d'),mat=new T.MeshStandardMaterial({color:start,roughness:.85});
-   const food=new T.Mesh(marsh?mallow:job.shared?half:geo,mat);food.position.set(0,marsh?.72:.55,marsh?.9:1.1);
+   const marsh=job.kind==='marshmallow',sweet=job.kind==='sweetpotato',start=new T.Color(marsh?'#fff4e3':sweet?'#bf7883':'#c6ab82'),end=new T.Color(marsh?'#bd7e38':sweet?'#b86e40':'#e0ab5d'),mat=new T.MeshStandardMaterial({color:start,map:marsh?null:vegetables[job.kind].map,bumpMap:marsh?null:vegetables[job.kind].map,bumpScale:marsh?0:.009,roughness:.85});
+   const food=new T.Mesh(marsh?mallow:job.shared?half:vegetables[job.kind].geometry,mat);food.position.set(0,marsh?.72:.55,marsh?.9:1.1);
    let flesh,fleshMaterial,stick,personalGeometry,flame;
    if(job.shared){
     food.position.set(0,.3,1.24);food.scale.set(marsh?1:.22,marsh?.5:.13,marsh?1:sweet?.34:.24);food.rotation.y=Math.PI;
@@ -29,9 +31,9 @@ export function createRoastingVisual(parent){
     personalGeometry=mallow.clone();personalGeometry.setAttribute('color',new T.BufferAttribute(new Float32Array(personalGeometry.attributes.position.count*3).fill(1),3));food.geometry=personalGeometry;mat.vertexColors=true;
     flame=new T.Mesh(flameGeo,new T.ShaderMaterial({uniforms:{uTime:{value:0},uPhase:{value:9.3},uHeat:{value:.65},uBurst:{value:0},uWidth:{value:.4},uHeight:{value:.65}},vertexShader:billboardVertex,fragmentShader:flameFragment,transparent:true,depthWrite:false,side:T.DoubleSide,toneMapped:false}));flame.name='marshmallow-small-flame';flame.visible=false;flame.renderOrder=12;g.add(flame);
    }else{
-    food.scale.set(.28,.18,sweet?.4:.3);food.rotation.y=.25;
+    food.scale.set(sweet?.21:.23,sweet?.13:.15,sweet?.3:.27);food.rotation.y=Math.PI/2-.2;food.position.y=.49;
     const foil=new T.Mesh(geo,foilMat);foil.scale.set(.33,.055,sweet?.44:.35);foil.position.set(0,.315,1.1);g.add(foil);
-    fleshMaterial=new T.MeshLambertMaterial({color:sweet?'#efb653':'#f0d698'});flesh=new T.Mesh(geo,fleshMaterial);flesh.position.set(0,.722,1.1);flesh.scale.set(.01,.015,sweet?.24:.18);g.add(flesh);
+    fleshMaterial=new T.MeshLambertMaterial({color:sweet?'#efb653':'#f0d698'});flesh=new T.Mesh(geo,fleshMaterial);flesh.position.set(0,.625,1.1);flesh.rotation.y=Math.PI/2-.2;flesh.scale.set(.01,.012,sweet?.25:.18);g.add(flesh);
    }
    g.add(food);models.set(job.id,{root:g,food,material:mat,job,start,end,flesh,fleshMaterial,stick,personalGeometry,flame,scorch:0,turnAngle:0,color:new T.Color()});
   }
@@ -50,6 +52,6 @@ export function createRoastingVisual(parent){
    }
   }},
   get diagnostics(){return {roasting:[...models.values()].filter(m=>!m.job.shared).length,sharedPortions:[...models.values()].filter(m=>m.job.shared).length,food:[...models.values()].map(m=>({kind:m.job.kind,color:m.material.color.getHexString(),scorch:m.scorch,shared:!!m.job.shared,height:m.food.position.y,turn:m.turnAngle,flaming:!!m.flame?.visible}))};},
-  dispose(){for(const m of models.values())remove(m);models.clear();root.removeFromParent();[geo,mallow,rod,half,cut,plate,flameGeo].forEach(g=>g.dispose());[rodMat,foilMat,cutMat].forEach(m=>m.dispose());}
+  dispose(){for(const m of models.values())remove(m);models.clear();root.removeFromParent();vegetables.dispose();[geo,mallow,rod,half,cut,plate,flameGeo].forEach(g=>g.dispose());[rodMat,foilMat,cutMat].forEach(m=>m.dispose());}
  };
 }

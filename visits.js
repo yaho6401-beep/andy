@@ -17,7 +17,7 @@
   s.last=Date.now();memorySession=s;write(sessionKey,JSON.stringify(s));return s;
  }
  const text=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value;};
- async function stats(){if(!document.getElementById('today-visitors')||new URLSearchParams(location.search).get('admin')!=='1')return;
+ async function stats(){if(!document.getElementById('today-visitors'))return;
   try{const r=await fetch(config.endpoint+'/stats',{headers:{apikey:config.key},signal:AbortSignal.timeout(12000)});if(!r.ok)throw Error();const d=await r.json();for(const [id,v]of [['today-visitors',d.visitors],['today-views',d.views],['total-views',d.totalViews]])text(id,Number.isFinite(Number(v))?Number(v).toLocaleString('ko-KR'):'—');text('visitor-stats-note','한국 시간 기준 · 방문은 같은 브라우저에서 하루 한 번 집계해요.');}catch{text('visitor-stats-note','방문 통계를 잠시 불러오지 못했어요.');}
  }
  async function record(kind,position=''){

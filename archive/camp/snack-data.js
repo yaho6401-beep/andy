@@ -11,12 +11,19 @@ export const HARVESTS=[
  {id:'potato-south',kind:'potato',x:-1.3,z:11.9},
  {id:'sweet-south',kind:'sweetpotato',x:1.3,z:11.9}
 ];
-export const PACK_LIMIT=3,HARVEST_PAUSE=300000,SERVICE_PAUSE=60000,PACK_TTL=7200000;
+export const PACK_LIMIT=3,HARVEST_PAUSE=10000,WOOD_PAUSE=300000,SERVICE_PAUSE=1000,PACK_TTL=7200000;
 export const SHARE_TTL=600000;
 // A calm twenty-second serving window, then gradual scorching. Shared food is off the fire.
 export const ROAST={graceMs:20000,scorchMs:30000};
+export const cookingRate=heat=>Math.max(.55,Math.min(3.5,.45+(Number.isFinite(heat)?heat:.72)*.85));
+export function advanceVegetable(job,now,heat=job.cook?.heat??.72){
+ const previous=job.cook||{at:job.startedAt,elapsed:0,heat:.72},s={...previous},end=Math.max(s.at,now),start=Math.max(s.at,end-300000);
+ for(let t=start;t<end;){const dt=Math.min(500,end-t),h=typeof heat==='function'?heat(t+dt/2):heat;s.heat=h;s.elapsed+=dt*cookingRate(h);t+=dt;}
+ s.at=end;return s;
+}
 export function roastState(job,now){
  if(job.kind==='marshmallow'&&job.roast&&!job.shared)return mallowState(job,now);
+ if(job.cook&&!job.shared){const cook=advanceVegetable(job,now),target=SNACKS[job.kind].seconds*1000,progress=Math.min(1,cook.elapsed/target),scorch=Math.max(0,Math.min(1,(cook.elapsed-target-ROAST.graceMs)/ROAST.scorchMs));return {progress,scorch,ready:progress>=1,burnt:scorch>=1,stage:progress<1?'cooking':scorch>=1?'burnt':scorch>0?'scorching':'ready'};}
  const progress=Math.max(0,Math.min(1,(now-job.startedAt)/Math.max(1,job.readyAt-job.startedAt)));
  const scorch=job.shared||job.kind==='marshmallow'?0:Math.max(0,Math.min(1,(now-job.readyAt-ROAST.graceMs)/ROAST.scorchMs));
  return {progress,scorch,ready:now>=job.readyAt,burnt:scorch>=1,stage:now<job.readyAt?'cooking':scorch>=1?'burnt':scorch>0?'scorching':'ready'};

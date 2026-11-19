@@ -9,9 +9,9 @@ export function roomRoute(from,to){
  for(let i=0;i<queue.length;i++){const path=queue[i],last=path.at(-1);if(last===to)return path;for(const gate of PORTALS[last])if(!seen.has(gate.to)){seen.add(gate.to);queue.push([...path,gate.to]);}}
  return null;
 }
-const targetRoom=id=>id==='cafe-order'?'salon':['shore','forest'].includes(id)?'camp':id;
-const targetPoint=id=>id==='cafe-order'?NPCS.salon.reach:id==='shore'?{x:-23,z:-12}:id==='forest'?{x:19,z:25}:roomLanding(id);
-const targetLabel=id=>id==='cafe-order'?'카페 주문':WALK_DESTINATIONS.find(d=>d[0]===id)?.[1]||'';
+const targetRoom=id=>['cafe-order','cafe-pickup'].includes(id)?'salon':['shore','forest'].includes(id)?'camp':id;
+const targetPoint=id=>['cafe-order','cafe-pickup'].includes(id)?NPCS.salon.reach:id==='shore'?{x:-23,z:-12}:id==='forest'?{x:19,z:25}:roomLanding(id);
+const targetLabel=id=>['cafe-order','cafe-pickup'].includes(id)?(id==='cafe-pickup'?'음료 픽업':'카페 주문'):WALK_DESTINATIONS.find(d=>d[0]===id)?.[1]||'';
 export function roomLanding(room){const p=directEntry(room);return p?{x:p.x,z:p.z}:room==='garden'?{x:0,z:5.5}:null;}
 
 export class AutoWalk{
@@ -39,7 +39,7 @@ export class AutoWalk{
   const p=s.position;if(!p)return;
   if(!this.lastPosition||Math.hypot(p.x-this.lastPosition.x,p.z-this.lastPosition.z)>.25){this.progressAt=now;this.lastPosition={x:p.x,z:p.z};}
   if(now-this.progressAt>14000){this.cancel(false);this.api.toast('길이 잠시 막혀 있어요. 열린 바닥에서 다시 선택해주세요.');return;}
-  if(this.leg){const distance=Math.hypot(p.x-this.leg.point.x,p.z-this.leg.point.z);if(this.leg.kind==='final'&&distance<.5){const destination=this.destination,label=targetLabel(destination);this.cancel(false);this.api.toast(label+'에 도착했어요.');if(destination==='cafe-order')this.api.order?.();return;}if(this.leg.kind==='clear'&&s.armed||this.leg.kind==='portal'&&!s.armed)this.leg=null;else if(s.walking||distance<.2||now-this.lastPlan<600)return;else this.leg=null;}
+  if(this.leg){const distance=Math.hypot(p.x-this.leg.point.x,p.z-this.leg.point.z);if(this.leg.kind==='final'&&distance<.5){const destination=this.destination,label=targetLabel(destination);this.cancel(false);this.api.toast(label+'에 도착했어요.');if(destination==='cafe-order')this.api.order?.();if(destination==='cafe-pickup')this.api.pickup?.();return;}if(this.leg.kind==='clear'&&s.armed||this.leg.kind==='portal'&&!s.armed)this.leg=null;else if(s.walking||distance<.2||now-this.lastPlan<600)return;else this.leg=null;}
   if(this.leg)return;
   const route=roomRoute(s.room,targetRoom(this.destination));if(!route){this.cancel(false);return;}
   const kind=!s.armed?'clear':route.length===1?'final':'portal',point=kind==='portal'?PORTALS[s.room].find(g=>g.to===route[1]):kind==='final'?targetPoint(this.destination):roomLanding(s.room);

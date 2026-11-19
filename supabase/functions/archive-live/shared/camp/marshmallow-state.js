@@ -6,11 +6,11 @@ export function advanceMallow(job,now,heat=job.roast?.heat??.72){
  const previous=job.roast||newMallow(job.startedAt),s={...previous,faces:[...previous.faces]};
  const end=Math.max(s.at,now),start=Math.max(s.at,end-120000); // Long unattended intervals are already enough to burn.
  for(let t=start;t<end;){const dt=Math.min(.25,(end-t)/1000),h=typeof heat==='function'?heat(t+dt*500):heat;s.heat=Number.isFinite(h)?h:.72;
-  const rate=MALLOW.rates[s.level]*clamp(.6+s.heat*.45,.65,1.65);
+  const rate=MALLOW.rates[s.level]*clamp(.45+s.heat*.66,.6,2.8);
   for(let i=0;i<4;i++){const d=(i-s.face+4)%4;s.faces[i]=Math.min(2.5,s.faces[i]+dt*rate*(d===0?1:d===2?.06:.22));}
   const exposed=s.faces[s.face],ignite=s.level===0&&exposed>1.05||s.level===1&&exposed>1.4;
   s.flame=clamp(s.flame+dt*(ignite?.8:s.level>=2?-.9:-.16),0,1);
-  const max=Math.max(...s.faces);s.char=clamp(s.char+dt*((rate>0?Math.max(0,max-1.3)*.08:0)+s.flame*.07),0,1);
+  const max=Math.max(...s.faces);s.char=clamp(s.char+dt*((rate>0?Math.max(0,max-1.3)*.08:0)+s.flame*.07)*clamp(.75+s.heat*.35,.75,2.2),0,1);
   t+=dt*1000;
  }
  s.at=end;return s;

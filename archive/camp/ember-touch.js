@@ -7,7 +7,7 @@ export class EmberTouch{
   const heart=this.random()<.1,big=this.random()<.2,strength=Math.max(.12,Math.min(1,(heat-.1)/1.5));
   if(heart)this.hearts++;
   const pause=this.count===5;this.readyAt=now+(pause?5000:800+this.random()*400);if(pause)this.count=0;
-  return {heart,big,motion:big?1.3:1,strength,pause,height:.9+Math.pow(Math.max(0,heat-.16),.92)*1.65,count:10+Math.floor(this.random()*16),heartCount:heart?20+Math.floor(this.random()*16):0};
+  return {heart,big,flip:big,flipIndex:this.total%6,motion:big?1.3:1,strength,pause,height:.9+Math.pow(Math.max(0,heat-.16),.92)*1.65,count:10+Math.floor(this.random()*16),heartCount:heart?20+Math.floor(this.random()*16):0};
  }
 }
 
