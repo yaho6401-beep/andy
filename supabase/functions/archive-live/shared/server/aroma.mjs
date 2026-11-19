@@ -4,7 +4,7 @@ import {packFor} from './snacks.mjs';
 export function settleHands(s,p){const now=s.clock(),pack=s.packs.get(p.id);if(pack?.handsHot&&now>=(pack.handsHotUntil||Infinity)){pack.handsHot=false;}if(p?.warmStarted!=null&&now-p.warmStarted>=18000){const own=packFor(s,p.id);own.handsHot=true;own.handsHotUntil=now+90000;p.warmStarted=null;}}
 export function aromaAction(s,id,input){const p=s.clients.get(id),now=s.clock();settleHands(s,p);
  if(input.type==='warm-hands'){
-  if(input.active===false){p.warmStarted=null;return {ok:true};}if(p.room!=='camp'||p.seat?.group!=='campfire-main')throw Error('모닥불 앞에 앉아서 손을 쬐어주세요.');if(packFor(s,id).handsHot)throw Error('손을 잠시 쉬게 해주세요.');if(p.warmStarted==null)p.warmStarted=now;return {ok:true,startedAt:p.warmStarted,at:now};
+  if(input.active===false){p.warmStarted=null;return {ok:true};}if(p.room!=='camp'||p.seat?.group!=='campfire-main')throw Error('모닥불 앞에 앉아서 손을 쬐어주세요.');if(packFor(s,id).handsHot)throw Error('손을 잠시 쉬게 해주세요.');if(input.flip===true){if(p.warmStarted==null)throw Error('먼저 손을 쬐어주세요.');if(now-p.warmStarted<1200)throw Error('손을 천천히 뒤집어주세요.');p.warmStarted=now;return {ok:true,flipped:true,startedAt:now,at:now};}if(p.warmStarted==null)p.warmStarted=now;return {ok:true,startedAt:p.warmStarted,at:now};
  }
  if(input.type==='museum-oil'){
   if(p.room!=='scents'||!['lavender','orange'].includes(input.kind))throw Error('향기박물관에서 향 이야기를 먼저 만나주세요.');
