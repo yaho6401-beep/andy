@@ -2,6 +2,7 @@ import {FireAudio} from './fire-audio.js';
 import {heatAt,fireMood,FIRE} from './fire-state.js';
 import {SNACKS,biteLine} from './snack-data.js';
 import {ScreenAwake} from '../src/screen-awake.js';
+import {EmberTouch} from './ember-touch.js';
 
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const moods={hot:'불이 너무 뜨겁다. 조금 기다리자…',embers:'불씨가 조용히 숨 쉬고 있어요. 가지 하나를 보태볼까요?',gentle:'가만히 타오르는 불과, 잠시 쉬어가는 시간.',bright:'따뜻한 불길이 피어올라요. 천천히 바라보세요.'};
@@ -9,7 +10,7 @@ const moods={hot:'불이 너무 뜨겁다. 조금 기다리자…',embers:'불�
 // One renderer, one shared fire, and sound that starts only after a tap.
 export class CampfireSession{
  constructor(api){
-  this.api=api;this.audio=new FireAudio();this.focused=false;this.waiting=false;this.pending=0;this.offset=0;this.fire=null;this.sequence=0;this.lastPaint=0;this.audioBusy=false;
+  this.api=api;this.audio=new FireAudio();this.emberTouch=new EmberTouch();this.focused=false;this.waiting=false;this.pending=0;this.offset=0;this.fire=null;this.sequence=0;this.lastPaint=0;this.audioBusy=false;
   document.body.insertAdjacentHTML('beforeend',`<aside id="campfire-invite" class="campfire-invite" hidden><button id="campfire-open"><span class="fire-mark" aria-hidden="true">♨</span><span><b>모닥불 가까이, 불멍하기</b><small>편히 앉아 가지 하나 · 누르면 불소리가 켜져요</small></span><span aria-hidden="true">↗</span></button><p id="campfire-walk" role="status" hidden>빈 통나무 자리로 천천히 걸어가요…</p></aside><section id="campfire-view" class="campfire-view" aria-label="별빛 캠핑장 불멍" hidden><header><span>STARLIGHT · A LITTLE PAUSE</span><button id="campfire-awake" aria-pressed="false">화면 켜두기</button><button id="campfire-back" aria-label="불멍 화면 닫고 캠핑장 보기">캠핑장 보기 ↗</button></header><div class="campfire-caption"><h2>오늘은, 불만 바라봐도 좋아요.</h2><p id="campfire-status" role="status"></p></div><div id="camp-bite" class="camp-bite" role="status" hidden><span id="camp-bite-line"></span><small id="camp-bite-note"></small></div><div class="campfire-controls"><div class="campfire-action-row"><button id="campfire-branch" class="campfire-branch"><span aria-hidden="true">↝</span><span><b>나뭇가지 하나 보태기</b><small id="campfire-branch-hint">앉은 자리에서 가볍게 던져요</small><em id="campfire-branches" class="campfire-branches">나뭇가지 0 / 5</em></span></button><details id="camp-snack-box" class="camp-snack-box"><summary id="camp-pack-title">작은 꾸러미 · 간식 찾기</summary><div class="camp-snack-panel"><div id="camp-snack-buttons"><button data-roast="potato"><span>🥔</span><b>감자</b><small data-snack-count="potato">0개</small></button><button data-roast="sweetpotato"><span>🍠</span><b>고구마</b><small data-snack-count="sweetpotato">0개</small></button><button data-roast="marshmallow"><span>☁</span><b>마시멜로</b><small data-snack-count="marshmallow">0개</small></button></div><p id="camp-snack-status" role="status">정원의 작은 밭에서 감자·고구마를, 카페 서비스 메뉴에서 마시멜로를 챙겨보세요.</p><progress id="camp-snack-progress" max="100" value="0" aria-label="간식 익는 정도" hidden></progress><div class="camp-eat-actions"><button id="camp-snack-take" hidden>혼자 먹기</button><button id="camp-snack-share" hidden>반쪽 나눠 먹기</button></div><div id="camp-shares" aria-label="모닥불 나눔 접시"></div></div></details></div><div class="campfire-sound"><button id="campfire-sound" aria-pressed="false">불소리 켜기</button><label for="campfire-volume">소리 크기</label><input id="campfire-volume" type="range" min="0" max="0.7" step="0.01" value="0.32"></div><nav aria-label="불멍 중 활동"><button id="campfire-chat">함께 이야기</button><span aria-hidden="true">·</span><button id="campfire-stand">사뿐히 일어나기</button></nav></div></section>`);
   this.awake=new ScreenAwake($('campfire-awake'),{notify:api.toast});
   this.onSnack=e=>{const b=e.target.closest('[data-roast]');if(b&&!b.disabled&&!this.snackPending){this.snackPending=performance.now();api.send({type:'camp-snack',kind:b.dataset.roast});this.paint(performance.now(),true);}};$('camp-snack-buttons').addEventListener('click',this.onSnack);this.take=share=>{if(this.snackPending)return;this.snackPending=performance.now();api.send({type:'camp-snack-take',share});this.paint(performance.now(),true);};$('camp-snack-take').onclick=()=>this.take(false);$('camp-snack-share').onclick=()=>this.take(true);$('camp-shares').onclick=e=>{const b=e.target.closest('[data-share-take]');if(!b||b.disabled||this.snackPending)return;this.snackPending=performance.now();api.send({type:'camp-snack-share-take',id:b.dataset.shareTake});this.paint(performance.now(),true);};
@@ -38,6 +39,14 @@ export class CampfireSession{
   if(!this.focused||!this.seated||!this.fire||this.pending||Date.now()+this.offset<this.fire.readyAt)return;
   this.pending=performance.now();this.api.send({type:'campfire-branch'});this.paint(performance.now(),true);
  }
+ touchWood(ray,camera){
+  if(!this.focused||document.hidden||!this.api.camp()?.pickWood(ray))return;
+  const now=performance.now(),event=this.emberTouch.touch(now,this.fire?heatAt(this.fire,Date.now()+this.offset):FIRE.min);
+  if(!event)return;
+  const m=camera.matrixWorld.elements,length=Math.hypot(m[0],m[2])||1;
+  this.api.camp().stirWood(event,now/1000,{x:m[0]/length,z:m[2]/length});this.audio.stir(event.strength);
+  if(event.pause)this.api.toast('너무 뜨거워서 나중에 해야겠다.');
+ }
  receipt(d){this.pending=0;this.snackPending=0;if(d?.action==='camp-snack'){$('camp-snack-box').open=false;}if(d?.action==='camp-snack')this.api.toast('모닥불 곁에 올렸어요. 천천히 익는 동안 불을 바라봐요.');if(d?.finished){$('camp-snack-box').open=false;this.showBite(d);}this.paint(performance.now(),true);}
  error(){this.pending=0;this.snackPending=0;this.paint(performance.now(),true);}
  showBite(d){clearTimeout(this.biteTimer);$('camp-bite-line').textContent=biteLine(d.kind);$('camp-bite-note').textContent=d.shared?'남은 반쪽은 나눔 접시에 놓았어요.':d.received?d.from+'님이 나눈 따뜻한 반쪽이에요.':SNACKS[d.kind].name+'와 잠시 쉬어가는 시간.';$('camp-bite').hidden=false;this.biteTimer=setTimeout(()=>$('camp-bite').hidden=true,5000);}
@@ -48,7 +57,7 @@ export class CampfireSession{
   if(this.waiting&&this.seated)this.open();
   if(this.focused&&this.startedSeated&&!this.seated)this.close();
  }
- cameraPose(position,target){const me=this.api.state().me;const p=me?.state.seat||me?.mesh.position||{x:0,z:3};const angle=Math.atan2(p.x,p.z)+.13;const hot=Math.max(0,(this.fire?.heat||0)-1.1),radius=4.6+hot*.85;position.set(Math.sin(angle)*radius,2.1+hot*.3,Math.cos(angle)*radius);target.set(0,.9+hot*.2,0);}
+ cameraPose(position,target){const me=this.api.state().me;const p=me?.state.seat||me?.mesh.position||{x:0,z:3};const angle=Math.atan2(p.x,p.z)+.13;const heat=this.fire?heatAt(this.fire,Date.now()+this.offset):FIRE.min,hot=Math.max(0,heat-1.1),radius=4.6+hot*1.65;position.set(Math.sin(angle)*radius,2.1+hot*.75,Math.cos(angle)*radius);target.set(0,.85+hot*.8,0);}
  frame(now){
   const state=this.api.state();
   if(state.room!=='camp'||!state.joined){if(this.focused||this.waiting||this.audio.enabled)this.close();$('campfire-invite').hidden=true;return;}

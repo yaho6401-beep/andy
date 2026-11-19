@@ -30,15 +30,16 @@ void main(){
 
 export const flameFragment=/* glsl */`
 uniform float uTime;
+uniform float uPhase;
 uniform float uHeat;
 uniform float uBurst;
 varying vec2 vUv;
 ${noiseGLSL}
 void main(){
- float y=vUv.y,x=vUv.x*2.0-1.0,t=uTime;
+ float y=vUv.y,x=vUv.x*2.0-1.0,t=uTime+uPhase;
  float n=flowNoise(vec2(x*4.8+sin(y*5.0-t)*0.4,y*3.8-t*1.65));
  float detail=noise21(vec2(x*16.0+0.25*t,y*8.2-t*3.4));
- float curl=sin(y*8.0-t*2.1)*0.15*y+(n-0.5)*0.6*y;
+ float curl=sin(y*8.0-t*2.1)*0.18*y+(n-0.5)*0.75*y;
  float center=0.42*pow(max(0.0,1.0-y),1.15)-abs(x+curl)+(n-0.5)*(0.17+y*0.38)*pow(1.0-y,0.65);
  float leftHeight=0.65+sin(t*2.3+0.8)*0.12+sin(t*4.1)*0.035;
  float rightHeight=0.73+sin(t*1.9+2.4)*0.11+sin(t*5.3)*0.025;
@@ -46,19 +47,22 @@ void main(){
  float right=0.26*pow(max(0.0,1.0-y/rightHeight),0.85)-abs(x-0.32+y*0.09+curl)+(detail-0.5)*0.10*sqrt(max(0.0,1.0-y/rightHeight));
  if(y>leftHeight)left=-1.0;
  if(y>rightHeight)right=-1.0;
- float field=max(center,max(left,right));
- float alpha=smoothstep(-0.018,0.055,field);
+ float wispL=0.13*pow(max(0.0,1.0-y/0.48),1.1)-abs(x+0.58+curl*.8)+(detail-0.5)*.085;
+ float wispR=0.15*pow(max(0.0,1.0-y/0.56),1.2)-abs(x-0.57+curl*.7)+(n-0.5)*.12;
+ float field=max(max(center,max(left,right)),max(wispL,wispR));
+ float alpha=smoothstep(-0.012,0.045,field);
  alpha*=smoothstep(0.0,0.055,y)*(1.0-smoothstep(0.86,1.0,y));
  // Moving translucent folds break up the solid, candle-like silhouette.
  float fold=flowNoise(vec2(x*7.5+curl*3.0,y*6.0-t*2.2));
- alpha*=mix(0.32,1.0,smoothstep(0.24,0.65,fold))*(0.82+detail*0.18);
+ alpha*=mix(0.12,1.0,smoothstep(0.24,0.66,fold))*(0.7+detail*0.3);
  float temperature=clamp(field*1.6+(1.0-y)*0.48+(fold-0.5)*0.65,0.0,1.2);
  vec3 color=mix(vec3(0.73,0.035,0.002),vec3(1.0,0.25,0.008),smoothstep(0.0,0.40,temperature));
  color=mix(color,vec3(1.0,0.68,0.10),smoothstep(0.35,0.78,temperature));
  color=mix(color,vec3(1.0,0.86,0.46),smoothstep(0.73,1.05,temperature));
- alpha*=0.80+uHeat*0.15+uBurst*0.04;
+ alpha*=0.72+min(uHeat,2.0)*0.11+uBurst*0.04;
  float core=smoothstep(0.52,0.96,temperature)*(1.0-smoothstep(0.36,0.68,y));
- alpha=mix(alpha,1.0,core*0.92);
+ alpha=mix(alpha,0.98,core*0.80);
+ alpha*=smoothstep(0.14,0.44,uHeat);
  if(alpha<0.008)discard;
  gl_FragColor=vec4(color,alpha);
  #include <colorspace_fragment>
@@ -75,9 +79,9 @@ void main(){
  float drift=sin(y*4.0-uTime*0.42)*0.18+(n-0.5)*0.4;
  float spread=0.18+y*0.65;
  float a=(1.0-smoothstep(0.0,spread,abs(x+drift)))*sin(y*3.14159265);
- a*=smoothstep(0.0,0.16,y)*(0.4+n*0.6)*(0.04+max(0.0,1.0-uHeat)*0.025);
+ a*=smoothstep(0.0,0.16,y)*(0.25+n*0.75)*(0.06+uHeat*uHeat*0.027);
  // Warm wood smoke, never a blue/grey luminous sheet over the flames.
- gl_FragColor=vec4(vec3(0.24,0.15,0.085),a);
+ gl_FragColor=vec4(vec3(0.24,0.21,0.18),a);
  #include <colorspace_fragment>
 }`;
 
@@ -128,10 +132,11 @@ varying vec3 vCoal;
 void main(){
  float n=noise21(vCoal.xz*23.0+vCoal.y*11.0);
  float cracks=1.0-smoothstep(0.015,0.095,abs(n-0.5));
- float warmth=(0.3+uHeat*0.7)*(0.87+0.13*sin(uTime*1.5+vCoal.x*16.0));
- float glow=cracks*cracks*warmth;
- vec3 c=vec3(0.012,0.008,0.006)*(0.8+n*0.4)+vec3(0.95,0.075,0.001)*glow;
- c=mix(c,vec3(1.0,0.45,0.025),glow*glow*0.5);
+ float warmth=(0.35+min(uHeat,2.0)*0.5)*(0.87+0.13*sin(uTime*1.5+vCoal.x*16.0));
+ float glow=(cracks*cracks*.5+smoothstep(.58,.84,n)*.28)*warmth;
+ float ash=noise21(vCoal.xz*73.0+vCoal.y*18.0);
+ vec3 c=vec3(0.018,0.015,0.012)*(0.6+ash)+vec3(0.8,0.035,0.002)*glow;
+ c=mix(c,vec3(1.0,0.24,0.008),min(.4,glow*glow*.3));
  gl_FragColor=vec4(c,1.0);
  #include <colorspace_fragment>
 }`;

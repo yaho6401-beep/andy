@@ -2,6 +2,7 @@ import * as T from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {CAMP,CAMP_SEATS,tentAt,tentTable} from './layout.js';
 import {createFireVisual} from './fire-visual.js';
+import {createWoodKit} from './wood.js';
 
 // Expanded from the original camp scene in afd9cef. One scene, no extra renderer.
 export function createCamp(scene){
@@ -111,11 +112,6 @@ export function createCamp(scene){
 
  // Existing six fire-circle seats keep their IDs and positions.
  for(let i=0;i<12;i++){const a=i*Math.PI/6;add(sphere,'#897564',Math.sin(a)*.95,.22,Math.cos(a)*.95,.27,.2,.23);}
- for(let i=0;i<3;i++){const log=add(cylinder,'#49372e',0,.22+i*.04,0,.16,1.6,.16);log.rotation.z=Math.PI/2;log.rotation.y=i*Math.PI/3;}
- for(const s of CAMP_SEATS.filter(s=>s.group==='campfire-main')){
-  const log=add(cylinder,'#a58065',s.x,.43,s.z,.33,1.25,.33);log.rotation.z=Math.PI/2;log.rotation.y=s.yaw;
-  for(const side of [-1,1])add(cylinder,'#d7b796',s.x+Math.cos(s.yaw)*side*.63,.43,s.z-Math.sin(s.yaw)*side*.63,.28,.03,.28).quaternion.copy(log.quaternion);
- }
 
 
  const b=CAMP.board;
@@ -145,9 +141,14 @@ export function createCamp(scene){
  originals.forEach(o=>o.removeFromParent());
  for(const bucket of buckets.values()){const geo=mergeGeometries(bucket.parts,false);bucket.parts.forEach(g=>g.dispose());if(!geo)throw Error('Camp geometry merge failed');root.add(new T.Mesh(geo,bucket.mat));}
  const fire=createFireVisual(root);
+ const seatWood=createWoodKit(),woodRoot=new T.Group();woodRoot.name='natural-log-seats';root.add(woodRoot);
+ for(const s of CAMP_SEATS.filter(s=>s.group==='campfire-main')){
+  const log=seatWood.log(.33,1.3);log.position.set(s.x,.43,s.z);log.rotation.set(0,s.yaw,Math.PI/2);woodRoot.add(log);
+  const scar=seatWood.log(.075,.12);scar.position.set(s.x+Math.cos(s.yaw)*.31,.7,s.z-Math.sin(s.yaw)*.31);scar.rotation.set(.2,s.yaw,.4);woodRoot.add(scar);
+ }
  let previous=0;
  return {
-  setFireState:value=>fire.setState(value),setSnacks:value=>fire.setSnacks(value),
+  setFireState:value=>fire.setState(value),setSnacks:value=>fire.setSnacks(value),pickWood:ray=>fire.pickWood(ray),stirWood:(...args)=>fire.stir(...args),
   get fireDiagnostics(){return fire.diagnostics;},
   get cutaway(){return cloth.map(c=>({id:c.tent.id,opacity:c.mesh.material.opacity,wallOpacity:c.wallMesh.material.opacity}));},
   setQuote(text){ctx.clearRect(0,0,512,256);ctx.fillStyle='#f8ead1';ctx.textAlign='center';ctx.font='24px sans-serif';ctx.fillText('오늘의 한 문장',256,60);ctx.font='18px sans-serif';const chars=[...text];ctx.fillText(chars.slice(0,23).join(''),256,115);ctx.fillText(chars.slice(23,46).join('')+(chars.length>46?'…':''),256,148);ctx.font='14px sans-serif';ctx.fillText('가까이에서 칠판 살펴보기',256,205);quoteTex.needsUpdate=true;},
@@ -163,6 +164,6 @@ export function createCamp(scene){
     c.sign.visible=inside?.id!==c.tent.id;
    }
   },
-  dispose(){fire.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
+  dispose(){fire.dispose();woodRoot.removeFromParent();seatWood.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
  };
 }
