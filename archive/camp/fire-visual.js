@@ -49,10 +49,11 @@ export function createFireVisual(parent){
    if(disposed)return;
    const now=Date.now()+offset,targetHeat=(fire.pourKind==='water'&&waterPourPhase(now-fire.pouredAt).heatDelay)||throwEvent&&now-throwEvent.at<FIRE.flightMs?displayHeat:heatAt(fire,now),dt=previousTime===null?0:Math.min(.05,Math.max(0,time-previousTime));previousTime=time;displayHeat=T.MathUtils.damp(displayHeat,targetHeat,fire.pourKind==='water'&&now-fire.pouredAt<2500?5:1.35,dt);const heat=displayHeat,age=throwEvent?(now-throwEvent.at)/1000:99,burst=(age<1.1?0:Math.max(0,1-(age-1.1)/2.8))*(throwEvent?.kind==='burnt'?.28:1),stirAge=time-stirTime,stir=reduced?0:Math.max(0,1-stirAge/.65)*stirStrength,flipAge=time-flipStarted,flipPulse=reduced?0:Math.sin(Math.PI*Math.max(0,Math.min(1,flipAge/.95)))**2*stirStrength;energy=.45+heat*1.25+burst*.8;
    waterPour.update(now,time,reduced);
-   timeUniform.value=reduced?3.7:time;heatUniform.value=Math.max(.46,heat);burstUniform.value=burst+stir*.14+flipPulse*.28;
+   const rain=fire.weather?.kind==='rain'?fire.weather.intensity||0:0,wetEmbers=T.MathUtils.clamp((rain-.65)/.35,0,1)*(1-T.MathUtils.smoothstep(heat,.2,.58));
+   timeUniform.value=reduced?3.7:time;heatUniform.value=Math.max(.46-wetEmbers*.25,heat);burstUniform.value=burst+stir*.14+flipPulse*.28;
    for(let i=0;i<logs.length;i++){const log=logs[i],wiggle=(reduced?0:stirMotion)*Math.sin(stirAge*21+i*1.7)*Math.exp(-Math.max(0,stirAge)*7)*(stirAge>=0&&stirAge<1?1:0);log.mesh.rotation.z=log.z+wiggle*.04025;log.mesh.rotation.y=log.yaw+wiggle*.0299;log.mesh.position.y=log.y+Math.abs(wiggle)*.0138;if(flip?.index===i){const p=Math.max(0,Math.min(1,flipAge/.78)),ease=p*p*(3-2*p);log.mesh.rotation.z=flip.from+Math.PI*ease+wiggle*.025;log.mesh.position.y+=reduced?0:Math.sin(p*Math.PI)*.33;if(p>=1){log.z=flip.from+Math.PI;flip=null;}}}
    roasting.update(now,time,reduced);
-   flame.material.uniforms.uHeight.value=Math.max(.95,.22+Math.pow(Math.max(.18,heat-FIRE.min),.92)*1.82)+burst*.22+stir*.0575+flipPulse*.46;flame.material.uniforms.uWidth.value=1.12+heat*.72+burst*.12;
+   flame.material.uniforms.uHeight.value=Math.max(.95,.22+Math.pow(Math.max(.18,heat-FIRE.min),.92)*1.82)*(1-.72*wetEmbers)+burst*.22+stir*.0575+flipPulse*.46;flame.material.uniforms.uWidth.value=(1.12+heat*.72+burst*.12)*(1-.55*wetEmbers);
    innerFlame.material.uniforms.uHeight.value=flame.material.uniforms.uHeight.value*.62;innerFlame.material.uniforms.uWidth.value=flame.material.uniforms.uWidth.value*.88;
    fireWood.materials[0].emissiveIntensity=.45+heat*.3+stir*.15;
    smoke.material.uniforms.uHeight.value=1.6+heat*1.05+burst*.3;smoke.material.uniforms.uWidth.value=1.5+heat*.5;smoke.visible=!reduced;

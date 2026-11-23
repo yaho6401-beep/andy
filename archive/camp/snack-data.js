@@ -11,7 +11,7 @@ export const HARVESTS=[
  {id:'potato-south',kind:'potato',x:-1.3,z:11.9},
  {id:'sweet-south',kind:'sweetpotato',x:1.3,z:11.9}
 ];
-export const PACK_LIMIT=3,HARVEST_PAUSE=10000,WOOD_PAUSE=300000,SERVICE_PAUSE=1000,PACK_TTL=7200000;
+export const PACK_LIMIT=3,HARVEST_PAUSE=10000,WOOD_PAUSE=60000,SERVICE_PAUSE=1000,PACK_TTL=7200000;
 export const SHARE_TTL=600000;
 // A calm twenty-second serving window, then gradual scorching. Shared food is off the fire.
 export const ROAST={graceMs:20000,scorchMs:30000};
@@ -31,6 +31,9 @@ export function roastState(job,now){
 export const WOOD_FINDS=[
  {id:'camp-east-wood',kind:'firewood',room:'camp',x:13.6,z:6},
  {id:'camp-west-wood',kind:'firewood',room:'camp',x:-13.6,z:6},
- {id:'camp-north-wood',kind:'firewood',room:'camp',x:-13.6,z:-9}
+ {id:'camp-north-wood',kind:'firewood',room:'camp',x:-13.6,z:-9},
+ {id:'camp-east-pine-wood',kind:'firewood',room:'camp',x:13.6,z:-4},
+ {id:'camp-west-pine-wood',kind:'firewood',room:'camp',x:-13.6,z:1},
+ {id:'camp-south-pine-wood',kind:'firewood',room:'camp',x:13.6,z:10}
 ];
 export function biteLine(kind){return kind==='marshmallow'?'말랑한 한입, 마음까지 달달해진다…':'호호, 한입. 속까지 따뜻해진다…';}

@@ -17,8 +17,8 @@ function fixture(){let now=100000;const s=new ArchiveStore({clock:()=>now});for(
 
 test('camp wood is reachable, privately capped at three, and cannot be remotely or repeatedly collected',()=>{
  const {s,advance}=fixture();assert.throws(()=>s.action('a',{type:'harvest',spot:WOOD_FINDS[0].id,count:99}),/가까이/);
- for(const spot of WOOD_FINDS){assert(validPosition('camp',spot.x,spot.z));assert(findWalkPath('camp',{x:0,z:8.5},spot).length);Object.assign(s.clients.get('a'),{room:'camp',x:spot.x,z:spot.z,seat:null});s.action('a',{type:'harvest',spot:spot.id});assert.throws(()=>s.action('a',{type:'harvest',spot:spot.id}),/방금|세 개/);}
- assert.equal(s.snapshot('a').myPack.wood,3);assert.equal(s.snapshot('b').myPack.wood||0,0);advance(HARVEST_PAUSE);assert.throws(()=>s.action('a',{type:'harvest',spot:WOOD_FINDS[2].id}),/세 개/);
+ for(const spot of WOOD_FINDS){assert(validPosition('camp',spot.x,spot.z));assert(findWalkPath('camp',{x:0,z:8.5},spot).length);Object.assign(s.clients.get('a'),{room:'camp',x:spot.x,z:spot.z,seat:null});if((s.packs.get('a')?.wood||0)<3)s.action('a',{type:'harvest',spot:spot.id});else assert.throws(()=>s.action('a',{type:'harvest',spot:spot.id}),/세 개/);assert.throws(()=>s.action('a',{type:'harvest',spot:spot.id}),/방금|세 개/);}
+ assert.equal(s.snapshot('a').myPack.wood,3);assert.equal(s.snapshot('b').myPack.wood||0,0);advance(HARVEST_PAUSE);Object.assign(s.clients.get('a'),{x:WOOD_FINDS[2].x,z:WOOD_FINDS[2].z});assert.throws(()=>s.action('a',{type:'harvest',spot:WOOD_FINDS[2].id}),/세 개/);
  const restored=restoreStore(JSON.parse(JSON.stringify(serializeStore(s))),s.clock);assert.equal(restored.snapshot('a').myPack.wood,3);
 });
 test('additional logs consume one owned log each, preserve branch count, enforce shared pauses/cap and cool naturally',()=>{

@@ -160,7 +160,8 @@ export function createCamp(scene){
   const log=seatWood.log(.33,1.3);log.position.set(s.x,.43,s.z);log.rotation.set(0,s.yaw,Math.PI/2);woodRoot.add(log);
   const scar=seatWood.log(.075,.12);scar.position.set(s.x+Math.cos(s.yaw)*.31,.7,s.z-Math.sin(s.yaw)*.31);scar.rotation.set(.2,s.yaw,.4);woodRoot.add(scar);
  }
- for(const spot of WOOD_FINDS)for(let i=0;i<3;i++){const wood=seatWood.log(.07,.54);wood.position.set(spot.x+(i-1)*.13,.12+i*.035,spot.z);wood.rotation.set(.13,i*.4,Math.PI/2);woodRoot.add(wood);}
+ const pickupWood=new T.InstancedMesh(seatWood.geometry,seatWood.materials,WOOD_FINDS.length*3),woodPose=new T.Object3D();let woodIndex=0;
+ for(const spot of WOOD_FINDS)for(let i=0;i<3;i++){woodPose.position.set(spot.x+(i-1)*.13,.12+i*.035,spot.z);woodPose.rotation.set(.13,i*.4,Math.PI/2);woodPose.scale.set(.07,.54,.07);woodPose.updateMatrix();pickupWood.setMatrixAt(woodIndex++,woodPose.matrix);}woodRoot.add(pickupWood);
  let previous=0;
  return {
   setCanPack:pack=>scenery.setPack(pack),setSkyMode:mode=>sky.setMode(mode),setSky:active=>{sky.set(active);moon.setSky(active);decorativeStars.visible=!active;},pickMoon:ray=>moon.pick(ray),get skyTarget(){return sky.target;},setFocus:active=>moon.setFocus(active),setWatch:active=>watch.set(active),groundPoint:ray=>landscape.groundPoint(ray),setHands:(...args)=>hands.set(...args),setWeather:value=>weather.setState(value),setFireState:value=>fire.setState(value),setSnacks:value=>fire.setSnacks(value),pickWood:ray=>fire.pickWood(ray),stirWood:(...args)=>fire.stir(...args),
@@ -179,6 +180,6 @@ export function createCamp(scene){
     c.sign.visible=inside?.id!==c.tent.id;
    }
   },
-  dispose(){scenery.dispose();canvasTex.dispose();sky.dispose();moon.dispose();landscape.dispose();weather.dispose();hands.dispose();watch.dispose();meteors.dispose();fire.dispose();woodRoot.removeFromParent();seatWood.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
+  dispose(){scenery.dispose();canvasTex.dispose();sky.dispose();moon.dispose();landscape.dispose();weather.dispose();hands.dispose();watch.dispose();meteors.dispose();fire.dispose();pickupWood.dispose();woodRoot.removeFromParent();seatWood.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
  };
 }

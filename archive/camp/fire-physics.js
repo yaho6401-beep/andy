@@ -3,7 +3,7 @@ export function advanceFire(state,at,seconds,weatherEnabled,holdUntil,oilUntil=0
  const weather=weatherEnabled?weatherAt(at+seconds*500):null,rain=weather?.kind==='rain'?weather.intensity||.5:0,held=at<holdUntil;
  const oiled=at<oilUntil&&state.heat>.73;
  const dry=oiled?.012:state.heat>2.5?.13:state.heat>1.5?.055:held?.009:state.heat>.73?.022:.012;
- state.heat=Math.max(.16,Math.min(4.5,state.heat-(dry+(rain?.06+rain*.35:0))*seconds));
+ state.heat=Math.max(.16,Math.min(4.5,state.heat-(dry+(rain?.08+rain*.42:0))*seconds));
  const rate=(state.heat>2.5?.018:state.heat>1.35?.035:state.heat>.65?.075:.14)*(held?.65:1)*(1+rain*3);
  state.load=Math.max(0,Math.min(state.load-rate*seconds,7*Math.max(0,(state.heat-.16)/2.34)));
 }
