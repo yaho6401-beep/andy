@@ -54,12 +54,12 @@ body.campfire-focus.camp-watch-active .campfire-invite.is-focused{left:14px;righ
 
 .camp-moon-hit{position:fixed;transform:translate(-50%,-50%);border:0;border-radius:50%;background:transparent;padding:0;pointer-events:auto;cursor:pointer;z-index:1}.camp-moon-hit[hidden]{display:none}.camp-moon-hit:focus-visible{outline:1px solid #f0dfb4;outline-offset:5px}.campfire-controls nav{flex-wrap:wrap}
 
-.campfire-controls nav:has(#campfire-flip:not([hidden])){display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px}.campfire-controls nav:has(#campfire-flip:not([hidden])) button{min-width:0;font-size:10px;padding:5px 2px;white-space:nowrap}.campfire-controls nav:has(#campfire-flip:not([hidden])) #campfire-log span{font-size:9px}
+
 
 .campfire-focus.camp-hands-active .campfire-invite.is-focused{left:14px;top:calc(16px + env(safe-area-inset-top));bottom:auto;width:158px;transform:none}.campfire-focus.camp-hands-active .campfire-view>header>span{visibility:hidden}
 
 #campfire-flip,#campfire-hands{touch-action:manipulation;min-height:40px!important}#campfire-flip:disabled{opacity:.6;cursor:default}
-.campfire-controls nav:has(#campfire-flip:not([hidden])) #campfire-log{display:flex;flex-direction:column;gap:0;line-height:1.15}.campfire-controls nav:has(#campfire-flip:not([hidden])) #campfire-chat{font-size:9px}
+
 
 /* A contextual prop action, kept at the right edge and clear of the fire. */
 .camp-can-pour{position:fixed;right:max(12px,env(safe-area-inset-right));bottom:calc(190px + env(safe-area-inset-bottom));max-width:132px;min-height:44px;padding:8px 12px;border:1px solid #d8c9a56b;border-radius:16px;background:#283a3ded;color:#f7ead4;box-shadow:0 4px 18px #101a2233;pointer-events:auto;touch-action:manipulation;font:12px/1.4 system-ui,sans-serif;z-index:4}.camp-can-pour small{display:block;font-size:9px;color:#cfbea1}.camp-can-pour[hidden]{display:none}.camp-can-pour:disabled{opacity:.5}@media(max-height:600px) and (orientation:landscape){.camp-can-pour{top:70px;bottom:auto;right:14px}}
@@ -80,6 +80,20 @@ body.campfire-focus.camp-watch-active .campfire-invite.is-focused{left:14px;righ
 body.camp-sea-focus .play-dock,body.camp-sea-focus #thought-control,body.camp-sea-focus #interact,body.camp-sea-focus #walk-shortcuts-open,body.camp-sea-focus #social-actions{visibility:hidden}
 body.camp-sea-focus #labels,body.camp-sea-focus #seat-panel,body.camp-sea-focus #joystick,body.camp-sea-focus #movement-hint,body.camp-sea-focus .action-dock,body.camp-sea-focus #route-hint{visibility:hidden}
 .camp-ranking article{display:grid;grid-template-columns:1fr auto;gap:7px;padding:15px 0;border-bottom:1px solid #9b958a33}.camp-ranking small{grid-column:1/-1;color:#7c8076}.camp-admin-visits{max-height:260px;overflow:auto}.camp-admin-visits p{padding:8px;border-bottom:1px solid #ccc5b7}
-.camp-shortcut-hint{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font:10px system-ui;color:#e0d4b6b3;white-space:nowrap;pointer-events:none}
-@media(pointer:coarse){.camp-shortcut-hint{display:none}}
+.camp-shortcut-hint{display:none}
 @media(max-width:380px){.camp-comfort{right:8px;max-width:138px}.camp-comfort p{font-size:10px;padding:6px 8px}}
+
+/* A stable pair: both hand actions stay together without shrinking touch targets. */
+#campfire-view .campfire-controls nav{display:grid;grid-template-columns:.85fr .9fr .85fr minmax(128px,1.9fr);gap:4px;align-items:stretch}
+#campfire-view .campfire-controls nav button{min-width:0;min-height:44px;padding:5px 3px;font:500 10.5px/1.25 system-ui,sans-serif;white-space:nowrap;word-break:keep-all}
+.camp-hand-actions{display:grid;grid-template-columns:1fr 1fr;gap:4px;min-width:0}
+#campfire-view #campfire-hands,#campfire-view #campfire-flip{width:100%;min-height:44px!important;padding:5px 3px;font-size:10.5px;border-radius:12px}
+#campfire-view #campfire-flip:disabled{opacity:.42}
+#campfire-view .campfire-controls nav #campfire-log{display:flex;flex-direction:column;gap:2px;line-height:1.15;padding:4px 2px}
+#campfire-view #campfire-log span,#campfire-view #campfire-log small{font-size:9px}
+@media(hover:hover) and (pointer:fine){
+ .camp-shortcut-hint{display:grid;gap:5px;position:fixed;left:18px;bottom:18px;width:240px;margin:0;padding:10px 12px;border-left:1px solid #d9c49942;border-radius:0 12px 12px 0;background:#18313a68;color:#e6dcc6;pointer-events:none;font:10.5px/1.4 system-ui,sans-serif;letter-spacing:0;text-shadow:0 1px 3px #14232b}
+ .camp-shortcut-hint>span:first-child{font-size:9px;letter-spacing:.1em;opacity:.65}.camp-shortcut-hint kbd{font:10px/1.2 system-ui,sans-serif;display:inline-block;margin:0 3px 0 7px;padding:2px 4px;border:1px solid #d7c9a844;border-radius:4px;color:#f3e6c8}.camp-shortcut-hint kbd:first-child{margin-left:0}.camp-shortcut-hint small{font-size:9px;opacity:.7}
+}
+@media(hover:hover) and (pointer:fine) and (max-width:899px){.camp-shortcut-hint{bottom:calc(var(--guide-dock-height,150px) + 64px);width:208px;padding:8px 10px;font-size:10px}}
+.camp-sky-active .camp-shortcut-hint,.camp-shortcut-hint[hidden]{display:none!important}

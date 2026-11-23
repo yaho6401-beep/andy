@@ -1,6 +1,6 @@
 import {fuelLocked} from './canisters.js';
 import {fireStateAt,advanceFire} from './fire-physics.js';
-import {weatherHeat} from './weather-state.js';
+import {weatherHeat,weatherAt} from './weather-state.js';
 // Seven unhurried branches. Capacity returns gradually with the shared fire heat.
 export const FIRE={min:.16,max:2.5,fuelMax:4.1,initial:.72,decayPerSecond:.018,hotDecayPerSecond:.16,branchWarmth:.24,settleMs:1600,personalPauseMs:1800,flightMs:1100,maxBranches:7,coolingMs:10000,cycleMs:60000,maxLogs:3,logCycleMs:90000};
 export const clampHeat=value=>Math.max(FIRE.min,Math.min(4.5,Number.isFinite(value)?value:FIRE.initial));
