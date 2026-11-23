@@ -70,3 +70,16 @@ body.campfire-focus.camp-watch-active .campfire-invite.is-focused{left:14px;righ
 .camp-sky-open{position:fixed;right:18px;top:24dvh;min-height:32px;padding:4px 7px;border:0;border-bottom:1px solid #e6d8b94a;border-radius:0;background:transparent;color:#e8dfcc;opacity:.72;font:11px/1.5 system-ui,sans-serif;letter-spacing:.02em;pointer-events:auto;z-index:3;touch-action:manipulation}.camp-sky-open span{font-size:16px;margin-right:3px}.camp-sky-open:hover,.camp-sky-open:focus-visible{opacity:1;background:#19313b45}.camp-sky-open[hidden]{display:none}#campfire-watch{min-height:40px}
 
 #campfire-view #camp-sky-open{font:500 11px/1.5 system-ui,sans-serif}
+/* Small, stable status cards; the world remains the main view. */
+.camp-comfort{position:fixed;right:12px;top:clamp(120px,22vh,180px);z-index:18;pointer-events:none;display:grid;gap:6px;max-width:160px}
+.camp-comfort p{margin:0;padding:8px 10px;border:1px solid #e3d8bd38;border-radius:12px;background:#253f41c9;color:#f5ecda;font:500 11px/1.55 system-ui,sans-serif;white-space:pre-line;box-shadow:0 4px 18px #152d3015}
+.camp-sea-view{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:29;text-align:center;width:max-content;max-width:94vw;color:#efe8d6}
+.camp-sea-view>span{font:500 11px/1.5 system-ui,sans-serif;letter-spacing:.1em;text-shadow:0 1px 5px #14292e}
+.camp-sea-view>div{display:flex;justify-content:center;gap:8px;margin-top:10px}
+.camp-sea-view button{border:1px solid #e4dfcb55;background:#253d42d9;color:#f1e8d4;border-radius:30px;padding:10px 15px;font:500 12px/1.2 system-ui,sans-serif;white-space:nowrap}
+body.camp-sea-focus .play-dock,body.camp-sea-focus #thought-control,body.camp-sea-focus #interact,body.camp-sea-focus #walk-shortcuts-open,body.camp-sea-focus #social-actions{visibility:hidden}
+body.camp-sea-focus #labels,body.camp-sea-focus #seat-panel,body.camp-sea-focus #joystick,body.camp-sea-focus #movement-hint,body.camp-sea-focus .action-dock,body.camp-sea-focus #route-hint{visibility:hidden}
+.camp-ranking article{display:grid;grid-template-columns:1fr auto;gap:7px;padding:15px 0;border-bottom:1px solid #9b958a33}.camp-ranking small{grid-column:1/-1;color:#7c8076}.camp-admin-visits{max-height:260px;overflow:auto}.camp-admin-visits p{padding:8px;border-bottom:1px solid #ccc5b7}
+.camp-shortcut-hint{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font:10px system-ui;color:#e0d4b6b3;white-space:nowrap;pointer-events:none}
+@media(pointer:coarse){.camp-shortcut-hint{display:none}}
+@media(max-width:380px){.camp-comfort{right:8px;max-width:138px}.camp-comfort p{font-size:10px;padding:6px 8px}}

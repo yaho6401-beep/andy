@@ -6,7 +6,7 @@ import {createCanisterModel} from './canister-model.js';
 export function campTexture(kind){
  const c=document.createElement('canvas');c.width=c.height=128;const ctx=c.getContext('2d');
  let seed=kind==='canvas'?17:91;const rand=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
- ctx.fillStyle=kind==='canvas'?'#d6ccb9':'#8e8170';ctx.fillRect(0,0,128,128);
+ ctx.fillStyle=kind==='canvas'?'#d6ccb9':'#bdac90';ctx.fillRect(0,0,128,128);
  for(let i=0;i<1600;i++){const v=Math.floor(70+rand()*100);ctx.fillStyle=`rgba(${v},${v-7},${v-14},${kind==='canvas'?.09:.2})`;ctx.fillRect(rand()*128,rand()*128,1+rand()*3,1+rand()*2);}
  if(kind==='canvas')for(let n=0;n<128;n+=3){ctx.fillStyle='rgba(255,248,224,.1)';ctx.fillRect(n,0,1,128);ctx.fillStyle='rgba(62,53,42,.06)';ctx.fillRect(0,n,128,1);}
  const tex=new T.CanvasTexture(c);tex.colorSpace=T.SRGBColorSpace;tex.wrapS=tex.wrapT=T.RepeatWrapping;tex.anisotropy=2;return tex;
@@ -15,7 +15,7 @@ export function campTexture(kind){
 export function createCampScenery(parent){
  const root=new T.Group();root.name='textured-camp-clearing';parent.add(root);
  const textures=[campTexture('earth')],materials=[],geometries=[],own=g=>(geometries.push(g),g),mat=o=>{const m=new T.MeshStandardMaterial(o);materials.push(m);return m;};
- const earth=mat({map:textures[0],color:'#b4a58e',roughness:1});textures[0].repeat.set(5,5);
+ const earth=mat({map:textures[0],color:'#e6d4b4',roughness:1});textures[0].repeat.set(5,5);
  const floor=new T.Mesh(own(new T.CylinderGeometry(4.35,4.35,.028,64)),earth);floor.position.y=.048;root.add(floor);
  // Smoothly weathered, asymmetric river stones with restrained mineral variation.
  const geo=own(new T.IcosahedronGeometry(1,2)),p=geo.attributes.position,colors=[];

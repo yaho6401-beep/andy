@@ -1,10 +1,11 @@
+import {createGatheringScreen} from './gathering-screen.js';
 import {createCampScenery,campTexture} from './scenery.js';
 import {createObservingSky} from './sky-visual.js';
 import {createMoon} from './moon.js';
 import {createWristwatch} from './wristwatch.js';
 import * as T from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
-import {CAMP,CAMP_SEATS,tentAt,tentTable} from './layout.js';
+import {CAMP,CAMP_SEATS,ALL_TENTS,SEA_BENCHES,tentAt,tentTable} from './layout.js';
 import {createFireVisual} from './fire-visual.js';
 import {createWoodKit} from './wood.js';
 import {WOOD_FINDS} from './snack-data.js';
@@ -41,12 +42,12 @@ export function createCamp(scene){
   add(cone,'#9a8673',x,y+1.34,z,.23,.18,.23);
  }
  // A wider clearing and a long, open coastline; flat colors avoid heavy reflections.
- panel('#426e83',0,-.62,-28,70,.12,30);
+ panel('#426e83',0,-.62,-28,92,.12,30);
  panel('#5d8798',0,-.55,-16.5,44,.025,7);
  panel('#cebfa0',0,-.15,-13.3,31,.22,3.2);
  panel('#e0d0ae',0,-.02,-12.6,29,.035,.7);
  panel('#617e76',0,-.43,0,32,.8,28);
- const groundTex=campTexture('earth');groundTex.repeat.set(14,12);const clearing=panel('#8faaa0',0,-.05,0,30,.1,26);const clearingMat=new T.MeshLambertMaterial({color:'#9fac96',map:groundTex});materials.set('clearing-texture',clearingMat);clearing.material=clearingMat;
+ const groundTex=campTexture('earth');groundTex.repeat.set(14,12);const clearing=panel('#8faaa0',0,-.05,0,30,.1,26);const clearingMat=new T.MeshLambertMaterial({color:'#e3d5bd',map:groundTex});materials.set('clearing-texture',clearingMat);clearing.material=clearingMat;
 
  for(let i=0;i<8;i++){
   const x=-13+(i%4)*8,z=-15-Math.floor(i/4)*5-(i%2)*.9;
@@ -54,7 +55,7 @@ export function createCamp(scene){
  }
  // Pale stepping stones and narrow timber paths join the entrance, fire and tents.
  for(let z=4;z<11.4;z+=.6)panel('#d4c8ac',Math.sin(z)*.12,.04,z,1.55,.045,.37).rotation.y=Math.sin(z)*.07;
- for(const t of CAMP.tents){
+ for(const t of ALL_TENTS){
   for(let i=0;i<9;i++)panel('#b9aa8d',t.x,.035,t.z+t.d/2+.5+i*.34,1.7,.035,.24);
   for(let i=0;i<7;i++)panel('#d4c8ac',Math.sign(t.x)*(3.8+i*.58),.035,4,.43,.04,1.25);
  }
@@ -74,7 +75,7 @@ export function createCamp(scene){
  for(let i=0;i<24;i++){const side=i%2?1:-1,z=-10.8+Math.floor(i/2)*1.9;add(sphere,i%3?'#aab6a0':'#c3b1ba',side*(13.7+(i%3)*.18),.2,z,.36,.25,.34);}
 
  // Full-size original canvas cabins. Front wings leave an actual open doorway.
- for(const t of CAMP.tents){
+ for(const t of ALL_TENTS){
   const {x,z,w,d,h,door}=t,half=w/2,back=z-d/2,front=z+d/2,eave=1.4;
   panel('#777d7d',x,.025,z,w,.05,d);
   const rug=panel(t.rug,x,.063,z+.35,w-.55,.018,d-1);const rugMat=new T.MeshLambertMaterial({color:t.rug,map:canvasTex});materials.set('rug-'+t.id,rugMat);rug.material=rugMat;
@@ -128,6 +129,12 @@ export function createCamp(scene){
   lantern(x+half-.6,back+.7);
  }
 
+ // Moonlit shore benches face the sea; each retains its own whisper group.
+ for(const s of SEA_BENCHES){
+  for(let j=0;j<4;j++)panel('#c9b89a',s.x,.53,s.z-.23+j*.15,1.8,.095,.13);
+  for(const side of [-1,1]){panel('#827666',s.x+side*.67,.25,s.z,.09,.5,.62);panel('#827666',s.x+side*.67,.83,s.z+.35,.07,.75,.08);}
+  for(let j=0;j<3;j++)panel('#d2bfa1',s.x,.75+j*.14,s.z+.36,1.8,.105,.075);
+ }
  // Existing six fire-circle seats keep their IDs and positions.
 
 
@@ -139,8 +146,8 @@ export function createCamp(scene){
  const quoteTex=new T.CanvasTexture(canvas);quoteTex.colorSpace=T.SRGBColorSpace;
  const quoteLabel=new T.Mesh(new T.PlaneGeometry(2.65,1.35),new T.MeshBasicMaterial({map:quoteTex,transparent:true}));quoteLabel.position.set(b.x,1.65,b.z+.14);root.add(quoteLabel);
  for(const [x,z] of [[-3.8,5],[3.8,5],[-8,2.2],[8,2.2],[-2.1,10.3],[2.1,10.3]])lantern(x,z);
- const coords=[];for(let i=0;i<100;i++){const a=i*2.39996,r=21+(i%5)*1.5;coords.push(Math.sin(a)*r,11+(i%11)*.8,Math.cos(a)*r);}
- const starGeo=new T.BufferGeometry();starGeo.setAttribute('position',new T.Float32BufferAttribute(coords,3));const decorativeStars=new T.Points(starGeo,new T.PointsMaterial({color:'#fff1d3',size:.07,sizeAttenuation:true}));root.add(decorativeStars);
+ const coords=[];for(let i=0;i<100;i++){const a=i*2.39996,r=75+(i%5)*4;coords.push(Math.sin(a)*r,18+(i%11)*4,Math.cos(a)*r);}
+ const starGeo=new T.BufferGeometry();starGeo.setAttribute('position',new T.Float32BufferAttribute(coords,3));const decorativeStars=new T.Points(starGeo,new T.PointsMaterial({color:'#fff1d3',size:.12,sizeAttenuation:true,fog:false}));root.add(decorativeStars);
 
 
  // Merge flat-color furniture; only cloth, flame, stars and water stay dynamic.
@@ -152,6 +159,7 @@ export function createCamp(scene){
  });
  originals.forEach(o=>o.removeFromParent());
  for(const bucket of buckets.values()){const geo=mergeGeometries(bucket.parts,false);bucket.parts.forEach(g=>g.dispose());if(!geo)throw Error('Camp geometry merge failed');root.add(new T.Mesh(geo,bucket.mat));}
+ const gathering=createGatheringScreen(root);
  const scenery=createCampScenery(root),landscape=createCampLandscape(root),weather=createCampWeather(root),hands=createWarmingHands(root),watch=createWristwatch(root);
  const meteors=createMeteors(root),moon=createMoon(root),sky=createObservingSky(root);
  const fire=createFireVisual(root);
@@ -164,13 +172,13 @@ export function createCamp(scene){
  for(const spot of WOOD_FINDS)for(let i=0;i<3;i++){woodPose.position.set(spot.x+(i-1)*.13,.12+i*.035,spot.z);woodPose.rotation.set(.13,i*.4,Math.PI/2);woodPose.scale.set(.07,.54,.07);woodPose.updateMatrix();pickupWood.setMatrixAt(woodIndex++,woodPose.matrix);}woodRoot.add(pickupWood);
  let previous=0;
  return {
-  setCanPack:pack=>scenery.setPack(pack),setSkyMode:mode=>sky.setMode(mode),setSky:active=>{sky.set(active);moon.setSky(active);decorativeStars.visible=!active;},pickMoon:ray=>moon.pick(ray),get skyTarget(){return sky.target;},setFocus:active=>moon.setFocus(active),setWatch:active=>watch.set(active),groundPoint:ray=>landscape.groundPoint(ray),setHands:(...args)=>hands.set(...args),setWeather:value=>weather.setState(value),setFireState:value=>fire.setState(value),setSnacks:value=>fire.setSnacks(value),pickWood:ray=>fire.pickWood(ray),stirWood:(...args)=>fire.stir(...args),
+  setRanking:value=>gathering.set(value),setCanPack:pack=>scenery.setPack(pack),setSkyMode:mode=>sky.setMode(mode),setSky:active=>{sky.set(active);moon.setSky(active);decorativeStars.visible=!active;},pickMoon:ray=>moon.pick(ray),get skyTarget(){return sky.target;},setFocus:active=>moon.setFocus(active),setWatch:active=>watch.set(active),groundPoint:ray=>landscape.groundPoint(ray),setHands:(...args)=>hands.set(...args),setWeather:value=>weather.setState(value),setFireState:value=>fire.setState(value),setSnacks:value=>fire.setSnacks(value),pickWood:ray=>fire.pickWood(ray),stirWood:(...args)=>fire.stir(...args),
   get fireDiagnostics(){return {...fire.diagnostics,scenery:scenery.diagnostics,sky:sky.diagnostics,moon:moon.diagnostics,meteor:meteors.diagnostics,weather:weather.diagnostics,hands:hands.diagnostics,watch:watch.diagnostics,landscape:landscape.diagnostics};},
   get cutaway(){return cloth.map(c=>({id:c.tent.id,opacity:c.mesh.material.opacity,wallOpacity:c.wallMesh.material.opacity}));},
-  setQuote(text){ctx.clearRect(0,0,512,256);ctx.fillStyle='#f8ead1';ctx.textAlign='center';ctx.font='24px sans-serif';ctx.fillText('오늘의 한 문장',256,60);ctx.font='18px sans-serif';const chars=[...text];ctx.fillText(chars.slice(0,23).join(''),256,115);ctx.fillText(chars.slice(23,46).join('')+(chars.length>46?'…':''),256,148);ctx.font='14px sans-serif';ctx.fillText('가까이에서 칠판 살펴보기',256,205);quoteTex.needsUpdate=true;},
+  setQuote(text){ctx.clearRect(0,0,512,256);ctx.fillStyle='#f8ead1';ctx.textAlign='center';ctx.font='24px sans-serif';ctx.fillText('별빛 캠핑장 방명록',256,60);ctx.font='18px sans-serif';const chars=[...text];ctx.fillText(chars.slice(0,23).join(''),256,115);ctx.fillText(chars.slice(23,46).join('')+(chars.length>46?'…':''),256,148);ctx.font='14px sans-serif';ctx.fillText('가까이에서 흔적 남기기',256,205);quoteTex.needsUpdate=true;},
   update(time,reduced=false,viewer,camera){
    const dt=previous?Math.min(.05,Math.max(0,time-previous)):.05;previous=time;
-   sky.update(time,camera);moon.update(camera);weather.update(time,viewer,reduced);hands.update(time,camera,reduced);watch.update(time,camera,reduced);landscape.update(time,viewer,!!viewer&&Math.hypot(viewer.x-(this.lastX??viewer.x),viewer.z-(this.lastZ??viewer.z))>.001,reduced,camera);this.lastX=viewer?.x;this.lastZ=viewer?.z;fire.update(time,reduced);meteors.update(time,camera,reduced);
+   sky.update(time,camera);moon.update(camera);weather.update(time,viewer,reduced);hands.update(time,camera,reduced);watch.update(time,camera,reduced);landscape.update(time,viewer,!!viewer&&Math.hypot(viewer.x-(this.lastX??viewer.x),viewer.z-(this.lastZ??viewer.z))>.001,reduced,camera,Date.now());this.lastX=viewer?.x;this.lastZ=viewer?.z;fire.update(time,reduced);meteors.update(time,camera,reduced);
    for(let i=0;i<waves.length;i++)waves[i].position.x=waves[i].userData.baseX+(reduced?0:Math.sin(time*.45+i)*.18);
 
    const near=viewer?tentAt(viewer.x,viewer.z,1.15):null;
@@ -180,6 +188,6 @@ export function createCamp(scene){
     c.sign.visible=inside?.id!==c.tent.id;
    }
   },
-  dispose(){scenery.dispose();canvasTex.dispose();sky.dispose();moon.dispose();landscape.dispose();weather.dispose();hands.dispose();watch.dispose();meteors.dispose();fire.dispose();pickupWood.dispose();woodRoot.removeFromParent();seatWood.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
+  dispose(){gathering.dispose();scenery.dispose();canvasTex.dispose();sky.dispose();moon.dispose();landscape.dispose();weather.dispose();hands.dispose();watch.dispose();meteors.dispose();fire.dispose();pickupWood.dispose();woodRoot.removeFromParent();seatWood.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
  };
 }

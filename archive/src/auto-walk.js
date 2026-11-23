@@ -2,15 +2,15 @@ import {NPCS} from './cafe-data.js';
 import {PORTALS} from './protocol.js';
 import {directEntry} from './room-entry.js';
 
-export const WALK_DESTINATIONS=[['garden','햇살 정원'],['lobby','로비'],['scents','향기박물관'],['books','북라운지'],['salon','향기카페'],['camp','별빛 캠핑장'],['shore','해변 산책길'],['forest','숲속 언덕']];
+export const WALK_DESTINATIONS=[['garden','햇살 정원'],['lobby','로비'],['scents','향기박물관'],['books','북라운지'],['salon','향기카페'],['camp','별빛 캠핑장'],['shore','해변 산책길'],['forest','숲속 언덕'],['sea-bench','달빛 바다 벤치'],['gathering','별빛 모임 텐트']];
 export function roomRoute(from,to){
  if(!Object.hasOwn(PORTALS,from)||!Object.hasOwn(PORTALS,to))return null;
  const queue=[[from]],seen=new Set([from]);
  for(let i=0;i<queue.length;i++){const path=queue[i],last=path.at(-1);if(last===to)return path;for(const gate of PORTALS[last])if(!seen.has(gate.to)){seen.add(gate.to);queue.push([...path,gate.to]);}}
  return null;
 }
-const targetRoom=id=>['cafe-order','cafe-pickup'].includes(id)?'salon':['shore','forest'].includes(id)?'camp':id;
-const targetPoint=id=>['cafe-order','cafe-pickup'].includes(id)?NPCS.salon.reach:id==='shore'?{x:-23,z:-12}:id==='forest'?{x:19,z:25}:roomLanding(id);
+const targetRoom=id=>['cafe-order','cafe-pickup'].includes(id)?'salon':['shore','forest','sea-bench','gathering'].includes(id)?'camp':id;
+const targetPoint=id=>['cafe-order','cafe-pickup'].includes(id)?NPCS.salon.reach:id==='sea-bench'?{x:21,z:-10.85}:id==='gathering'?{x:-36,z:8}:id==='shore'?{x:-23,z:-12}:id==='forest'?{x:19,z:25}:roomLanding(id);
 const targetLabel=id=>['cafe-order','cafe-pickup'].includes(id)?(id==='cafe-pickup'?'음료 픽업':'카페 주문'):WALK_DESTINATIONS.find(d=>d[0]===id)?.[1]||'';
 export function roomLanding(room){const p=directEntry(room);return p?{x:p.x,z:p.z}:room==='garden'?{x:0,z:5.5}:null;}
 

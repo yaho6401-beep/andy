@@ -2,7 +2,7 @@ import {artObject} from './art-library.js';
 import {furnishDetails} from './world-details.js';
 import {buildGallery} from './gallery-world.js';
 import {createCamp} from '../camp/world.js';
-import {CAMP} from '../camp/layout.js';
+import {CAMP,GATHERING_TENT} from '../camp/layout.js';
 import {campSign} from '../camp/signage.js';
 import {GALLERY} from './gallery-layout.js';
 import {HARVESTS,WOOD_FINDS} from '../camp/snack-data.js';
@@ -41,8 +41,8 @@ export class ArchiveWorld {
   portalFrame(g,PORTALS.camp[0],true);
   this.hotspots.push(...WOOD_FINDS.map(h=>({...h,type:'harvest',title:'나무 아래 · 마른 장작 찾기',reach:1.5})));
   this.hotspots.push({x:0,z:0,id:'campfire',title:'모닥불 가까이 · 불멍하기',type:'campfire',reach:5.5});
-  this.hotspots.push({x:CAMP.board.x,z:CAMP.board.z+.8,id:'camp-sentence',title:'모닥불 곁 · 오늘의 한 문장',type:'camp-story'});
-  this.colliders=LAYOUT.camp;return this.hotspots;
+  this.hotspots.push({x:CAMP.board.x,z:CAMP.board.z+.8,id:'camp-sentence',title:'별빛 캠핑장 방명록',type:'camp-story'});
+  this.hotspots.push({x:GATHERING_TENT.x,z:GATHERING_TENT.z-2,id:'camp-ranking',title:'별빛을 밝힌 사람들 · 월간 순위',type:'camp-ranking',reach:3.5});this.colliders=LAYOUT.camp;return this.hotspots;
  }
  if(GALLERY[room]){buildGallery(g,room,content,this.hotspots);this.bake();this.colliders=LAYOUT[room];return this.hotspots;}
  const outdoor=room==='garden';
