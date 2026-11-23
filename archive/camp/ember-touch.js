@@ -1,13 +1,13 @@
-// Local, bounded interaction. Never changes the shared fuel or five-branch count.
+// Local, bounded interaction. Never changes the shared fuel or seven-branch count.
 export class EmberTouch{
  constructor(random=Math.random){this.random=random;this.count=0;this.readyAt=0;this.total=0;this.hearts=0;}
  touch(now,heat){
   if(now<this.readyAt)return null;
   this.count++;this.total++;
-  const heart=this.random()<.1,big=this.random()<.2,strength=Math.max(.12,Math.min(1,(heat-.1)/1.5));
+  const heart=this.random()<.1,big=this.random()<.35,strength=Math.max(.12,Math.min(1,(heat-.1)/1.5));
   if(heart)this.hearts++;
   const pause=this.count===5;this.readyAt=now+(pause?5000:800+this.random()*400);if(pause)this.count=0;
-  return {heart,big,flip:big,flipIndex:this.total%6,motion:big?1.3:1,strength,pause,height:.9+Math.pow(Math.max(0,heat-.16),.92)*1.65,count:10+Math.floor(this.random()*16),heartCount:heart?20+Math.floor(this.random()*16):0};
+  return {heart,big,flip:big,flipIndex:this.total%6,motion:big?1.65:1.15,strength,pause,height:.9+Math.pow(Math.max(0,heat-.16),.92)*1.65,count:(big?30:16)+Math.floor(this.random()*(big?19:13)),heartCount:heart?20+Math.floor(this.random()*16):0};
  }
 }
 
@@ -30,7 +30,7 @@ export class EmberPool{
    this.hy[i]=(13*Math.cos(t)-5*Math.cos(2*t)-2*Math.cos(3*t)-Math.cos(4*t))*.033+(r()-.5)*.025;
   }
  }
- update(time,reduced=false){
+ update(time,reduced=false,wind={x:0,z:0}){
   let active=0;
   for(let i=0;i<this.capacity;i++){
    const age=time-this.born[i],life=this.life[i];this.fades[i]=0;if(age<0||age>=life)continue;active++;
@@ -41,7 +41,7 @@ export class EmberPool{
     z+=(this.hx[i]*this.rightZ[i]-z)*ease+this.vz[i]*scatter*scatter;
     y+=(this.height[i]+this.hy[i]-y)*ease+scatter*.4;
    }
-   this.positions[i*3]=x;this.positions[i*3+1]=Math.max(.22,y);this.positions[i*3+2]=z;
+   x+=(wind.x||0)*age*age*.65;z+=(wind.z||0)*age*age*.65;this.positions[i*3]=x;this.positions[i*3+1]=Math.max(.22,y);this.positions[i*3+2]=z;
    this.fades[i]=reduced?0:Math.min(1,age/.09)*Math.min(1,(life-age)/.8)*(.4+this.vy[i]*.17)*1.15;
    this.sizes[i]=this.size[i];
   }

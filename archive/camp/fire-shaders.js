@@ -18,6 +18,7 @@ float flowNoise(vec2 p){
 }`;
 
 export const billboardVertex=/* glsl */`
+uniform vec2 uWind;
 uniform float uWidth;
 uniform float uHeight;
 varying vec2 vUv;
@@ -26,6 +27,7 @@ void main(){
  vec3 right=normalize(vec3(viewMatrix[0][0],0.0,viewMatrix[2][0]));
  vec4 world=modelMatrix*vec4(0.0,0.0,0.0,1.0);
  world.xyz+=right*position.x*uWidth+vec3(0.0,(position.y+0.5)*uHeight,0.0);
+ world.xz+=uWind*pow(max(0.0,uv.y),1.65)*uHeight;
  gl_Position=projectionMatrix*viewMatrix*world;
 }`;
 

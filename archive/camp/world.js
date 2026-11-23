@@ -5,7 +5,7 @@ import {createMoon} from './moon.js';
 import {createWristwatch} from './wristwatch.js';
 import * as T from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
-import {CAMP,CAMP_SEATS,ALL_TENTS,SEA_BENCHES,tentAt,tentTable} from './layout.js';
+import {CAMP,CAMP_SEATS,ALL_TENTS,SEA_BENCHES,FAR_FIRE_BENCHES,tentAt,tentTable} from './layout.js';
 import {createFireVisual} from './fire-visual.js';
 import {createWoodKit} from './wood.js';
 import {WOOD_FINDS} from './snack-data.js';
@@ -130,10 +130,11 @@ export function createCamp(scene){
  }
 
  // Moonlit shore benches face the sea; each retains its own whisper group.
- for(const s of SEA_BENCHES){
-  for(let j=0;j<4;j++)panel('#c9b89a',s.x,.53,s.z-.23+j*.15,1.8,.095,.13);
-  for(const side of [-1,1]){panel('#827666',s.x+side*.67,.25,s.z,.09,.5,.62);panel('#827666',s.x+side*.67,.83,s.z+.35,.07,.75,.08);}
-  for(let j=0;j<3;j++)panel('#d2bfa1',s.x,.75+j*.14,s.z+.36,1.8,.105,.075);
+ for(const s of [...SEA_BENCHES,...FAR_FIRE_BENCHES]){
+  const yaw=s.yaw-Math.PI,c=Math.cos(yaw),n=Math.sin(yaw),plank=(color,x,y,z,w,h,d)=>{const mesh=panel(color,s.x+x*c+z*n,y,s.z-x*n+z*c,w,h,d);mesh.rotation.y=yaw;};
+  for(let j=0;j<4;j++)plank('#c9b89a',0,.53,-.23+j*.15,1.8,.095,.13);
+  for(const side of [-1,1]){plank('#827666',side*.67,.25,0,.09,.5,.62);plank('#827666',side*.67,.83,.35,.07,.75,.08);}
+  for(let j=0;j<3;j++)plank('#d2bfa1',0,.75+j*.14,.36,1.8,.105,.075);
  }
  // Existing six fire-circle seats keep their IDs and positions.
 

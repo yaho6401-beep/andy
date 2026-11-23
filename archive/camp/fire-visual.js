@@ -1,3 +1,4 @@
+import {fireWind} from './weather-state.js';
 import {createWaterPour,waterPourPhase} from './water-pour.js';
 import * as T from 'three';
 import {createFire,heatAt,FIRE} from './fire-state.js';
@@ -9,10 +10,10 @@ import {billboardVertex,flameFragment,smokeFragment,haloFragment,sparkVertex,spa
 export function createFireVisual(parent){
  const root=new T.Group();root.name='shared-cozy-campfire';parent.add(root);
  const materials=[],geometries=[],own=g=>(geometries.push(g),g),material=m=>(materials.push(m),m);
- const timeUniform={value:0},heatUniform={value:.72},burstUniform={value:0};
+ const timeUniform={value:0},heatUniform={value:.72},burstUniform={value:0},windUniform={value:new T.Vector2()};
  const quad=own(new T.PlaneGeometry(1,1));
  function veil(name,fragment,width,height,y,order,additive=false){
-  const uniforms={uTime:timeUniform,uPhase:{value:0},uHeat:heatUniform,uBurst:burstUniform,uWidth:{value:width},uHeight:{value:height}};
+  const uniforms={uTime:timeUniform,uPhase:{value:0},uHeat:heatUniform,uBurst:burstUniform,uWind:windUniform,uWidth:{value:width},uHeight:{value:height}};
   const mat=material(new T.ShaderMaterial({uniforms,vertexShader:billboardVertex,fragmentShader:fragment,transparent:true,depthWrite:false,side:T.DoubleSide,forceSinglePass:true,toneMapped:false,blending:additive?T.AdditiveBlending:T.NormalBlending}));
   const mesh=new T.Mesh(quad,mat);mesh.name=name;mesh.position.y=y;mesh.renderOrder=order;mesh.frustumCulled=false;root.add(mesh);return mesh;
  }
@@ -44,34 +45,34 @@ export function createFireVisual(parent){
   stir(event,time,right){if(disposed)return;stirTime=time;stirStrength=event.strength;stirMotion=event.motion||1;if(event.big)bigStirs++;stirSerial++;if(event.flip){flipStarted=time;flip={at:time,index:event.flipIndex%logs.length,from:logs[event.flipIndex%logs.length].z};flips++;}emberPool.emit(event,time,right);},
   setSnacks:jobs=>roasting.setJobs(jobs),
   setState(value){if(!value)return;waterPour.setState(value);if(value.pourKind==='water'&&value.pourSequence!==fire.pourSequence)throwEvent=null;fire=value;offset=value.at-Date.now();if(value.lastThrow?.sequence>sequence){sequence=value.lastThrow.sequence;throwEvent=value.lastThrow;}},
-  get diagnostics(){return {style:'layered-wood-fire',waterPour:waterPour.diagnostics,...roasting.diagnostics,heat:heatAt(fire,Date.now()+offset),sequence,branchVisible:branch.visible||thrownLog.visible||burntThrow.visible,energy,displayHeat,targetHeat:heatAt(fire,Date.now()+offset),sparks:sparks.visible,smoke:smoke.visible,stirs:stirSerial,bigStirs,flips,stirMotion,touchParticles:emberPool.active,particleCapacity:emberPool.capacity,flameHeight:flame.material.uniforms.uHeight.value};},
+  get diagnostics(){return {style:'layered-wood-fire',waterPour:waterPour.diagnostics,...roasting.diagnostics,heat:heatAt(fire,Date.now()+offset),sequence,branchVisible:branch.visible||thrownLog.visible||burntThrow.visible,energy,displayHeat,targetHeat:heatAt(fire,Date.now()+offset),sparks:sparks.visible,smoke:smoke.visible,stirs:stirSerial,bigStirs,flips,stirMotion,touchParticles:emberPool.active,particleCapacity:emberPool.capacity,flameHeight:flame.material.uniforms.uHeight.value,windLean:windUniform.value.toArray(),missedThrow:!!throwEvent?.missed,throwPosition:branch.position.toArray()};},
   update(time,reduced=false){
    if(disposed)return;
-   const now=Date.now()+offset,targetHeat=(fire.pourKind==='water'&&waterPourPhase(now-fire.pouredAt).heatDelay)||throwEvent&&now-throwEvent.at<FIRE.flightMs?displayHeat:heatAt(fire,now),dt=previousTime===null?0:Math.min(.05,Math.max(0,time-previousTime));previousTime=time;displayHeat=T.MathUtils.damp(displayHeat,targetHeat,fire.pourKind==='water'&&now-fire.pouredAt<2500?5:1.35,dt);const heat=displayHeat,age=throwEvent?(now-throwEvent.at)/1000:99,burst=(age<1.1?0:Math.max(0,1-(age-1.1)/2.8))*(throwEvent?.kind==='burnt'?.28:1),stirAge=time-stirTime,stir=reduced?0:Math.max(0,1-stirAge/.65)*stirStrength,flipAge=time-flipStarted,flipPulse=reduced?0:Math.sin(Math.PI*Math.max(0,Math.min(1,flipAge/.95)))**2*stirStrength;energy=.45+heat*1.25+burst*.8;
-   waterPour.update(now,time,reduced);
+   const now=Date.now()+offset,targetHeat=(fire.pourKind==='water'&&waterPourPhase(now-fire.pouredAt).heatDelay)||throwEvent&&now-throwEvent.at<(throwEvent.flightMs||FIRE.flightMs)?displayHeat:heatAt(fire,now),dt=previousTime===null?0:Math.min(.05,Math.max(0,time-previousTime));previousTime=time;displayHeat=T.MathUtils.damp(displayHeat,targetHeat,fire.pourKind==='water'&&now-fire.pouredAt<2500?5:1.35,dt);const heat=displayHeat,age=throwEvent?(now-throwEvent.at)/1000:99,burst=(throwEvent?.missed?0:age<(throwEvent?.flightMs||FIRE.flightMs)/1000?0:Math.max(0,1-(age-(throwEvent?.flightMs||FIRE.flightMs)/1000)/2.8))*(throwEvent?.kind==='burnt'?.28:1),stirAge=time-stirTime,stir=reduced?0:Math.max(0,1-stirAge/.65)*stirStrength,flipAge=time-flipStarted,flipPulse=reduced?0:Math.sin(Math.PI*Math.max(0,Math.min(1,flipAge/.95)))**2*stirStrength;energy=.45+heat*1.25+burst*.8;
+   const wind=fireWind(fire.weather,time),blend=reduced?0:1;windUniform.value.x=T.MathUtils.damp(windUniform.value.x,wind.x*blend,3,dt);windUniform.value.y=T.MathUtils.damp(windUniform.value.y,wind.z*blend,3,dt);waterPour.update(now,time,reduced);
    const rain=fire.weather?.kind==='rain'?fire.weather.intensity||0:0,wetEmbers=T.MathUtils.clamp((rain-.65)/.35,0,1)*(1-T.MathUtils.smoothstep(heat,.2,.58));
-   timeUniform.value=reduced?3.7:time;heatUniform.value=Math.max(.46-wetEmbers*.25,heat);burstUniform.value=burst+stir*.14+flipPulse*.28;
-   for(let i=0;i<logs.length;i++){const log=logs[i],wiggle=(reduced?0:stirMotion)*Math.sin(stirAge*21+i*1.7)*Math.exp(-Math.max(0,stirAge)*7)*(stirAge>=0&&stirAge<1?1:0);log.mesh.rotation.z=log.z+wiggle*.04025;log.mesh.rotation.y=log.yaw+wiggle*.0299;log.mesh.position.y=log.y+Math.abs(wiggle)*.0138;if(flip?.index===i){const p=Math.max(0,Math.min(1,flipAge/.78)),ease=p*p*(3-2*p);log.mesh.rotation.z=flip.from+Math.PI*ease+wiggle*.025;log.mesh.position.y+=reduced?0:Math.sin(p*Math.PI)*.33;if(p>=1){log.z=flip.from+Math.PI;flip=null;}}}
+   timeUniform.value=reduced?3.7:time;heatUniform.value=Math.max(.46-wetEmbers*.25,heat);burstUniform.value=burst+stir*.24+flipPulse*.48;
+   for(let i=0;i<logs.length;i++){const log=logs[i],wiggle=(reduced?0:stirMotion)*Math.sin(stirAge*21+i*1.7)*Math.exp(-Math.max(0,stirAge)*7)*(stirAge>=0&&stirAge<1?1:0);log.mesh.rotation.z=log.z+wiggle*.062;log.mesh.rotation.y=log.yaw+wiggle*.043;log.mesh.position.y=log.y+Math.abs(wiggle)*.021;if(flip?.index===i){const p=Math.max(0,Math.min(1,flipAge/.78)),ease=p*p*(3-2*p);log.mesh.rotation.z=flip.from+Math.PI*ease+wiggle*.025;log.mesh.position.y+=reduced?0:Math.sin(p*Math.PI)*.46;if(p>=1){log.z=flip.from+Math.PI;flip=null;}}}
    roasting.update(now,time,reduced);
-   flame.material.uniforms.uHeight.value=Math.max(.95,.22+Math.pow(Math.max(.18,heat-FIRE.min),.92)*1.82)*(1-.72*wetEmbers)+burst*.22+stir*.0575+flipPulse*.46;flame.material.uniforms.uWidth.value=(1.12+heat*.72+burst*.12)*(1-.55*wetEmbers);
+   flame.material.uniforms.uHeight.value=Math.max(.95,.22+Math.pow(Math.max(.18,heat-FIRE.min),.92)*1.82)*(1-.72*wetEmbers)+burst*.22+stir*.11+flipPulse*.72;flame.material.uniforms.uWidth.value=(1.12+heat*.72+burst*.12)*(1-.55*wetEmbers);
    innerFlame.material.uniforms.uHeight.value=flame.material.uniforms.uHeight.value*.62;innerFlame.material.uniforms.uWidth.value=flame.material.uniforms.uWidth.value*.88;
    fireWood.materials[0].emissiveIntensity=.45+heat*.3+stir*.15;
    smoke.material.uniforms.uHeight.value=1.6+heat*1.05+burst*.3;smoke.material.uniforms.uWidth.value=1.5+heat*.5;smoke.visible=!reduced;
    halo.material.uniforms.uHeight.value=.6+heat*.95+burst*.25;
    const flicker=reduced?0:Math.sin(time*7.3)*.1+Math.sin(time*11.7+1)*.07+Math.sin(time*2.4)*.12;
    light.intensity=Math.min(12,.8+heat*4+burst+flicker*heat);light.position.x=reduced?0:Math.sin(time*2.7)*.07;light.position.z=reduced?0:Math.cos(time*3.2)*.05;
-   const flying=age>=0&&age<FIRE.flightMs/1000;
+   const flight=(throwEvent?.flightMs||FIRE.flightMs)/1000,flying=age>=0&&age<flight+(throwEvent?.missed?.5:0);
    const prop=throwEvent?.kind==='wood'?thrownLog:throwEvent?.kind==='burnt'?burntThrow:branch;
    branch.visible=flying&&prop===branch;thrownLog.visible=flying&&prop===thrownLog;burntThrow.visible=flying&&prop===burntThrow;
-   if(flying){const t=Math.max(0,age/(FIRE.flightMs/1000));prop.position.set(throwEvent.x*(1-t),1.25*(1-t)+.25*t+Math.sin(Math.PI*t)*1.1,throwEvent.z*(1-t));prop.rotation.set(t*3.5,age*2,.3+t*2);}
+   if(flying){const t=Math.max(0,Math.min(1,age/flight)),tail=Math.max(0,age-flight),ex=throwEvent.endX||0,ez=throwEvent.endZ||0;prop.position.set(throwEvent.x*(1-t)+ex*t+Math.sin(tail*9)*tail*.2,1.25*(1-t)+.25*t+Math.sin(Math.PI*t)*(throwEvent.flightMs?1.7:1.1)+Math.sin(tail*12)*Math.exp(-tail*8)*.10,throwEvent.z*(1-t)+ez*t);prop.rotation.set(t*3.5+tail*2,age*2,.3+t*2);}
    sparks.visible=!reduced;
    for(let i=0;i<sparkCount;i++){
     const life=(time*(.18+(i%7)*.019)+i*.618)%1,a=i*2.39996,r=.1+life*.42;
-    sparkPositions[i*3]=Math.sin(a)*r+Math.sin(time*1.3+i)*life*.1;sparkPositions[i*3+1]=.3+life*(1.15+heat*.65+burst*.7);sparkPositions[i*3+2]=Math.cos(a)*r;
+    sparkPositions[i*3]=Math.sin(a)*r+Math.sin(time*1.3+i)*life*.1+windUniform.value.x*life*life*2;sparkPositions[i*3+1]=.3+life*(1.15+heat*.65+burst*.7);sparkPositions[i*3+2]=Math.cos(a)*r+windUniform.value.y*life*life*2;
     sparkFades[i]=i<6+Math.floor(heat*10+burst*18)?Math.sin(life*Math.PI)*(.4+heat*.4+burst*.2):0;
    }
    sparkGeo.attributes.position.needsUpdate=true;sparkGeo.attributes.aFade.needsUpdate=true;
-   emberPool.update(time,reduced);touchEmbers.visible=!reduced&&emberPool.active>0;for(const attribute of Object.values(touchGeo.attributes))attribute.needsUpdate=true;
+   emberPool.update(time,reduced,{x:windUniform.value.x,y:0,z:windUniform.value.y});touchEmbers.visible=!reduced&&emberPool.active>0;for(const attribute of Object.values(touchGeo.attributes))attribute.needsUpdate=true;
   },
   dispose(){if(disposed)return;disposed=true;waterPour.dispose();roasting.dispose();root.removeFromParent();fireWood.dispose();coals.dispose();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
  };

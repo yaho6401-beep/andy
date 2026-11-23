@@ -10,13 +10,15 @@ export const CAMP={
 };
 export const GATHERING_TENT={id:'gathering',name:'별빛 모임 텐트',x:-36,z:5,w:10,d:11,h:5.6,door:4,color:'#d5cbb5',rug:'#b9ab92'};
 export const ALL_TENTS=[...CAMP.tents,GATHERING_TENT];
-export const SEA_BENCHES=[-32,-21,21,32].map((x,i)=>({id:'camp-sea-'+i,x,z:-11.9,yaw:Math.PI,stand:{x,z:-10.85},group:'camp-sea-'+i,height:.65,label:'달빛 바다 벤치'}));
+export const SEA_BENCHES=[-32,-21,21,32,-10,10,-39,39].map((x,i)=>({id:'camp-sea-'+i,x,z:-11.9,yaw:Math.PI,stand:{x,z:-10.85},group:'camp-sea-'+i,height:.65,label:'달빛 바다 벤치'}));
+export const FAR_FIRE_BENCHES=[-1,1].map((side,i)=>({id:'camp-far-fire-'+i,x:side*5.6,z:5.7,yaw:Math.atan2(-side*5.6,-5.7),stand:{x:side*6.35,z:6.45},group:'campfire-far-'+i,height:.65,label:'멀리서 불멍 벤치'}));
 export const CAMP_SEATS=[
  ...Array.from({length:6},(_,i)=>{
   const angle=i*Math.PI/3;
   return {id:`camp-main-${i}`,x:Math.sin(angle)*2.55,z:Math.cos(angle)*2.55,yaw:angle+Math.PI,stand:{x:Math.sin(angle)*3.55,z:Math.cos(angle)*3.55},group:'campfire-main',height:.72,label:'모닥불 통나무 의자'};
  }),
  ...SEA_BENCHES,
+ ...FAR_FIRE_BENCHES,
  ...ALL_TENTS.flatMap(t=>[-1,1].map((side,i)=>({id:`camp-tent-${t.id}-${i}`,x:t.x+side*1.55,z:t.z-.4,yaw:0,stand:{x:t.x+side*1.55,z:t.z+.55},group:'camp-tent-'+t.id,height:.35,label:t.name+' · 독서 쿠션'})))
 ];
 export function tentWalls(t){

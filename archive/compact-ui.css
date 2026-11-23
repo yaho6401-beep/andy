@@ -97,3 +97,7 @@ body.camp-sea-focus #labels,body.camp-sea-focus #seat-panel,body.camp-sea-focus 
 }
 @media(hover:hover) and (pointer:fine) and (max-width:899px){.camp-shortcut-hint{bottom:calc(var(--guide-dock-height,150px) + 64px);width:208px;padding:8px 10px;font-size:10px}}
 .camp-sky-active .camp-shortcut-hint,.camp-shortcut-hint[hidden]{display:none!important}
+.camp-guide-far{display:none;margin:0}
+.camp-far-focus .camp-snack-box,.camp-far-focus .campfire-controls nav,.camp-far-focus #camp-can-pour,.camp-far-focus #camp-sky-open,.camp-far-focus #campfire-moon{display:none!important}
+.camp-far-focus .campfire-action-row{display:block}.camp-far-focus .campfire-branch{width:100%}.camp-far-focus .campfire-controls{max-width:280px}
+.camp-far-focus .camp-shortcut-hint>span:not(:first-child),.camp-far-focus .camp-shortcut-hint>small{display:none}.camp-far-focus .camp-guide-far{display:block;font-size:11px}

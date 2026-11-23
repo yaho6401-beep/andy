@@ -31,10 +31,10 @@ test('private whispers remain absent from other visitors, while host records are
  s.clients.get('a').seat={group:'isolated'};s.action('a',{type:'chat',scope:'whisper',text:'<private>'});assert.equal(s.snapshot('b').messages.length,0);assert.equal(s.admin('h').chatHistory[0].scope,'whisper');
  for(let i=0;i<550;i++){now+=1201;s.action('a',{type:'chat',text:'line '+i});}assert.equal(s.admin('h').chatHistory.length,500);assert.equal(s.snapshot('a').messages.length,45);assert(!JSON.stringify(s.snapshot('b')).includes('chatHistory'));
 });
-test('one in five accepted stirs rolls thirty percent more, without changing the heart probability or creating sound when muted',()=>{
+test('more frequent large stirs roll sixty-five percent more, without changing the heart probability or creating sound when muted',()=>{
  let seed=24;const random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;},touch=new EmberTouch(random);let big=0;
- for(let i=0;i<10000;i++){const event=touch.touch(touch.readyAt,1);if(event.big){big++;assert.equal(event.motion,1.3);}else assert.equal(event.motion,1);}
- assert(big>1900&&big<2100);assert(touch.hearts>900&&touch.hearts<1100);
+ for(let i=0;i<10000;i++){const event=touch.touch(touch.readyAt,1);if(event.big){big++;assert.equal(event.motion,1.65);}else assert.equal(event.motion,1.15);}
+ assert(big>3300&&big<3700);assert(touch.hearts>900&&touch.hearts<1100);
  const scene=new T.Group(),fire=createFireVisual(scene);fire.stir({big:true,motion:1.3,strength:1,count:20,heartCount:0},1,{x:1,z:0});fire.update(1.1);assert.equal(fire.diagnostics.bigStirs,1);assert.equal(fire.diagnostics.stirMotion,1.3);assert(fire.diagnostics.touchParticles<=168);fire.dispose();
  const audio=new FireAudio();audio.stir(1,true);assert.equal(audio.context,null);assert.equal(audio.voices.size,0);audio.dispose();
 });
