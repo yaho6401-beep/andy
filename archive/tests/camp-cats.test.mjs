@@ -5,6 +5,7 @@ import {findWalkPath} from '../src/navigation.js';
 import {campInviteURL,shareCampInvite} from '../camp/invite-share.js';
 import * as T from 'three';
 import {createCampCats} from '../camp/cat-visual.js';
+import {campHeight} from '../camp/layout.js';
 import {createWaterPour} from '../camp/water-pour.js';
 
 test('milk is collected once per tent, near the prop; one bowl at a time',()=>{
@@ -24,5 +25,5 @@ test('milk at the distant walking route is still reached within thirty seconds',
  const s=new CampCatsState({route:(a,b)=>findWalkPath('camp',a,b),random:()=>.4}),player={x:35,z:20};s.milk=1;assert(s.place(player,0));for(let at=100;at<=30000&&s.bowl.drinkingAt===null;at+=100)s.tick(at,.1,{player});assert.notEqual(s.bowl.drinkingAt,null);
 });
 test('cat animations and repeated oil/water pours reuse finite GPU buffers and release all resources',()=>{
- const parent=new T.Group(),visual=createCampCats(parent),state=new CampCatsState(),pour=createWaterPour(parent),resources=new Set();parent.traverse(o=>{if(o.geometry)resources.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material])if(m)resources.add(m);});const before=parent.children.length;for(let i=0;i<200;i++){state.tick(i*100,.1,{player:{x:0,z:4}});visual.set(state,i/10);pour.setState({pourSequence:i+1,pourKind:i%2?'water':'fuel',pouredAt:1000,pourFrom:{x:0,z:2.55}});pour.update(2000,i/10);assert.equal(pour.diagnostics.kind,i%2?'water':'fuel');assert(pour.diagnostics.flow);assert.equal(parent.children.length,before);}let disposed=0;resources.forEach(r=>r.addEventListener('dispose',()=>disposed++));visual.dispose();pour.dispose();assert.equal(parent.children.length,0);assert.equal(disposed,resources.size);
+ const parent=new T.Group(),visual=createCampCats(parent),state=new CampCatsState(),pour=createWaterPour(parent),resources=new Set();parent.traverse(o=>{if(o.geometry)resources.add(o.geometry);for(const m of Array.isArray(o.material)?o.material:[o.material])if(m)resources.add(m);});const before=parent.children.length;for(let i=0;i<200;i++){state.tick(i*100,.1,{player:{x:0,z:4}});visual.set(state,i/10);pour.setState({pourSequence:i+1,pourKind:i%2?'water':'fuel',pouredAt:1000,pourFrom:{x:0,z:2.55}});pour.update(2000,i/10);assert.equal(pour.diagnostics.kind,i%2?'water':'fuel');assert(pour.diagnostics.flow);assert.equal(parent.children.length,before);}state.cats[0].x=35;state.cats[0].z=20;state.bowl={x:35,z:20,placedAt:0};visual.set(state,21);assert.equal(visual.diagnostics.catPositions[0][1],campHeight(35,20));assert.equal(parent.getObjectByName('camp-three-cats').children.at(-1).position.y,campHeight(35,20));let disposed=0;resources.forEach(r=>r.addEventListener('dispose',()=>disposed++));visual.dispose();pour.dispose();assert.equal(parent.children.length,0);assert.equal(disposed,resources.size);
 });
