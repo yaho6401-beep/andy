@@ -1,11 +1,14 @@
+import {keeperPose,RESTOCK_MS} from '../camp/keeper-state.js';
 import {checkFuelDanger} from '../camp/fuel-danger.js';
 import {CANISTERS,OIL_HEAT,OIL_HOLD_MS,fuelLocked,heldCans} from '../camp/canisters.js';
 import {packFor,updateRoasts} from './snacks.mjs';
 import {settleFire,FIRE} from '../camp/fire-state.js';
 
 export function canisterAction(s,id,input){
- if(!['camp-can-pickup','camp-can-pour'].includes(input.type))return null;
+ if(!['camp-keeper','camp-can-pickup','camp-can-pour'].includes(input.type))return null;
  const p=s.clients.get(id),now=s.clock(),pack=packFor(s,id);
+ pack.canClaims??={};pack.refillAt??={};for(const [kind,at]of Object.entries(pack.refillAt))if(at<=now){for(const spot of CANISTERS.filter(c=>c.kind===kind))delete pack.canClaims[spot.id];delete pack.refillAt[kind];}
+ if(input.type==='camp-keeper'){const npc=keeperPose(now);if(p.room!=='camp'||p.seat||Math.hypot(p.x-npc.x,p.z-npc.z)>2.7)throw Error('텐트지기 가까이에서 이야기해 주세요.');const kind=input.kind;if(!['fuel','water'].includes(kind))throw Error('필요한 통을 골라주세요.');if(heldCans(pack)[kind])throw Error('그 통은 이미 챙기셨어요. 먼저 사용하고 찾아와 주세요.');if(CANISTERS.filter(c=>c.kind===kind).every(c=>!pack.canClaims[c.id]))return {ok:true,kind,available:true};if(!pack.refillAt[kind])pack.refillAt[kind]=now+RESTOCK_MS;pack.updatedAt=now;return {ok:true,kind,refillAt:pack.refillAt[kind]};}
  pack.canClaims??={};
  pack.cans??={...heldCans(pack)};
  if(input.type==='camp-can-pickup'){

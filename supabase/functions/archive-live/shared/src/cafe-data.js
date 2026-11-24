@@ -6,9 +6,11 @@ export const MENU=[
  ...['딸기케이크','치즈케이크','초콜릿 브라우니','크루아상','마카롱'].map((name,i)=>({id:'dessert-'+i,name,category:'디저트',color:['#ddb1bc','#e2d19a','#8a6552','#cea46c','#c4aed3'][i],kind:'dessert'})),
  {id:'service-marshmallow',name:'캠핑장 마시멜로 · 서비스',category:'서비스',color:'#fff1d9',kind:'service'}
 ];
-export const NPCS={salon:{id:'barista',name:'바리스타 모아',x:-1.3,z:-6.9,reach:{x:0,z:-4.2},greeting:'무얼 마시시겠어요?',description:'커피, 차, 에이드, 디저트가 준비되어 있어요. 주문하시면 30초 뒤 불러드릴게요.'},scents:{id:'curator',name:'향기 큐레이터 리브',x:-3.7,z:-5.1,reach:{x:-3.7,z:-4.2},greeting:'어떤 향의 이야기가 궁금하세요?',description:'향기 아카이브에 오신 걸 환영해요. 꽃, 나무, 과일의 기억을 함께 찾아볼까요?'}};
+export const NPCS={salon:{id:'barista',name:'바리스타 모아',x:-1.3,z:-6.9,reach:{x:0,z:-4.2},greeting:'무얼 마시시겠어요?',description:'커피, 차, 에이드, 디저트가 준비되어 있어요. 음료는 20초, 디저트는 10초 뒤 불러드릴게요.'},scents:{id:'curator',name:'향기 큐레이터 리브',x:-3.7,z:-5.1,reach:{x:-3.7,z:-4.2},greeting:'어떤 향의 이야기가 궁금하세요?',description:'향기 아카이브에 오신 걸 환영해요. 꽃, 나무, 과일의 기억을 함께 찾아볼까요?'}};
 export const THOUGHTS=['무슨 생각 중…?','점심은 뭐 먹지…','저녁은 뭐 먹지…','오늘은 왠지 좋은 일이 생길 것 같아.','이 향, 어디서 맡아봤더라…','잠깐 쉬어 가도 괜찮겠지.'];
 
 NPCS.scents={...NPCS.scents,...GALLERY.scents.curator,reach:{x:GALLERY.scents.curator.x,z:GALLERY.scents.curator.z+1}};
 
 NPCS.salon={...NPCS.salon,...GALLERY.salon.barista};
+
+export const preparationMs=item=>item.kind==='dessert'?10000:item.kind==='service'?10000:20000;

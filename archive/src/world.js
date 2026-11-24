@@ -1,3 +1,4 @@
+import {createCampCats} from '../camp/cat-visual.js';
 import {SPEAKERS} from '../camp/speaker-state.js';
 import {artObject} from './art-library.js';
 import {furnishDetails} from './world-details.js';
@@ -35,7 +36,7 @@ function portalFrame(p,gate,outdoor=false){const g=new T.Group();g.position.set(
 
 export class ArchiveWorld {
  constructor(scene){this.scene=scene;this.group=new T.Group();scene.add(this.group);this.hotspots=[];this.room=null;this.water=null;}
- build(room,content={scents:SCENTS,books:BOOKS}){this.camp?.dispose();this.camp=null;for(const obj of [...this.group.children]){obj.traverse(o=>{if(o.material?.map&&!o.material.userData.galleryShared){o.material.map.dispose();o.material.dispose();o.geometry?.dispose();}else if(o.userData.archiveMerged)o.geometry.dispose();});this.group.remove(obj);}this.hotspots=[];this.water=null;this.room=room;const g=this.group;
+ build(room,content={scents:SCENTS,books:BOOKS}){this.gardenCats?.dispose();this.gardenCats=null;this.camp?.dispose();this.camp=null;for(const obj of [...this.group.children]){obj.traverse(o=>{if(o.material?.map&&!o.material.userData.galleryShared){o.material.map.dispose();o.material.dispose();o.geometry?.dispose();}else if(o.userData.archiveMerged)o.geometry.dispose();});this.group.remove(obj);}this.hotspots=[];this.water=null;this.room=room;const g=this.group;
 
  if(room==='camp'){
   this.camp=createCamp(g);this.camp.setQuote('오늘의 이야기를 모닥불 곁에 잠시 내려놓아요.');
@@ -127,7 +128,7 @@ export class ArchiveWorld {
 
  if(room==='books'){const portal=new T.Mesh(new T.TorusGeometry(.65,.09,7,32),material('#a7c7b3'));portal.position.set(5.6,1.9,4.85);g.add(portal);label(g,'문장 너머 · 개인 독서 여행',5.6,2.9,4.9,3.4,'#57765f',40);this.hotspots.push({x:5.6,z:4.7,id:'beyond-portal',title:'문장 너머로 · 혼자 읽는 세계',type:'beyond'});}
  furnishDetails(g,room,{mesh,round,label,box,cylinder,sphere,tableData:CAFE_TABLES});
- this.bake();
+ this.bake();if(room==='garden')this.gardenCats=createCampCats(g,'garden');
  this.colliders=LAYOUT[room];return this.hotspots;
  }
  bake(){

@@ -1,0 +1,3 @@
+export const KEEPER_NAME='텐트지기 온유',RESTOCK_MS=30000;
+export const KEEPER_ROUTE=[{x:-3.5,z:6},{x:-3.5,z:-8},{x:-3.5,z:-12.8},{x:3,z:-12.8},{x:3,z:-8},{x:3,z:6}];
+export function keeperPose(at){let phase=((at/1000)%160+160)%160;for(let i=0;i<KEEPER_ROUTE.length;i++){const a=KEEPER_ROUTE[i],b=KEEPER_ROUTE[(i+1)%KEEPER_ROUTE.length],length=Math.hypot(b.x-a.x,b.z-a.z),duration=length/.7;if(phase<5)return {...a,yaw:Math.atan2(b.x-a.x,b.z-a.z),motion:'idle'};phase-=5;if(phase<duration){const t=phase/duration;return {x:a.x+(b.x-a.x)*t,z:a.z+(b.z-a.z)*t,yaw:Math.atan2(b.x-a.x,b.z-a.z),motion:'walk'};}phase-=duration;}return {...KEEPER_ROUTE[0],yaw:0,motion:'idle'};}
