@@ -1,0 +1,1280 @@
+{
+  "checked": "2026-11-24",
+  "bible": {
+    "edition": "성경전서 개역한글판",
+    "publisher": "대한성서공회",
+    "year": 1961,
+    "rightsNotice": "https://www.bskorea.or.kr/bbs/content.php?co_id=subpage2_3_4_1",
+    "expired": "2011-12-31",
+    "books": 66,
+    "chapters": 1189,
+    "verses": 31102,
+    "sources": [
+      {
+        "id": "bible-01",
+        "name": "창세기",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%B0%BD%EC%84%B8%EA%B8%B0.json",
+        "sha256": "b197cdeeb13cf22eddb82461e0f8c8a596ee8b904d5f96fb62ffea58eb727319"
+      },
+      {
+        "id": "bible-02",
+        "name": "출애굽기",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%B6%9C%EC%95%A0%EA%B5%BD%EA%B8%B0.json",
+        "sha256": "24fe5fd9bfa269a4dff57e7aa7bf5be13ba63f3bbe8b1125b42546d08b69c779"
+      },
+      {
+        "id": "bible-03",
+        "name": "레위기",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%A0%88%EC%9C%84%EA%B8%B0.json",
+        "sha256": "3c17155c4864257090ba8472ac401a01f793b2025470dac48b0305d4189e6eba"
+      },
+      {
+        "id": "bible-04",
+        "name": "민수기",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%AF%BC%EC%88%98%EA%B8%B0.json",
+        "sha256": "20bfa425db5c9bf1dd101081c105084e620809d48e53813e36d68f73aea5b4c4"
+      },
+      {
+        "id": "bible-05",
+        "name": "신명기",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%8B%A0%EB%AA%85%EA%B8%B0.json",
+        "sha256": "a2cf51bd05fbe79e170865d185a56100b2fa07d80dedb491780941a02d78df83"
+      },
+      {
+        "id": "bible-06",
+        "name": "여호수아",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%97%AC%ED%98%B8%EC%88%98%EC%95%84.json",
+        "sha256": "b6cf85080bbbd66289c5b3154733ce1eef1105722686e4e60a8e9b8c09b88623"
+      },
+      {
+        "id": "bible-07",
+        "name": "사사기",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%82%AC%EC%82%AC%EA%B8%B0.json",
+        "sha256": "7fd862d42bf54db19944f3f22588fc6493476c34e6d5551f70d3351b14dcbb48"
+      },
+      {
+        "id": "bible-08",
+        "name": "룻기",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%A3%BB%EA%B8%B0.json",
+        "sha256": "a7202fc57d6ab878c8cb5efc6a09a2fb46403bb0754b25ed5d265fb4bbb6db16"
+      },
+      {
+        "id": "bible-09",
+        "name": "사무엘상",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%82%AC%EB%AC%B4%EC%97%98%EC%83%81.json",
+        "sha256": "f6e499888b9a0971c7d57d3add8c714059ef50706e7de36f1a384f5518ac84a5"
+      },
+      {
+        "id": "bible-10",
+        "name": "사무엘하",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%82%AC%EB%AC%B4%EC%97%98%ED%95%98.json",
+        "sha256": "9425fcb30ae11c33ad14bb51f9f0ba87549e2b85a25b37f378dd225c2e13c007"
+      },
+      {
+        "id": "bible-11",
+        "name": "열왕기상",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%97%B4%EC%99%95%EA%B8%B0%EC%83%81.json",
+        "sha256": "c3f3605d9bfcefaf56d85342e98a9674e7b5b189e0bdca80bbf39004a9c2b3e3"
+      },
+      {
+        "id": "bible-12",
+        "name": "열왕기하",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%97%B4%EC%99%95%EA%B8%B0%ED%95%98.json",
+        "sha256": "df415da5bbc9c4650033da971b28751e72b58354e3ab9ee317640557cf04b0f5"
+      },
+      {
+        "id": "bible-13",
+        "name": "역대상",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%97%AD%EB%8C%80%EC%83%81.json",
+        "sha256": "a4e03f468f9df5478ae2c67190606428d64b4f5c265db9b9f82136594c18540e"
+      },
+      {
+        "id": "bible-14",
+        "name": "역대하",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%97%AD%EB%8C%80%ED%95%98.json",
+        "sha256": "32d96eb828ca6c78b773afa69d20ddf3f85d1e86fcc348d1f13f70628f8a5af3"
+      },
+      {
+        "id": "bible-15",
+        "name": "에스라",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%97%90%EC%8A%A4%EB%9D%BC.json",
+        "sha256": "949829f8472ec8fa3cbe078a20f1fad0b15dc983c5777fb75c0aa92abdb1d538"
+      },
+      {
+        "id": "bible-16",
+        "name": "느헤미야",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%8A%90%ED%97%A4%EB%AF%B8%EC%95%BC.json",
+        "sha256": "820fc142569331caa4e1c9417f079aa1e34cf2b72c22731f0524b56143802be4"
+      },
+      {
+        "id": "bible-17",
+        "name": "에스더",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%97%90%EC%8A%A4%EB%8D%94.json",
+        "sha256": "7ba890a66f460188ec142af60f2170fe385f90de0ce5d8ffe7a13316669e2ad4"
+      },
+      {
+        "id": "bible-18",
+        "name": "욥기",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%9A%A5%EA%B8%B0.json",
+        "sha256": "0429645a54b77c8de00cf1c3f3587443fe00a1e20442072214ba2d03e1eb51b2"
+      },
+      {
+        "id": "psalms",
+        "name": "시편",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%8B%9C%ED%8E%B8.json",
+        "sha256": "420d87f78fc36afde8ecadce3aaa21d1a4ff6a175a315d80edcb6bc51a4cc188"
+      },
+      {
+        "id": "proverbs",
+        "name": "잠언",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%9E%A0%EC%96%B8.json",
+        "sha256": "693bf9a264f08bede7a5a02ae7cdb682b887ad98788755a8323451d60c3c7ac9"
+      },
+      {
+        "id": "ecclesiastes",
+        "name": "전도서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%A0%84%EB%8F%84%EC%84%9C.json",
+        "sha256": "23813c6919fe4d6ba2ed0ec3787789ae8df9ff02bba8fd0bb4e3f3459f333b06"
+      },
+      {
+        "id": "bible-22",
+        "name": "아가",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%95%84%EA%B0%80.json",
+        "sha256": "c762e5a832b53dbf0e42ee2bd4ba0c98e7e6ef1cbcb70b48c880b1b8c2d4bada"
+      },
+      {
+        "id": "bible-23",
+        "name": "이사야",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%9D%B4%EC%82%AC%EC%95%BC.json",
+        "sha256": "1fbd23469cc17150fa46ba2c9ab708dd5e0ae9120034b92a9d495617edc82c4c"
+      },
+      {
+        "id": "bible-24",
+        "name": "예레미야",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%98%88%EB%A0%88%EB%AF%B8%EC%95%BC.json",
+        "sha256": "582d8ad87ddf91f473ba6fac2c06725d29afd9f393d3a95b43d2ad050e6e5f76"
+      },
+      {
+        "id": "bible-25",
+        "name": "예레미야애가",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%98%88%EB%A0%88%EB%AF%B8%EC%95%BC%EC%95%A0%EA%B0%80.json",
+        "sha256": "8ea0830a36b0500bb3c6f30b0defd573666ce4f098056b52927dea41e4b7c8cc"
+      },
+      {
+        "id": "bible-26",
+        "name": "에스겔",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%97%90%EC%8A%A4%EA%B2%94.json",
+        "sha256": "342ce056204db8823e50a8c6d29c5ff147a6c5224971c2a70e3acb2466ef5acf"
+      },
+      {
+        "id": "bible-27",
+        "name": "다니엘",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%8B%A4%EB%8B%88%EC%97%98.json",
+        "sha256": "2f9d9505f9891e485cf0941e6ae1f2d302a1985d13fc0ac6b6260e589cb63f85"
+      },
+      {
+        "id": "bible-28",
+        "name": "호세아",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%ED%98%B8%EC%84%B8%EC%95%84.json",
+        "sha256": "d2116f55f75e47930a716982961b3dff26cbe23f772f598ff0cc8b1d8079a83b"
+      },
+      {
+        "id": "bible-29",
+        "name": "요엘",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%9A%94%EC%97%98.json",
+        "sha256": "e47ed75d471e286fc31c052c65cee4aff6da99fa81cab28b58789da1460841aa"
+      },
+      {
+        "id": "bible-30",
+        "name": "아모스",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%95%84%EB%AA%A8%EC%8A%A4.json",
+        "sha256": "c767bb52433059c2f125cf13dc4c1862a8d3a810307898842f5a18398ef6a596"
+      },
+      {
+        "id": "bible-31",
+        "name": "오바댜",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%98%A4%EB%B0%94%EB%8C%9C.json",
+        "sha256": "0f94b6c200095afd7302ed0c2a599e3b10d2633e050da0a9f2620844f0fe8329"
+      },
+      {
+        "id": "bible-32",
+        "name": "요나",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%9A%94%EB%82%98.json",
+        "sha256": "9417ade3484dfae554a516c93878185005d921258aa8546a33669879a9d1aca6"
+      },
+      {
+        "id": "bible-33",
+        "name": "미가",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%AF%B8%EA%B0%80.json",
+        "sha256": "cc7f6ad2cf05a0eb597428385ff135e5e01042d67e78910cf213fc4a43d5c49a"
+      },
+      {
+        "id": "bible-34",
+        "name": "나훔",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%82%98%ED%9B%94.json",
+        "sha256": "3a8d7e65d8dc39c00958189c759680385f4a7101d23afdd36bc248da06de5ef3"
+      },
+      {
+        "id": "bible-35",
+        "name": "하박국",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%ED%95%98%EB%B0%95%EA%B5%AD.json",
+        "sha256": "6dd9e60968027f11370c2b3493fe3fd4fd3a8b235ef28436f30ce543238ff943"
+      },
+      {
+        "id": "bible-36",
+        "name": "스바냐",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%8A%A4%EB%B0%94%EB%83%90.json",
+        "sha256": "db8b4d6463cace8c0d59f100b7cf2e1520edf6c2cfa0c5084a2e99b737a4aeb4"
+      },
+      {
+        "id": "bible-37",
+        "name": "학개",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%ED%95%99%EA%B0%9C.json",
+        "sha256": "348e5b5665f1f71a7f595d46ec95341eb4ccfcf241c69057e1c39f2e89eee25c"
+      },
+      {
+        "id": "bible-38",
+        "name": "스가랴",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%8A%A4%EA%B0%80%EB%9E%B4.json",
+        "sha256": "b822db1ebab2ffb47be599ca622e259e09c669325dc78fe214f455c23f01ae6a"
+      },
+      {
+        "id": "bible-39",
+        "name": "말라기",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%A7%90%EB%9D%BC%EA%B8%B0.json",
+        "sha256": "2f0791089af8593429da8fdf16f2a13a425000db59636b202383eb2bbea6e22a"
+      },
+      {
+        "id": "bible-40",
+        "name": "마태복음",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%A7%88%ED%83%9C%EB%B3%B5%EC%9D%8C.json",
+        "sha256": "0d94fb391b6158b60cdf039e5a52fce7271eab33c8ff167a12b4a1768326bd45"
+      },
+      {
+        "id": "bible-41",
+        "name": "마가복음",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%A7%88%EA%B0%80%EB%B3%B5%EC%9D%8C.json",
+        "sha256": "3accb49a5f52a9abb1d2747994bd0733fe48f2f3fd630d825af9b4dc738ff8d5"
+      },
+      {
+        "id": "bible-42",
+        "name": "누가복음",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%88%84%EA%B0%80%EB%B3%B5%EC%9D%8C.json",
+        "sha256": "c4f90be1a50b8242dc123827090e16d96889c1321fec1e97b0eb3eb145255219"
+      },
+      {
+        "id": "bible-43",
+        "name": "요한복음",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%9A%94%ED%95%9C%EB%B3%B5%EC%9D%8C.json",
+        "sha256": "539ef3cf60fcdaa1dd5cd0a07cb2796eeee2dd5cb63250cb076ef401da81ba23"
+      },
+      {
+        "id": "bible-44",
+        "name": "사도행전",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%82%AC%EB%8F%84%ED%96%89%EC%A0%84.json",
+        "sha256": "454303d4e677a0c92385c520a0ff26efbacb7c2e00861ee11fc9815bf9f8579a"
+      },
+      {
+        "id": "bible-45",
+        "name": "로마서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%A1%9C%EB%A7%88%EC%84%9C.json",
+        "sha256": "a147ac45be5019c36082a1e128e50e2f5d5b76815607b186f1657006805ab08d"
+      },
+      {
+        "id": "bible-46",
+        "name": "고린도전서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EA%B3%A0%EB%A6%B0%EB%8F%84%EC%A0%84%EC%84%9C.json",
+        "sha256": "acb001cc50b1c6f6c1734fb79feb61de3a5200d44a9b66a2d6af9ddd4aa208bf"
+      },
+      {
+        "id": "bible-47",
+        "name": "고린도후서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EA%B3%A0%EB%A6%B0%EB%8F%84%ED%9B%84%EC%84%9C.json",
+        "sha256": "ebb373507c2ea7b5ebf5f2ec72e3f643a79e2ac5589afd91644e3753f632dc71"
+      },
+      {
+        "id": "bible-48",
+        "name": "갈라디아서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EA%B0%88%EB%9D%BC%EB%94%94%EC%95%84%EC%84%9C.json",
+        "sha256": "e368686ff5f5f8857721bb176c70e9bad3cb5a1bd1477d823a5456eb06afadee"
+      },
+      {
+        "id": "bible-49",
+        "name": "에베소서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%97%90%EB%B2%A0%EC%86%8C%EC%84%9C.json",
+        "sha256": "d9e029ba93cfa9b6fa1ca621524bca1b05d40c602249b95961b4aaf6922c9d78"
+      },
+      {
+        "id": "bible-50",
+        "name": "빌립보서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%B9%8C%EB%A6%BD%EB%B3%B4%EC%84%9C.json",
+        "sha256": "e3464c7b50efb39e8c0f3076d30e350d44aca51f28cf1df4bc3da56a5c514ff7"
+      },
+      {
+        "id": "bible-51",
+        "name": "골로새서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EA%B3%A8%EB%A1%9C%EC%83%88%EC%84%9C.json",
+        "sha256": "aab7a2c5feb9ffa0b77ae84db88f2fc01c658a894b3fa26c0570654dcb26376a"
+      },
+      {
+        "id": "bible-52",
+        "name": "데살로니가전서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%8D%B0%EC%82%B4%EB%A1%9C%EB%8B%88%EA%B0%80%EC%A0%84%EC%84%9C.json",
+        "sha256": "1f673438f3fd29f34e64dcfcb59f3a7ce989ad98845dbf935cf6595de8b853f4"
+      },
+      {
+        "id": "bible-53",
+        "name": "데살로니가후서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%8D%B0%EC%82%B4%EB%A1%9C%EB%8B%88%EA%B0%80%ED%9B%84%EC%84%9C.json",
+        "sha256": "fe822bb4605e52b90decfc3377a58706fa2db7282508e27dad134105f6e4225d"
+      },
+      {
+        "id": "bible-54",
+        "name": "디모데전서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%94%94%EB%AA%A8%EB%8D%B0%EC%A0%84%EC%84%9C.json",
+        "sha256": "61e93090e645a873c66a1e8fd30fb595a05de85d3ea54b502961a605c562ec7b"
+      },
+      {
+        "id": "bible-55",
+        "name": "디모데후서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%94%94%EB%AA%A8%EB%8D%B0%ED%9B%84%EC%84%9C.json",
+        "sha256": "4c0f56fa21ddfbac52b5b23e7c97735a269cb792b453cad2259e635a2af01179"
+      },
+      {
+        "id": "bible-56",
+        "name": "디도서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%94%94%EB%8F%84%EC%84%9C.json",
+        "sha256": "0ad04df591fd8616011417b1fe2b5fc042d1d4281f6de47195cd91d5d90bd53c"
+      },
+      {
+        "id": "bible-57",
+        "name": "빌레몬서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%B9%8C%EB%A0%88%EB%AA%AC%EC%84%9C.json",
+        "sha256": "29704021777b5b55894c2e08f08363d9ffd42ea65619baaba2075c9b87b7e0ba"
+      },
+      {
+        "id": "bible-58",
+        "name": "히브리서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%ED%9E%88%EB%B8%8C%EB%A6%AC%EC%84%9C.json",
+        "sha256": "02d639d92a41daccf25b4d722cfa23b15cad8ccd0e4f75cae90cad30e188a9b6"
+      },
+      {
+        "id": "bible-59",
+        "name": "야고보서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%95%BC%EA%B3%A0%EB%B3%B4%EC%84%9C.json",
+        "sha256": "7a461391aa865778b01caf5c5f8c5941d18d3f4f265addd5c49dc2187cd74385"
+      },
+      {
+        "id": "bible-60",
+        "name": "베드로전서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%B2%A0%EB%93%9C%EB%A1%9C%EC%A0%84%EC%84%9C.json",
+        "sha256": "88268716ab93b06e12465744e3570bae4fc4afb819f4cccf0ae99674a7e65839"
+      },
+      {
+        "id": "bible-61",
+        "name": "베드로후서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EB%B2%A0%EB%93%9C%EB%A1%9C%ED%9B%84%EC%84%9C.json",
+        "sha256": "8764f05aa33342603d7a8ab0ac8460da4c22e5f92d1e685f2bf21d0d010da09a"
+      },
+      {
+        "id": "bible-62",
+        "name": "요한1서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%9A%94%ED%95%9C1%EC%84%9C.json",
+        "sha256": "aae20f3ba5852541d4abe44cc069bf32fcb4db4a71cd10e07bd8f4a32381302c"
+      },
+      {
+        "id": "bible-63",
+        "name": "요한2서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%9A%94%ED%95%9C2%EC%84%9C.json",
+        "sha256": "35a2071efc9d04540ded6ee88e60b2b95f86c3714c464f3be3de959674f82b15"
+      },
+      {
+        "id": "bible-64",
+        "name": "요한3서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%9A%94%ED%95%9C3%EC%84%9C.json",
+        "sha256": "99fe3be38a884a24c4136fa35ee35768fb32ad3790ebcdd0c193064c1ef0bff4"
+      },
+      {
+        "id": "bible-65",
+        "name": "유다서",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%9C%A0%EB%8B%A4%EC%84%9C.json",
+        "sha256": "8fbff3da58edf5ee94f0e7783d8efb6da492515d30844f45d2bcfa00951939d5"
+      },
+      {
+        "id": "bible-66",
+        "name": "요한계시록",
+        "url": "https://raw.githubusercontent.com/yuhwan/Bible-krv/master/%EC%9A%94%ED%95%9C%EA%B3%84%EC%8B%9C%EB%A1%9D.json",
+        "sha256": "41d2f2c96542b54e9e51e4b094c9ab771522b04e3453d1305b5b85b93225a8aa"
+      }
+    ]
+  },
+  "classics": [
+    {
+      "id": "classic-01",
+      "title": "동백꽃",
+      "author": "김유정",
+      "mood": "풋풋한 마음과 시골의 봄",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%8F%99%EB%B0%B1%EA%BD%83&oldid=465103",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 465103,
+      "categories": [
+        {
+          "sortkey": "",
+          "*": "1936년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 87,
+      "characters": 6809,
+      "sha256": "4abcac3b7ba0bbf87759cec7e46bc53d1efebe3035514e499206878881845959"
+    },
+    {
+      "id": "classic-02",
+      "title": "봄봄",
+      "author": "김유정",
+      "mood": "서툰 약속에 담긴 해학",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%B4%84%EB%B4%84&oldid=458652",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 458652,
+      "categories": [
+        {
+          "sortkey": "",
+          "*": "1935년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 125,
+      "characters": 11024,
+      "sha256": "d65a791f015c008ab94c4c1f3394b33b2ef5f3b393a6eec2c3a17cf399a8a9e5"
+    },
+    {
+      "id": "classic-03",
+      "title": "금 따는 콩밭",
+      "author": "김유정",
+      "mood": "욕망과 일상의 씁쓸한 웃음",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EA%B8%88%20%EB%94%B0%EB%8A%94%20%EC%BD%A9%EB%B0%AD&oldid=354124",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 354124,
+      "categories": [
+        {
+          "sortkey": "",
+          "*": "1935년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 154,
+      "characters": 10288,
+      "sha256": "4f98aad7be9aaaf42324aa36a57a2265655be0d924a2ece30ef6e4708fa0e04e"
+    },
+    {
+      "id": "classic-04",
+      "title": "산골 나그네",
+      "author": "김유정",
+      "mood": "낯선 만남과 산골 풍경",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EC%82%B0%EA%B3%A8%20%EB%82%98%EA%B7%B8%EB%84%A4&oldid=250691",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 250691,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 124,
+      "characters": 9754,
+      "sha256": "02389c872d456f15b7a27bd66bcb501b3ec115279099988132891e41462cd40d"
+    },
+    {
+      "id": "classic-05",
+      "title": "만무방",
+      "author": "김유정",
+      "mood": "삶의 무게를 바라보는 이야기",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%A7%8C%EB%AC%B4%EB%B0%A9&oldid=157696",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 157696,
+      "categories": [
+        {
+          "sortkey": "",
+          "*": "1935년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 320,
+      "characters": 22485,
+      "sha256": "89f0717018f6f052cadc5d1e2be30d870f9c60af13900fc95a937803ae895752"
+    },
+    {
+      "id": "classic-06",
+      "title": "노다지",
+      "author": "김유정",
+      "mood": "금에 얽힌 사람들의 욕망",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%85%B8%EB%8B%A4%EC%A7%80&oldid=115694",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 115694,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 134,
+      "characters": 9392,
+      "sha256": "ca9222580573ec1488e3a315c3a77dd6c8ce7b58b09d41bf9058cc9b4a960209"
+    },
+    {
+      "id": "classic-07",
+      "title": "산골",
+      "author": "김유정",
+      "mood": "토속적인 산골의 정경",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EC%82%B0%EA%B3%A8&oldid=115695",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 115695,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 109,
+      "characters": 12346,
+      "sha256": "3fec975b964f8243335c213a4ebf1291e4685dc271005b088d21bc60b8e05d61"
+    },
+    {
+      "id": "classic-08",
+      "title": "슬픈 이야기",
+      "author": "김유정",
+      "mood": "작은 삶을 돌아보는 이야기",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EC%8A%AC%ED%94%88%20%EC%9D%B4%EC%95%BC%EA%B8%B0&oldid=120366",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 120366,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-50"
+        },
+        {
+          "sortkey": "",
+          "*": "1936년_작품"
+        }
+      ],
+      "paragraphs": 13,
+      "characters": 9042,
+      "sha256": "f30de48f2cd2d8bb36c8b59eae017250213322404aa72da9426aba9e44257a68"
+    },
+    {
+      "id": "classic-09",
+      "title": "땡볕",
+      "author": "김유정",
+      "mood": "한여름 볕 아래의 삶",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%95%A1%EB%B3%95&oldid=120264",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 120264,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 89,
+      "characters": 6119,
+      "sha256": "6cf100711c77a18cc68bf6623f8db6ba5d0d2fe0141ab46e2cabd1a912376a03"
+    },
+    {
+      "id": "classic-10",
+      "title": "옥토끼",
+      "author": "김유정",
+      "mood": "소박한 인물들의 속마음",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EC%98%A5%ED%86%A0%EB%81%BC&oldid=120364",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 120364,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-50"
+        },
+        {
+          "sortkey": "",
+          "*": "1936년_작품"
+        }
+      ],
+      "paragraphs": 41,
+      "characters": 3600,
+      "sha256": "035a74edea48fee63d94880fa930d11c35bbe05b1696e7e5c9cb85213da4fc04"
+    },
+    {
+      "id": "classic-11",
+      "title": "떡",
+      "author": "김유정",
+      "mood": "먹거리와 가난의 아이러니",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%96%A1&oldid=120356",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 120356,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-50"
+        },
+        {
+          "sortkey": "",
+          "*": "1935년_작품"
+        }
+      ],
+      "paragraphs": 11,
+      "characters": 12092,
+      "sha256": "68d6b3f4f973b0196aff941e042cbd7a87e2bb363dd3e55c051968449aab5377"
+    },
+    {
+      "id": "classic-12",
+      "title": "생의 반려",
+      "author": "김유정",
+      "mood": "함께 사는 삶을 바라보는 이야기",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EC%83%9D%EC%9D%98%20%EB%B0%98%EB%A0%A4&oldid=204400",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 204400,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-50"
+        },
+        {
+          "sortkey": "",
+          "*": "1920년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "미완의_작품"
+        }
+      ],
+      "paragraphs": 428,
+      "characters": 27738,
+      "sha256": "f4c6391967dcb87082002b0a085c9e6887b7d507e1d6920cff6a7552386d5de7"
+    },
+    {
+      "id": "classic-13",
+      "title": "운수 좋은 날",
+      "author": "현진건",
+      "mood": "비 오는 하루의 역설",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EC%9A%B4%EC%88%98%20%EC%A2%8B%EC%9D%80%20%EB%82%A0&oldid=468924",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1943,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 468924,
+      "categories": [
+        {
+          "sortkey": "",
+          "*": "1924년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-50"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 86,
+      "characters": 10204,
+      "sha256": "25c1f614ba6c54b5e23fa17d907df9bda23796ac9d0ed956dd1436efd754b5a2"
+    },
+    {
+      "id": "classic-14",
+      "title": "빈처",
+      "author": "현진건",
+      "mood": "일상과 부부의 마음",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%B9%88%EC%B2%98&oldid=250704",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1943,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 250704,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-50"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 242,
+      "characters": 13563,
+      "sha256": "0fa15665547468e4abc3f65973611c90b35c0db849306c004618d1508398eba9"
+    },
+    {
+      "id": "classic-15",
+      "title": "고향",
+      "author": "현진건",
+      "mood": "고향과 잃어버린 풍경",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EA%B3%A0%ED%96%A5%20(%ED%98%84%EC%A7%84%EA%B1%B4)&oldid=120311",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1943,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 120311,
+      "categories": [
+        {
+          "sortkey": "",
+          "*": "1926년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-50"
+        }
+      ],
+      "paragraphs": 58,
+      "characters": 5133,
+      "sha256": "6597f89c77921b516abea01ed00e108c14a88da0fb30df4ba123c77400ccabe3"
+    },
+    {
+      "id": "classic-16",
+      "title": "B사감과 러브레터",
+      "author": "현진건",
+      "mood": "겉모습과 속마음의 반전",
+      "source": "https://ko.wikisource.org/w/index.php?title=B%EC%82%AC%EA%B0%90%EA%B3%BC%20%EB%9F%AC%EB%B8%8C%EB%A0%88%ED%84%B0&oldid=470248",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1943,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 470248,
+      "categories": [
+        {
+          "sortkey": "",
+          "*": "1925년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-50"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 68,
+      "characters": 5240,
+      "sha256": "f4bc411b5ecfa684a5962d902fa5a2bde0cc23be047f4206979ded81be18ffa8"
+    },
+    {
+      "id": "classic-17",
+      "title": "술 권하는 사회",
+      "author": "현진건",
+      "mood": "시대와 개인을 돌아보는 소설",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EC%88%A0%20%EA%B6%8C%ED%95%98%EB%8A%94%20%EC%82%AC%ED%9A%8C&oldid=425047",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1943,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 425047,
+      "categories": [
+        {
+          "sortkey": "",
+          "*": "1921년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-50"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 159,
+      "characters": 10360,
+      "sha256": "01a7bac286b2c179c05fd0ec3d14b9b8114a2be975634e167fcf79e9f9802c0c"
+    },
+    {
+      "id": "classic-18",
+      "title": "할머니의 죽음",
+      "author": "현진건",
+      "mood": "가족과 삶을 돌아보는 이야기",
+      "source": "https://ko.wikisource.org/w/index.php?title=%ED%95%A0%EB%A8%B8%EB%8B%88%EC%9D%98%20%EC%A3%BD%EC%9D%8C&oldid=143104",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1943,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 143104,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-50"
+        },
+        {
+          "sortkey": "",
+          "*": "1923년_작품"
+        }
+      ],
+      "paragraphs": 148,
+      "characters": 9430,
+      "sha256": "ab1a58829b8194ccd327769a404f2d80835f02fc1bf46abf571547f7738ae34a"
+    },
+    {
+      "id": "classic-19",
+      "title": "벙어리 삼룡이",
+      "author": "나도향",
+      "mood": "말로 전하지 못한 마음",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%B2%99%EC%96%B4%EB%A6%AC%20%EC%82%BC%EB%A3%A1%EC%9D%B4&oldid=387844",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1926,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 387844,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "복원된_문자가_있는_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "1925년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 125,
+      "characters": 10451,
+      "sha256": "c7e454b5539a6b6222b9357b80b7456b9929fcdacafd4a9dd7bb661915357237"
+    },
+    {
+      "id": "classic-20",
+      "title": "그믐달",
+      "author": "나도향",
+      "mood": "달빛 아래에서 읽는 짧은 수필",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EA%B7%B8%EB%AF%90%EB%8B%AC%20(%EB%82%98%EB%8F%84%ED%96%A5)&oldid=386836",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1926,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 386836,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "수필"
+        }
+      ],
+      "paragraphs": 11,
+      "characters": 867,
+      "sha256": "4e8ba02df6c6ceb3f0bde2080524ba82619ec62537f08ebc95f7d8d7fa1b7929"
+    },
+    {
+      "id": "classic-21",
+      "title": "병상예어",
+      "author": "나도향",
+      "mood": "달과 별을 비롯한 짧은 수필 모음",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%B3%91%EC%83%81%EC%98%88%EC%96%B4&oldid=300567",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1926,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 300567,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        }
+      ],
+      "paragraphs": 49,
+      "characters": 4564,
+      "sha256": "11c2f42c8c49792f4993add10f6a602c8c91094f0e420b5c88225c1438067620"
+    },
+    {
+      "id": "classic-22",
+      "title": "날개",
+      "author": "이상",
+      "mood": "낯선 시선으로 돌아보는 나",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%82%A0%EA%B0%9C&oldid=221326",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 221326,
+      "categories": [
+        {
+          "sortkey": "",
+          "*": "1936년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 167,
+      "characters": 22184,
+      "sha256": "a932a6ef121cbd5f23b6830561ae75da48ab31c2a5b75fe228387f1f85687601"
+    },
+    {
+      "id": "classic-23",
+      "title": "권태",
+      "author": "이상",
+      "mood": "느린 하루를 응시하는 수필",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EA%B6%8C%ED%83%9C&oldid=387146",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 387146,
+      "categories": [
+        {
+          "sortkey": "",
+          "*": "1937년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "수필"
+        }
+      ],
+      "paragraphs": 111,
+      "characters": 10485,
+      "sha256": "08597b342e799214b0e92f7f0a0b323c6cb09568de0112912c4bf6ca1391c4fc"
+    },
+    {
+      "id": "classic-24",
+      "title": "산촌여정",
+      "author": "이상",
+      "mood": "산촌에서 발견하는 감각",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EC%82%B0%EC%B4%8C%EC%97%AC%EC%A0%95&oldid=221339",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1937,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 221339,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "수필"
+        }
+      ],
+      "paragraphs": 58,
+      "characters": 8121,
+      "sha256": "2d1f35ef3923d962c6272902177e557e8fcd15a33ed9d3f46d7e78f90a05e5ae"
+    },
+    {
+      "id": "classic-25",
+      "title": "메밀꽃 필 무렵",
+      "author": "이효석",
+      "mood": "달빛과 메밀꽃의 밤길",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%A9%94%EB%B0%80%EA%BD%83%20%ED%95%84%20%EB%AC%B4%EB%A0%B5&oldid=426852",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1942,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 426852,
+      "categories": [
+        {
+          "sortkey": "",
+          "*": "1936년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 100,
+      "characters": 8127,
+      "sha256": "200dbca54fb654deed29d12be3c44af5f528c1e4839ea26307c24973cd795bde"
+    },
+    {
+      "id": "classic-26",
+      "title": "산",
+      "author": "이효석",
+      "mood": "자연으로 향하는 마음",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EC%82%B0%20(%EC%9D%B4%ED%9A%A8%EC%84%9D)&oldid=423080",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1942,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 423080,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-50"
+        },
+        {
+          "sortkey": "",
+          "*": "1936년_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "단편소설"
+        }
+      ],
+      "paragraphs": 55,
+      "characters": 5689,
+      "sha256": "916c150070d39435ac73dfcd66e590a0eecb25d3c33400801fd6595ec1e1848d"
+    },
+    {
+      "id": "classic-27",
+      "title": "들",
+      "author": "이효석",
+      "mood": "들판의 생명과 감각",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%93%A4&oldid=202357",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1942,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 202357,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-50"
+        },
+        {
+          "sortkey": "",
+          "*": "한국의_소설"
+        },
+        {
+          "sortkey": "",
+          "*": "1936년_작품"
+        }
+      ],
+      "paragraphs": 168,
+      "characters": 13081,
+      "sha256": "8eb905dafb9f85040d7cea83914938042762837d9c61ce8aa8e739d4bd277882"
+    },
+    {
+      "id": "classic-28",
+      "title": "낙엽을 태우면서",
+      "author": "이효석",
+      "mood": "가을의 냄새와 사유",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%82%99%EC%97%BD%EC%9D%84%20%ED%83%9C%EC%9A%B0%EB%A9%B4%EC%84%9C&oldid=264425",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1942,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 264425,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        }
+      ],
+      "paragraphs": 9,
+      "characters": 2516,
+      "sha256": "649536623cad1e0f99899a6d7ce8f6560eea96ad46a380711a150cb9839b6547"
+    },
+    {
+      "id": "classic-29",
+      "title": "만년 셔츠",
+      "author": "방정환",
+      "mood": "다정한 용기와 어린 마음",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EB%A7%8C%EB%85%84%20%EC%85%94%EC%B8%A0&oldid=263594",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1931,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 263594,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "한국의_소설"
+        },
+        {
+          "sortkey": "",
+          "*": "1927년_작품"
+        }
+      ],
+      "paragraphs": 108,
+      "characters": 5847,
+      "sha256": "628ef3d5623c50c6869fad42f54aa7284d8e19abb1d06b7524af5255977c910e"
+    },
+    {
+      "id": "classic-30",
+      "title": "4월 그믐날 밤",
+      "author": "방정환",
+      "mood": "어린이의 눈으로 만나는 세상",
+      "source": "https://ko.wikisource.org/w/index.php?title=4%EC%9B%94%20%EA%B7%B8%EB%AF%90%EB%82%A0%20%EB%B0%A4&oldid=116291",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "authorDeath": 1931,
+      "rightsBasis": "한국어 원작, 저자 사후 70년 경과. 전자 판본의 위키문헌 기여자 표시 및 CC BY-SA 4.0 유지.",
+      "revision": 116291,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        },
+        {
+          "sortkey": "",
+          "*": "PD-old-70"
+        },
+        {
+          "sortkey": "",
+          "*": "동화"
+        },
+        {
+          "sortkey": "",
+          "*": "1924년_작품"
+        }
+      ],
+      "paragraphs": 34,
+      "characters": 2645,
+      "sha256": "14f24d0e060f81e89f79a4028c5de1daabd0444adb94ff39fb12f0e0a42eb8bc"
+    }
+  ]
+}
