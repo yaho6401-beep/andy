@@ -14,11 +14,11 @@ function fixture(){let now=100000;const s=new ArchiveStore({clock:()=>now});for(
 test('both tents offer reachable individual water and fuel props, with no wall crossing',()=>{
  assert.equal(CANISTERS.length,4);for(const c of CANISTERS){assert.ok(campPosition(c.x,c.z));assert.ok(findWalkPath('camp',{x:0,z:8.5},c).length);}
 });
-test('pickup validates admission, proximity, single held can and one claim per prop',()=>{
+test('pickup validates admission, proximity, one of each held kind and one claim per prop',()=>{
  const {s,pick,sit,advance}=fixture();assert.throws(()=>s.action('a',{type:'camp-can-pickup',spot:CANISTERS[0].id}),/가까이/);
- pick('a',CANISTERS[0]);assert.throws(()=>pick('a',CANISTERS[1]),/하나/);assert.equal(s.snapshot('b').players.find(p=>p.id==='a').heldCan,'fuel');assert.ok(!('canClaims' in s.snapshot('b').myPack));
- assert.throws(()=>s.action('a',{type:'camp-can-pour',kind:'water',heat:0}),/앉아서/);sit('a');const receipt=s.action('a',{type:'camp-can-pour',kind:'water',heat:0});assert.equal(receipt.kind,'fuel');assert.equal(s.campfire.heat,OIL_HEAT);assert.equal(s.packs.get('a').can,null);
- advance(2000);assert.throws(()=>s.action('a',{type:'camp-can-pour'}),/손에 든/);assert.throws(()=>pick('a',CANISTERS[0]),/이미/);pick('b',CANISTERS[0]); // Claims belong to a visitor, not all guests.
+ pick('a',CANISTERS[0]);pick('a',CANISTERS[1]);assert.throws(()=>pick('a',CANISTERS[2]),/하나/);assert.equal(s.snapshot('b').players.find(p=>p.id==='a').heldCan,'water');assert.ok(!('canClaims' in s.snapshot('b').myPack));
+ assert.throws(()=>s.action('a',{type:'camp-can-pour',kind:'water',heat:0}),/앉아서/);sit('a');assert.throws(()=>s.action('a',{type:'camp-can-pour',kind:'fake'}),/손에 든/);const receipt=s.action('a',{type:'camp-can-pour',kind:'fuel',heat:0});assert.equal(receipt.kind,'fuel');assert.equal(s.campfire.heat,OIL_HEAT);assert.equal(s.packs.get('a').can.kind,'water');assert.deepEqual(s.snapshot('b').players.find(p=>p.id==='a').heldCans,['water']);
+ advance(2000);s.action('a',{type:'camp-can-pour',kind:'water'});advance(2000);assert.throws(()=>s.action('a',{type:'camp-can-pour'}),/손에 든/);assert.throws(()=>pick('a',CANISTERS[0]),/이미/);pick('b',CANISTERS[0]); // Claims belong to a visitor, not all guests.
 });
 test('oil exceeds normal maximum briefly, decays slowly, and server permits only missing ingredients until danger',()=>{
  const {s,pick,sit,advance}=fixture();pick('a',CANISTERS[0]);sit('a');s.action('a',{type:'camp-can-pour'});assert.ok(heatAt(s.campfire,s.clock())>FIRE.fuelMax);assert.equal(s.snapshot('a').campfire.fuelLocked,true);
@@ -27,7 +27,7 @@ test('oil exceeds normal maximum briefly, decays slowly, and server permits only
  advance(OIL_HOLD_MS);assert.equal(s.snapshot('a').campfire.fuelLocked,false);assert.doesNotThrow(()=>s.action('a',{type:'campfire-log'}));
 });
 test('water sharply returns shared fire to its minimum and unlocks fuel, with no repeat consumption',()=>{
- const {s,pick,sit,advance}=fixture();pick('a',CANISTERS[0]);pick('b',CANISTERS[1]);sit('a');sit('b',1);s.action('a',{type:'camp-can-pour'});advance(2000);s.action('b',{type:'camp-can-pour',kind:'fuel'});const f=s.snapshot('a').campfire;assert.equal(f.heat,FIRE.min);assert.equal(f.fuelLocked,false);assert.equal(f.branches,0);assert.equal(f.logs,0);assert.equal(f.pourKind,'water');advance(2000);assert.doesNotThrow(()=>s.action('a',{type:'campfire-branch'}));assert.throws(()=>s.action('b',{type:'camp-can-pour'}),/손에 든/);
+ const {s,pick,sit,advance}=fixture();pick('a',CANISTERS[0]);pick('b',CANISTERS[1]);sit('a');sit('b',1);s.action('a',{type:'camp-can-pour'});advance(2000);assert.throws(()=>s.action('b',{type:'camp-can-pour',kind:'fuel'}),/손에 든/);s.action('b',{type:'camp-can-pour',kind:'water'});const f=s.snapshot('a').campfire;assert.equal(f.heat,FIRE.min);assert.equal(f.fuelLocked,false);assert.equal(f.branches,0);assert.equal(f.logs,0);assert.equal(f.pourKind,'water');advance(2000);assert.doesNotThrow(()=>s.action('a',{type:'campfire-branch'}));assert.throws(()=>s.action('b',{type:'camp-can-pour'}),/손에 든/);
 });
 test('private can ownership and cooking/drink records survive JSON restore without overwrites',()=>{
  const {s,pick}=fixture();s.notes.push({id:'keep',text:'keep'});const p=s.clients.get('a');p.heldItem='coffee-americano';p.heldTakeout=true;p.sipsLeft=4;const pack=packFor(s,'a');pack.items.potato=2;pack.oils.orange=1;pick('a',CANISTERS[2]);const restored=restoreStore(JSON.parse(JSON.stringify(serializeStore(s))),s.clock);assert.deepEqual(restored.snapshot('a').myPack,s.snapshot('a').myPack);assert.equal(restored.clients.get('a').heldItem,'coffee-americano');assert.equal(restored.notes[0].text,'keep');assert.equal(restored.snapshot('b').players.find(p=>p.id==='a').heldCan,'fuel');assert.ok(!JSON.stringify(restored.snapshot('b').players).includes('canClaims'));

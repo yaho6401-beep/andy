@@ -63,10 +63,11 @@ export function createFireVisual(parent){
    halo.material.uniforms.uHeight.value=.6+heat*.95+burst*.25;
    const flicker=reduced?0:Math.sin(time*7.3)*.1+Math.sin(time*11.7+1)*.07+Math.sin(time*2.4)*.12;
    light.intensity=Math.min(12,.8+heat*4+burst+flicker*heat);light.position.x=reduced?0:Math.sin(time*2.7)*.07;light.position.z=reduced?0:Math.cos(time*3.2)*.05;
-   const flight=(throwEvent?.flightMs||FIRE.flightMs)/1000,flying=age>=0&&age<flight+(throwEvent?.missed?.5:0);
+   const flight=(throwEvent?.flightMs||FIRE.flightMs)/1000,flying=age>=0&&age<flight+(throwEvent?.missed?2.2:0);
    const prop=throwEvent?.kind==='wood'?thrownLog:throwEvent?.kind==='burnt'?burntThrow:branch;
    branch.visible=flying&&prop===branch;thrownLog.visible=flying&&prop===thrownLog;burntThrow.visible=flying&&prop===burntThrow;
-   if(flying){const t=Math.max(0,Math.min(1,age/flight)),tail=Math.max(0,age-flight),ex=throwEvent.endX||0,ez=throwEvent.endZ||0;prop.position.set(throwEvent.x*(1-t)+ex*t+Math.sin(tail*9)*tail*.2,1.25*(1-t)+.25*t+Math.sin(Math.PI*t)*(throwEvent.flightMs?1.7:1.1)+Math.sin(tail*12)*Math.exp(-tail*8)*.10,throwEvent.z*(1-t)+ez*t);prop.rotation.set(t*3.5+tail*2,age*2,.3+t*2);}
+   branch.scale.setScalar(throwEvent?.flightMs?1.25:1);
+   if(flying){const t=Math.max(0,Math.min(1,age/flight)),tail=Math.max(0,age-flight),ex=throwEvent.endX||0,ez=throwEvent.endZ||0;prop.position.set(throwEvent.x*(1-t)+ex*t+Math.sin(Math.min(tail,.6)*9)*Math.min(tail,.6)*.4,1.6*(1-t)+.14*t+Math.sin(Math.PI*t)*(throwEvent.flightMs?1.7:1.1)+Math.sin(tail*12)*Math.exp(-tail*8)*.10,throwEvent.z*(1-t)+ez*t);prop.rotation.set(t*3.5+Math.min(tail,.5)*2,Math.min(age,flight+.5)*2,.3+t*2);}
    sparks.visible=!reduced;
    const gustAge=reduced?-1:threatAge(fire,now);tentEmbers=0;
    for(let i=0;i<sparkCount;i++){

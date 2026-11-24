@@ -1,3 +1,4 @@
+import {createCampCats} from './cat-visual.js';
 import {moonlightAt} from './night-ambience.js';
 import {createGatheringScreen} from './gathering-screen.js';
 import {createCampScenery,campTexture} from './scenery.js';
@@ -164,7 +165,7 @@ export function createCamp(scene){
  const gathering=createGatheringScreen(root);
  const scenery=createCampScenery(root),landscape=createCampLandscape(root),weather=createCampWeather(root),hands=createWarmingHands(root),watch=createWristwatch(root);
  const meteors=createMeteors(root),moon=createMoon(root),sky=createObservingSky(root);
- const fire=createFireVisual(root);
+ const fire=createFireVisual(root),cats=createCampCats(root);
  const seatWood=createWoodKit(),woodRoot=new T.Group();woodRoot.name='natural-log-seats';root.add(woodRoot);
  for(const s of CAMP_SEATS.filter(s=>s.group==='campfire-main')){
   const log=seatWood.log(.33,1.3);log.position.set(s.x,.43,s.z);log.rotation.set(0,s.yaw,Math.PI/2);woodRoot.add(log);
@@ -175,8 +176,9 @@ export function createCamp(scene){
  const moonFill=new T.DirectionalLight('#c1d9e8',.08);moonFill.position.set(8,14,-12);root.add(moonFill);let currentWeather=null,moonGlow=0;
  let previous=0;
  return {
+  setCats:(state,time)=>cats.set(state,time,matchMedia('(prefers-reduced-motion: reduce)').matches),pickCat:ray=>cats.pick(ray),pickMilk:ray=>cats.pickMilk(ray),
   setRanking:value=>gathering.set(value),setCanPack:pack=>scenery.setPack(pack),setSkyMode:mode=>sky.setMode(mode),setSky:active=>{sky.set(active);moon.setSky(active);decorativeStars.visible=!active;},pickMoon:ray=>moon.pick(ray),get skyTarget(){return sky.target;},setFocus:active=>moon.setFocus(active),setWatch:active=>watch.set(active),groundPoint:ray=>landscape.groundPoint(ray),setHands:(...args)=>hands.set(...args),setWeather:value=>{currentWeather=value;weather.setState(value);},setFireState:value=>fire.setState(value),setSnacks:value=>fire.setSnacks(value),pickWood:ray=>fire.pickWood(ray),stirWood:(...args)=>fire.stir(...args),
-  get fireDiagnostics(){return {...fire.diagnostics,moonGlow,scenery:scenery.diagnostics,sky:sky.diagnostics,moon:moon.diagnostics,meteor:meteors.diagnostics,weather:weather.diagnostics,hands:hands.diagnostics,watch:watch.diagnostics,landscape:landscape.diagnostics};},
+  get fireDiagnostics(){return {...fire.diagnostics,cats:cats.diagnostics,moonGlow,scenery:scenery.diagnostics,sky:sky.diagnostics,moon:moon.diagnostics,meteor:meteors.diagnostics,weather:weather.diagnostics,hands:hands.diagnostics,watch:watch.diagnostics,landscape:landscape.diagnostics};},
   get cutaway(){return cloth.map(c=>({id:c.tent.id,opacity:c.mesh.material.opacity,wallOpacity:c.wallMesh.material.opacity}));},
   setQuote(text){ctx.clearRect(0,0,512,256);ctx.fillStyle='#f8ead1';ctx.textAlign='center';ctx.font='24px sans-serif';ctx.fillText('별빛 캠핑장 방명록',256,60);ctx.font='18px sans-serif';const chars=[...text];ctx.fillText(chars.slice(0,23).join(''),256,115);ctx.fillText(chars.slice(23,46).join('')+(chars.length>46?'…':''),256,148);ctx.font='14px sans-serif';ctx.fillText('가까이에서 흔적 남기기',256,205);quoteTex.needsUpdate=true;},
   update(time,reduced=false,viewer,camera){
@@ -191,6 +193,6 @@ export function createCamp(scene){
     c.sign.visible=inside?.id!==c.tent.id;
    }
   },
-  dispose(){gathering.dispose();scenery.dispose();canvasTex.dispose();sky.dispose();moon.dispose();landscape.dispose();weather.dispose();hands.dispose();watch.dispose();meteors.dispose();fire.dispose();pickupWood.dispose();woodRoot.removeFromParent();seatWood.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
+  dispose(){cats.dispose();gathering.dispose();scenery.dispose();canvasTex.dispose();sky.dispose();moon.dispose();landscape.dispose();weather.dispose();hands.dispose();watch.dispose();meteors.dispose();fire.dispose();pickupWood.dispose();woodRoot.removeFromParent();seatWood.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
  };
 }
