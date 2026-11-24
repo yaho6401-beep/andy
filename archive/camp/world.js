@@ -1,3 +1,4 @@
+import {moonlightAt} from './night-ambience.js';
 import {createGatheringScreen} from './gathering-screen.js';
 import {createCampScenery,campTexture} from './scenery.js';
 import {createObservingSky} from './sky-visual.js';
@@ -171,15 +172,16 @@ export function createCamp(scene){
  }
  const pickupWood=new T.InstancedMesh(seatWood.geometry,seatWood.materials,WOOD_FINDS.length*3),woodPose=new T.Object3D();let woodIndex=0;
  for(const spot of WOOD_FINDS)for(let i=0;i<3;i++){woodPose.position.set(spot.x+(i-1)*.13,.12+i*.035,spot.z);woodPose.rotation.set(.13,i*.4,Math.PI/2);woodPose.scale.set(.07,.54,.07);woodPose.updateMatrix();pickupWood.setMatrixAt(woodIndex++,woodPose.matrix);}woodRoot.add(pickupWood);
+ const moonFill=new T.DirectionalLight('#c1d9e8',.08);moonFill.position.set(8,14,-12);root.add(moonFill);let currentWeather=null,moonGlow=0;
  let previous=0;
  return {
-  setRanking:value=>gathering.set(value),setCanPack:pack=>scenery.setPack(pack),setSkyMode:mode=>sky.setMode(mode),setSky:active=>{sky.set(active);moon.setSky(active);decorativeStars.visible=!active;},pickMoon:ray=>moon.pick(ray),get skyTarget(){return sky.target;},setFocus:active=>moon.setFocus(active),setWatch:active=>watch.set(active),groundPoint:ray=>landscape.groundPoint(ray),setHands:(...args)=>hands.set(...args),setWeather:value=>weather.setState(value),setFireState:value=>fire.setState(value),setSnacks:value=>fire.setSnacks(value),pickWood:ray=>fire.pickWood(ray),stirWood:(...args)=>fire.stir(...args),
-  get fireDiagnostics(){return {...fire.diagnostics,scenery:scenery.diagnostics,sky:sky.diagnostics,moon:moon.diagnostics,meteor:meteors.diagnostics,weather:weather.diagnostics,hands:hands.diagnostics,watch:watch.diagnostics,landscape:landscape.diagnostics};},
+  setRanking:value=>gathering.set(value),setCanPack:pack=>scenery.setPack(pack),setSkyMode:mode=>sky.setMode(mode),setSky:active=>{sky.set(active);moon.setSky(active);decorativeStars.visible=!active;},pickMoon:ray=>moon.pick(ray),get skyTarget(){return sky.target;},setFocus:active=>moon.setFocus(active),setWatch:active=>watch.set(active),groundPoint:ray=>landscape.groundPoint(ray),setHands:(...args)=>hands.set(...args),setWeather:value=>{currentWeather=value;weather.setState(value);},setFireState:value=>fire.setState(value),setSnacks:value=>fire.setSnacks(value),pickWood:ray=>fire.pickWood(ray),stirWood:(...args)=>fire.stir(...args),
+  get fireDiagnostics(){return {...fire.diagnostics,moonGlow,scenery:scenery.diagnostics,sky:sky.diagnostics,moon:moon.diagnostics,meteor:meteors.diagnostics,weather:weather.diagnostics,hands:hands.diagnostics,watch:watch.diagnostics,landscape:landscape.diagnostics};},
   get cutaway(){return cloth.map(c=>({id:c.tent.id,opacity:c.mesh.material.opacity,wallOpacity:c.wallMesh.material.opacity}));},
   setQuote(text){ctx.clearRect(0,0,512,256);ctx.fillStyle='#f8ead1';ctx.textAlign='center';ctx.font='24px sans-serif';ctx.fillText('별빛 캠핑장 방명록',256,60);ctx.font='18px sans-serif';const chars=[...text];ctx.fillText(chars.slice(0,23).join(''),256,115);ctx.fillText(chars.slice(23,46).join('')+(chars.length>46?'…':''),256,148);ctx.font='14px sans-serif';ctx.fillText('가까이에서 흔적 남기기',256,205);quoteTex.needsUpdate=true;},
   update(time,reduced=false,viewer,camera){
    const dt=previous?Math.min(.05,Math.max(0,time-previous)):.05;previous=time;
-   sky.update(time,camera);moon.update(camera);weather.update(time,viewer,reduced);hands.update(time,camera,reduced);watch.update(time,camera,reduced);landscape.update(time,viewer,!!viewer&&Math.hypot(viewer.x-(this.lastX??viewer.x),viewer.z-(this.lastZ??viewer.z))>.001,reduced,camera,Date.now());this.lastX=viewer?.x;this.lastZ=viewer?.z;fire.update(time,reduced);meteors.update(time,camera,reduced);
+   moonGlow=moonlightAt(Date.now(),currentWeather);moonFill.intensity=.08+moonGlow*.3;sky.update(time,camera);moon.update(camera,moonGlow);weather.update(time,viewer,reduced);hands.update(time,camera,reduced);watch.update(time,camera,reduced);landscape.update(time,viewer,!!viewer&&Math.hypot(viewer.x-(this.lastX??viewer.x),viewer.z-(this.lastZ??viewer.z))>.001,reduced,camera,Date.now(),moonGlow);this.lastX=viewer?.x;this.lastZ=viewer?.z;fire.update(time,reduced);meteors.update(time,camera,reduced);
    for(let i=0;i<waves.length;i++)waves[i].position.x=waves[i].userData.baseX+(reduced?0:Math.sin(time*.45+i)*.18);
 
    const near=viewer?tentAt(viewer.x,viewer.z,1.15):null;

@@ -7,4 +7,4 @@ export const CANISTERS=CAMP.tents.flatMap(t=>[
 ]);
 export const CAN_NAMES={fuel:'기름통',water:'물통'};
 export const OIL_HEAT=4.45, OIL_HOLD_MS=90000;
-export const fuelLocked=(fire,now)=>now<(fire?.oilUntil||0)&&fire?.heat>.73;
+export const fuelLocked=(fire,now)=>!!fire?.dangerAt||now<(fire?.oilUntil||0)&&fire?.heat>.73;

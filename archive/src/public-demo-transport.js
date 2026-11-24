@@ -11,7 +11,7 @@ export class PublicDemoTransport{
  this.onStatus('혼자 체험 중');this.onWelcome?.({id:this.id});this.emit();this.timer=setInterval(()=>this.emit(),500);return {id:this.id,mode:'public-demo'};
  }
  emit(){if(this.store)this.onSnapshot(this.store.snapshot(this.id));}
- send(data){try{const result=this.store.action(this.id,data);this.emit();if(['order','pickup','place-order','clear-order','sit','stand','camp-can-pickup','camp-can-pour','campfire-branch','campfire-log','camp-snack-fuel','harvest','camp-snack','camp-snack-adjust','camp-snack-take','camp-snack-share-take','camp-snack-give','museum-oil','use-oil','warm-hands','sip','travel','identity','note','delete-note'].includes(data.type))this.onReceipt?.({action:data.type,...result});}catch(e){this.onError?.(e.message);}}
+ send(data){try{const result=this.store.action(this.id,data);this.emit();if(['order','pickup','place-order','clear-order','sit','stand','camp-speaker','camp-can-pickup','camp-can-pour','campfire-branch','campfire-log','camp-snack-fuel','harvest','camp-snack','camp-snack-adjust','camp-snack-take','camp-snack-share-take','camp-snack-give','museum-oil','use-oil','warm-hands','sip','travel','identity','note','delete-note'].includes(data.type))this.onReceipt?.({action:data.type,...result});}catch(e){this.onError?.(e.message);}}
  async admin(){throw Error('공개 체험 모드에서는 진행자 기능을 사용할 수 없어요.');}
  close(){clearInterval(this.timer);this.store=null;}
 }

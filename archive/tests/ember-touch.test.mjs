@@ -15,7 +15,7 @@ test('touch has a short variable pause and a five-second break after five accept
 });
 test('heart events are approximately ten percent, with variable embers and weaker cold-fire strength',()=>{
  const t=new EmberTouch(random(100)),counts=new Set();let now=0;
- for(let i=0;i<10000;i++){const e=t.touch(now,.7);counts.add(e.count);assert.ok(e.count>=16&&e.count<=48);assert.ok(!e.heart||(e.heartCount>=20&&e.heartCount<=35));now=t.readyAt;}
+ for(let i=0;i<10000;i++){const e=t.touch(now,.7);counts.add(e.count);assert.ok(e.count>=24&&e.count<=68);assert.ok(!e.heart||(e.heartCount>=20&&e.heartCount<=35));now=t.readyAt;}
  assert.ok(t.hearts>900&&t.hearts<1100);assert.ok(counts.size>10);
  const weak=new EmberTouch(()=>.5).touch(0,FIRE.min),hot=new EmberTouch(()=>.5).touch(0,FIRE.max);assert.ok(weak.strength<hot.strength/3);
 });

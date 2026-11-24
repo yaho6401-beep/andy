@@ -1,3 +1,4 @@
+import {SPEAKERS} from '../camp/speaker-state.js';
 import {artObject} from './art-library.js';
 import {furnishDetails} from './world-details.js';
 import {buildGallery} from './gallery-world.js';
@@ -39,6 +40,7 @@ export class ArchiveWorld {
  if(room==='camp'){
   this.camp=createCamp(g);this.camp.setQuote('오늘의 이야기를 모닥불 곁에 잠시 내려놓아요.');
   portalFrame(g,PORTALS.camp[0],true);
+  this.hotspots.push(...SPEAKERS.map(s=>({...s,type:'camp-speaker',title:'텐트 스피커 · 전원 켜기',reach:2.1})));
   this.hotspots.push(...WOOD_FINDS.map(h=>({...h,type:'harvest',title:'나무 아래 · 마른 장작 찾기',reach:1.5})));
   this.hotspots.push({x:0,z:0,id:'campfire',title:'모닥불 가까이 · 불멍하기',type:'campfire',reach:5.5});
   this.hotspots.push({x:CAMP.board.x,z:CAMP.board.z+.8,id:'camp-sentence',title:'별빛 캠핑장 방명록',type:'camp-story'});
