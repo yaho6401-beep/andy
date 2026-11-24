@@ -8,7 +8,7 @@ export function advanceFire(state,at,seconds,weatherEnabled,holdUntil,oilUntil=0
  state.load=Math.max(0,Math.min(state.load-rate*seconds,7*Math.max(0,(state.heat-.16)/2.34)));
 }
 export function fireStateAt(fire,now){
- if(fire?.dangerAt)return {heat:4.45,load:7};
+ if(fire?.dangerAt)return {heat:4.45,load:Math.max(0,Math.min(7,fire.branchLoad??fire.branches??5))};
  const at=Number.isFinite(fire?.at)?fire.at:now,state={heat:Math.max(.16,Math.min(4.5,Number.isFinite(fire?.heat)?fire.heat:.72)),load:Math.max(0,Math.min(7,fire?.branchLoad??fire?.branches??0))};
  if(now-at>300000)return {heat:.16,load:0};
  for(let t=at;t<now;){const ms=Math.min(500,now-t);advanceFire(state,t,ms/1000,fire.weatherEnabled,fire.holdUntil||0,fire.oilUntil||0);t+=ms;}

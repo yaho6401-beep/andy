@@ -20,9 +20,9 @@ test('pickup validates admission, proximity, single held can and one claim per p
  assert.throws(()=>s.action('a',{type:'camp-can-pour',kind:'water',heat:0}),/앉아서/);sit('a');const receipt=s.action('a',{type:'camp-can-pour',kind:'water',heat:0});assert.equal(receipt.kind,'fuel');assert.equal(s.campfire.heat,OIL_HEAT);assert.equal(s.packs.get('a').can,null);
  advance(2000);assert.throws(()=>s.action('a',{type:'camp-can-pour'}),/손에 든/);assert.throws(()=>pick('a',CANISTERS[0]),/이미/);pick('b',CANISTERS[0]); // Claims belong to a visitor, not all guests.
 });
-test('oil exceeds normal maximum briefly, decays slowly, and server blocks every fuel type',()=>{
+test('oil exceeds normal maximum briefly, decays slowly, and server permits only missing ingredients until danger',()=>{
  const {s,pick,sit,advance}=fixture();pick('a',CANISTERS[0]);sit('a');s.action('a',{type:'camp-can-pour'});assert.ok(heatAt(s.campfire,s.clock())>FIRE.fuelMax);assert.equal(s.snapshot('a').campfire.fuelLocked,true);
- const pack=packFor(s,'a');pack.wood=2;advance(2000);assert.throws(()=>s.action('a',{type:'campfire-branch'}),/기름 연출/);assert.throws(()=>s.action('a',{type:'campfire-log'}),/기름 연출/);assert.equal(pack.wood,2);
+ const pack=packFor(s,'a');pack.wood=2;advance(2000);assert.equal(s.action('a',{type:'campfire-branch'}).branches,1);advance(2000);s.action('a',{type:'campfire-log'});assert.equal(pack.wood,1);assert.equal(s.snapshot('a').campfire.branchLocked,false);
  const plain={...s.campfire,oilUntil:0};advance(20000);assert.ok(heatAt(s.campfire,s.clock())>heatAt(plain,s.clock())+.8);assert.equal(s.snapshot('a').campfire.fuelLocked,true);
  advance(OIL_HOLD_MS);assert.equal(s.snapshot('a').campfire.fuelLocked,false);assert.doesNotThrow(()=>s.action('a',{type:'campfire-log'}));
 });

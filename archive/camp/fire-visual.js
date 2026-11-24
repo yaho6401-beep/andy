@@ -1,3 +1,4 @@
+import {threatAge,tentEmberAt} from './tent-embers.js';
 import {clearAirFlare} from './night-ambience.js';
 import {fireWind} from './weather-state.js';
 import {createWaterPour,waterPourPhase} from './water-pour.js';
@@ -40,13 +41,13 @@ export function createFireVisual(parent){
  const stem=new T.Mesh(stickGeo,wood);stem.rotation.z=Math.PI/2;branch.add(stem);const fork=new T.Mesh(stickGeo,wood);fork.scale.set(.65,.5,.65);fork.rotation.z=.5;fork.position.set(.06,.12,0);branch.add(fork);const end=new T.Mesh(own(new T.CylinderGeometry(.049,.049,.012,7)),cut);end.rotation.z=Math.PI/2;end.position.x=.38;branch.add(end);branch.visible=false;root.add(branch);
  const thrownLog=fireWood.log(.13,.9);thrownLog.visible=false;root.add(thrownLog);
  const burntThrow=new T.Mesh(own(new T.SphereGeometry(.2,10,7)),material(new T.MeshLambertMaterial({color:'#29231d'})));burntThrow.visible=false;root.add(burntThrow);
- let fire=createFire(Date.now()),offset=0,sequence=0,throwEvent=null,energy=1,disposed=false,stirTime=-100,stirStrength=0,stirMotion=1,bigStirs=0,stirSerial=0,displayHeat=FIRE.initial,previousTime=null,flip=null,flipStarted=-100,flips=0,stirFlare=0;
+ let fire=createFire(Date.now()),offset=0,sequence=0,throwEvent=null,energy=1,disposed=false,stirTime=-100,stirStrength=0,stirMotion=1,bigStirs=0,stirSerial=0,displayHeat=FIRE.initial,previousTime=null,flip=null,flipStarted=-100,flips=0,stirFlare=0,tentEmbers=0;
  return {
   pickWood(ray){root.updateMatrixWorld(true);return ray.intersectObject(hit,false).length>0;},
   stir(event,time,right){if(disposed)return;stirTime=time;stirStrength=event.strength;stirMotion=event.motion||1;stirFlare=event.flare?1:0;if(event.big)bigStirs++;stirSerial++;if(event.flip){flipStarted=time;flip={at:time,index:event.flipIndex%logs.length,from:logs[event.flipIndex%logs.length].z};flips++;}emberPool.emit(event,time,right);},
   setSnacks:jobs=>roasting.setJobs(jobs),
   setState(value){if(!value)return;waterPour.setState(value);if(value.pourKind==='water'&&value.pourSequence!==fire.pourSequence)throwEvent=null;fire=value;offset=value.at-Date.now();if(value.lastThrow?.sequence>sequence){sequence=value.lastThrow.sequence;throwEvent=value.lastThrow;}},
-  get diagnostics(){return {style:'layered-wood-fire',waterPour:waterPour.diagnostics,...roasting.diagnostics,heat:heatAt(fire,Date.now()+offset),sequence,branchVisible:branch.visible||thrownLog.visible||burntThrow.visible,energy,displayHeat,targetHeat:heatAt(fire,Date.now()+offset),sparks:sparks.visible,smoke:smoke.visible,stirs:stirSerial,bigStirs,flips,stirMotion,stirFlare,touchParticles:emberPool.active,particleCapacity:emberPool.capacity,flameHeight:flame.material.uniforms.uHeight.value,windLean:windUniform.value.toArray(),missedThrow:!!throwEvent?.missed,throwPosition:branch.position.toArray()};},
+  get diagnostics(){return {style:'layered-wood-fire',waterPour:waterPour.diagnostics,...roasting.diagnostics,heat:heatAt(fire,Date.now()+offset),sequence,branchVisible:branch.visible||thrownLog.visible||burntThrow.visible,energy,displayHeat,targetHeat:heatAt(fire,Date.now()+offset),sparks:sparks.visible,smoke:smoke.visible,stirs:stirSerial,bigStirs,flips,stirMotion,stirFlare,tentEmbers,touchParticles:emberPool.active,particleCapacity:emberPool.capacity,flameHeight:flame.material.uniforms.uHeight.value,windLean:windUniform.value.toArray(),missedThrow:!!throwEvent?.missed,throwPosition:branch.position.toArray()};},
   update(time,reduced=false){
    if(disposed)return;
    const now=Date.now()+offset,targetHeat=(fire.pourKind==='water'&&waterPourPhase(now-fire.pouredAt).heatDelay)||throwEvent&&now-throwEvent.at<(throwEvent.flightMs||FIRE.flightMs)?displayHeat:heatAt(fire,now),dt=previousTime===null?0:Math.min(.05,Math.max(0,time-previousTime));previousTime=time;displayHeat=T.MathUtils.damp(displayHeat,targetHeat,fire.pourKind==='water'&&now-fire.pouredAt<2500?5:1.35,dt);const heat=displayHeat,age=throwEvent?(now-throwEvent.at)/1000:99,burst=(throwEvent?.missed?0:age<(throwEvent?.flightMs||FIRE.flightMs)/1000?0:Math.max(0,1-(age-(throwEvent?.flightMs||FIRE.flightMs)/1000)/2.8))*(throwEvent?.kind==='burnt'?.28:1),stirAge=time-stirTime,stir=reduced?0:Math.max(0,1-stirAge/.65)*stirStrength,flipAge=time-flipStarted,flipPulse=reduced?0:Math.sin(Math.PI*Math.max(0,Math.min(1,flipAge/.95)))**2*stirStrength;energy=.45+heat*1.25+burst*.8;
@@ -67,12 +68,14 @@ export function createFireVisual(parent){
    branch.visible=flying&&prop===branch;thrownLog.visible=flying&&prop===thrownLog;burntThrow.visible=flying&&prop===burntThrow;
    if(flying){const t=Math.max(0,Math.min(1,age/flight)),tail=Math.max(0,age-flight),ex=throwEvent.endX||0,ez=throwEvent.endZ||0;prop.position.set(throwEvent.x*(1-t)+ex*t+Math.sin(tail*9)*tail*.2,1.25*(1-t)+.25*t+Math.sin(Math.PI*t)*(throwEvent.flightMs?1.7:1.1)+Math.sin(tail*12)*Math.exp(-tail*8)*.10,throwEvent.z*(1-t)+ez*t);prop.rotation.set(t*3.5+tail*2,age*2,.3+t*2);}
    sparks.visible=!reduced;
+   const gustAge=reduced?-1:threatAge(fire,now);tentEmbers=0;
    for(let i=0;i<sparkCount;i++){
+    const flyingEmber=i>=40&&gustAge>=0&&gustAge<6000?tentEmberAt(i-40,gustAge):null;if(flyingEmber){sparkPositions[i*3]=flyingEmber.x;sparkPositions[i*3+1]=flyingEmber.y;sparkPositions[i*3+2]=flyingEmber.z;sparkFades[i]=flyingEmber.fade*.95;sparkSizes[i]=flyingEmber.size;tentEmbers++;continue;}sparkSizes[i]=.035+(i%4)*.009;
     const life=(time*(.18+(i%7)*.019)+i*.618)%1,a=i*2.39996,r=.1+life*.42;
     sparkPositions[i*3]=Math.sin(a)*r+Math.sin(time*1.3+i)*life*.1+windUniform.value.x*life*life*4.2;sparkPositions[i*3+1]=.3+life*(1.15+heat*.65+burst*.7);sparkPositions[i*3+2]=Math.cos(a)*r+windUniform.value.y*life*life*4.2;
     sparkFades[i]=i<6+Math.floor(heat*11+burst*18+stir*24+flipPulse*20)?Math.sin(life*Math.PI)*(.4+heat*.4+burst*.2):0;
    }
-   sparkGeo.attributes.position.needsUpdate=true;sparkGeo.attributes.aFade.needsUpdate=true;
+   sparkGeo.attributes.position.needsUpdate=true;sparkGeo.attributes.aFade.needsUpdate=true;sparkGeo.attributes.aSize.needsUpdate=true;
    emberPool.update(time,reduced,{x:windUniform.value.x,y:0,z:windUniform.value.y});touchEmbers.visible=!reduced&&emberPool.active>0;for(const attribute of Object.values(touchGeo.attributes))attribute.needsUpdate=true;
   },
   dispose(){if(disposed)return;disposed=true;waterPour.dispose();roasting.dispose();root.removeFromParent();fireWood.dispose();coals.dispose();geometries.forEach(g=>g.dispose());materials.forEach(m=>m.dispose());}
