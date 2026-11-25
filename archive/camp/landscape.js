@@ -9,7 +9,7 @@ export function createCampLandscape(parent){
  const root=new T.Group();root.name='coast-and-woodland-walk';parent.add(root);const geometries=[],materials=[],own=g=>(geometries.push(g),g),mat=c=>{const m=new T.MeshLambertMaterial({color:c});materials.push(m);return m;},sandMat=mat('#ccb58f'),wood=mat('#5d4e43'),green=mat('#385c52'),stone=mat('#b9b19b');
  const ground=own(new T.PlaneGeometry(96,100,42,44));ground.rotateX(-Math.PI/2);ground.translate(0,0,32.9);const gp=ground.attributes.position;for(let i=0;i<gp.count;i++)gp.setY(i,campHeight(gp.getX(i),gp.getZ(i))-.075);ground.computeVertexNormals();const land=new T.Mesh(ground,mat('#6d8a77'));root.add(land);
  const beach=new T.Mesh(own(new T.BoxGeometry(88,.06,5.8)),sandMat);beach.position.set(0,-.015,-12.4);root.add(beach);
- const oceanGeo=own(new T.PlaneGeometry(180,140,80,56));oceanGeo.rotateX(-Math.PI/2);oceanGeo.translate(0,-.17,-84);const oceanMat=createMoonlitOceanMaterial();materials.push(oceanMat);const ocean=new T.Mesh(oceanGeo,oceanMat);root.add(ocean);
+ const oceanGeo=own(new T.PlaneGeometry(300,230,80,56));oceanGeo.rotateX(-Math.PI/2);oceanGeo.translate(0,-.17,-129);const oceanMat=createMoonlitOceanMaterial();materials.push(oceanMat);const ocean=new T.Mesh(oceanGeo,oceanMat);root.add(ocean);
  // Fade only crowns between the camera and the walker, keeping the path legible.
  const crownAlpha=new T.InstancedBufferAttribute(new Float32Array(128).fill(1),1);
  green.transparent=true;green.depthWrite=false;
