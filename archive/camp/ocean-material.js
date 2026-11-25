@@ -22,8 +22,8 @@ export function createMoonlitOceanMaterial(){return new T.ShaderMaterial({
   float crest=sin(p.z*7.8+sin(p.x*2.6+uTime*.42)*1.15+uTime*.75);
   float edge=max(fwidth(crest)*1.4,.04),shine=smoothstep(.70-edge,.94+edge,crest);
   float fragments=smoothstep(.24,.76,detail)*(.42+.58*pow(max(0.,sin(p.x*5.1-p.z*.63+uTime*.16)),2.));
-  color+=vec3(.36,.41,.37)*path*shine*fragments*(.36+.45*fresnel)*(1.+uMoonGlow*1.65);
-  color+=vec3(.025,.034,.031)*path*(.4+.6*detail)*(1.+uMoonGlow*.8);
+  color+=vec3(.36,.41,.37)*path*shine*fragments*(.36+.45*fresnel)*(1.+uMoonGlow*3.2);
+  color+=vec3(.025,.034,.031)*path*(.4+.6*detail)*(1.+uMoonGlow*1.6);
   float foam=exp(-pow((p.z-uTide)*4.,2.))*(.45+.55*detail);color+=vec3(.17,.23,.22)*foam;
   float haze=smoothstep(30.,100.,distance);color=mix(color,vec3(.035,.066,.086),haze*.73);
   gl_FragColor=vec4(color,1.);

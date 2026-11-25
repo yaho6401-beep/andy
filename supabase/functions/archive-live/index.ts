@@ -9,8 +9,8 @@ const allowedOrigin=(o:string)=>o==='https://andy-plum.vercel.app'||/^https:\/\/
 const hex=(a:ArrayBuffer)=>Array.from(new Uint8Array(a)).map(b=>b.toString(16).padStart(2,'0')).join('');
 const digest=async(t:string)=>hex(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)));
 const fail=(message:string,status=400)=>Object.assign(Error(message),{status});
-const receiptTypes=new Set(['note','delete-note','order','pickup','place-order','clear-order','sit','stand','barista-duty','camp-speaker','camp-keeper','camp-can-pickup','camp-can-pour','campfire-branch','campfire-log','camp-snack-fuel','harvest','camp-snack','camp-snack-adjust','camp-snack-take','camp-snack-share-take','camp-snack-give','museum-oil','use-oil','warm-hands','sip','travel','identity','like','report']);
-const allowed=new Set(['move','room','chat','emote','note','delete-note','order','pickup','place-order','clear-order','sit','stand','barista-duty','camp-speaker','camp-keeper','camp-can-pickup','camp-can-pour','campfire-branch','campfire-log','camp-snack-fuel','harvest','camp-snack','camp-snack-adjust','camp-snack-take','camp-snack-share-take','camp-snack-give','museum-oil','use-oil','warm-hands','sip','travel','identity','profile','balance','report','like','host']);
+const receiptTypes=new Set(['note','delete-note','order','pickup','place-order','clear-order','sit','stand','barista-duty','camp-speaker','camp-keeper','camp-can-pickup','camp-can-pour','campfire-branch','campfire-log','camp-snack-fuel','harvest','camp-snack','camp-snack-adjust','camp-snack-take','camp-snack-share-take','sea-swim','sea-rod','sea-cast','sea-reel','sea-cancel','camp-snack-give','museum-oil','use-oil','warm-hands','sip','travel','identity','like','report']);
+const allowed=new Set(['move','room','chat','emote','note','delete-note','order','pickup','place-order','clear-order','sit','stand','barista-duty','camp-speaker','camp-keeper','camp-can-pickup','camp-can-pour','campfire-branch','campfire-log','camp-snack-fuel','harvest','camp-snack','camp-snack-adjust','camp-snack-take','camp-snack-share-take','sea-swim','sea-rod','sea-cast','sea-reel','sea-cancel','camp-snack-give','museum-oil','use-oil','warm-hands','sip','travel','identity','profile','balance','report','like','host']);
 Deno.serve(async req=>{
  const origin=req.headers.get('origin'),headers:Record<string,string>={'Content-Type':'application/json;charset=utf-8','Cache-Control':'no-store','Vary':'Origin'};
  if(origin&&allowedOrigin(origin))Object.assign(headers,{'Access-Control-Allow-Origin':origin,'Access-Control-Allow-Headers':'apikey,content-type,authorization,x-region','Access-Control-Allow-Methods':'POST,OPTIONS','Access-Control-Max-Age':'3600'});
@@ -54,7 +54,7 @@ Deno.serve(async req=>{
   if(p.connectionId!==input.connectionId)throw fail('다른 화면의 접속 요청입니다.',409);
   if(op==='tick'&&now-(p.lastRequest||0)<180)throw fail('요청이 너무 빠릅니다.',429);p.lastRequest=now;p.lastSeen=now;
  }
- const p=s.clients.get(id);let out:any;
+ const p=s.clients.get(id);p.seaVersion=input.seaVersion===1?1:0;let out:any;
  // Membership is independent of admission, adult approval and host authorization.
  // Only short-lived, server-issued tickets bind an account; never client member IDs.
  const ticket=typeof input.memberTicket==='string'&&/^[a-f0-9]{64}$/.test(input.memberTicket)?input.memberTicket:'',ticketHash=ticket?await digest(ticket):'';
@@ -76,6 +76,8 @@ Deno.serve(async req=>{
   }
   if(p.nickname!==session.nickname)await q('update archive_private.sessions set nickname=$1 where token_hash=$2 and player_id=$3',[p.nickname,session.token_hash,id]);
   const snapshot=s.snapshot(id),notesVersion=s.notes.length+':'+(s.notes.at(-1)?.id||'');
+  // Old open tabs cannot render the new fish model; capabilities never grant permissions.
+  if(input.seaVersion!==1){snapshot.campSnacks=snapshot.campSnacks.filter(j=>j.kind!=='fish');snapshot.campShares=snapshot.campShares.filter(j=>j.kind!=='fish');}
   if(input.notesVersion===notesVersion)delete snapshot.notes;
   if(input.contentVersion===s.meeting.version)delete snapshot.content;
   out={ok:true,id,token:issuedToken||undefined,snapshot,receipts,notesVersion,contentVersion:s.meeting.version,batch:p.lastBatch,serverMode:'shared'};

@@ -7,9 +7,9 @@ import {ArchiveStore} from '../server/room-store.mjs';
 function route(start,target){const path=findWalkPath('camp',start,target);assert.ok(path.length);let p=start;for(const q of path){assert.ok(campMove(p.x,p.z,q.x,q.z));p=q;}assert.deepEqual(p,target);}
 test('expanded coast is walkable beyond old bounds and all shared destinations stay inside land',()=>{
  assert.ok(CAMP.width*CAMP.depth/(15.8*14.8)>3);
- assert.deepEqual(ROOM_BOUNDS.camp,CAMP.bounds);
+ assert.deepEqual(ROOM_BOUNDS.camp,{...CAMP.bounds,z:91});
  for(const [x,z] of [[12,5],[-12,5],[0,-11.5],[13,-8]])assert.ok(campPosition(x,z));
- assert.ok(!campPosition(CAMP.bounds.x,0));assert.ok(!campPosition(0,-CAMP.bounds.z));
+ assert.ok(!campPosition(CAMP.bounds.x,0));assert.ok(!campPosition(0,-92));
  const spawn=PORTALS.garden.find(p=>p.to==='camp').spawn;
  assert.deepEqual({x:spawn.x,z:spawn.z},CAMP.spawn);assert.equal(spawn.yaw,Math.PI);
  route(CAMP.spawn,CAMP.gate);

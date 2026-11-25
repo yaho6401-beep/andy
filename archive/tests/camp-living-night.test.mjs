@@ -46,8 +46,8 @@ test('new visual baseline retains small flames and roasting changes colors witho
  const count=root.children[0].children.length;for(let i=0;i<100;i++)fire.update(i/10);assert.equal(root.children[0].children.length,count);fire.setSnacks([]);assert.equal(fire.diagnostics.roasting,0);fire.dispose();assert.equal(root.children.length,0);
 });
 test('meteors remain rare, respect reduced motion and reuse the same GPU buffers across many appearances',()=>{
- const root=new T.Group(),sky=createMeteors(root,()=>.5),camera=new T.PerspectiveCamera(50,1,.1,80);camera.updateMatrixWorld();sky.update(1,camera);assert.equal(sky.diagnostics.visible,false);
- sky.update(14,camera);assert.equal(sky.diagnostics.visible,true);sky.update(14.5,camera);const geo=root.children[0].geometry,positions=geo.attributes.position.array;assert(positions.every(Number.isFinite));sky.update(16,camera);assert.equal(sky.diagnostics.visible,false);
- for(let i=1;i<100;i++){sky.update(14+i*34,camera);assert.equal(geo.attributes.position.array,positions);}sky.update(4000,camera,true);assert.equal(sky.diagnostics.visible,false);assert.equal(root.children.length,2);sky.dispose();assert.equal(root.children.length,0);
+ const root=new T.Group(),sky=createMeteors(root,()=>.5),camera=new T.PerspectiveCamera(50,1,.1,80);camera.updateMatrixWorld();sky.update(1,camera,false,{kind:'clear',cloudCover:.3});assert.equal(sky.diagnostics.visible,false);
+ sky.update(94,camera,false,{kind:'clear',cloudCover:.3});assert.equal(sky.diagnostics.visible,true);sky.update(94.5,camera,false,{kind:'clear',cloudCover:.3});const geo=root.children[0].geometry,positions=geo.attributes.position.array;assert(positions.every(Number.isFinite));sky.update(96,camera,false,{kind:'clear',cloudCover:.3});assert.equal(sky.diagnostics.visible,false);
+ for(let i=1;i<100;i++){sky.update(94+i*160,camera,false,{kind:'clear',cloudCover:.3});assert.equal(geo.attributes.position.array,positions);}sky.update(4000,camera,true);assert.equal(sky.diagnostics.visible,false);assert.equal(root.children.length,2);sky.dispose();assert.equal(root.children.length,0);
  for(const heat of [FIRE.min,FIRE.max,FIRE.fuelMax])assert(fireSoundProfile(heat).interval>=65);
 });

@@ -26,7 +26,7 @@ export const LAYOUT={
 };
 export const ROOM_BOUNDS=Object.fromEntries(ROOMS.map(room=>[room,GALLERY[room]?{x:GALLERY[room].width/2-.2,z:GALLERY[room].depth/2-.2}:{x:7.8,z:7.8}]));
 ROOM_BOUNDS.garden={...GARDEN.bounds};
-ROOM_BOUNDS.camp={...CAMP.bounds};
+ROOM_BOUNDS.camp={...CAMP.bounds,z:91};
 export function validPosition(room,x,z){if(room==='camp')return campPosition(x,z);const bounds=ROOM_BOUNDS[room];return !!bounds&&Number.isFinite(x)&&Number.isFinite(z)&&Math.abs(x)<bounds.x&&Math.abs(z)<bounds.z&&!LAYOUT[room].some(o=>Math.abs(x-o.x)<o.w/2+.28&&Math.abs(z-o.z)<o.d/2+.28);}
 // Swept validation stops a fast or lagged packet passing through a cabinet.
 export function validMove(room,x0,z0,x1,z1){if(!validPosition(room,x1,z1))return false;const steps=Math.max(1,Math.ceil(Math.hypot(x1-x0,z1-z0)/.12));for(let i=1;i<=steps;i++)if(!validPosition(room,x0+(x1-x0)*i/steps,z0+(z1-z0)*i/steps))return false;return true;}

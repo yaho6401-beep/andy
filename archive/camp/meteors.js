@@ -14,10 +14,11 @@ export function createMeteors(parent,random=Math.random){
  const head=new T.Points(headGeo,headMat);head.frustumCulled=false;head.visible=false;parent.add(head);
  const point=new T.Vector3();let next=0,start=-100,fromX=0,fromY=0,dx=0,dy=0,total=0;
  return {
-  update(time,camera,reduced=false){
-   if(!camera||reduced){trail.visible=head.visible=false;return;}
-   if(!next)next=time+9+random()*7;
-   if(time>=next){start=time;next=time+22+random()*24;fromX=.35+random()*.4;fromY=.64+random()*.2;dx=-.5-random()*.2;dy=-.2-random()*.13;total++;}
+  update(time,camera,reduced=false,weather=null){
+   if(!camera||reduced||weather?.kind!=='clear'||(weather?.cloudCover||0)>.66){trail.visible=head.visible=false;next=time+65+random()*55;return;}
+   point.set(.6,.72,.995).unproject(camera).sub(camera.position).normalize();if(point.y<.08){trail.visible=head.visible=false;return;}
+   if(!next)next=time+65+random()*55;
+   if(time>=next){start=time;next=time+100+random()*85;fromX=.35+random()*.4;fromY=.64+random()*.2;dx=-.5-random()*.2;dy=-.2-random()*.13;total++;}
    const age=time-start,duration=1.35,active=age>=0&&age<duration;
    trail.visible=head.visible=active;if(!active)return;
    const fade=Math.min(1,age/.15)*Math.min(1,(duration-age)/.35);material.opacity=fade*.85;headMat.opacity=fade;

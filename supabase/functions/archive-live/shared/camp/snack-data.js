@@ -1,6 +1,7 @@
 import {mallowState} from './marshmallow-state.js';
 // Shared by the garden renderer and the authoritative room server.
 export const SNACKS={
+ fish:{name:'생선',emoji:'🐟',seconds:28,color:'#9bb7bb',done:'직접 잡은 생선이 노릇하게 익었어요. 따뜻한 한입에 바다의 여운이 남아요.'},
  potato:{name:'감자',emoji:'🥔',seconds:25,color:'#c29a64',done:'포슬포슬한 감자가 익었어요. 잠시 식혀 한입 드세요.'},
  sweetpotato:{name:'고구마',emoji:'🍠',seconds:30,color:'#9b5960',done:'고구마가 달콤하게 익었어요. 따뜻한 속을 호호 불어 드세요.'},
  marshmallow:{name:'마시멜로',emoji:'☁',seconds:12,color:'#fff1d9',done:'겉은 노릇, 속은 말랑. 마시멜로가 알맞게 구워졌어요.'}

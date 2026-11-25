@@ -6,7 +6,7 @@ function effectFor(s,id){s.campEffects??=new Map();let e=s.campEffects.get(id);i
 export function settleComfort(s,p){if(!p)return;const e=effectFor(s,p.id),now=s.clock(),old=comfortSpeed({wetness:e.wetness,joyRemaining:Math.max(0,e.joyUntil-e.at)});let at=Math.max(e.at,now-3600000);
  while(at<now){const end=Math.min(now,at+1000),dt=end-at,fire=p.room==='camp'&&p.seat?.group==='campfire-main',outdoor=['camp','garden'].includes(p.room)&&!(p.room==='camp'&&tentAt(p.x,p.z)),rain=s.publicLounge&&outdoor?weatherAt((at+end)/2):null;
   if(e.wetness>0){e.wetness=Math.max(0,e.wetness-dt/(fire?fireDryDuration(effectiveFireHeat(s.campfire,(at+end)/2,s.publicLounge)):DRY_NATURAL));if(e.wetness<1e-8)e.wetness=0;if(!e.wetness)e.notice={text:'옷이 다 말랐다. 다시 편하게 걸어보자.',at:end};e.exposure=0;}
-  else if(!fire){const wave=p.room==='camp'&&!p.seat&&p.z<tideEdge((at+end)/2),r=rain?.kind==='rain'?rain.intensity:0;e.exposure=wave?12000:Math.max(0,e.exposure+dt*(r||-.5));if(e.exposure>=12000){e.wetness=1;e.exposure=0;e.notice={text:wave?'파도에 바지가 젖었다. 불을 쬐며 말려야겠다…':'비에 옷이 젖었다. 불을 쬐며 말려야겠다…',at:end};}}
+  else if(!fire){const wave=p.room==='camp'&&!p.seat&&p.z> -65&&p.z<tideEdge((at+end)/2),r=rain?.kind==='rain'?rain.intensity:0;e.exposure=wave?12000:Math.max(0,e.exposure+dt*(r||-.5));if(e.exposure>=12000){e.wetness=1;e.exposure=0;e.notice={text:wave?'파도에 바지가 젖었다. 불을 쬐며 말려야겠다…':'비에 옷이 젖었다. 불을 쬐며 말려야겠다…',at:end};}}
   at=end;
  }
  // Keep a bounded in-flight allowance when wetness or a food boost changes.
