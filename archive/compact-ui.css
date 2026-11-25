@@ -74,6 +74,11 @@ body.campfire-focus.camp-watch-active .campfire-invite.is-focused{left:14px;righ
 .camp-comfort{position:fixed;right:12px;top:clamp(120px,22vh,180px);z-index:18;pointer-events:none;display:grid;gap:6px;max-width:160px}
 .camp-comfort p{margin:0;padding:8px 10px;border:1px solid #e3d8bd38;border-radius:12px;background:#253f41c9;color:#f5ecda;font:500 11px/1.55 system-ui,sans-serif;white-space:pre-line;box-shadow:0 4px 18px #152d3015}
 .camp-sea-view{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);z-index:29;text-align:center;width:max-content;max-width:94vw;color:#efe8d6}
+/* Sea and fire share one sky controller; only sky controls appear over the sea. */
+body.camp-sea-sky #campfire-view>:not(#camp-sky-tools):not(#campfire-subtitle){display:none!important}
+body.camp-sea-sky #camp-sea-view{display:none}
+body.camp-sea-sky .fire-subtitle{top:calc(var(--archive-controls-top,110px) + 44px)}
+.camp-sea-view .camp-sea-sky{display:block;margin:12px auto 0;min-height:40px;background:#2036409c;border-color:#d7e5e16b;font-size:13px}
 .camp-sea-view>span{font:500 11px/1.5 system-ui,sans-serif;letter-spacing:.1em;text-shadow:0 1px 5px #14292e}
 .camp-sea-view>div{display:flex;justify-content:center;gap:8px;margin-top:10px}
 .camp-sea-view button{border:1px solid #e4dfcb55;background:#253d42d9;color:#f1e8d4;border-radius:30px;padding:10px 15px;font:500 12px/1.2 system-ui,sans-serif;white-space:nowrap}
