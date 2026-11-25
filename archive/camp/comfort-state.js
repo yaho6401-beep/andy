@@ -1,4 +1,4 @@
-export const DRY_NATURAL=300000,DRY_FIRE=30000,JOY_TIME=120000,JOY_MAX=600000;
+export const DRY_NATURAL=300000,DRY_FIRE=30000,JOY_TIME=120000,JOY_MAX=600000,FISH_TIME=180000,FISH_MAX=540000;
 // Gentle flames: 30 seconds. A strong, sustained fire: down to 12 seconds.
 export function fireDryDuration(heat){const strength=Math.max(0,Math.min(1,((Number.isFinite(heat)?heat:.72)-.72)/2.63));return DRY_FIRE/(1+strength*1.5);}
 // One tide clock for the visible foam and authoritative wet-clothes checks.
@@ -6,3 +6,5 @@ export function tideEdge(at){const phase=((at/1000%48)+48)%48;return -15.2+(phas
 export function comfortSpeed(effect){return (effect?.wetness>0?.6:1)*(effect?.joyRemaining>0?1.5:1);}
 export function monthKey(at){return new Date(at+9*3600000).toISOString().slice(0,7);}
 export const JOY_LINES={fish:['바다에서 잡은 한입, 기분이 좋아졌다.','노릇한 생선구이, 고소한 향이 감돈다.','내 손으로 잡아 더 뿌듯한 맛이다.','따뜻한 한입에 바다의 기억이 떠오른다.'],potato:['포슬포슬한 감자에 기분이 좋아졌다.','따뜻한 한입, 마음도 든든해졌다.','담백하고 고소하다. 잠시 웃음이 난다.','속까지 따뜻해지는 맛이다.'],sweetpotato:['달콤하다. 마음까지 포근해진다.','노란 속살 한입에 기분이 좋아졌다.','달큰한 고구마가 오늘의 작은 행복이다.','따뜻한 한입에 미소가 번진다.'],marshmallow:['마음까지 달달해진다.','노릇한 한입에 기분이 좋아졌다.','사르르 녹는 달콤함이 좋다.','작은 구름을 먹은 듯 마음이 가벼워진다.']};
+
+export const swimmingSpeed=effect=>effect?.swimRemaining>0?2:1;

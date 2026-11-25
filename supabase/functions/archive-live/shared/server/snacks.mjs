@@ -1,5 +1,5 @@
 import {heldCans} from '../camp/canisters.js';
-import {grantJoy} from './camp-comfort.mjs';
+import {grantJoy,grantFishSwim} from './camp-comfort.mjs';
 import {weatherAt,weatherHeat} from '../camp/weather-state.js';
 import {SNACKS,HARVESTS,WOOD_FINDS,roastState,advanceVegetable,cookingRate,PACK_LIMIT,HARVEST_PAUSE,WOOD_PAUSE,SERVICE_PAUSE,SHARE_TTL} from '../camp/snack-data.js';
 import {addCampFuel} from '../camp/fire-state.js';
@@ -37,7 +37,7 @@ export function snackAction(s,id,input){const p=s.clients.get(id),now=s.clock();
  if(input.type==='camp-snack-take'){
   seated(p);const pack=s.packs.get(id),job=pack?.job;if(!job)throw Error('굽고 있는 간식이 없어요.');const state=roastState(job,now);if(state.burnt)throw Error('너무 타서 먹기는 어려워요. 불에 보태주세요.');if(state.onFire)throw Error('불이 붙었어요. 높이 들어 불을 꺼주세요.');if(!state.ready)throw Error(job.kind==='marshmallow'?'돌려가며 네 면을 조금 더 익혀주세요.':'아직 속까지 익는 중이에요. 조금만 기다려주세요.');const kind=job.kind,shared=input.share===true;
   if(shared){const shares=availableShares(s);if(shares.some(item=>item.owner===id))throw Error('먼저 놓아둔 반쪽을 나눌 분을 기다려주세요. 혼자 먹기는 계속 가능해요.');if(shares.length>=30)throw Error('나눔 접시가 가득해요. 잠시 뒤 나눠주세요.');shares.push({id:crypto.randomUUID(),owner:id,nickname:p.nickname,kind,seat:p.seat.id,at:now,expiresAt:now+SHARE_TTL});}
-  pack.job=null;pack.updatedAt=now;grantJoy(s,p);return {ok:true,kind,finished:true,shared,joy:true};
+  pack.job=null;pack.updatedAt=now;grantJoy(s,p);if(kind==='fish')grantFishSwim(s,p);return {ok:true,kind,finished:true,shared,joy:true};
  }
  if(input.type==='campfire-log'){
   seated(p);const pack=packFor(s,id);if(pack.wood<1)throw Error('캠핑장 나무 아래에서 마른 장작을 찾아보세요.');
@@ -48,7 +48,7 @@ export function snackAction(s,id,input){const p=s.clients.get(id),now=s.clock();
   const result=addCampFuel(s,id,'burnt');pack.job=null;pack.updatedAt=now;return {...result,kind:job.kind};
  }
  if(input.type==='camp-snack-share-take'){
-  seated(p);const shares=availableShares(s),item=shares.find(item=>item.id===input.id);if(!item)throw Error('이미 다른 분이 드셨거나 나눔 시간이 지난 간식이에요.');if(item.owner===id)throw Error('내가 남긴 반쪽은 다른 분에게 나눠주세요.');s.sharedSnacks=shares.filter(other=>other.id!==item.id);grantJoy(s,p);return {ok:true,kind:item.kind,finished:true,received:true,from:item.nickname,joy:true};
+  seated(p);const shares=availableShares(s),item=shares.find(item=>item.id===input.id);if(!item)throw Error('이미 다른 분이 드셨거나 나눔 시간이 지난 간식이에요.');if(item.owner===id)throw Error('내가 남긴 반쪽은 다른 분에게 나눠주세요.');s.sharedSnacks=shares.filter(other=>other.id!==item.id);grantJoy(s,p);if(item.kind==='fish')grantFishSwim(s,p);return {ok:true,kind:item.kind,finished:true,received:true,from:item.nickname,joy:true};
  }
  return null;
 }
