@@ -1,4 +1,4 @@
-export const DRY_NATURAL=300000,DRY_FIRE=30000,JOY_TIME=120000;
+export const DRY_NATURAL=300000,DRY_FIRE=30000,JOY_TIME=120000,JOY_MAX=600000;
 // Gentle flames: 30 seconds. A strong, sustained fire: down to 12 seconds.
 export function fireDryDuration(heat){const strength=Math.max(0,Math.min(1,((Number.isFinite(heat)?heat:.72)-.72)/2.63));return DRY_FIRE/(1+strength*1.5);}
 // One tide clock for the visible foam and authoritative wet-clothes checks.

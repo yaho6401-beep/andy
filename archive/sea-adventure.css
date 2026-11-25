@@ -5,3 +5,11 @@
 #camp-snack-buttons{flex-wrap:wrap}
 
 .sea-swimming-active #camp-comfort,.sea-fishing-active #camp-comfort{display:none}.sea-swimming-active #route-hint{visibility:hidden}
+
+/* Keep the crossing readable without covering the water or avatar. */
+#sea-boat-guide{pointer-events:none;max-width:260px;background:rgba(23,43,49,.7);backdrop-filter:blur(10px)}
+#sea-boat-guide progress{width:100%;height:3px;accent-color:#b9cfc2}
+body.sea-boat-active .action-dock,body.sea-boat-active #joystick,body.sea-boat-active #route-hint,body.sea-boat-active #stand{display:none!important}
+.sea-fishing{background:rgba(21,40,47,.82);backdrop-filter:blur(14px);border:1px solid rgba(220,230,217,.22);border-radius:20px}
+.sea-fishing-fight button[aria-pressed=true]{background:#537e7d;box-shadow:inset 0 0 0 1px #c2d6c7}
+@media(max-height:500px){#sea-boat-guide{bottom:12px}}
