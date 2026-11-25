@@ -1,0 +1,185 @@
+{
+  "checked": "2026-11-25",
+  "books": [
+    {
+      "id": "world-ko-1",
+      "title": "행복한 왕자",
+      "author": "오스카 와일드",
+      "translator": "방정환",
+      "translatorDied": 1931,
+      "editionTitle": "왕자와 제비",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EC%82%AC%EB%9E%91%EC%9D%98%20%EC%84%A0%EB%AC%BC%2F%EC%99%95%EC%9E%90%EC%99%80%20%EC%A0%9C%EB%B9%84&oldid=263613",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "revision": 263613,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "하위_문서"
+        }
+      ],
+      "characters": 8126,
+      "sha256": "84e2df4f41cda8807ded5b336104c731749d7b20b124edf9b1fa2302b09bbb85"
+    },
+    {
+      "id": "world-ko-2",
+      "title": "신데렐라",
+      "author": "샤를 페로",
+      "translator": "방정환",
+      "translatorDied": 1931,
+      "editionTitle": "산드룡의 유리 구두",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EC%82%AC%EB%9E%91%EC%9D%98%20%EC%84%A0%EB%AC%BC%2F%EC%82%B0%EB%93%9C%EB%A3%A1%EC%9D%98%20%EC%9C%A0%EB%A6%AC%20%EA%B5%AC%EB%91%90&oldid=263612",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "revision": 263612,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "하위_문서"
+        }
+      ],
+      "characters": 7469,
+      "sha256": "99da20cbf528883c24794452769629312d9f2173cba0a7c8ecfcee00c6be8fa5"
+    },
+    {
+      "id": "world-ko-3",
+      "title": "잠자는 숲속의 공주",
+      "author": "그림 형제",
+      "translator": "방정환",
+      "translatorDied": 1931,
+      "editionTitle": "잠자는 왕녀",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EC%82%AC%EB%9E%91%EC%9D%98%20%EC%84%A0%EB%AC%BC%2F%EC%9E%A0%EC%9E%90%EB%8A%94%20%EC%99%95%EB%85%80&oldid=263610",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "revision": 263610,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "하위_문서"
+        }
+      ],
+      "characters": 4033,
+      "sha256": "4ac47e392b9493e3b133ebf33d739cc80e9ee0cf574096a0e4b623fe72e30b2e"
+    },
+    {
+      "id": "world-ko-4",
+      "title": "개구리 왕자",
+      "author": "그림 형제",
+      "translator": "방정환",
+      "translatorDied": 1931,
+      "editionTitle": "개구리 왕자",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EA%B0%9C%EA%B5%AC%EB%A6%AC%20%EC%99%95%EC%9E%90&oldid=264685",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "revision": 264685,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        }
+      ],
+      "characters": 3766,
+      "sha256": "17f753e95a35ebde28b416eb4793c800eac95ee2c8a5168d49a1f85ec430a59c"
+    },
+    {
+      "id": "world-ko-5",
+      "title": "황금 거위",
+      "author": "그림 형제",
+      "translator": "방정환",
+      "translatorDied": 1931,
+      "editionTitle": "황금 거위",
+      "source": "https://ko.wikisource.org/w/index.php?title=%ED%99%A9%EA%B8%88%20%EA%B1%B0%EC%9C%84&oldid=263716",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "revision": 263716,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "연도_미입력_작품"
+        }
+      ],
+      "characters": 4921,
+      "sha256": "8de9646d922b3b9be707c438a17f12a35321532c9bbe6be4ecc361773c4874b1"
+    },
+    {
+      "id": "world-ko-6",
+      "title": "장미 요정",
+      "author": "한스 크리스티안 안데르센",
+      "translator": "방정환",
+      "translatorDied": 1931,
+      "editionTitle": "꽃 속의 작은이",
+      "source": "https://ko.wikisource.org/w/index.php?title=%EC%82%AC%EB%9E%91%EC%9D%98%20%EC%84%A0%EB%AC%BC%2F%EA%BD%83%20%EC%86%8D%EC%9D%98%20%EC%9E%91%EC%9D%80%EC%9D%B4&oldid=263534",
+      "license": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "revision": 263534,
+      "categories": [
+        {
+          "sortkey": "",
+          "hidden": "",
+          "*": "하위_문서"
+        }
+      ],
+      "characters": 6467,
+      "sha256": "7e45dd7a349bba4a2e11a054929d17cc3faf9ba29cf26252fd969159ba47c2a0"
+    },
+    {
+      "id": "world-en-1",
+      "title": "월든",
+      "author": "헨리 데이비드 소로",
+      "source": "https://www.gutenberg.org/ebooks/205",
+      "download": "https://raw.githubusercontent.com/GITenberg/Walden-and-On-The-Duty-Of-Civil-Disobedience_205/master/205-0.txt",
+      "license": "https://www.gutenberg.org/policy/license.html",
+      "chars": 656206,
+      "sha256": "5012fcfe1f653aad4ba7ef9354b6a87fe8d494fd921945819aebde1660bb453e"
+    },
+    {
+      "id": "world-en-2",
+      "title": "비밀의 화원",
+      "author": "프랜시스 호지슨 버넷",
+      "source": "https://www.gutenberg.org/ebooks/113",
+      "download": "https://raw.githubusercontent.com/GITenberg/The-Secret-Garden_113/master/113-0.txt",
+      "license": "https://www.gutenberg.org/policy/license.html",
+      "chars": 448095,
+      "sha256": "1166e0032b36e66794c8dcf4bb88ac6551bda9128567cdb3e3514072af487404"
+    },
+    {
+      "id": "world-en-3",
+      "title": "빨강 머리 앤",
+      "author": "루시 모드 몽고메리",
+      "source": "https://www.gutenberg.org/ebooks/45",
+      "download": "https://raw.githubusercontent.com/GITenberg/Anne-of-Green-Gables_45/master/45-0.txt",
+      "license": "https://www.gutenberg.org/policy/license.html",
+      "chars": 580634,
+      "sha256": "b6a5f2cbf80c2bf77592c20b05c69c6303c9b8c25d0d277297911a8b0e04c678"
+    },
+    {
+      "id": "world-en-4",
+      "title": "작은 아씨들",
+      "author": "루이자 메이 올컷",
+      "source": "https://www.gutenberg.org/ebooks/514",
+      "download": "https://raw.githubusercontent.com/GITenberg/Little-Women_514/master/514.txt",
+      "license": "https://www.gutenberg.org/policy/license.html",
+      "chars": 1032411,
+      "sha256": "f413843efb2b5b7143656480f4a7a7fafd7a997371f6197741959634010e4469"
+    },
+    {
+      "id": "world-en-5",
+      "title": "행복한 왕자와 다른 이야기들",
+      "author": "오스카 와일드",
+      "source": "https://www.gutenberg.org/ebooks/902",
+      "download": "https://raw.githubusercontent.com/GITenberg/The-Happy-Prince-and-Other-Tales_902/master/902-0.txt",
+      "license": "https://www.gutenberg.org/policy/license.html",
+      "chars": 108170,
+      "sha256": "cde16bc3152159d1362aebf270c99424788d62caf6ff63a33218661b66462123"
+    },
+    {
+      "id": "world-en-6",
+      "title": "오만과 편견",
+      "author": "제인 오스틴",
+      "source": "https://www.gutenberg.org/ebooks/1342",
+      "download": "https://raw.githubusercontent.com/GITenberg/Pride-and-Prejudice_1342/master/1342-0.txt",
+      "license": "https://www.gutenberg.org/policy/license.html",
+      "chars": 704189,
+      "sha256": "0d1b2bf2e50f92b8b0be8b1a2588e815272a3cf7059422d26344ad77cbeb7068"
+    }
+  ]
+}
