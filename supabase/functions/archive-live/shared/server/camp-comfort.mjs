@@ -9,7 +9,9 @@ export function settleComfort(s,p){if(!p)return;const e=effectFor(s,p.id),now=s.
   else if(!fire){const wave=p.room==='camp'&&!p.seat&&p.z<tideEdge((at+end)/2),r=rain?.kind==='rain'?rain.intensity:0;e.exposure=wave?12000:Math.max(0,e.exposure+dt*(r||-.5));if(e.exposure>=12000){e.wetness=1;e.exposure=0;e.notice={text:wave?'파도에 바지가 젖었다. 불을 쬐며 말려야겠다…':'비에 옷이 젖었다. 불을 쬐며 말려야겠다…',at:end};}}
   at=end;
  }
- e.at=now;e.fire=p.room==='camp'&&p.seat?.group==='campfire-main';const speed=comfortSpeed({wetness:e.wetness,joyRemaining:Math.max(0,e.joyUntil-now)});if(speed!==old){p.moveCredit=0;p.lastMove=now;}return e;
+ // Keep a bounded in-flight allowance when wetness or a food boost changes.
+ // The browser learns the new speed on the next snapshot, not at this instant.
+ e.at=now;e.fire=p.room==='camp'&&p.seat?.group==='campfire-main';const speed=comfortSpeed({wetness:e.wetness,joyRemaining:Math.max(0,e.joyUntil-now)});if(speed!==old){const allowance=3.5*Math.max(old,speed);p.moveCredit=Math.min(allowance*3.1,(p.moveCredit??2.1)+allowance*(Math.max(0,(now-(p.lastMove??now))/1000)+.85));p.lastMove=now;}return e;
 }
 export function comfortView(s,p){const e=settleComfort(s,p),duration=e.fire?fireDryDuration(effectiveFireHeat(s.campfire,s.clock(),s.publicLounge)):DRY_NATURAL;return {wetness:e.wetness,dryRemaining:Math.ceil(e.wetness*duration),drySeconds:duration/1000,fire:e.fire,joyRemaining:Math.max(0,e.joyUntil-s.clock()),notice:e.notice};}
 export function movementFactor(s,p){const e=settleComfort(s,p);return comfortSpeed({wetness:e.wetness,joyRemaining:Math.max(0,e.joyUntil-s.clock())});}

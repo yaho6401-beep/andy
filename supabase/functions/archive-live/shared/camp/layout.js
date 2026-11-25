@@ -31,7 +31,11 @@ export function tentWalls(t){
 }
 export function tentTable(t){return {x:t.x,z:t.z-1.85,w:1.6,d:.75};}
 export function campHeight(x,z){if(z< -15.25)return -Math.min(.32,(-z-15.25)*.34);const ramp=Math.max(0,Math.min(1,(z-13)/12));return ramp*ramp*(3-2*ramp)*(1.5+1.6*Math.exp(-Math.pow((x-19)/12,2)));}
-export const FOREST_TREES=Array.from({length:64},(_,i)=>({x:(i%2?1:-1)*(16+(i%7)*2),z:i<30?-8+Math.floor(i/2)*1.7:14+(i%15)*1.05}));
+// One shared route and tree list for both rendering and collision. The broad
+// westward lane reaches the big tent's south-facing door without a canopy wall.
+export const GATHERING_PATH=[{x:-4,z:8},{x:-12,z:9},{x:-23,z:10},{x:-36,z:11.8},{x:-36,z:8}];
+export function gatheringPathDistance(x,z){let nearest=Infinity;for(let i=1;i<GATHERING_PATH.length;i++){const a=GATHERING_PATH[i-1],b=GATHERING_PATH[i],dx=b.x-a.x,dz=b.z-a.z,t=Math.max(0,Math.min(1,((x-a.x)*dx+(z-a.z)*dz)/(dx*dx+dz*dz)));nearest=Math.min(nearest,Math.hypot(x-a.x-dx*t,z-a.z-dz*t));}return nearest;}
+export const FOREST_TREES=Array.from({length:64},(_,i)=>{const x=(i%2?1:-1)*(16+(i%7)*2);let z=i<30?-8+Math.floor(i/2)*1.7:14+(i%15)*1.05;if(gatheringPathDistance(x,z)<3.6)z-=7;return {x,z};});
 export const SHORE_WADE_Z=-16.2;
 export const CAMP_OBSTACLES=[
  {x:0,z:-28.6,w:92,d:24.2},

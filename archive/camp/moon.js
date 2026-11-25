@@ -1,5 +1,18 @@
 import * as T from 'three';
-// NASA / LRO public-domain surface map. Camera-relative placement stays in the sky margin.
-export function createMoon(parent){const root=new T.Group();root.name='lro-moon';parent.add(root);const texture=new T.TextureLoader().load('/assets/camp/nasa-lro-moon-1k.jpg');texture.colorSpace=T.SRGBColorSpace;const geo=new T.SphereGeometry(1,32,20),mat=new T.MeshBasicMaterial({map:texture,color:'#e4dfd3',toneMapped:false,fog:false,depthTest:false,depthWrite:false}),moon=new T.Mesh(geo,mat);moon.renderOrder=-999;moon.rotation.y=Math.PI/2;root.add(moon);let focused=false,screen;const projected=new T.Vector3();const forward=new T.Vector3(),right=new T.Vector3(),up=new T.Vector3();
- return {pick(ray){root.updateWorldMatrix(true,true);return root.visible&&ray.intersectObject(moon).length>0;},setSky(v){root.visible=!v;},setFocus(v){focused=v;},update(camera,glow=0){mat.color.setRGB(.89+glow*.15,.87+glow*.15,.83+glow*.17);const distance=55,half=Math.tan(T.MathUtils.degToRad((camera.fov||58)/2))*distance/(camera.zoom||1);camera.getWorldDirection(forward);right.setFromMatrixColumn(camera.matrixWorld,0);up.setFromMatrixColumn(camera.matrixWorld,1);root.position.copy(camera.position).addScaledVector(forward,distance).addScaledVector(right,half*(camera.aspect||1)*((camera.aspect||1)>1.5?0:.53)).addScaledVector(up,half*(focused?((camera.aspect||1)>1.5?.82:(globalThis.innerHeight||844)<650?.48:.60):.35));moon.scale.setScalar(half*.085);root.updateWorldMatrix(true,true);moon.getWorldPosition(projected).project(camera);screen={x:(projected.x+1)/2,y:(1-projected.y)/2,diameter:(globalThis.innerHeight||844)*.085};},get diagnostics(){return {source:'NASA-LRO',focused,screen};},dispose(){root.removeFromParent();texture.dispose();geo.dispose();mat.dispose();}};
+// One world bearing shared with the clouds; it never follows the screen or
+// appears through the ground and tents. NASA / LRO public-domain surface map.
+export const CAMP_MOON_DIRECTION=new T.Vector3(.28,.53,-.8).normalize();
+export function createMoon(parent){
+ const root=new T.Group();root.name='lro-moon';parent.add(root);
+ const texture=new T.TextureLoader().load('/assets/camp/nasa-lro-moon-1k.jpg');texture.colorSpace=T.SRGBColorSpace;
+ const geo=new T.SphereGeometry(1,32,20),mat=new T.MeshBasicMaterial({map:texture,color:'#e4dfd3',toneMapped:false,fog:false,transparent:true,depthTest:true,depthWrite:false}),moon=new T.Mesh(geo,mat);
+ moon.renderOrder=-1096;moon.rotation.y=Math.PI/2;root.add(moon);
+ let focused=false,screen=null;const projected=new T.Vector3(),direction=CAMP_MOON_DIRECTION.clone(),forward=new T.Vector3();
+ return {
+  pick(ray){root.updateWorldMatrix(true,true);return root.visible&&!!screen?.visible&&ray.intersectObject(moon).length>0;},
+  setSky(v){root.visible=!v;},setFocus(v){focused=v;},get direction(){return direction;},
+  update(camera,glow=0){if(!camera)return;mat.color.setRGB(.89+glow*.1,.87+glow*.1,.83+glow*.11);root.position.copy(camera.position).addScaledVector(direction,68);moon.scale.setScalar(1.55);root.updateWorldMatrix(true,true);moon.getWorldPosition(projected).project(camera);camera.getWorldDirection(forward);screen={x:(projected.x+1)/2,y:(1-projected.y)/2,diameter:(globalThis.innerHeight||844)*1.55/(68*Math.tan(T.MathUtils.degToRad((camera.fov||58)/2))),visible:forward.dot(direction)>0&&Math.abs(projected.x)<1.05&&Math.abs(projected.y)<1.05};},
+  get diagnostics(){return {source:'NASA-LRO',focused,screen,direction:direction.toArray()};},
+  dispose(){root.removeFromParent();texture.dispose();geo.dispose();mat.dispose();}
+ };
 }
