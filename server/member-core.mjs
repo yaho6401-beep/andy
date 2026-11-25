@@ -1,4 +1,5 @@
 import {createRecord} from '../workshop/model.js';
+import {cleanNotebook} from '../reading-notebook-model.js';
 export const MEMBER_ITERATIONS=600000;
 export const memberError=(message,status=400)=>Object.assign(Error(message),{status});
 export const hex=data=>Array.from(new Uint8Array(data),n=>n.toString(16).padStart(2,'0')).join('');
@@ -16,8 +17,9 @@ export function equalHash(a,b){if(typeof a!=='string'||typeof b!=='string'||a.le
 export function cleanRecord(kind,value){
  if(!value||typeof value!=='object'||!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value.id||''))throw memberError('기록 번호를 확인해 주세요.');
  if(kind==='blending'){const date=new Date(value.createdAt);if(!Number.isFinite(date.getTime()))throw memberError('기록 날짜를 확인해 주세요.');return createRecord(value,value.name,{id:value.id,now:date});}
- if(kind!=='reading')throw memberError('기록 종류를 확인해 주세요.');
+ if(!['reading','notebook'].includes(kind))throw memberError('기록 종류를 확인해 주세요.');
  const date=new Date(value.date);if(!Number.isFinite(date.getTime()))throw memberError('기록 날짜를 확인해 주세요.');
+ if(kind==='notebook'){let record;try{record=cleanNotebook(value);}catch(e){throw memberError(e.message);}return {id:value.id,date:date.toISOString(),...record};}
  const text=(v,max)=>typeof v==='string'?v.replace(/[\u0000-\u0008\u000b-\u001f]/g,'').slice(0,max):'';
  return {id:value.id,date:date.toISOString(),category:['한 줄','두세 줄','몇 페이지','조금 더'].includes(value.category)?value.category:'한 줄',place:text(value.place,70),title:text(value.title,120),thought:text(value.thought,1000),durationMinutes:Math.min(1440,Math.max(0,Math.floor(Number(value.durationMinutes)||0)))};
 }

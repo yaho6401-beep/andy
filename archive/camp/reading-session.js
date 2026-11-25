@@ -4,6 +4,8 @@ import {cleanBookmarks,saveBookmark} from './reading-bookmarks.js';
 import {BIBLE_BOOKS} from './bible-catalog.js';
 import {CLASSIC_BOOKS} from './classics-catalog.js';
 import {validLoan,loanRemaining,borrowBook} from './library-loan.js';
+import {notebook} from '../../reading-notebook.js';
+import {excerptUnits,selectedExcerpt,QUOTE_LIMIT} from '../../reading-notebook-model.js';
 export {BIBLE_BOOKS};
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const TENT_BOOKS=[{id:'bible-amber',book:'bible',x:-8.6,z:-5.15,title:'성경전서 · 펼쳐볼까?'},{id:'bible-lavender',book:'bible',x:7.4,z:-5.15,title:'성경전서 · 펼쳐볼까?'}];
@@ -20,8 +22,8 @@ export class TentReading{
   $('reader-close').onclick=()=>$('tent-reader').close();$('reader-book').onchange=()=>{this.book=$('reader-book').value;this.chapter=1;this.load();};$('reader-chapter').onchange=()=>{this.chapter=Number($('reader-chapter').value);this.render();};$('reader-smaller').onclick=()=>this.size(-1);$('reader-larger').onclick=()=>this.size(1);$('reader-prev').onclick=()=>this.turn(-1);$('reader-next').onclick=()=>this.turn(1);$('reader-borrow').onclick=()=>this.borrow(this.kind);
   $('library-close').onclick=()=>$('library-catalog').close();$('library-search').oninput=()=>this.renderCatalog();$('library-open').onclick=()=>this.openCatalog();$('camp-borrowed-book').onclick=()=>this.open(this.loan?.id);
   $('library-list').onclick=e=>{const b=e.target.closest('button[data-read]');if(b){$('library-catalog').close();this.open(b.dataset.read);}};
-  this.bindReaderTools();$('library-filters').onclick=e=>{const b=e.target.closest('[data-filter]');if(b){this.filter=b.dataset.filter;this.renderCatalog();}};
-  this.onKey=e=>{if(!$('tent-reader').open||/SELECT|INPUT|BUTTON/.test(e.target.tagName))return;if(e.key==='ArrowLeft'){e.preventDefault();this.turn(-1);}if(e.key==='ArrowRight'){e.preventDefault();this.turn(1);}};document.addEventListener('keydown',this.onKey);
+  this.bindReaderTools();this.bindNotebook();$('library-filters').onclick=e=>{const b=e.target.closest('[data-filter]');if(b){this.filter=b.dataset.filter;this.renderCatalog();}};
+  this.onKey=e=>{if(!$('tent-reader').open||!$('tent-reader').contains(e.target)||/SELECT|INPUT|BUTTON|TEXTAREA/.test(e.target.tagName))return;if(e.key==='ArrowLeft'){e.preventDefault();this.turn(-1);}if(e.key==='ArrowRight'){e.preventDefault();this.turn(1);}};document.addEventListener('keydown',this.onKey);
  }
  openCatalog(){this.api.stopInputs();$('library-search').value='';this.renderCatalog();if(!$('library-catalog').open)$('library-catalog').showModal();}
  renderCatalog(){const q=$('library-search').value.trim().toLocaleLowerCase(),books=LIBRARY_BOOKS.filter(b=>(b.title+' '+b.author).toLocaleLowerCase().includes(q)&&(this.filter==='all'||this.filter==='world'&&b.category==='world'||this.filter==='korean'&&b.id.startsWith('classic-')||this.filter==='bible'&&b.id==='bible'));$('library-filters').querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.filter===this.filter)));$('library-count').textContent=books.length+'권';$('library-list').innerHTML=books.map((b,i)=>`<article class="library-book" style="--spine:${['#72876b','#9b7968','#79788f','#a28e60'][i%4]}"><span class="library-book-spine" aria-hidden="true">${esc(b.author)}</span><div><small>${esc(b.author)}</small>${b.language?'<span class="library-language">'+(b.language==='en'?'영어 원문':'한국어 옛 번역·번안')+'</span>':''}<h3>${esc(b.title)}</h3><p>${esc(b.mood)}</p><button data-read="${b.id}">펼쳐보기${this.loan?.id===b.id?' · 빌린 책':''} ↗</button></div></article>`).join('')||'<p>검색한 책이 없어요. 다른 제목이나 작가를 찾아보세요.</p>';}
@@ -49,7 +51,33 @@ export class TentReading{
  render(){const data=this.data();if(!data)return;this.chapter=Math.max(1,Math.min(data.chapters.length,this.chapter));const chapter=data.chapters[this.chapter-1],bible=this.kind==='bible';$('reader-title').textContent=bible?'성경전서 개역한글판 · '+data.book:data.book;$('reader-chapter').innerHTML=data.chapters.map((c,i)=>'<option value="'+(i+1)+'">'+(bible?(i+1)+'장':esc(c.title))+'</option>').join('');$('reader-chapter').value=this.chapter;
   $('reader-text').innerHTML=bible?'<h2>'+esc(data.book)+' '+this.chapter+'장</h2>'+chapter.verses.map(v=>'<p><sup>'+v.verse+'</sup>'+esc(v.text)+'</p>').join(''):'<h2>'+esc(chapter.title)+'</h2>'+chapter.paragraphs.map(p=>'<p>'+esc(p)+'</p>').join('')+(chapter.question?'<aside>잠깐 생각해보기<br>'+esc(chapter.question)+'</aside>':'');$('reader-text').lang=this.kind.startsWith('world-en-')?'en':'ko';$('reader-text').style.fontSize=this.font+'px';$('reader-text').scrollTop=0;$('reader-position').textContent=this.chapter+' / '+data.chapters.length;$('reader-prev').disabled=this.chapter===1;$('reader-next').disabled=this.chapter===data.chapters.length;
   $('reader-credit').innerHTML=bible?'성경전서 개역한글판 (대한성서공회, 1961) · <a href="https://www.bskorea.or.kr/bbs/content.php?co_id=subpage2_3_4_1" target="_blank" rel="noopener">판본·이용 안내</a> · <a href="https://github.com/yuhwan/Bible-krv" target="_blank" rel="noopener">전자 본문 출처</a>':esc(data.author)+' · '+esc(data.edition)+' · <a href="'+esc(data.source)+'" target="_blank" rel="noopener">원문·기여자 이력</a> · <a href="'+esc(data.license)+'" target="_blank" rel="noopener">'+(data.license?.includes('creativecommons')?'전자 판본 CC BY-SA 4.0':'원문 이용 조건')+'</a><br>'+esc(data.changes);
-  this.save();this.paintLoan();this.paintBookmarks();this.restoreBookmark();
+  this.paintExcerptUnits();this.save();this.paintLoan();this.paintBookmarks();this.restoreBookmark();
+ }
+ bindNotebook(){
+  this.chosen=new Set();this.selecting=false;
+  $('reader-bookmarks').insertAdjacentHTML('afterend','<button id="reader-select" type="button" aria-pressed="false">文 문장 고르기</button><button id="reader-notebook" type="button">▤ 내 수첩</button>');
+  $('reader-text').insertAdjacentHTML('beforebegin','<div id="reader-excerpt-tools" class="reader-excerpt-tools" hidden><span id="reader-excerpt-count">문장이나 절을 눌러 골라주세요.</span><button id="reader-excerpt-save" type="button" disabled>내 수첩에 옮기기</button><button id="reader-excerpt-drag" type="button">드래그한 글 옮기기</button></div><p id="reader-excerpt-status" class="reader-excerpt-status" role="status"></p>');
+  $('library-count').insertAdjacentHTML('beforebegin','<button type="button" id="library-notebook" class="library-notebook-link">▤ 내 수첩 · 내가 모은 문장 펼치기</button>');
+  $('reader-select').onclick=()=>{this.selecting=!this.selecting;this.paintSelectionMode();};$('reader-notebook').onclick=()=>$('library-notebook').click();$('library-notebook').onclick=()=>{this.api.stopInputs();notebook().open();};
+  $('reader-excerpt-save').onclick=()=>this.keepExcerpt();$('reader-excerpt-drag').onpointerdown=e=>e.preventDefault();$('reader-excerpt-drag').onclick=()=>{const selection=window.getSelection(),a=$('reader-text');if(!selection?.rangeCount||!a.contains(selection.anchorNode)||!a.contains(selection.focusNode)||!selection.toString().trim()){$('reader-excerpt-status').textContent='본문에서 글을 드래그하거나 문장·절을 눌러 골라주세요.';return;}this.keepExcerpt(selection.toString());};
+  $('reader-text').addEventListener('click',e=>{const unit=e.target.closest('[data-excerpt-key]');if(!this.selecting||!unit)return;const key=unit.dataset.excerptKey;if(this.chosen.has(key))this.chosen.delete(key);else{const next=new Set([...this.chosen,key]);if(selectedExcerpt(this.units,next).length>QUOTE_LIMIT){$('reader-excerpt-status').textContent='한 페이지에는 4,000자까지 담을 수 있어요. 나누어 옮겨주세요.';return;}this.chosen.add(key);}this.paintSelectionMode();});
+  $('reader-text').addEventListener('keydown',e=>{if(this.selecting&&e.target.matches('[data-excerpt-key]')&&['Enter',' '].includes(e.key)){e.preventDefault();e.target.click();}});
+ }
+ paintExcerptUnits(){
+  const data=this.data();if(!data)return;const chapter=data.chapters[this.chapter-1],bible=this.kind==='bible';this.units=excerptUnits(chapter,bible,this.kind.startsWith('world-en-')?'en':'ko');this.chosen.clear();
+  if(bible)$('reader-text').innerHTML='<h2>'+esc(data.book)+' '+this.chapter+'장</h2>'+this.units.map(u=>'<p><sup>'+esc(u.label.replace('절',''))+'</sup><span class="excerpt-unit" data-excerpt-key="'+u.key+'">'+esc(u.text)+'</span></p>').join('');
+  else $('reader-text').innerHTML='<h2>'+esc(chapter.title)+'</h2>'+chapter.paragraphs.map((p,i)=>'<p>'+this.units.filter(u=>u.paragraph===i).map(u=>'<span class="excerpt-unit" data-excerpt-key="'+u.key+'">'+esc(u.text)+'</span>').join('')+'</p>').join('')+(chapter.question?'<aside>잠깐 생각해보기<br>'+esc(chapter.question)+'</aside>':'');
+  this.paintSelectionMode();
+ }
+ paintSelectionMode(){
+  $('reader-text').classList.toggle('is-selecting',this.selecting);$('reader-select').textContent=this.selecting?'✓ 고르기 마치기':'文 문장 고르기';$('reader-select').setAttribute('aria-pressed',String(this.selecting));$('reader-excerpt-tools').hidden=!this.selecting;$('reader-excerpt-save').disabled=!this.chosen.size;$('reader-excerpt-count').textContent=this.chosen.size?this.chosen.size+'개 선택 · '+selectedExcerpt(this.units,this.chosen).length+'자':'문장이나 절을 눌러 골라주세요.';$('reader-excerpt-status').textContent='';
+  $('reader-text').querySelectorAll('[data-excerpt-key]').forEach(el=>{el.tabIndex=this.selecting?0:-1;if(this.selecting){el.setAttribute('role','button');el.setAttribute('aria-pressed',String(this.chosen.has(el.dataset.excerptKey)));}else{el.removeAttribute('role');el.removeAttribute('aria-pressed');}});
+ }
+ keepExcerpt(text){
+  const data=this.data();if(!data)return;const quote=text||selectedExcerpt(this.units,this.chosen);if(!quote.trim())return;if(quote.length>QUOTE_LIMIT){$('reader-excerpt-status').textContent='한 번에 4,000자까지 옮길 수 있어요. 문장을 나누어 골라주세요.';return;}
+  const bible=this.kind==='bible',chapter=data.chapters[this.chapter-1],labels=this.units.filter(u=>this.chosen.has(u.key)).map(u=>u.label),location=bible?data.book+' '+this.chapter+'장'+(!text&&labels.length?' · '+labels.join(', '):''):chapter.title;
+  notebook().onSaved=()=>{$('reader-excerpt-status').textContent='내 수첩에 담았어요. ‘내 수첩’에서 한 권처럼 펼쳐보세요.';};
+  notebook().edit({quote,title:bible?data.book+' '+this.chapter+'장의 문장':data.book+'에서 만난 문장',sourceTitle:bible?'성경전서 개역한글판':data.book,location,author:data.author||(bible?'대한성서공회':''),credit:bible?'성경전서 개역한글판 (1961)':[(data.edition||''),(data.changes||'')].filter(Boolean).join(' · '),sourceUrl:bible?'https://github.com/yuhwan/Bible-krv':data.source,licenseUrl:bible?'https://www.bskorea.or.kr/bbs/content.php?co_id=subpage2_3_4_1':data.license});
  }
  bindReaderTools(){
   $('reader-fullscreen').onclick=()=>this.setExpanded(!this.expanded);$('reader-bookmark').onclick=()=>this.addBookmark();$('reader-bookmarks').onclick=()=>{const p=$('reader-bookmarks-panel');p.hidden=!p.hidden;$('reader-bookmarks').setAttribute('aria-expanded',String(!p.hidden));this.paintBookmarks();};

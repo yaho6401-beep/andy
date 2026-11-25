@@ -29,7 +29,7 @@ export async function memberService({input,token='',ip='unknown',sql,clock=Date.
   if(!equalHash(await passwordHash(checkPassword(input.password),member.salt),member.password_hash))throw memberError('현재 비밀번호를 확인해 주세요.',401);
   await sql.begin(async tx=>{await tx.unsafe('delete from workshop_private.members where id=$1',[member.id]);await tx.unsafe('delete from public.workshop_scent_accounts where id=$1',[member.journal_id]);});return {body:{ok:true}};
  }
- if(!['reading','blending'].includes(input.kind))throw memberError('기록 종류를 확인해 주세요.');
+ if(!['reading','blending','notebook'].includes(input.kind))throw memberError('기록 종류를 확인해 주세요.');
  if(op==='clear-records'){await q('delete from workshop_private.member_records where member_id=$1 and kind=$2',[member.id,input.kind]);return {body:{deleted:true}};}
  if(op==='records'){
   const items=await q('select payload from workshop_private.member_records where member_id=$1 and kind=$2 order by created_at desc,id desc limit 500',[member.id,input.kind]);return {body:{items:items.map(r=>r.payload)}};
