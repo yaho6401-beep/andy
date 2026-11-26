@@ -2,8 +2,8 @@ import {CAMP} from './layout.js';
 
 // Fictional camp props; their contents are never real-world fire instructions.
 export const CANISTERS=CAMP.tents.flatMap(t=>[
- {id:t.id+'-fuel',tent:t.id,kind:'fuel',name:'기름통',x:t.x-.78,z:t.z+1.6},
- {id:t.id+'-water',tent:t.id,kind:'water',name:'물통',x:t.x+.78,z:t.z+1.6}
+ {id:t.id+'-fuel',tent:t.id,kind:'fuel',name:'기름통',x:t.x+2.4,z:t.z-1.2},
+ {id:t.id+'-water',tent:t.id,kind:'water',name:'물통',x:t.x+2.4,z:t.z-.35}
 ]);
 export const CAN_NAMES={fuel:'기름통',water:'물통'};
 // Read legacy saved packs without rewriting other inventory fields.
