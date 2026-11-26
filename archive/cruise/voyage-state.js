@@ -1,4 +1,5 @@
 // Personal, time-compressed trial voyages. Ship-local walking coordinates never move.
+import {geographicLegTrack} from './geographic-voyage.js';
 export const VOYAGE_KEY='bookscents-cruise-voyage-v1';
 export const VOYAGE_ROUTES=[
  {id:'bergen',name:'베르겐 · 피오르',sea:'북유럽 · 노르웨이',seconds:110,x:-430,z:-950,color:'#adc5bd',description:'깊은 피오르와 산자락, 붉은 목조 창고가 이어지는 항구'},
@@ -10,29 +11,38 @@ export const VOYAGE_ROUTES=[
 export const routeById=id=>VOYAGE_ROUTES.find(r=>r.id===id)||null;
 export const homeVoyage=()=>({version:1,phase:'home',routeId:null});
 const clamp=t=>Math.max(0,Math.min(1,t)),ease=t=>t*t*(3-2*t);
+export function departureSeconds(originId,destinationId){const route=routeById(destinationId);if(!route)return 0;if(!originId)return route.seconds;const leg=geographicLegTrack(originId,destinationId);return leg?Math.round(Math.max(65,Math.min(145,Math.sqrt(leg.total)*1.4))):0;}
+const outboundDuration=state=>departureSeconds(state.originId,state.routeId)*1000+(state.originId?6000:0);
 export function departVoyage(state,routeId,now){
- if(state.phase!=='home')throw Error('지금 항해를 마친 뒤 새로운 항로를 골라 주세요.');
+ if(!['home','port'].includes(state.phase))throw Error('항구에 도착한 뒤 다음 목적지를 골라 주세요.');
  if(!routeById(routeId)||!Number.isFinite(now))throw Error('항로를 확인해 주세요.');
+ if(state.phase==='port'){if(!routeById(state.routeId)||state.routeId===routeId)throw Error('현재 항구와 다른 목적지를 골라 주세요.');return {version:1,phase:'outbound',originId:state.routeId,routeId,at:now};}
  return {version:1,phase:'outbound',routeId,at:now};
 }
 function travelPoint(route,u){
  if(u===0)return {x:0,z:0};
  return bezier(coursePoints(route),u);
 }
-function coursePoints(route){const side=Math.sign(route.x);return [{x:0,z:0},{x:0,z:-90},{x:side*240,z:-170},{x:side*310,z:route.z*.58},{x:route.x,z:route.z*.82},{x:route.x,z:route.z}];}
+function coursePoints(route){const side=Math.sign(route.x)||1;return [{x:0,z:0},{x:0,z:-90},{x:side*240,z:-170},{x:side*310,z:route.z*.58},{x:route.x,z:route.z*.82},{x:route.x,z:route.z}];}
 function bezier(points,t){const n=points.length-1,weights=n===5?[1,5,10,10,5,1]:[1,4,6,4,1],out={x:0,z:0};for(let i=0;i<=n;i++){const f=weights[i]*(1-t)**(n-i)*t**i;out.x+=points[i].x*f;out.z+=points[i].z*f;}return out;}
 function travelDerivative(route,u){const points=coursePoints(route),differences=points.slice(1).map((p,i)=>({x:5*(p.x-points[i].x),z:5*(p.z-points[i].z)}));return bezier(differences,u);}
 // The departure arc clears the home coast before heading into open sea.
 export function voyagePosition(routeId,u){const route=routeById(routeId);if(!route)return {x:0,z:0,heading:0};u=clamp(u);const p=travelPoint(route,u),d=travelDerivative(route,u);return {...p,heading:Math.atan2(-d.x,-d.z)};}
+function interportPoints(origin,route){return [{x:origin.x,z:origin.z},{x:origin.x,z:origin.z+180},{x:origin.x,z:-500},{x:route.x,z:-500},{x:route.x,z:route.z+180},{x:route.x,z:route.z}];}
+export function legPosition(originId,routeId,u){if(!originId)return voyagePosition(routeId,u);const origin=routeById(originId),route=routeById(routeId);if(!origin||!route)return {x:0,z:0,heading:0};const points=interportPoints(origin,route);u=clamp(u);const p=bezier(points,u),d=bezier(points.slice(1).map((p,i)=>({x:5*(p.x-points[i].x),z:5*(p.z-points[i].z)})),u);return {...p,heading:Math.atan2(-d.x,-d.z)};}
 export function updateVoyage(state,now){
  const route=routeById(state.routeId);if(!route)return homeVoyage();
- if(state.phase==='outbound'&&now>=state.at+route.seconds*1000)return {...state,phase:'port',arrivedAt:state.at+route.seconds*1000};
+ if(state.phase==='outbound'&&now>=state.at+outboundDuration(state))return {...state,phase:'port',arrivedAt:state.at+outboundDuration(state)};
  if(state.phase==='returning'&&now>=state.at+state.turnMs+state.durationMs)return homeVoyage();
  return state;
 }
 export function voyagePose(state,now){
  const route=routeById(state.routeId);if(!route||state.phase==='home')return {phase:'home',u:0,x:0,z:0,heading:0,speed:0,moving:false,remaining:0,route:null};
  let u=1,remaining=0,turning=false;
+ if(state.originId){
+  if(state.phase==='outbound'){const turn=6000,t=clamp((now-state.at-turn)/(departureSeconds(state.originId,state.routeId)*1000));u=ease(t);turning=now<state.at+turn;remaining=Math.max(0,Math.ceil((state.at+outboundDuration(state)-now)/1000));const p=legPosition(state.originId,state.routeId,u),after=legPosition(state.originId,state.routeId,clamp(u+.0001)),before=legPosition(state.originId,state.routeId,clamp(u-.0001)),speed=turning?0:Math.hypot(after.x-before.x,after.z-before.z)/Math.max(.000001,clamp(u+.0001)-clamp(u-.0001))*6*t*(1-t)/departureSeconds(state.originId,state.routeId);return {phase:state.phase,u,...p,heading:turning?Math.PI*ease(clamp((now-state.at)/turn)):p.heading,speed,moving:speed>.1,turning,remaining,route,originId:state.originId};}
+  if(state.phase==='returning'){const start=legPosition(state.originId,state.routeId,state.fromU),synthetic={x:start.x,z:start.z},t=clamp((now-state.at-state.turnMs)/state.durationMs),homeProgress=ease(t),point=travelPoint(synthetic,1-homeProgress),d=travelDerivative(synthetic,1-homeProgress),diff=Math.atan2(Math.sin(Math.PI-start.heading),Math.cos(Math.PI-start.heading));turning=now<state.at+state.turnMs;const heading=turning?start.heading+diff*ease(clamp((now-state.at)/state.turnMs)):Math.atan2(-d.x,-d.z)+Math.PI,speed=turning?0:Math.hypot(d.x,d.z)*6*t*(1-t)/(state.durationMs/1000);return {phase:state.phase,u:1-homeProgress,...point,heading,speed,moving:speed>.1,turning,remaining:Math.max(0,Math.ceil((state.at+state.turnMs+state.durationMs-now)/1000)),route,originId:state.originId,homeProgress,returnFromProgress:state.fromU};}
+ }
  if(state.phase==='outbound'){const t=clamp((now-state.at)/(route.seconds*1000));u=ease(t);remaining=Math.max(0,Math.ceil((state.at+route.seconds*1000-now)/1000));}
  if(state.phase==='returning'){turning=now<state.at+state.turnMs;const t=clamp((now-state.at-state.turnMs)/state.durationMs);u=state.fromU*(1-ease(t));remaining=Math.max(0,Math.ceil((state.at+state.turnMs+state.durationMs-now)/1000));}
  const p=voyagePosition(route.id,u),direction=state.phase==='returning'?-1:1;
@@ -45,11 +55,12 @@ export function voyagePose(state,now){
 }
 export function returnVoyage(state,now){
  const current=updateVoyage(state,now);if(current.phase==='home'||current.phase==='returning')return current;
- const p=voyagePose(current,now);return {version:1,phase:'returning',routeId:current.routeId,at:now,fromU:p.u,turnMs:6000,durationMs:Math.round(8000+52000*p.u)};
+ const p=voyagePose(current,now),result={version:1,phase:'returning',routeId:current.routeId,at:now,fromU:p.u,turnMs:6000,durationMs:Math.round(8000+52000*(current.originId?clamp(Math.hypot(p.x,p.z)/1400):p.u))};if(current.originId)result.originId=current.originId;return result;
 }
 export function restoreVoyage(value,now){
  if(!value||value.version!==1||!routeById(value.routeId)||!['outbound','port','returning'].includes(value.phase)||!Number.isFinite(value.at)||value.at>now+2000||value.at<now-86400000)return homeVoyage();
+ if(value.originId!==undefined&&(!routeById(value.originId)||value.originId===value.routeId))return homeVoyage();
  if(value.phase==='returning'&&(!Number.isFinite(value.fromU)||value.fromU<0||value.fromU>1||value.turnMs!==6000||!Number.isFinite(value.durationMs)||value.durationMs<8000||value.durationMs>60000))return homeVoyage();
  // Copy only known fields; local records never provide URLs or executable state.
- const state={version:1,phase:value.phase,routeId:value.routeId,at:value.at};if(value.phase==='returning')Object.assign(state,{fromU:value.fromU,turnMs:6000,durationMs:value.durationMs});return updateVoyage(state,now);
+ const state={version:1,phase:value.phase,routeId:value.routeId,at:value.at};if(value.originId)state.originId=value.originId;if(value.phase==='returning')Object.assign(state,{fromU:value.fromU,turnMs:6000,durationMs:value.durationMs});return updateVoyage(state,now);
 }

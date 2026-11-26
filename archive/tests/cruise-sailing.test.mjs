@@ -5,7 +5,7 @@ test('five compressed voyages leave the home world, move continuously and stop o
  assert.equal(VOYAGE_ROUTES.length,5);assert.equal(new Set(VOYAGE_ROUTES.map(r=>r.id)).size,5);
  for(const route of VOYAGE_ROUTES){const state=departVoyage(homeVoyage(),route.id,1000);let last=voyagePose(state,1000);assert.equal(last.speed,0);assert.equal(last.x,0);assert.equal(last.z,0);
   for(let t=1100;t<=1000+route.seconds*1000;t+=100){const p=voyagePose(state,t);assert.ok(Math.hypot(p.x-last.x,p.z-last.z)<2.5,'no landscape teleport');assert.ok([p.x,p.z,p.heading,p.speed].every(Number.isFinite));assert.ok(p.speed>=0);last=p;}
-  assert.ok(Math.hypot(last.x,last.z)>1000);const docked=updateVoyage(state,1000+route.seconds*1000);assert.equal(docked.phase,'port');assert.equal(voyagePose(docked,900000).speed,0);assert.deepEqual(voyagePosition(route.id,1).x,route.x);assert.throws(()=>departVoyage(docked,'bergen',900000));
+  assert.ok(Math.hypot(last.x,last.z)>1000);const docked=updateVoyage(state,1000+route.seconds*1000);assert.equal(docked.phase,'port');assert.equal(voyagePose(docked,900000).speed,0);assert.deepEqual(voyagePosition(route.id,1).x,route.x);assert.throws(()=>departVoyage(docked,route.id,900000));
  }
 });
 test('return duration scales with distance, includes a gradual turn and persists through reload',()=>{
