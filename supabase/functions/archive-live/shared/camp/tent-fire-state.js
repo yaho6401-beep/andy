@@ -6,7 +6,7 @@ export const activeTentFire=f=>!!f?.tentFire&&!f.tentFire.extinguishedAt;
 export function finishTentFire(f,now,cause){
  if(!activeTentFire(f))return false;
  Object.assign(f.tentFire,{extinguishedAt:now,cause});
- Object.assign(f,{dangerAt:0,rescuedAt:now,oilUntil:0,branchPeakUntil:0,logPeakUntil:0,heat:Math.min(2.15,f.heat),branchLoad:Math.min(3,f.branchLoad||0),at:now,holdUntil:now+12000});return true;
+ Object.assign(f,{dangerAt:0,rescuedAt:now,oilUntil:cause==='rain'?f.oilUntil:0,branchPeakUntil:0,logPeakUntil:0,heat:Math.min(2.15,f.heat),branchLoad:Math.min(3,f.branchLoad||0),at:now,holdUntil:now+12000});return true;
 }
 export function tentFireView(f,now){const e=f?.tentFire;if(!e||now-(e.extinguishedAt||now)>10000)return null;
  const age=Math.max(0,now-e.at),out=!!e.extinguishedAt,foam=!out&&now>=e.arrivesAt;
