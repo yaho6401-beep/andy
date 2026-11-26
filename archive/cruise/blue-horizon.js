@@ -57,10 +57,10 @@ export function startBlueHorizon(T, identity={}, ui={}) {
       float wakeWidth=9.+z*.13;
       float center=exp(-x*x/(wakeWidth*wakeWidth*.35));
       float arms=exp(-abs(x-wakeWidth)*1.4);
-      float cells=.5+.5*sin(p.y*3.8+t*5.+sin(p.x*4.1+p.y*1.2)*2.5);
-      float grain=.5+.5*sin(p.x*27.+p.y*20.+t*4.+sin(p.y*16.)*4.);
-      float foam=wake*smoothstep(0.,2.,z)*exp(-z*.018)*(center*.85+arms*.4)*smoothstep(.32,.9,cells*.75+grain*.25);
-      c=mix(c,vec3(.71,.92,.91),clamp(foam,0.,.84));
+      float cells=seaNoise(vec2(p.x*.8,p.y*.7-t*.8));
+      float grain=seaNoise(vec2(p.x*2.3,p.y*2.-t*1.2));
+      float foam=wake*smoothstep(0.,2.,z)*exp(-z*.018)*(center*.85+arms*.4)*smoothstep(.26,.83,cells*.65+grain*.35);
+      c=mix(c,vec3(.65,.81,.8),clamp(foam,0.,.72));
       gl_FragColor=vec4(mix(c,sky,smoothstep(260.,1000.,dist)),1.);
       #include <tonemapping_fragment>
       #include <colorspace_fragment>
