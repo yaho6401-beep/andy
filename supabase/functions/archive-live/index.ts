@@ -1,6 +1,7 @@
 import postgres from 'npm:postgres@3.4.8';
 import {restoreStore,serializeStore,expirePlayers} from './shared/server/persistence.mjs';
 import {clean,appearance} from './shared/src/protocol.js';
+import {claimConnection,requireConnection} from './shared/server/session-handoff.mjs';
 import {directEntry} from './shared/src/room-entry.js';
 import {MEMBER_ACTIONS} from './shared/src/member-policy.js';
 const createSql=()=>postgres(Deno.env.get('SUPABASE_DB_URL')!,{max:1,idle_timeout:2,connect_timeout:10,prepare:false,ssl:'require',connection:{application_name:'books_scents_archive'}});
@@ -46,12 +47,12 @@ Deno.serve(async req=>{
  const now=Date.now(),s=restoreStore(typeof row.state==='string'?JSON.parse(row.state):row.state),id=session.player_id;s.publicLounge=true;s.enforceMembers=true;expirePlayers(s,now);
  if(s.members.get(id)?.blocked||s.members.has(id)&&s.members.get(id).status!=='approved')throw fail('진행자가 이 라운지의 입장을 제한했어요.',403);
  if(op==='join'){
-  const active=s.clients.get(id);if(active&&active.connectionId!==input.connectionId)throw fail('이미 다른 화면에서 접속 중이에요.',409);
+  const connectionId=clean(input.connectionId,60),active=s.clients.get(id);if(active)claimConnection(s,id,connectionId,input.takeover===true);
   if(!active){const existing=s.members.get(id);s.seed(id,session.nickname,session.role,{adultConfirmed:session.role==='host'||existing?.adultConfirmed===true,publicVisitor:session.role==='guest'});s.join(id,input.appearance);const entry=directEntry(input.startRoom);if(entry){const entrant=s.clients.get(id);Object.assign(entrant,entry,{epoch:entrant.epoch+1});}}
-  const p=s.clients.get(id);p.nickname=clean(input.nickname,16);p.appearance=appearance(input.appearance);s.members.get(id).nickname=p.nickname;p.connectionId=clean(input.connectionId,60);p.lastSeen=now;p.lastRequest=now;p.lastBatch=0;p.lastReceipts=[];if(/^[a-f0-9-]{36}$/.test(String(input.browserId||'')))p.visitorKey=await digest('archive-browser:'+input.browserId);if(p.room==='camp')p.campPagePending=true;
+  const p=s.clients.get(id);p.nickname=clean(input.nickname,16);p.appearance=appearance(input.appearance);s.members.get(id).nickname=p.nickname;claimConnection(s,id,connectionId);p.lastSeen=now;p.lastRequest=now;p.lastBatch=0;p.lastReceipts=[];if(/^[a-f0-9-]{36}$/.test(String(input.browserId||'')))p.visitorKey=await digest('archive-browser:'+input.browserId);if(p.room==='camp')p.campPagePending=true;
  }else{
   const p=s.clients.get(id);if(!p)throw fail('연결이 오래 끊겼어요. 다시 입장해 주세요.',410);
-  if(p.connectionId!==input.connectionId)throw fail('다른 화면의 접속 요청입니다.',409);
+  requireConnection(s,id,input.connectionId);
   if(op==='tick'&&now-(p.lastRequest||0)<180)throw fail('요청이 너무 빠릅니다.',429);p.lastRequest=now;p.lastSeen=now;
  }
  const p=s.clients.get(id);p.seaVersion=input.seaVersion===1?1:0;let out:any;
@@ -88,5 +89,5 @@ Deno.serve(async req=>{
  return out;
  });
  return reply(result);
- }catch(e){const status=e.status||(/권한|승인|관리자/.test(e.message)?403:400);if(e.code){console.error('archive database error',e.code);return reply({error:'라운지 서버 연결이 지연되고 있어요. 잠시 후 다시 시도해 주세요.',code:String(e.code)},503);}return reply({error:e.message||'연결 오류'},status);}finally{await sql.end({timeout:1});}
+ }catch(e){const status=e.status||(/권한|승인|관리자/.test(e.message)?403:400);if(e.code){console.error('archive database error',e.code);return reply({error:'라운지 서버 연결이 지연되고 있어요. 잠시 후 다시 시도해 주세요.',code:String(e.code)},503);}return reply({error:e.message||'연결 오류',...(e.reason?{reason:e.reason}:{})},status);}finally{await sql.end({timeout:1});}
 });
