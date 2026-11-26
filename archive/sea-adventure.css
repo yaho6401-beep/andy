@@ -17,3 +17,5 @@ body.sea-boat-active .action-dock,body.sea-boat-active #joystick,body.sea-boat-a
 .sea-posture-row{display:flex;align-items:center;gap:10px;margin-top:8px}.sea-posture-row small{font-size:11px;opacity:.8}.sea-posture-row button{min-height:34px;font-size:12px}.sea-posture-row button[aria-pressed=true]{border-color:#e3c58a;background:#5b5140}.sea-fishing #sea-fishing-result{flex-wrap:wrap}.sea-swimming-active #camp-comfort{display:block;max-width:160px;pointer-events:none}.sea-swimming-active #camp-drying,.sea-swimming-active #camp-joy{display:none!important}
 
 body.sea-swimming-active #camp-comfort{top:calc(var(--archive-controls-top,120px) + 100px);bottom:auto;right:10px;max-width:142px}
+
+#sea-fishing-tip{white-space:normal;word-break:keep-all;overflow-wrap:anywhere}
