@@ -1,3 +1,5 @@
+import {createDolphin} from './dolphin-model.js';
+import {DolphinEncounter} from './dolphin-encounter.js';
 import {createFishingRig} from './fishing-rig.js';
 import {createScenicShips} from './scenic-ships.js';
 import * as T from 'three';
@@ -19,13 +21,13 @@ export function createSeaAdventureVisual(scene){
  for(let i=0;i<5;i++)mesh(root,new T.BoxGeometry(1.6,.1,.27),wood,ISLAND.fish.x,.59,ISLAND.fish.z+i*.3);for(const x of [-.65,.65])mesh(root,new T.CylinderGeometry(.06,.06,1,7),wood,ISLAND.fish.x+x,.18,ISLAND.fish.z-.08);
  // A small hand-painted island marker is readable without floating menu cards.
  const canvas=document.createElement('canvas');canvas.width=512;canvas.height=128;const ctx=canvas.getContext('2d');ctx.fillStyle='#344e50';ctx.fillRect(0,0,512,128);ctx.fillStyle='#eee4ca';ctx.font='28px system-ui';ctx.textAlign='center';ctx.fillText('작은 섬 · 파도가 놓고 간 쉼표',256,58);ctx.font='20px system-ui';ctx.fillText('쉼돌 · 나무 상자 옆 낚싯대',256,99);const texture=own(new T.CanvasTexture(canvas)),signMat=own(new T.MeshBasicMaterial({map:texture}));mesh(root,new T.PlaneGeometry(2.7,.675),signMat,0,1.25,-76.4);mesh(root,new T.CylinderGeometry(.04,.04,1,6),wood,0,.7,-76.4);
- const dolphin=marineModel('dolphin','#789baf');models.push(dolphin);root.add(dolphin);dolphin.visible=false;
+ const dolphin=createDolphin();models.push(dolphin);root.add(dolphin);dolphin.visible=false;
  const rig=createFishingRig(root),scenic=createScenicShips(root);
  const caught=marineModel('fish');models.push(caught);root.add(caught);caught.visible=false;
- let dolphinSeen=false,shipKind=-1;return {update(time,{enabled,player,job,hand,wall=Date.now(),reduced=false}){root.visible=enabled;if(!enabled)return {dolphin:false};const p=player,swim=!!p?.swimming,age=(Date.now()-(p?.swimAt||Date.now()))/1000,meet=swim&&p.z< -25&&age>7&&age%72<30;dolphin.visible=meet;
-  if(meet){const phase=age*.6,jump=Math.max(0,Math.sin(age*1.05));dolphin.position.set(p.x+3+Math.sin(phase)*1.3,SEA.surface-.19+jump*.95,p.z-2+Math.cos(phase)*1.5);dolphin.rotation.set(-Math.cos(age*.55)*.18,Math.PI*.35+Math.sin(phase)*.4,Math.sin(age*2)*.035);}
+ const encounters=new DolphinEncounter();let dolphinSeen=false;return {update(time,{enabled,player,job,hand,wall=Date.now(),reduced=false}){root.visible=enabled;if(!enabled){encounters.update(wall,null);dolphin.visible=false;return {dolphin:false};}const p=player,pose=encounters.update(wall,p),meet=!!pose;dolphin.visible=meet;
+  if(pose){dolphin.position.set(pose.x,pose.y,pose.z);dolphin.rotation.set(pose.pitch,pose.yaw,0);dolphin.userData.tail.rotation.x=reduced?0:pose.tail;}
   rig.update(time,{player:p,job,hand,wall});
   caught.visible=!!p&&onIsland(p.x,p.z)&&!!job&&job.stage==='result'&&job.catch?.kind==='fish';if(caught.visible){caught.position.set(p.x+.7,1.25+Math.sin(time*3)*.05,p.z-.7);caught.scale.setScalar(.45);caught.rotation.set(0,time*.4,.25);const info=FISH_SPECIES.find(f=>f.id===job.catch.species);if(info)caught.children[0].material.color.set(info.color);}
   scenic.update(time,wall);
-  const first=meet&&!dolphinSeen;dolphinSeen=meet;return {dolphin:meet,dolphinGreeting:first};},get diagnostics(){return {island:true,dolphin:dolphin.visible,ship:0,ships:4,lanes:scenic.diagnostics,rod:foundRod.visible,cast:rig.diagnostics.visible,rig:rig.diagnostics};},dispose(){rig.dispose();scenic.dispose();root.removeFromParent();models.forEach(m=>m.userData.dispose());owned.forEach(o=>o.dispose());}};
+  const first=meet&&!dolphinSeen;dolphinSeen=meet;return {dolphin:meet,dolphinGreeting:first};},get diagnostics(){return {island:true,dolphin:dolphin.visible,dolphinEncounters:encounters.count,dolphinPosition:dolphin.visible?dolphin.position.toArray():null,ship:0,ships:4,lanes:scenic.diagnostics,rod:foundRod.visible,cast:rig.diagnostics.visible,rig:rig.diagnostics};},dispose(){rig.dispose();scenic.dispose();root.removeFromParent();models.forEach(m=>m.userData.dispose());owned.forEach(o=>o.dispose());}};
 }
