@@ -7,6 +7,7 @@ await mkdir('dist/cruise',{recursive:true});
 await build({entryPoints:['cruise/main.js'],outdir:'dist/cruise',bundle:true,format:'esm',platform:'browser',target:['es2022'],minify:true});
 for(const file of ['index.html','styles.css','reading.css','voyage.css','navigation.css'])await copyFile('cruise/'+file,'dist/cruise/'+file);
 await mkdir('dist/cruise/scenery',{recursive:true});for(const name of ['garden.webp','camp.webp'])await copyFile('cruise/scenery/'+name,'dist/cruise/scenery/'+name);
+await mkdir('dist/cruise/scenery/ports',{recursive:true});for(const id of ['bergen','copenhagen','madeira','seychelles','singapore'])await copyFile('cruise/scenery/ports/'+id+'-v1.jpg','dist/cruise/scenery/ports/'+id+'-v1.jpg');
 await mkdir('dist/workshop',{recursive:true});
 await build({entryPoints:['../workshop/main.js'],outdir:'dist/workshop',bundle:true,format:'esm',platform:'browser',target:['es2022'],minify:true});
 for(const file of ['index.html','styles.css'])await copyFile('../workshop/'+file,'dist/workshop/'+file);

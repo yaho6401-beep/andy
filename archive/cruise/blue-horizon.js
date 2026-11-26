@@ -40,15 +40,17 @@ export function startBlueHorizon(T, identity={}, ui={}) {
   const orb=(p,c,...v)=>mesh(p,ball,c,...v);
   const ivory=0xe7dfcd, navy=0x162d40, teak=0xb77e56, brass=0xe4ba70;
   const uniforms={time:{value:0},sky:{value:new T.Color()},deep:{value:new T.Color()},shine:{value:new T.Color()},wake:{value:0},seaOffset:{value:new T.Vector2()},course:{value:0},moon:{value:new T.Vector2(-.42,-1)}};
-  const water=new T.Mesh(new T.PlaneGeometry(850,850),new T.ShaderMaterial({uniforms,
+  const water=new T.Mesh(new T.PlaneGeometry(2000,2000),new T.ShaderMaterial({uniforms,
     vertexShader:'varying vec3 world; void main(){world=(modelMatrix*vec4(position,1.)).xyz;gl_Position=projectionMatrix*viewMatrix*vec4(world,1.);}',
     fragmentShader:`varying vec3 world;uniform float time,wake,course;uniform vec2 seaOffset;uniform vec3 sky,deep,shine;uniform vec2 moon;
+    float hash21(vec2 p){vec3 q=fract(vec3(p.xyx)*.1031);q+=dot(q,q.yzx+33.33);return fract((q.x+q.y)*q.z);}
+    float seaNoise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash21(i),hash21(i+vec2(1.,0.)),f.x),mix(hash21(i+vec2(0.,1.)),hash21(i+vec2(1.)),f.x),f.y);}
     void main(){vec2 p=mat2(cos(course),-sin(course),sin(course),cos(course))*world.xz+seaOffset; float t=time;
-      float a=sin(p.y*2.7+p.x*.87+t*2.1+sin(p.x*.47+t)*1.8);
-      float b=sin(p.y*4.1-p.x*1.33+t*1.55);
+      float a=(seaNoise(p*.56+vec2(t*.11,t*.19))*.7+seaNoise(p*1.37+vec2(-t*.16,t*.09))*.3)*2.-1.;
+      float b=seaNoise(p*.29+vec2(t*.08,-t*.12))*2.-1.;
       float dist=length(world.xz-cameraPosition.xz);
-      float detail=1.-smoothstep(16.,85.,dist);float rip=.5+(.25*a+.25*b)*(.17+.83*detail);
-      vec3 c=deep*(.91+.15*rip);
+      float detail=1.-smoothstep(35.,250.,dist);float rip=.5+(.25*a+.25*b)*(.34+.66*detail);
+      vec3 c=deep*(.88+.2*rip);c+=vec3(.11,.15,.17)*pow(.5+.5*b,12.)*(.08+.15*detail);
       float reflected=exp(-abs(p.x-moon.x*(-p.y))* .085)*smoothstep(0.,20.,-p.y);
       c+=shine*reflected*pow(.5+.5*a,7.)*(.16+.28*detail);
       float z=max(0.,world.z-70.), x=abs(world.x+.4*sin(z*.18));
@@ -59,7 +61,7 @@ export function startBlueHorizon(T, identity={}, ui={}) {
       float grain=.5+.5*sin(p.x*27.+p.y*20.+t*4.+sin(p.y*16.)*4.);
       float foam=wake*smoothstep(0.,2.,z)*exp(-z*.018)*(center*.85+arms*.4)*smoothstep(.32,.9,cells*.75+grain*.25);
       c=mix(c,vec3(.71,.92,.91),clamp(foam,0.,.84));
-      gl_FragColor=vec4(mix(c,sky,smoothstep(60.,480.,dist)),1.);
+      gl_FragColor=vec4(mix(c,sky,smoothstep(260.,1000.,dist)),1.);
       #include <colorspace_fragment>
     }`}));
   water.rotation.x=-Math.PI/2;scene.add(water);
@@ -251,7 +253,7 @@ export function startBlueHorizon(T, identity={}, ui={}) {
   const wish=new T.Vector2(),target=new T.Vector3();
   const ship=new T.Group();scene.add(ship);rooms.forEach((r,i)=>{const zone=SHIP_ZONES[i];r.group=new T.Group();r.group.userData={zone:i,upper:i>=3};r.group.position.set(0,zone.y-3,zone.z);r.build(r.group);if(i<5)furnishings.build(r.group,i);ship.add(r.group);});const connections=buildShipConnections(ship,{box,mesh,cylinder,rail,label});const details=buildCruiseDetails(ship,{box,mesh,cylinder,label});const maritime=buildMaritimeInteriors(ship,{box,mesh,cylinder,label});bake(ship);avatar.position.set(0,DECK_Y,4);avatar.rotation.y=Math.PI;showZone(0);
   crew=createBridgeCrew(scene);
-  sailing=new CruiseVoyage(environmentRoot,{pause:pauseInputs,player:()=>({room,position:avatar.position}),meetCaptain:()=>action('선장 만나기'),watchHarbor:()=>{pauseInputs();harborView=true;overview=false;document.body.classList.add('cruise-overview');$('ship-overview').textContent='갑판으로 돌아가기';$('ship-overview').setAttribute('aria-pressed','true');},depart:route=>{$('light').value='2';try{localStorage.setItem('bookscents-cruise-light-v1','2');}catch{}theme();uniforms.deep.value.set(route.id==='seychelles'?'#187c85':route.id==='madeira'?'#17445e':'#1b5c74');tone('horn');}});
+  sailing=new CruiseVoyage(environmentRoot,{pause:pauseInputs,player:()=>({room,position:avatar.position}),meetCaptain:()=>action('선장 만나기'),watchHarbor:()=>{pauseInputs();harborView=true;overview=false;document.body.classList.add('cruise-overview');$('ship-overview').textContent='갑판으로 돌아가기';$('ship-overview').setAttribute('aria-pressed','true');},night:()=>Number($('light').value)===1,harborWater:color=>{uniforms.deep.value.set(color);if(Number($('light').value)===1)uniforms.deep.value.multiplyScalar(.3);},depart:route=>{harborView=false;overview=false;document.body.classList.remove('cruise-overview');$('ship-overview').textContent='크루즈 전경';$('light').value='2';try{localStorage.setItem('bookscents-cruise-light-v1','2');}catch{}theme();uniforms.deep.value.set(route.id==='seychelles'?'#187c85':route.id==='madeira'?'#17445e':'#1b5c74');tone('horn');}});
   const chart=new CruiseChart(scene,{pause:pauseInputs,state:()=>sailing.state,canvas:renderer.domElement,camera,viewer:()=>({x:avatar.position.x,y:floorY,z:avatar.position.z})});
   renderer.setAnimationLoop(now=>{
     const dt=Math.min(.04,(now-previous)/1000);previous=now;elapsed+=dt;
