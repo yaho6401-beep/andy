@@ -1,5 +1,6 @@
 import * as T from 'three';
 import {startBlueHorizon} from './blue-horizon.js';
+import {loadArt} from '../src/art-library.js';
 import {loadIdentity} from '../src/identity.js';
 
 // Same-origin navigation only. Never pass guest/session tokens through URLs.
@@ -8,6 +9,7 @@ if(params.get('soloPreview')==='1')returnURL.searchParams.set('soloPreview','1')
 document.getElementById('return-camp').href=returnURL.pathname+returnURL.search;
 let app;
 try{
+ await loadArt();
  app=startBlueHorizon(T,loadIdentity());
  globalThis.BlueHorizonDiagnostics={get state(){return app.state;}};
  document.getElementById('loading').hidden=true;

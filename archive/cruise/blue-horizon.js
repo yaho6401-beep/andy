@@ -1,3 +1,7 @@
+import {createAvatar,animateAvatar,disposeAvatar} from '../src/avatar.js';
+import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
+import {cruiseFurnishings} from './promenade.js';
+import {createCoastline} from './coastline.js';
 // Adapted from the owner-provided BLUE HORIZON prototype. Original source SHA-256: c4af2aaa9d7afd2dbee26bfbd9bd096c2002631c8530213dd9f9dd48e119a7a6
 const $=id=>document.getElementById(id);
 export function startBlueHorizon(T, identity={}) {
@@ -5,19 +9,22 @@ export function startBlueHorizon(T, identity={}) {
   const camera = new T.PerspectiveCamera(52,1,.1,460);
   const renderer = new T.WebGLRenderer({antialias:true,powerPreference:'low-power'});
   renderer.setPixelRatio(Math.min(devicePixelRatio,1.35));
-  document.body.prepend(renderer.domElement);
+  renderer.outputColorSpace=T.SRGBColorSpace;renderer.toneMapping=T.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;document.body.prepend(renderer.domElement);
   function resize(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);}
   addEventListener('resize',resize);resize();
   renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();document.getElementById('error').hidden=false;document.getElementById('error').textContent='그래픽 연결이 끊겼어요. 새로고침하거나 캠핑장으로 돌아가 주세요.';});
   const sunLight = new T.DirectionalLight(0xffd2a1,2.1);
   sunLight.position.set(-25,15,-30);
-  scene.add(sunLight,new T.HemisphereLight(0xc4deff,0x615263,2));
+  const fill=new T.HemisphereLight(0xd4e4ee,0x655c54,1.45);const bounce=new T.DirectionalLight('#fff0d5',1.05);bounce.position.set(4,8,12);scene.add(sunLight,fill,bounce);
   const cube=new T.BoxGeometry(), ball=new T.SphereGeometry(1,12,8), cylinder=new T.CylinderGeometry(1,1,1,12);
+  // A tiny original grain texture, reused on every teak surface.
+  const grainCanvas=document.createElement('canvas');grainCanvas.width=128;grainCanvas.height=512;const gc=grainCanvas.getContext('2d');gc.fillStyle='#b58b65';gc.fillRect(0,0,128,512);for(let i=0;i<90;i++){gc.strokeStyle=i%3?'#d4af842e':'#73583c36';gc.lineWidth=.5+i%2;gc.beginPath();const x=(i*47)%128;gc.moveTo(x,0);gc.bezierCurveTo(x+7,150,x-9,350,x+3,512);gc.stroke();}const grain=new T.CanvasTexture(grainCanvas);grain.colorSpace=T.SRGBColorSpace;grain.wrapS=grain.wrapT=T.RepeatWrapping;
   const materials=new Map();
   function mesh(parent,geometry,color,x,y,z,w,h,d,glow=false){
     const key=color+':'+glow;
-    if(!materials.has(key))materials.set(key,glow?new T.MeshBasicMaterial({color}):new T.MeshLambertMaterial({color}));
-    const m=new T.Mesh(geometry,materials.get(key));
+    if(!materials.has(key))materials.set(key,glow?new T.MeshBasicMaterial({color}):new T.MeshStandardMaterial({color,roughness:.76,metalness:color===0xe4ba70?.35:0}));
+    const material=materials.get(key);if([0xb77e56,0xbb8965,0xae7955,0xb1836e].includes(color)){material.map=grain;material.roughness=.85;}
+    const m=new T.Mesh(geometry,material);
     m.position.set(x,y,z);m.scale.set(w,h,d);parent.add(m);return m;
   }
   const box=(p,c,...v)=>mesh(p,cube,c,...v);
@@ -30,11 +37,11 @@ export function startBlueHorizon(T, identity={}) {
     void main(){vec2 p=world.xz; float t=time;
       float a=sin(p.y*2.7+p.x*.87+t*2.1+sin(p.x*.47+t)*1.8);
       float b=sin(p.y*4.1-p.x*1.33+t*1.55);
-      float rip=.5+.25*a+.25*b;
       float dist=length(p-cameraPosition.xz);
-      vec3 c=deep*(.73+.47*rip);
+      float detail=1.-smoothstep(16.,85.,dist);float rip=.5+(.25*a+.25*b)*(.17+.83*detail);
+      vec3 c=deep*(.91+.15*rip);
       float reflected=exp(-abs(p.x-moon.x*(-p.y))* .085)*smoothstep(0.,20.,-p.y);
-      c+=shine*reflected*pow(rip,4.)*.62;
+      c+=shine*reflected*pow(.5+.5*a,7.)*(.16+.28*detail);
       float z=max(0.,-p.y-8.2), x=abs(p.x+.4*sin(z*.18));
       float wakeWidth=1.4+z*.13;
       float center=exp(-x*x/(wakeWidth*wakeWidth*.35));
@@ -52,7 +59,7 @@ export function startBlueHorizon(T, identity={}) {
   #include <colorspace_fragment>
   }`}));
   scene.add(dome);
-  const sun=orb(scene,0xffe0a5,-83,17,-198,6,6,6,true);
+  const moonMap=new T.TextureLoader().load('/assets/camp/nasa-lro-moon-1k.jpg');moonMap.colorSpace=T.SRGBColorSpace;const sun=mesh(scene,new T.SphereGeometry(1,40,24),0xffe0a5,-83,17,-198,6,6,6,true);sun.material=sun.material.clone();sun.material.map=moonMap;sun.material.color.set('#dce8ed');
   const starPositions=[];
   let seed=397;
   function random(){seed=(1664525*seed+1013904223)>>>0;return seed/4294967296;}
@@ -60,17 +67,7 @@ export function startBlueHorizon(T, identity={}) {
   const starGeo=new T.BufferGeometry();
   starGeo.setAttribute('position',new T.Float32BufferAttribute(starPositions,3));
   const stars=new T.Points(starGeo,new T.PointsMaterial({color:0xffefd8,size:.48}));scene.add(stars);
-  const harbor=new T.Group();scene.add(harbor);
-  box(harbor,0x29344b,0,.25,2,88,.5,12);
-  for(let i=0;i<33;i++){
-    const x=i*2.6-42,h=1.5+random()*5,z=random()*5;
-    box(harbor,i%3?0x574659:0x644759,x,h/2,z,2.35,h,2.7);
-    const roof=box(harbor,0x282b42,x,h,z,1.65,1.65,2.85);roof.rotation.z=Math.PI/4;
-    for(let y=.8;y<h-.2;y+=1)for(const side of [-1,1]){
-      box(harbor,0xffc66c,x+side*.48,y,z+1.36,.24,.38,.03,true);
-      box(harbor,0xffc66c,x+side*.48,y,z-1.36,.24,.38,.03,true);
-    }
-  }
+  const coast=createCoastline(scene),furnishings=cruiseFurnishings();
   function rail(p,x1,z1,x2,z2){
     const length=Math.hypot(x2-x1,z2-z1),angle=-Math.atan2(z2-z1,x2-x1);
     for(const [y,h,c] of [[1.05,.12,teak],[.69,.05,ivory],[.38,.05,ivory]]){
@@ -100,6 +97,8 @@ export function startBlueHorizon(T, identity={}) {
     const texture=new T.CanvasTexture(c);texture.colorSpace=T.SRGBColorSpace;
     const sprite=new T.Sprite(new T.SpriteMaterial({map:texture}));sprite.position.set(x,y,z);sprite.scale.set(2.5,.625,1);p.add(sprite);
   }
+  // Merge static opaque furniture by material; preserve wheel joints and alpha glass.
+  function bake(root){const groups=new Map();root.updateMatrixWorld(true);root.traverse(o=>{if(!o.isMesh||o.material.transparent||o===wheel||wheel.getObjectById(o.id))return;const m=o.matrixWorld.clone().premultiply(root.matrixWorld.clone().invert());const parts=groups.get(o.material)||[];parts.push({o,g:(o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone()).applyMatrix4(m)});groups.set(o.material,parts);});for(const [mat,parts]of groups){if(parts.length<2){parts.forEach(p=>p.g.dispose());continue;}const merged=mergeGeometries(parts.map(p=>p.g),false);parts.forEach(p=>{p.g.dispose();p.o.removeFromParent();});root.add(new T.Mesh(merged,mat));}}
   const wheel=new T.Group();
   const rooms=[
     {name:'메인 갑판',build(p){
@@ -151,13 +150,7 @@ export function startBlueHorizon(T, identity={}) {
       }
     },actions:['창가 앉기']}
   ];
-  const avatar=new T.Group();scene.add(avatar);
-  const legs=[-1,1].map(s=>orb(avatar,navy,s*.14,.26,0,.13,.28,.15));
-  orb(avatar,identity.appearance?.color||0x378a86,0,.64,0,.34,.36,.25);
-  for(const s of [-1,1])orb(avatar,identity.appearance?.color||0x378a86,s*.32,.63,0,.105,.25,.105);
-  orb(avatar,0xefb992,0,1.18,0,.31,.32,.29);
-  orb(avatar,identity.appearance?.hair||0x273047,0,1.36,-.02,.315,.16,.29);
-  for(const s of [-1,1])orb(avatar,navy,s*.105,1.2,.267,.025,.039,.019);
+  const avatar=createAvatar(identity.appearance);scene.add(avatar);
   const wildlife=[0,1,2].map(i=>{
     const g=new T.Group();scene.add(g);
     const scale=i===2?2.1:1;
@@ -170,7 +163,7 @@ export function startBlueHorizon(T, identity={}) {
   function theme(){
     const mode=Number($('light').value), [h,t,d,s]=themes[mode];
     horizon.setHex(h);top.setHex(t);uniforms.sky.value.copy(horizon);uniforms.deep.value.setHex(d);uniforms.shine.value.setHex(s);
-    scene.fog=new T.Fog(h,32,270);stars.visible=mode===1;sun.material.color.setHex(mode===1?0xe3efff:0xffdfaa);sun.position.y=mode===1?36:17;sunLight.intensity=mode===1?.7:2.1;
+    scene.fog=new T.Fog(h,85,390);fill.intensity=mode===1?1.35:1.8;bounce.intensity=mode===1?.95:1.2;stars.visible=mode===1;sun.material.map=mode===1?moonMap:null;sun.material.needsUpdate=true;sun.material.color.setHex(mode===1?0xe3efff:0xffdfaa);sun.position.y=mode===1?36:17;sunLight.intensity=mode===1?.9:2.1;
   }
   $('light').onchange=theme;theme();
   let room=0,pose='',zoom=false,helm=false,velocity=0,angle=0,drag=null,audio=null,muted=true;
@@ -205,11 +198,11 @@ export function startBlueHorizon(T, identity={}) {
     room=i;pose='';zoom=false;helm=false;$('helm').hidden=true;
     rooms.forEach((r,j)=>{if(r.group)r.group.visible=i===j;tabs[j].setAttribute('aria-pressed',String(i===j));});
     const r=rooms[i];
-    if(!r.group){r.group=new T.Group();r.build(r.group);scene.add(r.group);}
+    if(!r.group){r.group=new T.Group();r.build(r.group);furnishings.build(r.group,i);bake(r.group);scene.add(r.group);}
     avatar.position.set(0,3,i===3?-2.6:-.6);avatar.rotation.y=Math.PI;
     camera.position.set(0,6.3,5);
     uniforms.wake.value=i===2?1:0;
-    $('place').textContent=r.name+' · '+(identity.nickname||'여행자')+'의 항해';$('hint').textContent=i===2?'배가 남긴 물결을 바라보세요':'조이스틱 또는 방향키로 산책';
+    coast.set(i,Number($('light').value)===1);$('place').textContent=r.name+' · '+(identity.nickname||'여행자')+'의 항해';$('hint').textContent=i===2?'선미 너머 향기마을 · 우리가 출발한 곳':i===1?'선수 너머 별빛 캠핑장 · 같은 바다의 이야기':'조이스틱 또는 방향키로 산책';
     $('actions').replaceChildren();r.actions.forEach(t=>button($('actions'),t,()=>action(t)));
     button($('actions'),'👋 인사',()=>{greeting=1.3;});
   }
@@ -252,19 +245,15 @@ export function startBlueHorizon(T, identity={}) {
       if(!(room===0&&nextX>3.65&&nextZ>-1.8&&nextZ<3.8))avatar.position.set(nextX,3,nextZ);
       avatar.rotation.y=Math.atan2(wish.x,wish.y);
     }
-    legs.forEach((leg,i)=>{leg.rotation.x=walking?Math.sin(elapsed*13+i*Math.PI)*.62:pose.includes('앉기')?-1.25:0;});
-    avatar.position.y=pose.includes('앉기')?3.36:3+(walking?Math.abs(Math.sin(elapsed*13))*.057:0);
-    avatar.rotation.x=pose.includes('기대기')?.16:0;
-    greeting=Math.max(0,greeting-dt);
-    avatar.children[4].rotation.z=greeting?1.85+.3*Math.sin(elapsed*19):0;
+    avatar.position.y=pose.includes('앉기')?3.36:3;avatar.rotation.x=pose.includes('기대기')?.12:0;
+    greeting=Math.max(0,greeting-dt);animateAvatar(avatar,{motion:walking?'walk':pose.includes('앉기')?'sit':'idle',emote:greeting?'wave':null,emoteAt:greeting?elapsed*1000:0},elapsed);
     avatar.visible=!zoom;
     if(drag===null){angle+=velocity*dt;velocity*=Math.exp(-5*dt);}
     wheel.rotation.z=-angle;$('helm').style.transform=helm?'rotate('+angle+'rad)':'';
     uniforms.time.value=elapsed;
-    harbor.position.set(room===2?20:-66,0,-92-(room===2?Math.min(elapsed*.32,115):0));
-    harbor.rotation.y=room===2?.06:-.2;
+    coast.set(room,Number($('light').value)===1);
     wildlife.forEach((g,i)=>{
-      const t=(elapsed+i*1.1)%32;
+      const t=(elapsed+i*19)%160;
       g.visible=(room===1||room===2)&&t>4&&t<12;
       g.position.set(-18+(t-4)*3.8,-.48+Math.max(0,Math.sin((t-4)*(i===2?1:2.8)))*1.35,-23-i*5);
       g.rotation.y=1.3;g.rotation.x=Math.cos(t*2.8)*.25;
@@ -275,5 +264,5 @@ export function startBlueHorizon(T, identity={}) {
     camera.lookAt(zoom?-11:avatar.position.x*.49,zoom?3.9:room===2?2.7:3.95,zoom?-90:avatar.position.z-7.3);
     renderer.render(scene,camera);
   });
-  return {enter,get state(){return {room:rooms[room].name,position:avatar.position.toArray(),pose,helm,zoom,drawCalls:renderer.info.render.calls,geometries:renderer.info.memory.geometries};},dispose(){renderer.setAnimationLoop(null);removeEventListener('resize',resize);const geometries=new Set(),mats=new Set(),textures=new Set();scene.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of [o.material].flat().filter(Boolean)){mats.add(m);if(m.map)textures.add(m.map);}});geometries.forEach(g=>g.dispose());textures.forEach(t=>t.dispose());mats.forEach(m=>m.dispose());audio?.close().catch(()=>{});renderer.dispose();renderer.forceContextLoss();}};
+  return {enter,get state(){return {room:rooms[room].name,position:avatar.position.toArray(),pose,helm,zoom,avatar:{kind:identity.appearance?.kind||0,originalGLB:!!avatar.userData.originalGLB,system:'archive-shared'},coast:coast.state,drawCalls:renderer.info.render.calls,geometries:renderer.info.memory.geometries};},dispose(){renderer.setAnimationLoop(null);disposeAvatar(avatar);removeEventListener('resize',resize);const geometries=new Set(),mats=new Set(),textures=new Set();scene.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of [o.material].flat().filter(Boolean)){mats.add(m);if(m.map)textures.add(m.map);}});geometries.forEach(g=>g.dispose());textures.forEach(t=>t.dispose());mats.forEach(m=>m.dispose());audio?.close().catch(()=>{});renderer.dispose();renderer.forceContextLoss();}};
 }
