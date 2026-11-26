@@ -8,7 +8,7 @@ export function buildCruiseDetails(ship,{box,mesh,cylinder,label}){
  glass.forceSinglePass=true;
  const paneGeo=new T.PlaneGeometry(1,1);
  function pane(x,y,z,w,h,yaw=0){const p=new T.Mesh(paneGeo,glass);p.position.set(x,y,z);p.scale.set(w,h,1);p.rotation.y=yaw;p.userData.bakeGlass=true;ship.add(p);return p;}
- for(const zone of SHIP_ZONES.slice(3)){
+ for(const zone of SHIP_ZONES.slice(4,5)){
   // Tall panoramic glazing, fine mullions and a softly lit, coffered ceiling.
   for(const side of [-1,1])for(let z=-14;z<=14;z+=4){pane(side*12.85,UPPER_Y+2.1,zone.z+z,3.85,3.4,Math.PI/2);box(ship,white,side*12.85,UPPER_Y+2.1,zone.z+z+2,.075,4.2,.075);}
   for(let x=-10.5;x<=10.5;x+=3.5){pane(x,UPPER_Y+2.2,zone.z+(zone.z<0?-16.45:16.45),3.35,3.5);box(ship,white,x+1.75,UPPER_Y+2.2,zone.z+(zone.z<0?-16.45:16.45),.075,4.4,.12);}

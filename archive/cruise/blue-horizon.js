@@ -1,4 +1,4 @@
-import {SHIP_ZONES,DECK_Y,UPPER_Y,SHIP_LENGTH,SHIP_BEAM,CAPTAIN_CONTACT,findShipPath,shipStep,shipZone} from './ship-layout.js';
+import {SHIP_ZONES,DECK_Y,UPPER_Y,CABIN_Y,ROOF_Y,SHIP_LENGTH,SHIP_BEAM,CAPTAIN_CONTACT,findShipPath,shipStep,shipZone} from './ship-layout.js';
 import {buildShipConnections} from './ship-architecture.js';
 import {createAvatar,animateAvatar,disposeAvatar} from '../src/avatar.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
@@ -7,6 +7,8 @@ import {buildCruiseDetails} from './ship-details.js';
 import {CruiseVoyage} from './voyage-session.js';
 import {createBridgeCrew} from './bridge-crew.js';
 import {createCoastline} from './coastline.js';
+import {buildMaritimeInteriors} from './maritime-interiors.js';
+import {CruiseChart} from './navigation-chart.js';
 // Adapted from the owner-provided BLUE HORIZON prototype. Original source SHA-256: c4af2aaa9d7afd2dbee26bfbd9bd096c2002631c8530213dd9f9dd48e119a7a6
 const $=id=>document.getElementById(id);
 export function startBlueHorizon(T, identity={}, ui={}) {
@@ -75,13 +77,13 @@ export function startBlueHorizon(T, identity={}, ui={}) {
   starGeo.setAttribute('position',new T.Float32BufferAttribute(starPositions,3));
   const stars=new T.Points(starGeo,new T.PointsMaterial({color:0xffefd8,size:.48}));scene.add(stars);
   const environmentRoot=new T.Group();scene.add(environmentRoot);const coast=createCoastline(environmentRoot),furnishings=cruiseFurnishings();
-  function rail(p,x1,z1,x2,z2){
+  function rail(p,x1,z1,x2,z2,base=DECK_Y){
     const length=Math.hypot(x2-x1,z2-z1),angle=-Math.atan2(z2-z1,x2-x1);
     for(const [y,h,c] of [[1.05,.12,teak],[.69,.05,ivory],[.38,.05,ivory]]){
-      const m=box(p,c,(x1+x2)/2,DECK_Y+y,(z1+z2)/2,length,h,.09);m.rotation.y=angle;
+      const m=box(p,c,(x1+x2)/2,base+y,(z1+z2)/2,length,h,.09);m.rotation.y=angle;
     }
     const count=Math.ceil(length/1.7);
-    for(let i=0;i<=count;i++)box(p,ivory,x1+(x2-x1)*i/count,DECK_Y+.5,z1+(z2-z1)*i/count,.08,1,.08);
+    for(let i=0;i<=count;i++)box(p,ivory,x1+(x2-x1)*i/count,base+.5,z1+(z2-z1)*i/count,.08,1,.08);
   }
   function seat(p,x,z,c=teak,w=1.7){
     box(p,c,x,3.46,z,w,.14,.52);box(p,c,x,3.79,z-.23,w,.48,.12);
@@ -102,7 +104,7 @@ export function startBlueHorizon(T, identity={}, ui={}) {
     const sprite=new T.Sprite(new T.SpriteMaterial({map:texture}));sprite.position.set(x,y,z);sprite.scale.set(width,width/4,1);p.add(sprite);
   }
   // Merge static opaque furniture by material; preserve wheel joints and alpha glass.
-  function bake(root){const groups=new Map();root.updateMatrixWorld(true);root.traverse(o=>{if(!o.isMesh||(o.material.transparent&&!o.userData.bakeGlass)||o===wheel||wheel.getObjectById(o.id))return;const m=o.matrixWorld.clone().premultiply(root.matrixWorld.clone().invert());const parts=groups.get(o.material)||[];parts.push({o,g:(o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone()).applyMatrix4(m)});groups.set(o.material,parts);});for(const [mat,parts]of groups){if(parts.length<2){parts.forEach(p=>p.g.dispose());continue;}const merged=mergeGeometries(parts.map(p=>p.g),false);parts.forEach(p=>{p.g.dispose();p.o.removeFromParent();});root.add(new T.Mesh(merged,mat));}}
+  function bake(root){const groups=new Map();root.updateMatrixWorld(true);root.traverse(o=>{let dynamic=false;for(let a=o;a&&a!==root;a=a.parent)if(a.userData.dynamic)dynamic=true;if(dynamic||!o.isMesh||(o.material.transparent&&!o.userData.bakeGlass)||o===wheel||wheel.getObjectById(o.id))return;const m=o.matrixWorld.clone().premultiply(root.matrixWorld.clone().invert());const parts=groups.get(o.material)||[];parts.push({o,g:(o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone()).applyMatrix4(m)});groups.set(o.material,parts);});for(const [mat,parts]of groups){if(parts.length<2){parts.forEach(p=>p.g.dispose());continue;}const merged=mergeGeometries(parts.map(p=>p.g),false);parts.forEach(p=>{p.g.dispose();p.o.removeFromParent();});root.add(new T.Mesh(merged,mat));}}
   const wheel=new T.Group();
   const rooms=[
     {name:'메인 갑판',build(p){
@@ -153,7 +155,11 @@ export function startBlueHorizon(T, identity={}, ui={}) {
         orb(p,0xffcc80,x,5.42,-5.8,.29,.16,.29,true);
         orb(p,0xffad71,x,3.96,-5.8,.09,.12,.09,true);p=tableRoot;
       }
-    },actions:['창가 앉기']}
+    },actions:['창가 앉기']},
+    {name:'좌현 윙',build(){},actions:['바다 바라보기']},
+    {name:'우현 윙',build(){},actions:['바다 바라보기']},
+    {name:'레이더 데크',build(){},actions:['바다 바라보기']},
+    {name:'나의 객실',build(){},actions:['침대에 쉬기','독서하기']}
   ];
   const avatar=createAvatar(identity.appearance);scene.add(avatar);
   const wildlife=[0,1,2].map(i=>{
@@ -194,6 +200,10 @@ export function startBlueHorizon(T, identity={}, ui={}) {
     pose='';zoom=false;helm=false;overview=false;harborView=false;document.body.classList.remove('cruise-overview');$('ship-overview').textContent='크루즈 전경';$('ship-overview').setAttribute('aria-pressed','false');$('helm').hidden=true;pauseInputs();autoPath=path;arrival=after;destination={...target,label};$('hint').textContent=label+'로 걸어가는 중 · 방향키나 조이스틱을 움직이면 직접 조작해요';
   }
   function action(text){
+    if(text==='항해 지도'){chart.open();return;}
+    if(text==='독서하기'){const book=document.getElementById('camp-borrowed-book');if(book&&!book.hidden)book.click();else $('hint').textContent='도서관이나 텐트에서 책을 빌려오면 객실에서도 펼칠 수 있어요.';return;}
+    if(text==='침대에 쉬기'){routeTo({x:6.25,z:3.6,y:CABIN_Y},{pose:'침대 옆에 앉기'},'침대');return;}
+    if(text==='바다 바라보기'){pose=pose?'':'난간 기대기';return;}
     if(text==='선장 만나기'){routeTo(CAPTAIN_CONTACT,{captain:true},'선장');return;}
     if(text==='기적 듣기'){tone('horn');$('hint').textContent=muted?'소리를 켜면 개인용 뱃고동을 들을 수 있어요.':'개인용 뱃고동 체험';return;}
     if(text==='조타 체험'){if(helm){helm=false;$('helm').hidden=true;return;}routeTo(local(0,-9.85),{helm:true},'조타륜');return;}
@@ -203,7 +213,7 @@ export function startBlueHorizon(T, identity={}, ui={}) {
     routeTo(target,{pose:text},text);
   }
   function showZone(i){
-    room=i;document.body.classList.toggle('cruise-bridge',i===3);tabs.forEach((t,j)=>t.setAttribute('aria-pressed',String(i===j)));$('actions').replaceChildren();rooms[i].actions.forEach(t=>button($('actions'),t,()=>action(t)));if(i===3)button($('actions'),'선장 만나기',()=>action('선장 만나기'));button($('actions'),'👋 인사',()=>{greeting=1.3;});
+    room=i;document.body.classList.toggle('cruise-bridge',i===3);tabs.forEach((t,j)=>t.setAttribute('aria-pressed',String(i===j)));$('actions').replaceChildren();rooms[i].actions.forEach(t=>button($('actions'),t,()=>action(t)));if(i===3){button($('actions'),'선장 만나기',()=>action('선장 만나기'));}button($('actions'),'👋 인사',()=>{greeting=1.3;});
   }
   function enter(i){if(!SHIP_ZONES[i])return;routeTo(SHIP_ZONES[i].target,null,SHIP_ZONES[i].name);}
   function pointer(el,move,end){
@@ -239,9 +249,10 @@ export function startBlueHorizon(T, identity={}, ui={}) {
   addEventListener('keyup',e=>keys.delete(e.key));addEventListener('blur',()=>keys.clear());
   let greeting=0,previous=performance.now(),elapsed=0,frameStart=performance.now(),frameCount=0,fps=0;
   const wish=new T.Vector2(),target=new T.Vector3();
-  const ship=new T.Group();scene.add(ship);rooms.forEach((r,i)=>{const zone=SHIP_ZONES[i];r.group=new T.Group();r.group.userData={zone:i,upper:i>=3};r.group.position.set(0,zone.y-3,zone.z);r.build(r.group);furnishings.build(r.group,i);ship.add(r.group);});const connections=buildShipConnections(ship,{box,mesh,cylinder,rail,label});const details=buildCruiseDetails(ship,{box,mesh,cylinder,label});bake(ship);avatar.position.set(0,DECK_Y,4);avatar.rotation.y=Math.PI;showZone(0);
+  const ship=new T.Group();scene.add(ship);rooms.forEach((r,i)=>{const zone=SHIP_ZONES[i];r.group=new T.Group();r.group.userData={zone:i,upper:i>=3};r.group.position.set(0,zone.y-3,zone.z);r.build(r.group);if(i<5)furnishings.build(r.group,i);ship.add(r.group);});const connections=buildShipConnections(ship,{box,mesh,cylinder,rail,label});const details=buildCruiseDetails(ship,{box,mesh,cylinder,label});const maritime=buildMaritimeInteriors(ship,{box,mesh,cylinder,label});bake(ship);avatar.position.set(0,DECK_Y,4);avatar.rotation.y=Math.PI;showZone(0);
   crew=createBridgeCrew(scene);
   sailing=new CruiseVoyage(environmentRoot,{pause:pauseInputs,player:()=>({room,position:avatar.position}),meetCaptain:()=>action('선장 만나기'),watchHarbor:()=>{pauseInputs();harborView=true;overview=false;document.body.classList.add('cruise-overview');$('ship-overview').textContent='갑판으로 돌아가기';$('ship-overview').setAttribute('aria-pressed','true');},depart:route=>{$('light').value='2';try{localStorage.setItem('bookscents-cruise-light-v1','2');}catch{}theme();uniforms.deep.value.set(route.id==='seychelles'?'#187c85':route.id==='madeira'?'#17445e':'#1b5c74');tone('horn');}});
+  const chart=new CruiseChart(scene,{pause:pauseInputs,state:()=>sailing.state,canvas:renderer.domElement,camera,viewer:()=>({x:avatar.position.x,y:floorY,z:avatar.position.z})});
   renderer.setAnimationLoop(now=>{
     const dt=Math.min(.04,(now-previous)/1000);previous=now;elapsed+=dt;
     const has=(a,b)=>Number(keys.has(a)||keys.has(b));ui.onFrame?.();const blocked=!!document.querySelector('dialog[open]');
@@ -266,8 +277,8 @@ export function startBlueHorizon(T, identity={}, ui={}) {
       g.position.set(-18+(t-4)*3.8,-.48+Math.max(0,Math.sin((t-4)*(i===2?1:2.8)))*1.35,-23-i*5);
       g.rotation.y=1.3;g.rotation.x=Math.cos(t*2.8)*.25;
     });
-    details.update(elapsed);const interior=room>=3&&floorY>=UPPER_Y-.05;const turn=(room===2||room===4?Math.PI:0)+orbit;cameraTurn=T.MathUtils.damp(cameraTurn,turn,2,dt);const forward=new T.Vector3(-Math.sin(cameraTurn),0,-Math.cos(cameraTurn));target.copy(avatar.position).addScaledVector(forward,zoom?.5:interior?-7.2:-9.3);if(interior&&!zoom){target.x+=Math.cos(cameraTurn)*1.35;target.z-=Math.sin(cameraTurn)*1.35;}target.y=floorY+(zoom?1.45:interior?2.8:5.0);if(harborView)target.set(112,DECK_Y+24,-35);if(overview){const fit=innerWidth<innerHeight?1.48:1;target.set(100*fit,88*fit,135*fit);}camera.position.lerp(target,1-Math.exp(-dt*(overview?3:7)));camera.fov=T.MathUtils.lerp(camera.fov,zoom?24:harborView?(innerWidth<600?86:58):innerWidth<600?65:52,1-Math.exp(-dt*7));camera.updateProjectionMatrix();const look=avatar.position.clone().addScaledVector(forward,zoom?70:12);look.y=floorY+(zoom?.9:1);if(overview)look.set(0,8,0);if(harborView)look.set(0,35,-390);camera.lookAt(look);
+    details.update(elapsed);maritime.update(elapsed,avatar.position);chart.frame();const bridgeInside=floorY<ROOF_Y-.5&&floorY>UPPER_Y-.1&&Math.abs(avatar.position.x)<10.6&&avatar.position.z< -28.1&&avatar.position.z> -50.2,cabinInside=floorY<CABIN_Y+.5,interior=bridgeInside||cabinInside||room===4;const turn=(room===2||room===4?Math.PI:0)+orbit;cameraTurn=T.MathUtils.damp(cameraTurn,turn,2,dt);const forward=new T.Vector3(-Math.sin(cameraTurn),0,-Math.cos(cameraTurn));target.copy(avatar.position).addScaledVector(forward,zoom?.5:interior?-7.2:-9.3);if(interior&&!zoom){target.x+=Math.cos(cameraTurn)*1.35;target.z-=Math.sin(cameraTurn)*1.35;}target.y=floorY+(zoom?1.45:cabinInside?2.1:interior?2.8:5.0);if(bridgeInside&&!zoom){target.x=T.MathUtils.clamp(target.x,-10,10);target.z=T.MathUtils.clamp(target.z,-49.7,-28.6);}if(cabinInside&&!zoom){target.y=CABIN_Y+2.1;if(avatar.position.x>4&&avatar.position.z>0&&avatar.position.z<11){target.x=T.MathUtils.clamp(target.x,4.35,11.75);target.z=T.MathUtils.clamp(target.z,.7,10.3);}else{target.x=T.MathUtils.clamp(target.x,-12,3.1);target.z=T.MathUtils.clamp(target.z,-20,20);}}if(room===1&&avatar.position.z< -51.5){target.z=Math.min(target.z,-52.5);target.x+=3.5;target.y=floorY+3.6;}if(room===2&&avatar.position.z>51.5){target.z=Math.max(target.z,52.5);target.x+=3.5;target.y=floorY+3.6;}if(harborView)target.set(112,DECK_Y+24,-35);if(overview){const fit=innerWidth<innerHeight?1.48:1;target.set(100*fit,88*fit,135*fit);}camera.position.lerp(target,1-Math.exp(-dt*(overview?3:7)));camera.fov=T.MathUtils.lerp(camera.fov,zoom?24:harborView?(innerWidth<600?86:58):innerWidth<600?65:52,1-Math.exp(-dt*7));camera.updateProjectionMatrix();const look=avatar.position.clone().addScaledVector(forward,zoom?70:12);look.y=floorY+(zoom?.9:1);if((room===1&&avatar.position.z< -51.5)||(room===2&&avatar.position.z>51.5)){look.copy(avatar.position).addScaledVector(forward,2.5);look.y=floorY+.9;}if(overview)look.set(0,8,0);if(harborView)look.set(0,35,-390);camera.lookAt(look);
     scene.fog.near=overview?260:travel.route?180:140;scene.fog.far=travel.route?(overview?1100:850):(overview?680:480);renderer.render(scene,camera);frameCount++;if(now-frameStart>=1000){fps=frameCount*1000/(now-frameStart);frameCount=0;frameStart=now;}
   });
-  return {enter,pauseInputs,get state(){return {room:rooms[room].name,position:avatar.position.toArray(),pose,helm,zoom,route:{destination:destination?.label||null,points:autoPath.length},deckY:floorY,shipLength:SHIP_LENGTH,fps,shipBeam:SHIP_BEAM,overview,harborView,orbit,pool:true,triangles:renderer.info.render.triangles,stairs:Math.abs(avatar.position.x)>13.6&&floorY>DECK_Y&&floorY<UPPER_Y,avatar:{kind:identity.appearance?.kind||0,originalGLB:!!avatar.userData.originalGLB,system:'archive-shared'},coast:coast.state,voyage:sailing.state,crew:crew.state,drawCalls:renderer.info.render.calls,geometries:renderer.info.memory.geometries};},dispose(){renderer.setAnimationLoop(null);sailing?.dispose();crew?.dispose();disposeAvatar(avatar);removeEventListener('resize',resize);const geometries=new Set(),mats=new Set(),textures=new Set();scene.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of [o.material].flat().filter(Boolean)){mats.add(m);if(m.map)textures.add(m.map);}});geometries.forEach(g=>g.dispose());textures.forEach(t=>t.dispose());mats.forEach(m=>m.dispose());audio?.close().catch(()=>{});environment.dispose();renderer.dispose();renderer.forceContextLoss();}};
+  return {enter,pauseInputs,get state(){return {room:rooms[room].name,position:avatar.position.toArray(),pose,helm,zoom,route:{destination:destination?.label||null,points:autoPath.length},deckY:floorY,shipLength:SHIP_LENGTH,fps,shipBeam:SHIP_BEAM,overview,harborView,orbit,pool:true,triangles:renderer.info.render.triangles,stairs:Math.abs(avatar.position.x)>13.6&&floorY>DECK_Y&&floorY<UPPER_Y,avatar:{kind:identity.appearance?.kind||0,originalGLB:!!avatar.userData.originalGLB,system:'archive-shared'},coast:coast.state,voyage:sailing.state,crew:crew.state,maritime:maritime.state,chart:chart.state,drawCalls:renderer.info.render.calls,geometries:renderer.info.memory.geometries};},dispose(){renderer.setAnimationLoop(null);sailing?.dispose();crew?.dispose();chart?.dispose();maritime.dispose();disposeAvatar(avatar);removeEventListener('resize',resize);const geometries=new Set(),mats=new Set(),textures=new Set();scene.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of [o.material].flat().filter(Boolean)){mats.add(m);if(m.map)textures.add(m.map);}});geometries.forEach(g=>g.dispose());textures.forEach(t=>t.dispose());mats.forEach(m=>m.dispose());audio?.close().catch(()=>{});environment.dispose();renderer.dispose();renderer.forceContextLoss();}};
 }
