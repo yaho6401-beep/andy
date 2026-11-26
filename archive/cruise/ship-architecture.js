@@ -1,3 +1,4 @@
+import {cruiseHullGeometry,hullDeckLevel} from './exterior-hull.js';
 import * as T from 'three';
 import {DECK_Y,UPPER_Y,LOWER_Y,SHIP_STAIRS,SHIP_COLUMNS,SHIP_ZONES,stairLanding,hullHalfBeam,SHIP_LENGTH} from './ship-layout.js';
 // One shaped hull and promenade; the exact same stairs feed pedestrian routing.
@@ -7,10 +8,8 @@ export function buildShipConnections(parent,{box,mesh,cylinder,rail,label}){
  for(let z=-69;z<=69;z++)outline.lineTo(hullHalfBeam(z),z);
  outline.lineTo(0,70);for(let z=69;z>=-69;z--)outline.lineTo(-hullHalfBeam(z),z);outline.closePath();
  // Shape XY rotates into world XZ; the fore/aft asymmetry is preserved.
- const level=z=>Math.abs(z)<=31?DECK_Y:Math.abs(z)>=41?LOWER_Y:DECK_Y+(LOWER_Y-DECK_Y)*(Math.abs(z)-31)/10;
- // Open shell, rather than a solid capped extrusion: lower decks are genuinely below the promenade.
- const vertices=[];for(const side of [-1,1])for(let z=-69;z<69;z++){const a=[side*hullHalfBeam(z),level(z)-.15,z],b=[side*hullHalfBeam(z+1),level(z+1)-.15,z+1],c=[b[0]*.92,1.05,b[2]],d=[a[0]*.92,1.05,a[2]];vertices.push(...a,...b,...c,...a,...c,...d);}
- const hullGeo=new T.BufferGeometry();hullGeo.setAttribute('position',new T.Float32BufferAttribute(vertices,3));hullGeo.computeVertexNormals();const hull=mesh(parent,hullGeo,ivory,0,0,0,1,1,1);hull.material=hull.material.clone();hull.material.side=T.DoubleSide;
+ const level=hullDeckLevel;
+ const hullGeo=cruiseHullGeometry(),hull=new T.Mesh(hullGeo,new T.MeshStandardMaterial({color:'#ffffff',vertexColors:true,metalness:.24,roughness:.44}));parent.add(hull);
  function deckSection(from,to,y,hole){const shape=new T.Shape();shape.moveTo(-hullHalfBeam(from),from);for(let z=from;z<=to;z++)shape.lineTo(hullHalfBeam(z),z);shape.lineTo(-hullHalfBeam(to),to);for(let z=to;z>=from;z--)shape.lineTo(-hullHalfBeam(z),z);shape.closePath();if(hole){const p=new T.Path();p.moveTo(-13.3,6);p.lineTo(-13.3,17);p.lineTo(-10.7,17);p.lineTo(-10.7,6);p.closePath();shape.holes.push(p);}const g=new T.ShapeGeometry(shape);g.rotateX(Math.PI/2);for(let i=0;i<g.index.count;i+=3){const a=g.index.getX(i+1);g.index.setX(i+1,g.index.getX(i+2));g.index.setX(i+2,a);}g.computeVertexNormals();g.translate(0,y,0);mesh(parent,g,teak,0,0,0,1,1,1);}
  deckSection(-31,31,DECK_Y,true);deckSection(-70,-41,LOWER_Y);deckSection(41,70,LOWER_Y);
  for(const s of [-1,1])for(const [a,b]of [[-13.5,-9],[-6,-1],[1,6],[9,13.5]]){box(parent,ivory,(a+b)/2,DECK_Y-.15,s*36,b-a,.3,10);}

@@ -6,7 +6,9 @@ export function coastalGeometry(waterline=.34){
  for(let i=0;i<p.count;i++){const x=p.getX(i),u=x/930;uv.setX(i,x/1860+.5);p.setXYZ(i,x,p.getY(i)+620*(.5-waterline),-25-285*u*u);}
  p.needsUpdate=true;g.computeVertexNormals();g.computeBoundingSphere();return g;
 }
-export function harborAtmosphere(distance,extra=0){return {visibility:1-smooth(700,1320,distance+extra),haze:smooth(350,1200,distance+extra)*.78};}
+// Finish fading before the 1200m camera clip plane can leave a visible straight cut.
+export const COAST_FADE_NEAR=500,COAST_FADE_FAR=1040;
+export function harborAtmosphere(distance,extra=0){return {visibility:1-smooth(COAST_FADE_NEAR,COAST_FADE_FAR,distance+extra),haze:smooth(300,COAST_FADE_FAR,distance+extra)*.9};}
 // Inter-port travel hides scene handover in open sea, well before the new coast is legible.
 export function harborSceneFor(state,p){
  if(p.phase==='home')return {id:null,extra:0};
