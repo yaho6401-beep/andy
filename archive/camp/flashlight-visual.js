@@ -1,12 +1,12 @@
 import * as T from 'three';
-import {FLASHLIGHTS,FLASHLIGHT_ANGLE,FLASHLIGHT_RANGE} from './flashlight-state.js';
+import {FLASHLIGHTS,FLASHLIGHT_ANGLE,FLASHLIGHT_RANGE,FLASHLIGHT_INTENSITY} from './flashlight-state.js';
 import {campHeight,CAMP_OBSTACLES} from './layout.js';
 // One unshadowed light, one faint cone and shared small torch geometries.
 export function createCampFlashlight(parent){
  const root=new T.Group();root.name='camp-flashlight';parent.add(root);const geos=[],mats=[],own=g=>(geos.push(g),g),mat=o=>{const m=new T.MeshStandardMaterial(o);mats.push(m);return m;},body=mat({color:'#465b58',roughness:.75}),metal=mat({color:'#b4baa8',metalness:.2,roughness:.55}),lens=mat({color:'#ecdeb1',emissive:'#e5c881',emissiveIntensity:.25}),geo=own(new T.CylinderGeometry(.045,.045,.24,10)),headGeo=own(new T.CylinderGeometry(.075,.05,.09,12)),lensGeo=own(new T.CircleGeometry(.061,12));
  function torch(){const g=new T.Group();for(const [geometry,material,y]of [[geo,body,0],[headGeo,metal,.145],[lensGeo,lens,.192]]){const m=new T.Mesh(geometry,material);m.position.y=y;if(geometry===lensGeo)m.rotation.x=-Math.PI/2;g.add(m);}root.add(g);return g;}
  const finds=FLASHLIGHTS.map(spot=>{const mesh=torch();mesh.position.set(spot.x,.22,spot.z);mesh.rotation.z=-1.3;return {spot,mesh};}),held=torch();held.visible=false;
- const light=new T.SpotLight('#ffe6b6',27,FLASHLIGHT_RANGE,FLASHLIGHT_ANGLE/2*Math.PI/180,.5,1.4);light.castShadow=false;light.visible=false;root.add(light,light.target);
+ const light=new T.SpotLight('#ffe6b6',FLASHLIGHT_INTENSITY,FLASHLIGHT_RANGE,FLASHLIGHT_ANGLE/2*Math.PI/180,.62,1.25);light.castShadow=false;light.visible=false;root.add(light,light.target);
  const beamMat=new T.MeshBasicMaterial({color:'#f0ddb2',transparent:true,opacity:.026,forceSinglePass:true,depthWrite:false,side:T.DoubleSide,blending:T.AdditiveBlending,toneMapped:false});mats.push(beamMat);const beam=new T.Mesh(own(new T.ConeGeometry(1,1,24,1,true)),beamMat);beam.visible=false;beam.frustumCulled=false;root.add(beam);
  const up=new T.Vector3(0,1,0),down=new T.Vector3(0,-1,0),direction=new T.Vector3(),target=new T.Vector3();let pack,carrier,enabled=false,range=FLASHLIGHT_RANGE;
  return {set(value,actor,allowed=true){pack=value;carrier=actor;enabled=!!allowed;},update(){const p=carrier?.mesh?.position,yaw=carrier?.mesh?.rotation.y||0,standing=p&&!carrier.state.seat&&!carrier.state.swimming&&!carrier.state.voyage&&!carrier.state.seaRescue,owned=pack?.flashlight===true,on=owned&&standing&&enabled&&carrier.state.room==='camp'&&carrier.state.flashlightOn===true;for(const f of finds)f.mesh.visible=!owned;held.visible=!!(owned&&standing&&enabled&&carrier.state.room==='camp');light.visible=beam.visible=!!on;if(!p)return;
