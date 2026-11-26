@@ -63,7 +63,7 @@ export function createFireVisual(parent){
    smoke.material.uniforms.uHeight.value=1.6+heat*1.05+burst*.3;smoke.material.uniforms.uWidth.value=1.5+heat*.5;smoke.visible=!reduced;
    halo.material.uniforms.uHeight.value=.6+heat*.95+burst*.25;
    const flicker=reduced?0:Math.sin(time*7.3)*.1+Math.sin(time*11.7+1)*.07+Math.sin(time*2.4)*.12;
-   light.intensity=Math.min(12,.8+heat*4+burst+flicker*heat);light.position.x=reduced?0:Math.sin(time*2.7)*.07;light.position.z=reduced?0:Math.cos(time*3.2)*.05;
+   light.intensity=Math.min(95,.2+Math.pow(Math.max(.08,heat),1.6)*15+burst*3+flicker*heat*2);light.distance=7+Math.min(3,heat)*4;light.position.x=reduced?0:Math.sin(time*2.7)*.07;light.position.z=reduced?0:Math.cos(time*3.2)*.05;
    const flight=(throwEvent?.flightMs||FIRE.flightMs)/1000,flying=age>=0&&age<flight+(throwEvent?.missed?2.2:0);
    const prop=throwEvent?.kind==='wood'?thrownLog:throwEvent?.kind==='burnt'?burntThrow:branch;
    branch.visible=flying&&prop===branch;thrownLog.visible=flying&&prop===thrownLog;burntThrow.visible=flying&&prop===burntThrow;

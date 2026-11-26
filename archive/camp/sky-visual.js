@@ -20,6 +20,7 @@ export function createObservingSky(parent){
  }
  return {
   set(value){active=!!value;root.visible=active;if(active){calculate();if(!loaded){loaded=true;texture=new T.TextureLoader().load('/assets/camp/nasa-lro-moon-1k.jpg',t=>{if(disposed){t.dispose();return;}t.colorSpace=T.SRGBColorSpace;moonMat.map=t;moonMat.needsUpdate=true;});}}else aim=null;},
+  setMoonOpacity(value){moonMat.transparent=true;moonMat.opacity=value;},
   setMode(value){if(!['auto','now','tonight','dawn'].includes(value))return;mode=value;calculate();},
   get target(){return aim;},get moonDirection(){return moonDirection;},
   update(time,camera){if(!active)return;if(Date.now()-lastCalc>15000)calculate();root.position.copy(camera.position);camera.getWorldDirection(forward);let best=.982;aim=null;for(const target of SKY_TARGETS){for(const id of target.ids){const p=vectors.get(id);if(!p?.visible)continue;const score=p.vector.dot(forward);if(score>best){best=score;aim=target;}}}
