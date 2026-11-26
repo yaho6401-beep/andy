@@ -5,3 +5,8 @@
 /* Keep the return label intact on narrow phones. */
 #return-camp{white-space:nowrap;word-break:keep-all}
 @media(max-width:360px){#return-camp{font-size:10px;max-width:none;letter-spacing:-.02em}}
+
+/* Maritime controls: restrained glass, generous readable labels, room to see the sea. */
+body{font-family:system-ui,-apple-system,'Segoe UI',sans-serif}header small{letter-spacing:.25em;color:#e2d5ba}header h1{font-weight:500;letter-spacing:.07em}button,select,#return-camp{border-color:#dce8e330;background:#102638b8;backdrop-filter:blur(10px)}button:hover{background:#254252dc}button[aria-pressed=true]{background:#e9e1cf;color:#253b44;border-color:#e9e1cf}.row button{border-radius:8px;padding:8px 14px;min-height:38px;font-size:13px}#rooms{gap:6px}#rooms button{letter-spacing:.02em}#hint{background:#122b3b80;font-size:12px;font-weight:400}#ship-overview{border-color:#ddcb9c70;color:#f1e7d0}#ship-overview[aria-pressed=true]{color:#233943}nav{gap:7px}nav select,nav button{min-height:34px;font-size:12px}#pad{border-color:#f4e5c55c;background:#0f293b40}#knob{background:#f0e4cac4}@media(max-width:360px){.row button{font-size:12px;padding:7px 10px}nav{gap:4px}nav button,nav select{font-size:11px;padding:6px 8px}}
+
+.cruise-overview #pad,.cruise-overview #actions,.cruise-overview #hint{visibility:hidden;pointer-events:none}
