@@ -1,3 +1,4 @@
+import {TentReading} from '../camp/reading-session.js';
 import * as T from 'three';
 import {startBlueHorizon} from './blue-horizon.js';
 import {loadArt} from '../src/art-library.js';
@@ -7,10 +8,12 @@ import {loadIdentity} from '../src/identity.js';
 const params=new URLSearchParams(location.search),returnURL=new URL('/archive/?start=camp-shore',location.origin);
 if(params.get('soloPreview')==='1')returnURL.searchParams.set('soloPreview','1');
 document.getElementById('return-camp').href=returnURL.pathname+returnURL.search;
-let app;
+let app,reader,toastTimer;
+function toast(text){const el=document.getElementById('cruise-reading-status');el.textContent=text;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,3200);}
 try{
  await loadArt();
- app=startBlueHorizon(T,loadIdentity());
+ app=startBlueHorizon(T,loadIdentity(),{onFrame:()=>reader?.frame()});
+ reader=new TentReading({state:()=>({joined:true,room:'cruise'}),focused:()=>true,stopInputs:()=>app.pauseInputs(),toast});
  globalThis.BlueHorizonDiagnostics={get state(){return app.state;}};
  document.getElementById('loading').hidden=true;
 }catch(e){
@@ -18,6 +21,6 @@ try{
  const error=document.getElementById('error');error.hidden=false;
  error.textContent='이 브라우저에서 크루즈를 열지 못했어요. 최신 브라우저로 다시 시도하거나 캠핑장으로 돌아가 주세요.';
 }
-window.addEventListener('pagehide',()=>app?.dispose(),{once:true});
+window.addEventListener('pagehide',()=>{reader?.dispose();clearTimeout(toastTimer);app?.dispose();},{once:true});
 // Both worlds release WebGL when leaving. A BFCache restore needs a fresh scene.
 window.addEventListener('pageshow',e=>{if(e.persisted)location.reload();});
