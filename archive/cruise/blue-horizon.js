@@ -62,12 +62,14 @@ export function startBlueHorizon(T, identity={}, ui={}) {
       float foam=wake*smoothstep(0.,2.,z)*exp(-z*.018)*(center*.85+arms*.4)*smoothstep(.32,.9,cells*.75+grain*.25);
       c=mix(c,vec3(.71,.92,.91),clamp(foam,0.,.84));
       gl_FragColor=vec4(mix(c,sky,smoothstep(260.,1000.,dist)),1.);
+      #include <tonemapping_fragment>
       #include <colorspace_fragment>
     }`}));
   water.rotation.x=-Math.PI/2;scene.add(water);
-  const horizon=new T.Color(), top=new T.Color();
+  const horizon=new T.Color(), top=new T.Color(), harborSea=new T.Color();
   const dome=new T.Mesh(new T.SphereGeometry(390,24,14),new T.ShaderMaterial({side:T.BackSide,depthWrite:false,depthTest:false,uniforms:{horizon:{value:horizon},top:{value:top}},vertexShader:'varying vec3 v;void main(){v=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:`varying vec3 v;uniform vec3 horizon,top;void main(){gl_FragColor=vec4(mix(horizon,top,pow(clamp(normalize(v).y*2.,0.,1.),.45)),1.);
-  #include <colorspace_fragment>
+  #include <tonemapping_fragment>
+      #include <colorspace_fragment>
   }`}));
   dome.renderOrder=-1000;scene.add(dome);
   const moonMap=new T.TextureLoader().load('/assets/camp/nasa-lro-moon-1k.jpg');moonMap.colorSpace=T.SRGBColorSpace;const sun=mesh(scene,new T.SphereGeometry(1,40,24),0xffe0a5,-83,17,-198,6,6,6,true);sun.material=sun.material.clone();sun.material.map=moonMap;sun.material.color.set('#dce8ed');
@@ -176,7 +178,7 @@ export function startBlueHorizon(T, identity={}, ui={}) {
   function theme(){
     const mode=Number($('light').value), [h,t,d,s]=themes[mode];
     horizon.setHex(h);top.setHex(t);uniforms.sky.value.copy(horizon);uniforms.deep.value.setHex(d);uniforms.shine.value.setHex(s);
-    scene.fog=new T.Fog(h,140,480);fill.intensity=mode===1?1.35:1.8;bounce.intensity=mode===1?.95:1.2;stars.visible=mode===1;sun.material.map=mode===1?moonMap:null;sun.material.needsUpdate=true;sun.material.color.setHex(mode===1?0xe3efff:0xffdfaa);sun.position.y=mode===1?36:17;sunLight.intensity=mode===1?.9:2.1;
+    scene.fog=new T.Fog(h,140,480);fill.intensity=mode===1?1.35:1.8;bounce.intensity=mode===1?.95:1.2;stars.visible=mode===1;sun.material.map=mode===1?moonMap:null;sun.material.needsUpdate=true;sun.material.color.setHex(mode===1?0xe3efff:0xffdfaa);sun.position.y=mode===1?86:mode===2?145:17;sunLight.intensity=mode===1?.9:2.1;
   }
   try{const saved=localStorage.getItem('bookscents-cruise-light-v1');if(['0','1','2'].includes(saved))$('light').value=saved;}catch{}$('light').onchange=()=>{try{localStorage.setItem('bookscents-cruise-light-v1',$('light').value);}catch{}theme();};theme();
   let sailing=null,crew=null;
@@ -253,7 +255,7 @@ export function startBlueHorizon(T, identity={}, ui={}) {
   const wish=new T.Vector2(),target=new T.Vector3();
   const ship=new T.Group();scene.add(ship);rooms.forEach((r,i)=>{const zone=SHIP_ZONES[i];r.group=new T.Group();r.group.userData={zone:i,upper:i>=3};r.group.position.set(0,zone.y-3,zone.z);r.build(r.group);if(i<5)furnishings.build(r.group,i);ship.add(r.group);});const connections=buildShipConnections(ship,{box,mesh,cylinder,rail,label});const details=buildCruiseDetails(ship,{box,mesh,cylinder,label});const maritime=buildMaritimeInteriors(ship,{box,mesh,cylinder,label});bake(ship);avatar.position.set(0,DECK_Y,4);avatar.rotation.y=Math.PI;showZone(0);
   crew=createBridgeCrew(scene);
-  sailing=new CruiseVoyage(environmentRoot,{pause:pauseInputs,player:()=>({room,position:avatar.position}),meetCaptain:()=>action('선장 만나기'),watchHarbor:()=>{pauseInputs();harborView=true;overview=false;document.body.classList.add('cruise-overview');$('ship-overview').textContent='갑판으로 돌아가기';$('ship-overview').setAttribute('aria-pressed','true');},night:()=>Number($('light').value)===1,harborWater:color=>{uniforms.deep.value.set(color);if(Number($('light').value)===1)uniforms.deep.value.multiplyScalar(.3);},depart:route=>{harborView=false;overview=false;document.body.classList.remove('cruise-overview');$('ship-overview').textContent='크루즈 전경';$('light').value='2';try{localStorage.setItem('bookscents-cruise-light-v1','2');}catch{}theme();uniforms.deep.value.set(route.id==='seychelles'?'#187c85':route.id==='madeira'?'#17445e':'#1b5c74');tone('horn');}});
+  sailing=new CruiseVoyage(environmentRoot,{pause:pauseInputs,player:()=>({room,position:avatar.position}),meetCaptain:()=>action('선장 만나기'),watchHarbor:()=>{pauseInputs();harborView=true;overview=false;document.body.classList.add('cruise-overview');$('ship-overview').textContent='갑판으로 돌아가기';$('ship-overview').setAttribute('aria-pressed','true');},eye:()=>camera,horizon:()=>horizon,night:()=>Number($('light').value)===1,harborWater:(color,dt=.016)=>{harborSea.set(color);if(Number($('light').value)===1)harborSea.multiplyScalar(.3);uniforms.deep.value.lerp(harborSea,1-Math.exp(-dt*.7));},depart:route=>{harborView=false;overview=false;document.body.classList.remove('cruise-overview');$('ship-overview').textContent='크루즈 전경';$('light').value='2';try{localStorage.setItem('bookscents-cruise-light-v1','2');}catch{}theme();uniforms.deep.value.set(route.id==='seychelles'?'#187c85':route.id==='madeira'?'#17445e':'#1b5c74');tone('horn');}});
   const chart=new CruiseChart(scene,{pause:pauseInputs,state:()=>sailing.state,canvas:renderer.domElement,camera,viewer:()=>({x:avatar.position.x,y:floorY,z:avatar.position.z})});
   renderer.setAnimationLoop(now=>{
     const dt=Math.min(.04,(now-previous)/1000);previous=now;elapsed+=dt;

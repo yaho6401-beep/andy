@@ -6,7 +6,14 @@ export const VOYAGE_ROUTES=[
  {id:'copenhagen',name:'코펜하겐',sea:'북유럽 · 덴마크',seconds:115,x:400,z:-1050,color:'#d5bd9b',description:'파스텔빛 운하의 집들과 구릿빛 첨탑, 작은 범선들'},
  {id:'madeira',name:'마데이라',sea:'대서양 · 포르투갈',seconds:135,x:-740,z:-1100,color:'#b7c7a0',description:'대서양의 푸른 물결 너머, 초록 절벽과 층층이 놓인 하얀 마을'},
  {id:'seychelles',name:'세이셸',sea:'인도양 · 섬의 정원',seconds:130,x:550,z:-1130,color:'#94cfc4',description:'연둣빛 바다와 밝은 모래, 화강암 바위와 흔들리는 야자수'},
- {id:'singapore',name:'싱가포르 항',sea:'동남아시아 · 말라카 해협',seconds:125,x:750,z:-960,color:'#a9bfd0',description:'유리빛 스카이라인과 항만 크레인, 열대의 푸른 해안'}
+ {id:'singapore',name:'싱가포르 항',sea:'동남아시아 · 말라카 해협',seconds:125,x:750,z:-960,color:'#a9bfd0',description:'유리빛 스카이라인과 항만 크레인, 열대의 푸른 해안'},
+ {id:'southampton',name:'사우샘턴',sea:'유럽 · 영국',seconds:130,x:-600,z:-1050,color:'#bdc9bd',description:'넓은 하구와 초록 해안, 크루즈 터미널이 이어지는 영국 항구'},
+ {id:'busan',name:'부산항',sea:'동아시아 · 대한민국',seconds:100,x:470,z:-1000,color:'#a6bccc',description:'산자락의 도시와 항만대교, 익숙하고도 새로운 부산 북항의 풍경'},
+ {id:'hongkong',name:'홍콩항',sea:'동아시아 · 빅토리아 하버',seconds:115,x:630,z:-1080,color:'#a0bdb4',description:'산과 마천루 사이로 페리가 오가는 빅토리아 하버'},
+ {id:'ningbo',name:'닝보·저우산항',sea:'동아시아 · 중국',seconds:110,x:-520,z:-1070,color:'#a9b9bf',description:'푸른 섬과 대형 크레인, 동중국해의 넓은 항만'},
+ {id:'shenzhen',name:'선전·옌톈항',sea:'동아시아 · 중국',seconds:115,x:540,z:-1030,color:'#a5bfae',description:'짙은 녹음의 산 아래 컨테이너 부두가 길게 펼쳐진 해안'},
+ {id:'dubai',name:'두바이·라시드항',sea:'중동 · 아랍에미리트',seconds:130,x:-660,z:-1100,color:'#d0c4ab',description:'옅은 모래빛 해안 너머, 아스라이 떠오르는 두바이의 스카이라인'},
+ {id:'abudhabi',name:'아부다비·자이드항',sea:'중동 · 아랍에미리트',seconds:135,x:660,z:-1110,color:'#c6cbb8',description:'잔잔한 걸프의 바다와 밝은 터미널, 따뜻한 빛의 해안 도시'}
 ];
 export const routeById=id=>VOYAGE_ROUTES.find(r=>r.id===id)||null;
 export const homeVoyage=()=>({version:1,phase:'home',routeId:null});
