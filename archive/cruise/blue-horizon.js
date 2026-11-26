@@ -119,9 +119,9 @@ export function startBlueHorizon(T, identity={}, ui={}) {
       box(p,ivory,9,3.75,9,1.4,1.5,7.4);
       box(p,navy,9,4.55,9,1.35,.1,7.3);
       label(p,'OCEAN BAR',9,5.2,5.2);
-      mesh(p,cylinder,brass,-13.2,3.55,-6,.1,1.1,.1);
-      const scope=mesh(p,cylinder,navy,-13.5,4.22,-6,.19,1.1,.19);scope.rotation.z=1.35;
-      mesh(p,cylinder,brass,-14.04,4.34,-6,.22,.12,.22).rotation.z=1.35;
+      mesh(p,cylinder,brass,13.2,3.55,-6,.1,1.1,.1);
+      const scope=mesh(p,cylinder,navy,13.5,4.22,-6,.19,1.1,.19);scope.rotation.z=-1.35;
+      mesh(p,cylinder,brass,14.04,4.34,-6,.22,.12,.22).rotation.z=-1.35;
     },actions:['난간 기대기','망원경','먼 풍경 보기']},
     {name:'선수',build(p){
       deck(p,0xbb8965);
@@ -215,7 +215,7 @@ export function startBlueHorizon(T, identity={}, ui={}) {
     if(text==='선장 만나기'){routeTo(CAPTAIN_CONTACT,{captain:true},'선장');return;}
     if(text==='기적 듣기'){tone('horn');$('hint').textContent=muted?'소리를 켜면 개인용 뱃고동을 들을 수 있어요.':'개인용 뱃고동 체험';return;}
     if(text==='조타 체험'){if(helm){helm=false;$('helm').hidden=true;return;}routeTo(local(0,-9.85),{helm:true},'조타륜');return;}
-    if(text==='망원경'){if(zoom){exploration.close();zoom=false;return;}routeTo(local(-12.35,-6),{zoom:true},'망원경');return;}
+    if(text==='망원경'){if(zoom){exploration.close();zoom=false;return;}routeTo(local(12.35,-6),{zoom:true},'망원경');return;}
     if(text==='벤치 앉기'){document.getElementById('deck-sit').click();return;}
     if(pose===text){pose='';avatar.position.y=floorY;return;}
     const target=text==='창가 앉기'?local(-10.32,-11):text==='벤치 앉기'?local(room===2?-5:-3,room===2?-5.5:7):room===0?local(-13.3,4):local(0,room===2?17.7:-17.7);

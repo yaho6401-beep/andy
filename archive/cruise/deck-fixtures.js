@@ -1,6 +1,6 @@
 // Metres. One source for rendered footprints, collision bounds and visitor seating.
 export const DECK_FIXTURES=[
- {id:'main-scope',kind:'binocular',zone:0,x:-13.2,z:-6,w:.55,d:.55},
+ {id:'main-scope',kind:'binocular',zone:0,x:13.2,z:-6,w:.55,d:.55},
  ...[-1,1].flatMap(s=>[
   {id:`bow-winch-${s}`,kind:'mooring-winch',zone:1,x:s*8.4,z:-55.7,w:2.6,d:2.8},
   {id:`bow-bitts-${s}`,kind:'bitts',zone:1,x:s*8.7,z:-60,w:1.8,d:1.1},

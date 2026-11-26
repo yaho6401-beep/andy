@@ -6,6 +6,8 @@ Story: a visitor walks aboard the integrated cruise, inspects richer ship equipm
 
 The existing twin anchor windlasses, chain runs, hawses and outboard anchors are retained. The working foredeck gains mooring drums with wound line, bitts, roller fairleads, coiled rope and chain stoppers. Alternating chain links now change plane instead of simply rotating inside the same plane. The radar roof gains a second rotating scanner, VHF/AIS/GNSS-style antennas, a signal-light mast, ventilation louvres, a maintenance hatch, a compass binnacle and cable trays. Static fittings merge into the existing material batches; only scanners animate independently. No external model or new dependency is installed.
 
+The landscape camera clears external stair rails and nearby signs without moving the seated avatar.
+
 Appearance references, rather than engineering plans or replicas:
 
 - [Furuno marine radar installation manual](https://www.furunousa.com/-/media/sites/furuno/document_library/documents/manuals/public_manuals/fr1760ds_installation_manual_l.pdf)
@@ -16,8 +18,8 @@ Appearance references, rather than engineering plans or replicas:
 ## Visitor controls
 
 - No automatic seating. The right-side **벤치에 앉기** control appears only near a bench on the same deck. It walks to the front of the bench, then seats the visitor. **사뿐히 일어나기** returns to its clear approach. Movement input also stands up.
-- **먼 풍경 보기** / **바다 바라보기** opens a first-person landscape view, preserving the seat when applicable. Left/right controls and dragging rotate the view; **돌아가기** restores the previous seated or standing view. Landscape yaw is limited to approximately 86 degrees each way and telescope yaw to 60 degrees; vertical adjustment is gentle and bounded.
-- The telescope is moved to the port side and points over the sea rather than through the superstructure. Its existing approach action remains available, with the shared view controls for looking and closing.
+- **먼 풍경 보기** / **바다 바라보기** opens an unobstructed landscape camera beyond the outer rail, preserving the seat when applicable. Left/right controls and dragging rotate the view; **돌아가기** restores the previous seated or standing view. Landscape yaw is limited to approximately 86 degrees each way and telescope yaw to 60 degrees; vertical adjustment is gentle and bounded.
+- The telescope is moved to the starboard side and points over the sea rather than through the superstructure. Its existing approach action remains available, with the shared view controls for looking and closing.
 - A short mouse click or mobile tap on an upward-facing, visible walkable deck selects a destination. The route uses existing A* stairs, deck heights and collision checks. Sea, equipment, walls and hidden lower floors are not floor targets. A drag rotates the camera and never creates a movement command; secondary touches cancel tap intent. UI clicks remain separate.
 - Initial camera placement starts above the main deck, avoiding a brief view from below the ship while the scene first settles.
 
