@@ -12,6 +12,8 @@ export const SHIP_ZONES=[
 export const SHIP_STAIRS=[{id:'bridge',label:'선교 · 전망 라운지',x:-15.3,fromZ:0,toZ:-17,w:2.6},{id:'dining',label:'파노라마 다이닝',x:15.3,fromZ:0,toZ:17,w:2.6}];
 export const SHIP_COLUMNS=SHIP_ZONES.slice(3).flatMap(zone=>[-12.7,12.7].flatMap(x=>[-14,-7,0,7,14].map(offset=>({x,z:zone.z+offset,w:.34,d:.34,y:DECK_Y}))));
 export const POOL={x:3,z:-6,w:6.4,d:12.4};
+export const BRIDGE_CREW=[{id:'captain',name:'선장',x:4.5,z:-43,y:UPPER_Y},{id:'helmsman',name:'조타수',x:-4.5,z:-45.5,y:UPPER_Y}];
+export const CAPTAIN_CONTACT={x:2.3,z:-41.5,y:UPPER_Y};
 export const DINING_TABLES=[-9,0,9].flatMap(x=>[-11,-3,5].map(z=>({x,z})));
 export const DECK_LOUNGERS=[
  ...[-9,-6].flatMap(x=>[-10,-5,0].map(z=>({zone:0,x,z}))),
@@ -20,7 +22,7 @@ export const DECK_LOUNGERS=[
 ];
 export function hullHalfBeam(z){const t=Math.max(0,(-z-44)/26,(z-56)/14);return 14*Math.sqrt(Math.max(0,1-t*t));}
 export function stairLanding(stair,upper){const direction=Math.sign(stair.toZ-stair.fromZ),side=Math.sign(stair.x);return {x:side*13.95,z:(upper?stair.toZ:stair.fromZ)+(upper?direction:-direction)*.9,w:5.5,d:1.8,y:upper?UPPER_Y:DECK_Y};}
-const OBSTACLES=[...SHIP_COLUMNS,{...POOL,w:POOL.w+.8,d:POOL.d+.8,y:DECK_Y},{x:9,z:9,w:1.5,d:7.5,y:DECK_Y},
+const OBSTACLES=[...SHIP_COLUMNS,...BRIDGE_CREW.map(p=>({...p,w:.8,d:.8})),{...POOL,w:POOL.w+.8,d:POOL.d+.8,y:DECK_Y},{x:9,z:9,w:1.5,d:7.5,y:DECK_Y},
  {x:0,z:-47,w:23,d:1.4,y:UPPER_Y},
  ...DINING_TABLES.map(p=>({x:p.x,z:p.z+34,w:2.1,d:2.1,y:UPPER_Y})),
  ...DECK_LOUNGERS.map(p=>({x:p.x,z:p.z+SHIP_ZONES[p.zone].z,w:.95,d:2,y:DECK_Y}))];
