@@ -1,3 +1,4 @@
+import {DECK_FIXTURES,DECK_SEATS,seatFootprint} from './deck-fixtures.js';
 // Metres, shared by architecture, furniture collisions and pedestrian routing.
 import {SHIP_LENGTH,SHIP_BEAM} from '../camp/cruise-dimensions.js';
 export {SHIP_LENGTH,SHIP_BEAM};
@@ -27,12 +28,14 @@ export const DECK_LOUNGERS=[
  ...[-9,-5,5,9].flatMap(x=>[-4,1,6].map(z=>({zone:2,x,z}))),
  ...[-8,8].map(x=>({zone:1,x,z:1}))
 ];
+export const SHIP_EQUIPMENT=DECK_FIXTURES.map(p=>({...p,y:SHIP_ZONES[p.zone].y}));
+export const SHIP_BENCHES=DECK_SEATS.map(p=>({...p,y:SHIP_ZONES[p.zone].y}));
 export function hullHalfBeam(z){const t=Math.max(0,(-z-44)/26,(z-56)/14);return 14*Math.sqrt(Math.max(0,1-t*t));}
 export function stairLanding(stair,upper){const direction=Math.sign(stair.toZ-stair.fromZ),side=Math.sign(stair.x),external=['bridge','dining'].includes(stair.id);return {x:external?side*13.95:stair.x,z:(upper?stair.toZ:stair.fromZ)+(upper?direction:-direction)*.9,w:external?5.5:3.8,d:1.8,y:upper?stair.toY:stair.fromY};}
 export const BRIDGE_WALLS=[{x:0,z:-50.45,w:21.6,d:.3},...[-1,1].flatMap(s=>[{x:s*6.15,z:-28,w:9.3,d:.28},{x:s*10.8,z:-48.8,w:.25,d:3.4},{x:s*10.8,z:-34.75,w:.25,d:13.5}])].map(p=>({...p,y:UPPER_Y}));
 export const CABIN_WALLS=[{x:8.1,z:0,w:8.6,d:.22},{x:8.1,z:11,w:8.6,d:.22},{x:12.4,z:5.5,w:.22,d:11},...[[2.35,4.7],[9,4]].map(([z,d])=>({x:3.8,z,w:.22,d}))].map(p=>({...p,y:CABIN_Y}));
 export const CABIN_FURNITURE=[{x:9,z:3,w:4.1,d:3.7,y:CABIN_Y},{x:11.4,z:8,w:1,d:3.2,y:CABIN_Y},{x:5.5,z:.8,w:2.3,d:1,y:CABIN_Y}];
-const OBSTACLES=[...SHIP_COLUMNS,...BRIDGE_WALLS,...CABIN_WALLS,...CABIN_FURNITURE,...BRIDGE_CREW.map(p=>({...p,w:.8,d:.8})),{...POOL,w:POOL.w+.8,d:POOL.d+.8,y:DECK_Y},{x:9,z:9,w:1.5,d:7.5,y:DECK_Y},
+const OBSTACLES=[...SHIP_EQUIPMENT,...SHIP_BENCHES.map(seatFootprint),...SHIP_COLUMNS,...BRIDGE_WALLS,...CABIN_WALLS,...CABIN_FURNITURE,...BRIDGE_CREW.map(p=>({...p,w:.8,d:.8})),{...POOL,w:POOL.w+.8,d:POOL.d+.8,y:DECK_Y},{x:9,z:9,w:1.5,d:7.5,y:DECK_Y},
  {x:0,z:-47,w:23,d:1.4,y:UPPER_Y},
  ...DINING_TABLES.map(p=>({x:p.x,z:p.z+34,w:2.1,d:2.1,y:UPPER_Y})),
  ...DECK_LOUNGERS.map(p=>({x:p.x,z:p.z+SHIP_ZONES[p.zone].z,w:.95,d:2,y:SHIP_ZONES[p.zone].y})),
