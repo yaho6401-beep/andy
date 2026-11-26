@@ -13,7 +13,7 @@ export function cruiseFurnishings(){
  return {build(p,room){
   // Cap rail, brass inlay, scuppers and subtle deck seams.
   for(const x of [-8.3,8.3]){box(p,'#d5b78b',x,3.13,0,.09,.045,16.4,.45);for(let z=-7;z<=7;z+=2)box(p,'#354f5b',x,2.73,z,.05,.08,.28);}
-  if(room===0){for(const x of [-6,-3])lounger(p,x,-1.2);planter(p,-7,5.9);planter(p,2.6,-1.2);ring(p,-8.3,-1);lantern(p,-1.5,3.1);box(p,'#f2e9d8',-4.5,5.8,2.9,6,.075,3.6);for(const x of [-7.3,-1.7])box(p,'#d5bf9f',x,4.45,4.4,.07,2.8,.07,.4);for(let i=0;i<5;i++)box(p,'#345564',3.96,4.85,-.55+i*.74,.035,1.03,.56);box(p,'#d9c9ac',6,6.16,1,4.2,.14,5.2);}
+  if(room===0){for(const x of [-6,-3])lounger(p,x,-1.2);planter(p,-7,5.9);planter(p,2.6,-1.2);ring(p,-8.3,-1);lantern(p,-1.5,3.1);box(p,'#f2e9d8',-4.5,5.8,2.9,6,.075,3.6);for(const x of [-7.3,-1.7])box(p,'#d5bf9f',x,4.45,4.4,.07,2.8,.07,.4);for(let i=0;i<5;i++)box(p,'#345564',3.96,4.85,4.45+i*.74,.035,1.03,.56);box(p,'#d9c9ac',6,6.16,6,4.2,.14,5.2);}
   if(room===1){for(const x of [-7,7]){planter(p,x,4);ring(p,x,-3.8);}for(const x of [-4.2,4.2])lounger(p,x,-2.6);box(p,'#e0cba7',0,3.62,-4.9,1.8,.1,.8);item(p,cylinder,'#293f4b',0,3.3,-4.9,.07,.6,.07,.5);lantern(p,0,-4.9);}
   if(room===2){for(const x of [-6,-2.6,2.6,6])lounger(p,x,-1.4);planter(p,-7.4,-2);planter(p,7.4,-2);ring(p,-8.2,4);lantern(p,0,-5.5);}
   if(room===3){for(const x of [-6.8,6.8])planter(p,x,0);for(const x of [-5.1,-2.55,0,2.55,5.1]){for(let i=0;i<4;i++)item(p,cylinder,i%2?'#b9bfaa':'#cfac73',x-.7+i*.22,4.1,-5.96,.035,.035,.035,.4);box(p,'#c0a171',x,4.06,-5.79,1.7,.025,.02,.5);}}

@@ -1,10 +1,12 @@
+import {SHIP_ZONES,DECK_Y,UPPER_Y,findShipPath,shipStep,shipZone} from './ship-layout.js';
+import {buildShipConnections} from './ship-architecture.js';
 import {createAvatar,animateAvatar,disposeAvatar} from '../src/avatar.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
 import {cruiseFurnishings} from './promenade.js';
 import {createCoastline} from './coastline.js';
 // Adapted from the owner-provided BLUE HORIZON prototype. Original source SHA-256: c4af2aaa9d7afd2dbee26bfbd9bd096c2002631c8530213dd9f9dd48e119a7a6
 const $=id=>document.getElementById(id);
-export function startBlueHorizon(T, identity={}) {
+export function startBlueHorizon(T, identity={}, ui={}) {
   const scene = new T.Scene();
   const camera = new T.PerspectiveCamera(52,1,.1,460);
   const renderer = new T.WebGLRenderer({antialias:true,powerPreference:'low-power'});
@@ -42,7 +44,7 @@ export function startBlueHorizon(T, identity={}) {
       vec3 c=deep*(.91+.15*rip);
       float reflected=exp(-abs(p.x-moon.x*(-p.y))* .085)*smoothstep(0.,20.,-p.y);
       c+=shine*reflected*pow(.5+.5*a,7.)*(.16+.28*detail);
-      float z=max(0.,-p.y-8.2), x=abs(p.x+.4*sin(z*.18));
+      float z=max(0.,p.y-36.), x=abs(p.x+.4*sin(z*.18));
       float wakeWidth=1.4+z*.13;
       float center=exp(-x*x/(wakeWidth*wakeWidth*.35));
       float arms=exp(-abs(x-wakeWidth)*1.4);
@@ -81,21 +83,21 @@ export function startBlueHorizon(T, identity={}) {
     for(const s of [-1,1])box(p,navy,x+s*w*.34,3.22,z,.1,.45,.36);
   }
   function deck(p,color){
-    box(p,navy,0,1.4,0,17,2.8,17);
+    if(!p.userData.upper)box(p,navy,0,1.4,0,17,2.8,17);
     box(p,ivory,0,2.73,0,17.15,.25,17.15);
     box(p,color,0,2.91,0,17,.18,17);
     for(let i=-16;i<=16;i++)box(p,0x81573e,i*.5,3.004,0,.012,.006,16.9);
-    rail(p,-8.48,-8.48,8.48,-8.48);rail(p,-8.48,-8.48,-8.48,8.48);rail(p,8.48,-8.48,8.48,8.48);
+    const zone=p.userData.zone;if(zone===1||zone===3)rail(p,-8.48,-8.48,8.48,-8.48);if(zone===2||zone===4)rail(p,-8.48,8.48,8.48,8.48);rail(p,-8.48,-8.48,-8.48,zone===3?6.1:8.48);rail(p,8.48,zone===4?-6.1:-8.48,8.48,8.48);
   }
   function lamp(p,x,z){
     box(p,navy,x,4,z,.07,2,.07);
     orb(p,0xffce86,x,5,z,.16,.18,.16,true);
   }
-  function label(p,text,x,y,z){
+  function label(p,text,x,y,z,width=2.5){
     const c=document.createElement('canvas');c.width=256;c.height=64;
     const ctx=c.getContext('2d');ctx.fillStyle='#182c40';ctx.fillRect(0,0,256,64);ctx.fillStyle='#ddede4';ctx.font='600 24px system-ui';ctx.textAlign='center';ctx.fillText(text,128,41);
     const texture=new T.CanvasTexture(c);texture.colorSpace=T.SRGBColorSpace;
-    const sprite=new T.Sprite(new T.SpriteMaterial({map:texture}));sprite.position.set(x,y,z);sprite.scale.set(2.5,.625,1);p.add(sprite);
+    const sprite=new T.Sprite(new T.SpriteMaterial({map:texture}));sprite.position.set(x,y,z);sprite.scale.set(width,width/4,1);p.add(sprite);
   }
   // Merge static opaque furniture by material; preserve wheel joints and alpha glass.
   function bake(root){const groups=new Map();root.updateMatrixWorld(true);root.traverse(o=>{if(!o.isMesh||o.material.transparent||o===wheel||wheel.getObjectById(o.id))return;const m=o.matrixWorld.clone().premultiply(root.matrixWorld.clone().invert());const parts=groups.get(o.material)||[];parts.push({o,g:(o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone()).applyMatrix4(m)});groups.set(o.material,parts);});for(const [mat,parts]of groups){if(parts.length<2){parts.forEach(p=>p.g.dispose());continue;}const merged=mergeGeometries(parts.map(p=>p.g),false);parts.forEach(p=>{p.g.dispose();p.o.removeFromParent();});root.add(new T.Mesh(merged,mat));}}
@@ -103,9 +105,9 @@ export function startBlueHorizon(T, identity={}) {
   const rooms=[
     {name:'메인 갑판',build(p){
       deck(p,teak);seat(p,-4,-3);seat(p,4,-3);lamp(p,-7,-5);lamp(p,7,-5);
-      box(p,ivory,6,4.55,1,4,3.1,5);
-      box(p,navy,4,4.8,-.5,.06,.85,1.7);
-      label(p,'BLUE HORIZON',5,5.85,-1.58);
+      box(p,ivory,6,4.55,6,4,3.1,5);
+      box(p,navy,4,4.8,4.5,.06,.85,1.7);
+      label(p,'BLUE HORIZON',5,5.85,3.42);
       mesh(p,cylinder,brass,-4,3.55,-6,.1,1.1,.1);
       const scope=mesh(p,cylinder,navy,-4,4.22,-6,.19,1.1,.19);scope.rotation.x=1.28;
       mesh(p,cylinder,brass,-4,4.34,-6.54,.22,.12,.22).rotation.x=1.28;
@@ -166,7 +168,7 @@ export function startBlueHorizon(T, identity={}) {
     scene.fog=new T.Fog(h,85,390);fill.intensity=mode===1?1.35:1.8;bounce.intensity=mode===1?.95:1.2;stars.visible=mode===1;sun.material.map=mode===1?moonMap:null;sun.material.needsUpdate=true;sun.material.color.setHex(mode===1?0xe3efff:0xffdfaa);sun.position.y=mode===1?36:17;sunLight.intensity=mode===1?.9:2.1;
   }
   $('light').onchange=theme;theme();
-  let room=0,pose='',zoom=false,helm=false,velocity=0,angle=0,drag=null,audio=null,muted=true;
+  let room=0,pose='',zoom=false,helm=false,velocity=0,angle=0,drag=null,audio=null,muted=true,floorY=DECK_Y,cameraTurn=0,autoPath=[],arrival=null,destination=null;
   function tone(kind){
     if(muted)return;
     const Audio=window.AudioContext||window.webkitAudioContext;
@@ -180,32 +182,25 @@ export function startBlueHorizon(T, identity={}) {
   $('sound').onclick=()=>{muted=!muted;$('sound').textContent=muted?'소리 끔':'소리 켬';$('sound').setAttribute('aria-pressed',String(!muted));if(!muted)tone('wheel');};
   function button(parent,text,handler){const b=document.createElement('button');b.textContent=text;b.onclick=handler;parent.append(b);return b;}
   const tabs=rooms.map((r,i)=>button($('rooms'),r.name,()=>enter(i)));
+  function pauseInputs(){if(destination)$('hint').textContent='산책을 잠시 멈췄어요.';keys.clear();stick.set(0,0);$('knob').style.transform='';autoPath=[];arrival=null;destination=null;}
+  function local(x,z){return {x,z:z+SHIP_ZONES[room].z,y:SHIP_ZONES[room].y};}
+  function routeTo(target,after=null,label='목적지'){
+    const path=findShipPath({x:avatar.position.x,z:avatar.position.z,y:floorY},target);
+    if(!path.length){$('hint').textContent='난간 안쪽의 통로에서 다시 선택해 주세요.';return;}
+    pose='';zoom=false;helm=false;$('helm').hidden=true;pauseInputs();autoPath=path;arrival=after;destination={...target,label};$('hint').textContent=label+'로 걸어가는 중 · 방향키나 조이스틱을 움직이면 직접 조작해요';
+  }
   function action(text){
     if(text==='기적 듣기'){tone('horn');$('hint').textContent=muted?'소리를 켜면 개인용 뱃고동을 들을 수 있어요.':'개인용 뱃고동 체험';return;}
-    if(text==='조타 체험'){
-      helm=!helm;$('helm').hidden=!helm;$('hint').textContent=helm?'원을 그리듯 드래그하세요 · 개인 체험':'조타 체험 종료';
-      if(helm){avatar.position.set(0,3,-2.85);pose='';}return;
-    }
-    if(text==='망원경'){
-      zoom=!zoom;pose='';if(zoom)avatar.position.set(-4,3,-5.6);
-      $('hint').textContent=zoom?'망원경으로 바다 보기':'망원경 내려놓기';return;
-    }
-    pose=pose===text?'':text;
-    if(pose)avatar.position.set(text==='창가 앉기'?-1.32:text==='벤치 앉기'?(room===2?-5:-4):0,3,text==='창가 앉기'?-5.8:text==='벤치 앉기'?(room===2?-5.5:-3):-7.92);
-    $('hint').textContent=pose||'산책 중';
+    if(text==='조타 체험'){if(helm){helm=false;$('helm').hidden=true;return;}routeTo(local(0,-2.85),{helm:true},'조타륜');return;}
+    if(text==='망원경'){if(zoom){zoom=false;return;}routeTo(local(-4,-5.6),{zoom:true},'망원경');return;}
+    if(pose===text){pose='';avatar.position.y=floorY;return;}
+    const target=text==='창가 앉기'?local(-1.32,-5.8):text==='벤치 앉기'?local(room===2?-5:-4,room===2?-5.5:-3):room===0?local(-7.9,0):local(0,room===2?7.92:-7.92);
+    routeTo(target,{pose:text},text);
   }
-  function enter(i){
-    room=i;pose='';zoom=false;helm=false;$('helm').hidden=true;
-    rooms.forEach((r,j)=>{if(r.group)r.group.visible=i===j;tabs[j].setAttribute('aria-pressed',String(i===j));});
-    const r=rooms[i];
-    if(!r.group){r.group=new T.Group();r.build(r.group);furnishings.build(r.group,i);bake(r.group);scene.add(r.group);}
-    avatar.position.set(0,3,i===3?-2.6:-.6);avatar.rotation.y=Math.PI;
-    camera.position.set(0,6.3,5);
-    uniforms.wake.value=i===2?1:0;
-    coast.set(i,Number($('light').value)===1);$('place').textContent=r.name+' · '+(identity.nickname||'여행자')+'의 항해';$('hint').textContent=i===2?'선미 너머 향기마을 · 우리가 출발한 곳':i===1?'선수 너머 별빛 캠핑장 · 같은 바다의 이야기':'조이스틱 또는 방향키로 산책';
-    $('actions').replaceChildren();r.actions.forEach(t=>button($('actions'),t,()=>action(t)));
-    button($('actions'),'👋 인사',()=>{greeting=1.3;});
+  function showZone(i){
+    room=i;tabs.forEach((t,j)=>t.setAttribute('aria-pressed',String(i===j)));$('actions').replaceChildren();rooms[i].actions.forEach(t=>button($('actions'),t,()=>action(t)));button($('actions'),'👋 인사',()=>{greeting=1.3;});
   }
+  function enter(i){if(!SHIP_ZONES[i])return;routeTo(SHIP_ZONES[i].target,null,SHIP_ZONES[i].name);}
   function pointer(el,move,end){
     let active=null;
     el.onpointerdown=e=>{if(active!==null)return;active=e.pointerId;el.setPointerCapture(active);move(e,true);};
@@ -228,26 +223,25 @@ export function startBlueHorizon(T, identity={}) {
     if(Math.abs(delta)>.05&&performance.now()-lastTick>100){tone('wheel');lastTick=performance.now();}
   },()=>{drag=null;});
   const movement=new Set(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','a','d','w','s']);
-  addEventListener('keydown',e=>{if(movement.has(e.key)&&!['SELECT','INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();keys.add(e.key);}});
+  addEventListener('keydown',e=>{if(movement.has(e.key)&&!document.querySelector('dialog[open]')&&!['SELECT','INPUT','TEXTAREA'].includes(document.activeElement.tagName)){e.preventDefault();keys.add(e.key);}});
   addEventListener('keyup',e=>keys.delete(e.key));addEventListener('blur',()=>keys.clear());
   let greeting=0,previous=performance.now(),elapsed=0;
   const wish=new T.Vector2(),target=new T.Vector3();
-  enter(0);
+  const ship=new T.Group();scene.add(ship);rooms.forEach((r,i)=>{const zone=SHIP_ZONES[i];r.group=new T.Group();r.group.userData={zone:i,upper:i>=3};r.group.position.set(0,zone.y-DECK_Y,zone.z);r.build(r.group);furnishings.build(r.group,i);ship.add(r.group);});const connections=buildShipConnections(ship,{box,mesh,cylinder,rail,label});bake(ship);avatar.position.set(0,DECK_Y,3);avatar.rotation.y=Math.PI;showZone(0);
   renderer.setAnimationLoop(now=>{
     const dt=Math.min(.04,(now-previous)/1000);previous=now;elapsed+=dt;
-    const has=(a,b)=>Number(keys.has(a)||keys.has(b));
+    const has=(a,b)=>Number(keys.has(a)||keys.has(b));ui.onFrame?.();const blocked=!!document.querySelector('dialog[open]');
     wish.set(stick.x+has('ArrowRight','d')-has('ArrowLeft','a'),stick.y+has('ArrowDown','s')-has('ArrowUp','w')).clampLength(0,1);
-    const walking=wish.lengthSq()>.015&&!helm;
-    if(walking){
-      pose='';zoom=false;
-      const nextX=T.MathUtils.clamp(avatar.position.x+wish.x*dt*3,-7.6,7.6);
-      const nextZ=T.MathUtils.clamp(avatar.position.z+wish.y*dt*3,room===3?-5.24:-7.95,6.9);
-      if(!(room===0&&nextX>3.65&&nextZ>-1.8&&nextZ<3.8))avatar.position.set(nextX,3,nextZ);
-      avatar.rotation.y=Math.atan2(wish.x,wish.y);
+    let dx=0,dz=0,walking=false;
+    if(!blocked&&!helm){
+      if(wish.lengthSq()>.015){if(destination)$('hint').textContent='조이스틱 또는 방향키로 산책';autoPath=[];arrival=null;destination=null;dx=wish.x*Math.cos(cameraTurn)+wish.y*Math.sin(cameraTurn);dz=-wish.x*Math.sin(cameraTurn)+wish.y*Math.cos(cameraTurn);}
+      else if(autoPath.length){let point=autoPath[0];if(Math.hypot(point.x-avatar.position.x,point.z-avatar.position.z)<.012){autoPath.shift();point=autoPath[0];}if(point){const length=Math.hypot(point.x-avatar.position.x,point.z-avatar.position.z),step=Math.min(1,length/Math.max(.001,4.1*dt));dx=(point.x-avatar.position.x)/Math.max(.001,length)*step;dz=(point.z-avatar.position.z)/Math.max(.001,length)*step;}else{const result=arrival;arrival=null;destination=null;if(result?.pose)pose=result.pose;if(result?.zoom)zoom=true;if(result?.helm){helm=true;$('helm').hidden=false;}$('hint').textContent=pose?pose:helm?'조타륜을 천천히 돌려보세요.':zoom?'망원경으로 바다 보기':'도착했어요. 바다를 바라보며 쉬어가세요.';}}
+      if(dx||dz){const speed=autoPath.length?4.1:3.3,next=shipStep({x:avatar.position.x,z:avatar.position.z,y:floorY},{x:avatar.position.x+dx*dt*speed,z:avatar.position.z+dz*dt*speed});if(next){pose='';zoom=false;avatar.position.set(next.x,next.y,next.z);floorY=next.y;avatar.rotation.y=Math.atan2(dx,dz);walking=true;}}
     }
-    avatar.position.y=pose.includes('앉기')?3.36:3;avatar.rotation.x=pose.includes('기대기')?.12:0;
-    greeting=Math.max(0,greeting-dt);animateAvatar(avatar,{motion:walking?'walk':pose.includes('앉기')?'sit':'idle',emote:greeting?'wave':null,emoteAt:greeting?elapsed*1000:0},elapsed);
-    avatar.visible=!zoom;
+    const zone=shipZone({x:avatar.position.x,z:avatar.position.z,y:floorY});if(zone!==room)showZone(zone);
+    const heading=rooms[room].name+' · '+(Math.abs(avatar.position.x)>8.1&&floorY>3&&floorY<7.2?'계단':floorY>5.4?'상층':'메인층')+' · '+(identity.nickname||'여행자')+(destination?' → '+destination.label:'');if($('place').textContent!==heading)$('place').textContent=heading;
+    uniforms.wake.value=room===2?1:0;connections.guide(destination,elapsed);
+    avatar.position.y=floorY+(pose.includes('앉기')?.36:0);avatar.rotation.x=pose.includes('기대기')?.12:0;greeting=Math.max(0,greeting-dt);animateAvatar(avatar,{motion:walking?'walk':pose.includes('앉기')?'sit':'idle',emote:greeting?'wave':null,emoteAt:greeting?elapsed*1000:0},elapsed);avatar.visible=!zoom;
     if(drag===null){angle+=velocity*dt;velocity*=Math.exp(-5*dt);}
     wheel.rotation.z=-angle;$('helm').style.transform=helm?'rotate('+angle+'rad)':'';
     uniforms.time.value=elapsed;
@@ -258,11 +252,8 @@ export function startBlueHorizon(T, identity={}) {
       g.position.set(-18+(t-4)*3.8,-.48+Math.max(0,Math.sin((t-4)*(i===2?1:2.8)))*1.35,-23-i*5);
       g.rotation.y=1.3;g.rotation.x=Math.cos(t*2.8)*.25;
     });
-    target.set(avatar.position.x*.71,zoom?4.45:room===2?6.6:5.9,zoom?-6.18:avatar.position.z+(room===2?4.6:4.9));
-    camera.position.lerp(target,1-Math.exp(-dt*7));
-    camera.fov=T.MathUtils.lerp(camera.fov,zoom?24:innerWidth<600?65:52,1-Math.exp(-dt*7));camera.updateProjectionMatrix();
-    camera.lookAt(zoom?-11:avatar.position.x*.49,zoom?3.9:room===2?2.7:3.95,zoom?-90:avatar.position.z-7.3);
+    const turn=room===2?Math.PI:0;cameraTurn=T.MathUtils.damp(cameraTurn,turn,2,dt);const forward=new T.Vector3(-Math.sin(cameraTurn),0,-Math.cos(cameraTurn));target.copy(avatar.position).addScaledVector(forward,zoom?.5:-5.8);target.y=floorY+(zoom?1.45:3.15);camera.position.lerp(target,1-Math.exp(-dt*7));camera.fov=T.MathUtils.lerp(camera.fov,zoom?24:innerWidth<600?65:52,1-Math.exp(-dt*7));camera.updateProjectionMatrix();const look=avatar.position.clone().addScaledVector(forward,zoom?70:7.4);look.y=floorY+(zoom?.9:1);camera.lookAt(look);
     renderer.render(scene,camera);
   });
-  return {enter,get state(){return {room:rooms[room].name,position:avatar.position.toArray(),pose,helm,zoom,avatar:{kind:identity.appearance?.kind||0,originalGLB:!!avatar.userData.originalGLB,system:'archive-shared'},coast:coast.state,drawCalls:renderer.info.render.calls,geometries:renderer.info.memory.geometries};},dispose(){renderer.setAnimationLoop(null);disposeAvatar(avatar);removeEventListener('resize',resize);const geometries=new Set(),mats=new Set(),textures=new Set();scene.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of [o.material].flat().filter(Boolean)){mats.add(m);if(m.map)textures.add(m.map);}});geometries.forEach(g=>g.dispose());textures.forEach(t=>t.dispose());mats.forEach(m=>m.dispose());audio?.close().catch(()=>{});renderer.dispose();renderer.forceContextLoss();}};
+  return {enter,pauseInputs,get state(){return {room:rooms[room].name,position:avatar.position.toArray(),pose,helm,zoom,route:{destination:destination?.label||null,points:autoPath.length},deckY:floorY,shipLength:73,stairs:Math.abs(avatar.position.x)>8.1&&floorY>DECK_Y&&floorY<UPPER_Y,avatar:{kind:identity.appearance?.kind||0,originalGLB:!!avatar.userData.originalGLB,system:'archive-shared'},coast:coast.state,drawCalls:renderer.info.render.calls,geometries:renderer.info.memory.geometries};},dispose(){renderer.setAnimationLoop(null);disposeAvatar(avatar);removeEventListener('resize',resize);const geometries=new Set(),mats=new Set(),textures=new Set();scene.traverse(o=>{if(o.geometry)geometries.add(o.geometry);for(const m of [o.material].flat().filter(Boolean)){mats.add(m);if(m.map)textures.add(m.map);}});geometries.forEach(g=>g.dispose());textures.forEach(t=>t.dispose());mats.forEach(m=>m.dispose());audio?.close().catch(()=>{});renderer.dispose();renderer.forceContextLoss();}};
 }
