@@ -1,4 +1,5 @@
 import {campLightAt} from './camp-lighting.js';
+import {createCampPracticalLights} from './practical-lighting.js';
 import {moonTransmissionAt} from './cloud-occlusion.js';
 import {createMoonBeams} from './moon-beams.js';
 import {createTentFireVisual} from './tent-fire-visual.js';
@@ -46,7 +47,7 @@ export function createCamp(scene){
  function lantern(x,z,y=0){
   add(cylinder,'#aa8d71',x,y+.53,z,.035,1.06,.035);
   panel('#d7ba84',x,y+1.08,z,.25,.35,.25);
-  panel('#fff0bc',x,y+1.08,z+.13,.17,.26,.02);
+  panel('#fff0bc',x,y+1.08,z+.13,.17,.26,.02).material=mat('#fff0bc',true);
   add(cone,'#9a8673',x,y+1.34,z,.23,.18,.23);
  }
  // A wider clearing and a long, open coastline; flat colors avoid heavy reflections.
@@ -86,7 +87,7 @@ export function createCamp(scene){
  for(const t of ALL_TENTS){
   const {x,z,w,d,h,door}=t,half=w/2,back=z-d/2,front=z+d/2,eave=1.4;
   panel('#777d7d',x,.025,z,w,.05,d);
-  const rug=panel(t.rug,x,.063,z+.35,w-.55,.018,d-1);const rugMat=new T.MeshLambertMaterial({color:t.rug,map:canvasTex});materials.set('rug-'+t.id,rugMat);rug.material=rugMat;
+  const rug=panel(t.rug,x,.063,z+.35,w-.55,.018,d-1);const rugMat=new T.MeshLambertMaterial({color:t.rug,map:canvasTex,emissive:'#ffddba',emissiveIntensity:.045});materials.set('rug-'+t.id,rugMat);rug.material=rugMat;
   for(let j=0;j<8;j++)panel('#d9c3ac',x-w/2+.4+j*.74,.075,z+.35,.025,.004,d-1.2);
   const vertices=[],wallVertices=[];
   const tri=(a,b,c)=>vertices.push(...a,...b,...c);
@@ -103,7 +104,7 @@ export function createCamp(scene){
   quad([left,0,front],[x-door/2,0,front],[x-door/2,openingTop,front],[left,eave,front]);
   quad([x+door/2,0,front],[right,0,front],[right,eave,front],[x+door/2,openingTop,front]);
   const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(vertices,3));geo.setAttribute('uv',new T.Float32BufferAttribute(vertices.flatMap((v,i)=>i%3===0?[v*.4+vertices[i+2]*.2,vertices[i+1]*.45+vertices[i+2]*.35]:[]),2));geo.computeVertexNormals();geometries.push(geo);
-  const fabric=new T.MeshLambertMaterial({color:t.color,map:canvasTex,side:T.DoubleSide,transparent:true,opacity:1,depthWrite:true});
+  const fabric=new T.MeshLambertMaterial({color:t.color,map:canvasTex,emissive:'#ffddba',emissiveIntensity:.055,side:T.DoubleSide,transparent:true,opacity:1,depthWrite:true});
   const mesh=new T.Mesh(geo,fabric);root.add(mesh);
   const wallGeo=new T.BufferGeometry();wallGeo.setAttribute('position',new T.Float32BufferAttribute(wallVertices,3));wallGeo.setAttribute('uv',new T.Float32BufferAttribute(wallVertices.flatMap((v,i)=>i%3===0?[v*.4+wallVertices[i+2]*.2,wallVertices[i+1]*.45+wallVertices[i+2]*.35]:[]),2));wallGeo.computeVertexNormals();geometries.push(wallGeo);
   const wallMesh=new T.Mesh(wallGeo,fabric.clone());root.add(wallMesh);
@@ -179,28 +180,29 @@ export function createCamp(scene){
  }
  const pickupWood=new T.InstancedMesh(seatWood.geometry,seatWood.materials,WOOD_FINDS.length*3),woodPose=new T.Object3D();let woodIndex=0;
  for(const spot of WOOD_FINDS)for(let i=0;i<3;i++){woodPose.position.set(spot.x+(i-1)*.13,.12+i*.035,spot.z);woodPose.rotation.set(.13,i*.4,Math.PI/2);woodPose.scale.set(.07,.54,.07);woodPose.updateMatrix();pickupWood.setMatrixAt(woodIndex++,woodPose.matrix);}woodRoot.add(pickupWood);
+ const practicals=createCampPracticalLights(root);let fireFocus=false;
  const moonFill=new T.DirectionalLight('#c1d9e8',.08);moonFill.position.set(8,14,-12);root.add(moonFill);let currentWeather=null,moonGlow=0,skyActive=false;
  let previous=0;
  return {
   setLifeTime:at=>lifeTime=at,pickLife:ray=>life.pick(ray),
   setCats:(state,time)=>cats.set(state,time,matchMedia('(prefers-reduced-motion: reduce)').matches),pickCat:ray=>cats.pick(ray),pickMilk:ray=>cats.pickMilk(ray),
-  setRanking:value=>gathering.set(value),setCanPack:pack=>scenery.setPack(pack),setSkyMode:mode=>sky.setMode(mode),setSky:active=>{skyActive=active;sky.set(active);moon.setSky(active);decorativeStars.visible=!active;},pickMoon:ray=>moon.pick(ray),get skyTarget(){return sky.target;},setFocus:active=>moon.setFocus(active),setWatch:active=>watch.set(active),groundPoint:ray=>landscape.groundPoint(ray),setHands:(...args)=>hands.set(...args),setWeather:value=>{currentWeather=value;weather.setState(value);},setFireState:value=>{sharedFire=value;fire.setState(value);emergency.setState(value);},setSnacks:value=>fire.setSnacks(value),pickWood:ray=>fire.pickWood(ray),stirWood:(...args)=>fire.stir(...args),
+  setRanking:value=>gathering.set(value),setCanPack:pack=>scenery.setPack(pack),setSkyMode:mode=>sky.setMode(mode),setSky:active=>{skyActive=active;sky.set(active);moon.setSky(active);decorativeStars.visible=!active;},pickMoon:ray=>moon.pick(ray),get skyTarget(){return sky.target;},setFocus:active=>{fireFocus=!!active;moon.setFocus(active);},setWatch:active=>watch.set(active),groundPoint:ray=>landscape.groundPoint(ray),setHands:(...args)=>hands.set(...args),setWeather:value=>{currentWeather=value;weather.setState(value);},setFireState:value=>{sharedFire=value;fire.setState(value);emergency.setState(value);},setSnacks:value=>fire.setSnacks(value),pickWood:ray=>fire.pickWood(ray),stirWood:(...args)=>fire.stir(...args),
   get moonGlow(){return moonGlow;},get lighting(){return lighting;},
-  get fireDiagnostics(){return {...fire.diagnostics,lighting,tentFire:emergency.diagnostics,clouds:clouds.diagnostics,life:life.diagnostics,cats:cats.diagnostics,moonGlow,scenery:scenery.diagnostics,sky:sky.diagnostics,moon:moon.diagnostics,meteor:meteors.diagnostics,weather:weather.diagnostics,hands:hands.diagnostics,watch:watch.diagnostics,landscape:landscape.diagnostics};},
+  get fireDiagnostics(){return {...fire.diagnostics,lighting,practicals:practicals.diagnostics,tentFire:emergency.diagnostics,clouds:clouds.diagnostics,life:life.diagnostics,cats:cats.diagnostics,moonGlow,scenery:scenery.diagnostics,sky:sky.diagnostics,moon:moon.diagnostics,meteor:meteors.diagnostics,weather:weather.diagnostics,hands:hands.diagnostics,watch:watch.diagnostics,landscape:landscape.diagnostics};},
   get cutaway(){return cloth.map(c=>({id:c.tent.id,opacity:c.mesh.material.opacity,wallOpacity:c.wallMesh.material.opacity}));},
   setQuote(text){ctx.clearRect(0,0,512,256);ctx.fillStyle='#f8ead1';ctx.textAlign='center';ctx.font='24px sans-serif';ctx.fillText('별빛 캠핑장 방명록',256,60);ctx.font='18px sans-serif';const chars=[...text];ctx.fillText(chars.slice(0,23).join(''),256,115);ctx.fillText(chars.slice(23,46).join('')+(chars.length>46?'…':''),256,148);ctx.font='14px sans-serif';ctx.fillText('가까이에서 흔적 남기기',256,205);quoteTex.needsUpdate=true;},
   update(time,reduced=false,viewer,camera){
    const dt=previous?Math.min(.05,Math.max(0,time-previous)):.05;previous=time;
-   const direction=skyActive?sky.moonDirection:moon.direction,transmission=moonTransmissionAt(direction,time,currentWeather?.cloudCover||0,currentWeather?.kind==='rain'?currentWeather.intensity||.7:0);lighting=campLightAt(lifeTime,currentWeather,fire.diagnostics.heat,transmission);moonGlow=lighting.moon;moonFill.intensity=0;beams.set(lighting.beams);sky.update(time,camera);sky.setMoonOpacity(transmission);moon.update(camera,moonGlow,transmission);clouds.update(time,camera,currentWeather,lifeTime,skyActive?sky.moonDirection:moon.direction);life.update(time,lifeTime,sharedFire);emergency.update(time,lifeTime,reduced);weather.update(time,viewer,reduced);hands.update(time,camera,reduced);watch.update(time,camera,reduced);landscape.update(time,viewer,!!viewer&&Math.hypot(viewer.x-(this.lastX??viewer.x),viewer.z-(this.lastZ??viewer.z))>.001,reduced,camera,Date.now(),moonGlow,lighting);this.lastX=viewer?.x;this.lastZ=viewer?.z;fire.update(time,reduced,camera);meteors.update(time,camera,reduced,currentWeather);
+   const direction=skyActive?sky.moonDirection:moon.direction,transmission=moonTransmissionAt(direction,time,currentWeather?.cloudCover||0,currentWeather?.kind==='rain'?currentWeather.intensity||.7:0);lighting=campLightAt(lifeTime,currentWeather,fire.diagnostics.heat,transmission,fireFocus);practicals.update(viewer,dt);moonGlow=lighting.moon;moonFill.intensity=0;beams.set(lighting.beams);sky.update(time,camera);sky.setMoonOpacity(transmission);moon.update(camera,moonGlow,transmission);clouds.update(time,camera,currentWeather,lifeTime,skyActive?sky.moonDirection:moon.direction);life.update(time,lifeTime,sharedFire);emergency.update(time,lifeTime,reduced);weather.update(time,viewer,reduced);hands.update(time,camera,reduced);watch.update(time,camera,reduced);landscape.update(time,viewer,!!viewer&&Math.hypot(viewer.x-(this.lastX??viewer.x),viewer.z-(this.lastZ??viewer.z))>.001,reduced,camera,Date.now(),moonGlow,lighting);this.lastX=viewer?.x;this.lastZ=viewer?.z;fire.update(time,reduced,camera);meteors.update(time,camera,reduced,currentWeather);
    for(let i=0;i<waves.length;i++)waves[i].position.x=waves[i].userData.baseX+(reduced?0:Math.sin(time*.45+i)*.18);
 
    const near=viewer?tentAt(viewer.x,viewer.z,1.15):null;
    const inside=viewer?tentAt(viewer.x,viewer.z):null;
-   for(const c of cloth){c.baseRotation??=c.mesh.rotation.z;c.mesh.rotation.z=c.baseRotation+(reduced?0:Math.sin(time*2+c.tent.x)*weather.wind*.018);
+   for(const c of cloth){const glow=inside?.id===c.tent.id ? .12 : .055;c.mesh.material.emissiveIntensity=T.MathUtils.damp(c.mesh.material.emissiveIntensity,glow,5,dt);c.wallMesh.material.emissiveIntensity=c.mesh.material.emissiveIntensity;c.baseRotation??=c.mesh.rotation.z;c.mesh.rotation.z=c.baseRotation+(reduced?0:Math.sin(time*2+c.tent.x)*weather.wind*.018);
     for(const [mesh,faded] of [[c.mesh,.1],[c.wallMesh,.72]]){const material=mesh.material,target=near?.id === c.tent.id ? faded : 1;material.opacity=reduced?target:T.MathUtils.damp(material.opacity,target,9,dt);material.depthWrite=material.opacity>.98;}
     c.sign.visible=inside?.id!==c.tent.id;
    }
   },
-  dispose(){emergency.dispose();life.dispose();beams.dispose();clouds.dispose();cats.dispose();gathering.dispose();scenery.dispose();canvasTex.dispose();sky.dispose();moon.dispose();landscape.dispose();weather.dispose();hands.dispose();watch.dispose();meteors.dispose();fire.dispose();pickupWood.dispose();woodRoot.removeFromParent();seatWood.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
+  dispose(){practicals.dispose();emergency.dispose();life.dispose();beams.dispose();clouds.dispose();cats.dispose();gathering.dispose();scenery.dispose();canvasTex.dispose();sky.dispose();moon.dispose();landscape.dispose();weather.dispose();hands.dispose();watch.dispose();meteors.dispose();fire.dispose();pickupWood.dispose();woodRoot.removeFromParent();seatWood.dispose();const gs=new Set(geometries),ms=new Set(materials.values());root.traverse(o=>{if(o.geometry)gs.add(o.geometry);if(o.material)ms.add(o.material);});gs.forEach(g=>g.dispose());ms.forEach(m=>{m.map?.dispose();m.dispose();});scene.remove(root);}
  };
 }
