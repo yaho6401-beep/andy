@@ -1,6 +1,6 @@
 import {GARDEN} from '../src/garden-layout.js';
 import {CAMP,campPosition} from './layout.js';
-export const MILK_SPOTS=CAMP.tents.map(t=>({id:t.id,x:t.x-2.05,z:t.z+1.05}));
+export const MILK_SPOTS=CAMP.tents.map(t=>({id:t.id,x:t.x+2.4,z:t.z+1.4}));
 export const CAT_COATS=['#d6aa73','#aaa6a0','#e9dfcd'];
 const homes=[{x:-9.6,z:-2.5},{x:9.6,z:-2.5},{x:-9.4,z:-3.8}];
 // Local ambient companions: no player identity or shared-room state is stored.

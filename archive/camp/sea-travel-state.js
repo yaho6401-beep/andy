@@ -1,5 +1,5 @@
 // Shared routes: the server owns boarding, time and landing. Clients only interpolate.
-export const UMBRELLAS=[{id:'amber',x:-5.8,z:-1.6},{id:'lavender',x:10.2,z:-1.6}];
+export const UMBRELLAS=[{id:'amber',x:-5.6,z:-1.05},{id:'lavender',x:10.4,z:-1.05}];
 export const BOAT_PORTS={shore:{x:24,z:-14.25,label:'해변'},island:{x:6.5,z:-77.2,label:'작은 섬'}};
 const ROUTE=[BOAT_PORTS.shore,{x:24,z:-20},{x:16,z:-52},{x:13,z:-68},{x:10,z:-74},BOAT_PORTS.island];
 export const BOAT_TIME=28000;

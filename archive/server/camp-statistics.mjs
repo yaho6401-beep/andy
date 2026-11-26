@@ -11,9 +11,9 @@ export function campStatistics(s){const now=s.clock(),day=koreaDay(now),local=ne
 export function keeperStatisticsAction(s,id,input){
  if(!['camp-keeper-inquiry','camp-keeper-stats'].includes(input.type))return null;
  const p=s.clients.get(id),now=s.clock(),npc=emergencyKeeperPose(s.campfire,now);
- if(!p||p.room!=='camp')throw Error('온유 가까이에서 조용히 이야기해 주세요.');
+ if(!p||p.room!=='camp')throw Error('온유 할아버지 가까이에서 조용히 이야기해 주세요.');
  if(input.type==='camp-keeper-inquiry'){
-  if(p.seat||Math.hypot(p.x-npc.x,p.z-npc.z)>3)throw Error('온유 가까이에서 조용히 이야기해 주세요.');
+  if(p.seat||Math.hypot(p.x-npc.x,p.z-npc.z)>3)throw Error('온유 할아버지 가까이에서 조용히 이야기해 주세요.');
   if(!asksCampVisitors(String(input.question||'').slice(0,200)))throw Error('캠핑장 방문객에 대해 먼저 물어보세요.');
   p.keeperStatUntil=now+STAT_TALK_MS;return {ok:true,questioned:true,line:SECRET_VISIT_REPLIES[Math.floor(s.random()*SECRET_VISIT_REPLIES.length)]};
  }
