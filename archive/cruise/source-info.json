@@ -1,0 +1,16 @@
+{
+  "source": "blue-horizon/index.html",
+  "sha256": "c4af2aaa9d7afd2dbee26bfbd9bd096c2002631c8530213dd9f9dd48e119a7a6",
+  "features": [
+    "메인 갑판",
+    "선수",
+    "선미",
+    "선교",
+    "식당",
+    "조타",
+    "망원경",
+    "시간대",
+    "소리"
+  ],
+  "note": "Owner-provided local prototype reused. Standalone original directory is unchanged. Cruise is a single-player world."
+}

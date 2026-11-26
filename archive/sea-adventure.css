@@ -19,3 +19,9 @@ body.sea-boat-active .action-dock,body.sea-boat-active #joystick,body.sea-boat-a
 body.sea-swimming-active #camp-comfort{top:calc(var(--archive-controls-top,120px) + 100px);bottom:auto;right:10px;max-width:142px}
 
 #sea-fishing-tip{white-space:normal;word-break:keep-all;overflow-wrap:anywhere}
+
+#sea-cruise{border-color:#bda46d99;background:#233e4cde;color:#f5e9c9}
+body.sea-boat-active #camp-comfort{display:none!important}
+#cruise-arrival{position:fixed;z-index:18;bottom:calc(22px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:min(350px,calc(100vw - 28px));padding:16px 18px;border:1px solid #d7c39955;border-radius:20px;background:#18313dde;backdrop-filter:blur(12px);color:#f1e9d6;text-align:center;box-shadow:0 8px 32px #0003}
+#cruise-arrival small{font-size:10px;letter-spacing:.16em;color:#d6c698}#cruise-arrival p{font-size:15px;margin:9px 0 13px;word-break:keep-all}#cruise-arrival>div{display:flex;gap:7px;justify-content:center}#cruise-arrival button{font:inherit;font-size:12px;padding:10px;border:1px solid #d6cead66;border-radius:12px;background:#edf0df;color:#233e4c;min-height:42px;cursor:pointer;word-break:keep-all}#cruise-arrival #sea-cruise-return{color:#e4ebdf;background:transparent}#cruise-arrival>span{display:block;font-size:10px;opacity:.7;margin-top:9px}
+@media(max-height:500px){#cruise-arrival{bottom:10px;padding:10px 16px}#cruise-arrival p{margin:4px 0 8px}#cruise-arrival>span{margin-top:5px}}
