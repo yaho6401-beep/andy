@@ -1,5 +1,5 @@
 // Personal, time-compressed trial voyages. Ship-local walking coordinates never move.
-import {geographicLegTrack} from './geographic-voyage.js';
+import {geographicLegTrack,geographicTrack,geographicReturnTrack} from './geographic-voyage.js';
 export const VOYAGE_KEY='bookscents-cruise-voyage-v1';
 export const VOYAGE_ROUTES=[
  {id:'bergen',name:'베르겐 · 피오르',sea:'북유럽 · 노르웨이',seconds:110,x:-430,z:-950,color:'#adc5bd',description:'깊은 피오르와 산자락, 붉은 목조 창고가 이어지는 항구'},
@@ -15,16 +15,22 @@ export const VOYAGE_ROUTES=[
  {id:'dubai',name:'두바이·라시드항',sea:'중동 · 아랍에미리트',seconds:130,x:-660,z:-1100,color:'#d0c4ab',description:'옅은 모래빛 해안 너머, 아스라이 떠오르는 두바이의 스카이라인'},
  {id:'abudhabi',name:'아부다비·자이드항',sea:'중동 · 아랍에미리트',seconds:135,x:660,z:-1110,color:'#c6cbb8',description:'잔잔한 걸프의 바다와 밝은 터미널, 따뜻한 빛의 해안 도시'}
 ];
+const longestSeaLeg=Math.max(...VOYAGE_ROUTES.map(r=>geographicTrack(r.id).total),...VOYAGE_ROUTES.flatMap(a=>VOYAGE_ROUTES.filter(b=>a!==b).map(b=>geographicLegTrack(a.id,b.id).total)));
+// Playable compressed duration: local passages near one minute, longest sea routes three.
+export function distanceDurationSeconds(nauticalMiles){if(!Number.isFinite(nauticalMiles)||nauticalMiles<0)return 0;return Math.round(60+120*Math.sqrt(Math.min(1,nauticalMiles/longestSeaLeg)));}
+for(const route of VOYAGE_ROUTES){route.legacySeconds=route.seconds;route.seconds=distanceDurationSeconds(geographicTrack(route.id).total);}
 export const routeById=id=>VOYAGE_ROUTES.find(r=>r.id===id)||null;
 export const homeVoyage=()=>({version:1,phase:'home',routeId:null});
 const clamp=t=>Math.max(0,Math.min(1,t)),ease=t=>t*t*(3-2*t);
-export function departureSeconds(originId,destinationId){const route=routeById(destinationId);if(!route)return 0;if(!originId)return route.seconds;const leg=geographicLegTrack(originId,destinationId);return leg?Math.round(Math.max(65,Math.min(145,Math.sqrt(leg.total)*1.4))):0;}
-const outboundDuration=state=>departureSeconds(state.originId,state.routeId)*1000+(state.originId?6000:0);
+export function departureSeconds(originId,destinationId){const route=routeById(destinationId);if(!route)return 0;if(!originId)return route.seconds;const leg=geographicLegTrack(originId,destinationId);return leg?distanceDurationSeconds(leg.total)-6:0;}
+const sailingSeconds=state=>state.sailSeconds??(state.originId?Math.round(Math.max(65,Math.min(145,Math.sqrt(geographicLegTrack(state.originId,state.routeId).total)*1.4))):routeById(state.routeId).legacySeconds);
+const outboundDuration=state=>sailingSeconds(state)*1000+(state.originId?6000:0);
+export function voyageTotalSeconds(state){if(!routeById(state.routeId)||state.phase==='home')return 0;return state.phase==='returning'?(state.durationMs+state.turnMs)/1000:outboundDuration(state)/1000;}
 export function departVoyage(state,routeId,now){
  if(!['home','port'].includes(state.phase))throw Error('항구에 도착한 뒤 다음 목적지를 골라 주세요.');
  if(!routeById(routeId)||!Number.isFinite(now))throw Error('항로를 확인해 주세요.');
- if(state.phase==='port'){if(!routeById(state.routeId)||state.routeId===routeId)throw Error('현재 항구와 다른 목적지를 골라 주세요.');return {version:1,phase:'outbound',originId:state.routeId,routeId,at:now};}
- return {version:1,phase:'outbound',routeId,at:now};
+ if(state.phase==='port'){if(!routeById(state.routeId)||state.routeId===routeId)throw Error('현재 항구와 다른 목적지를 골라 주세요.');return {version:1,phase:'outbound',originId:state.routeId,routeId,at:now,sailSeconds:departureSeconds(state.routeId,routeId)};}
+ return {version:1,phase:'outbound',routeId,at:now,sailSeconds:departureSeconds(null,routeId)};
 }
 function travelPoint(route,u){
  if(u===0)return {x:0,z:0};
@@ -47,27 +53,28 @@ export function voyagePose(state,now){
  const route=routeById(state.routeId);if(!route||state.phase==='home')return {phase:'home',u:0,x:0,z:0,heading:0,speed:0,moving:false,remaining:0,route:null};
  let u=1,remaining=0,turning=false;
  if(state.originId){
-  if(state.phase==='outbound'){const turn=6000,t=clamp((now-state.at-turn)/(departureSeconds(state.originId,state.routeId)*1000));u=ease(t);turning=now<state.at+turn;remaining=Math.max(0,Math.ceil((state.at+outboundDuration(state)-now)/1000));const p=legPosition(state.originId,state.routeId,u),after=legPosition(state.originId,state.routeId,clamp(u+.0001)),before=legPosition(state.originId,state.routeId,clamp(u-.0001)),speed=turning?0:Math.hypot(after.x-before.x,after.z-before.z)/Math.max(.000001,clamp(u+.0001)-clamp(u-.0001))*6*t*(1-t)/departureSeconds(state.originId,state.routeId);return {phase:state.phase,u,...p,heading:turning?Math.PI*ease(clamp((now-state.at)/turn)):p.heading,speed,moving:speed>.1,turning,remaining,route,originId:state.originId};}
+  if(state.phase==='outbound'){const turn=6000,t=clamp((now-state.at-turn)/(sailingSeconds(state)*1000));u=ease(t);turning=now<state.at+turn;remaining=Math.max(0,Math.ceil((state.at+outboundDuration(state)-now)/1000));const p=legPosition(state.originId,state.routeId,u),after=legPosition(state.originId,state.routeId,clamp(u+.0001)),before=legPosition(state.originId,state.routeId,clamp(u-.0001)),speed=turning?0:Math.hypot(after.x-before.x,after.z-before.z)/Math.max(.000001,clamp(u+.0001)-clamp(u-.0001))*6*t*(1-t)/sailingSeconds(state);return {phase:state.phase,u,...p,heading:turning?Math.PI*ease(clamp((now-state.at)/turn)):p.heading,speed,moving:speed>.1,turning,remaining,route,originId:state.originId};}
   if(state.phase==='returning'){const start=legPosition(state.originId,state.routeId,state.fromU),synthetic={x:start.x,z:start.z},t=clamp((now-state.at-state.turnMs)/state.durationMs),homeProgress=ease(t),point=travelPoint(synthetic,1-homeProgress),d=travelDerivative(synthetic,1-homeProgress),diff=Math.atan2(Math.sin(Math.PI-start.heading),Math.cos(Math.PI-start.heading));turning=now<state.at+state.turnMs;const heading=turning?start.heading+diff*ease(clamp((now-state.at)/state.turnMs)):Math.atan2(-d.x,-d.z)+Math.PI,speed=turning?0:Math.hypot(d.x,d.z)*6*t*(1-t)/(state.durationMs/1000);return {phase:state.phase,u:1-homeProgress,...point,heading,speed,moving:speed>.1,turning,remaining:Math.max(0,Math.ceil((state.at+state.turnMs+state.durationMs-now)/1000)),route,originId:state.originId,homeProgress,returnFromProgress:state.fromU};}
  }
- if(state.phase==='outbound'){const t=clamp((now-state.at)/(route.seconds*1000));u=ease(t);remaining=Math.max(0,Math.ceil((state.at+route.seconds*1000-now)/1000));}
+ if(state.phase==='outbound'){const t=clamp((now-state.at)/(sailingSeconds(state)*1000));u=ease(t);remaining=Math.max(0,Math.ceil((state.at+sailingSeconds(state)*1000-now)/1000));}
  if(state.phase==='returning'){turning=now<state.at+state.turnMs;const t=clamp((now-state.at-state.turnMs)/state.durationMs);u=state.fromU*(1-ease(t));remaining=Math.max(0,Math.ceil((state.at+state.turnMs+state.durationMs-now)/1000));}
  const p=voyagePosition(route.id,u),direction=state.phase==='returning'?-1:1;
  let heading=p.heading;
  if(direction<0){const turn=ease(clamp((now-state.at)/state.turnMs));heading+=Math.PI*turn;}
  let speed=0;
- if(state.phase==='outbound'||state.phase==='returning'&&!turning){const t=state.phase==='outbound'?clamp((now-state.at)/(route.seconds*1000)):clamp((now-state.at-state.turnMs)/state.durationMs),seconds=state.phase==='outbound'?route.seconds:state.durationMs/1000,d=travelDerivative(route,u);
+ if(state.phase==='outbound'||state.phase==='returning'&&!turning){const t=state.phase==='outbound'?clamp((now-state.at)/(sailingSeconds(state)*1000)):clamp((now-state.at-state.turnMs)/state.durationMs),seconds=state.phase==='outbound'?sailingSeconds(state):state.durationMs/1000,d=travelDerivative(route,u);
   speed=Math.hypot(d.x,d.z)*6*t*(1-t)*(state.phase==='returning'?state.fromU:1)/seconds;}
  return {phase:state.phase,u,...p,heading,speed,moving:speed>.1,turning,remaining,route};
 }
 export function returnVoyage(state,now){
  const current=updateVoyage(state,now);if(current.phase==='home'||current.phase==='returning')return current;
- const p=voyagePose(current,now),result={version:1,phase:'returning',routeId:current.routeId,at:now,fromU:p.u,turnMs:6000,durationMs:Math.round(8000+52000*(current.originId?clamp(Math.hypot(p.x,p.z)/1400):p.u))};if(current.originId)result.originId=current.originId;return result;
+ const p=voyagePose(current,now),distance=current.originId?geographicReturnTrack(current.originId,current.routeId,p.u).total:geographicTrack(current.routeId).total*p.u,result={version:1,phase:'returning',routeId:current.routeId,at:now,fromU:p.u,turnMs:6000,durationMs:(distanceDurationSeconds(distance)-6)*1000};if(current.originId)result.originId=current.originId;return result;
 }
 export function restoreVoyage(value,now){
  if(!value||value.version!==1||!routeById(value.routeId)||!['outbound','port','returning'].includes(value.phase)||!Number.isFinite(value.at)||value.at>now+2000||value.at<now-86400000)return homeVoyage();
  if(value.originId!==undefined&&(!routeById(value.originId)||value.originId===value.routeId))return homeVoyage();
- if(value.phase==='returning'&&(!Number.isFinite(value.fromU)||value.fromU<0||value.fromU>1||value.turnMs!==6000||!Number.isFinite(value.durationMs)||value.durationMs<8000||value.durationMs>60000))return homeVoyage();
+ if(value.sailSeconds!==undefined&&(!Number.isInteger(value.sailSeconds)||value.sailSeconds<(value.originId?54:60)||value.sailSeconds>(value.originId?174:180)))return homeVoyage();
+ if(value.phase==='returning'&&(!Number.isFinite(value.fromU)||value.fromU<0||value.fromU>1||value.turnMs!==6000||!Number.isFinite(value.durationMs)||value.durationMs<8000||value.durationMs>174000))return homeVoyage();
  // Copy only known fields; local records never provide URLs or executable state.
- const state={version:1,phase:value.phase,routeId:value.routeId,at:value.at};if(value.originId)state.originId=value.originId;if(value.phase==='returning')Object.assign(state,{fromU:value.fromU,turnMs:6000,durationMs:value.durationMs});return updateVoyage(state,now);
+ const state={version:1,phase:value.phase,routeId:value.routeId,at:value.at};if(value.originId)state.originId=value.originId;if(value.sailSeconds!==undefined)state.sailSeconds=value.sailSeconds;if(value.phase==='returning')Object.assign(state,{fromU:value.fromU,turnMs:6000,durationMs:value.durationMs});return updateVoyage(state,now);
 }
