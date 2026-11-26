@@ -15,7 +15,7 @@ export function buildCruiseDetails(ship,{box,mesh,cylinder,label}){
   const roof=pane(0,UPPER_Y+4.5,zone.z,25.8,32);roof.rotation.x=-Math.PI/2;
   for(const x of [-12.9,12.9])box(ship,white,x,UPPER_Y+4.45,zone.z,.2,.25,34);
   for(const z of [-16.8,16.8])box(ship,white,0,UPPER_Y+4.45,zone.z+z,26,.25,.18);
-  for(const x of [-10,0,10]){const light=box(ship,0xf4dfb6,x,UPPER_Y+4.32,zone.z,.045,.025,30);light.material.emissive?.setHex(0xc29b62);light.material.emissiveIntensity=.23;}
+  for(const x of [-10,10]){const light=box(ship,0xf4dfb6,x,UPPER_Y+4.32,zone.z,.045,.025,30);light.material.emissive?.setHex(0xc29b62);light.material.emissiveIntensity=.23;}
  }
  // Sculpted funnel, ventilation louvres, communications domes and navigation mast.
  box(ship,white,-7,UPPER_Y+1.3,12.5,5.4,2.6,5);

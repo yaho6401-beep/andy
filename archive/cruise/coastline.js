@@ -3,7 +3,7 @@ import * as T from 'three';
 // Two small alpha panoramas keep the village's full scene out of this world.
 export function createCoastline(parent){
  const root=new T.Group();parent.add(root);const loader=new T.TextureLoader(),planes=[];
- for(const [name,x,z,w,h]of [['camp',-10,-183,108,17],['garden',12,179,89,34]]){
+ for(const [name,x,z,w,h]of [['camp',-10,-280,108,17],['garden',12,285,89,20]]){
   const map=loader.load(new URL('./scenery/'+name+'.webp',import.meta.url).href);map.colorSpace=T.SRGBColorSpace;map.minFilter=T.LinearFilter;map.generateMipmaps=false;
   const m=new T.Mesh(new T.PlaneGeometry(w,h),new T.MeshBasicMaterial({map,transparent:true,depthWrite:false,alphaTest:.015,color:'#c9d8df',fog:true}));m.position.set(x,h/2-.7,z);if(name==='garden')m.rotation.y=Math.PI;root.add(m);planes.push({name,mesh:m});
  }
