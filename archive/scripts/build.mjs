@@ -2,6 +2,10 @@ import {build} from 'esbuild';
 import {mkdir,readFile,writeFile,copyFile,readdir} from 'node:fs/promises';
 await mkdir('dist',{recursive:true});
 await build({entryPoints:['src/main.js'],outdir:'dist',bundle:true,splitting:true,format:'esm',platform:'browser',target:['es2022'],minify:true});
+// Load BLUE HORIZON only after boarding; it is not part of the village bundle.
+await mkdir('dist/cruise',{recursive:true});
+await build({entryPoints:['cruise/main.js'],outdir:'dist/cruise',bundle:true,format:'esm',platform:'browser',target:['es2022'],minify:true});
+for(const file of ['index.html','styles.css'])await copyFile('cruise/'+file,'dist/cruise/'+file);
 await mkdir('dist/workshop',{recursive:true});
 await build({entryPoints:['../workshop/main.js'],outdir:'dist/workshop',bundle:true,format:'esm',platform:'browser',target:['es2022'],minify:true});
 for(const file of ['index.html','styles.css'])await copyFile('../workshop/'+file,'dist/workshop/'+file);
