@@ -1,4 +1,5 @@
 import {VOYAGE_KEY,VOYAGE_ROUTES,homeVoyage,departVoyage,returnVoyage,restoreVoyage,updateVoyage,voyagePose,voyagePosition,departureSeconds} from './voyage-state.js';
+import {harborSceneFor} from './coastal-scenery.js';
 import {createPortWorld} from './port-world.js';
 const $=id=>document.getElementById(id),time=n=>`${Math.floor(n/60)}:${String(n%60).padStart(2,'0')}`;
 export class CruiseVoyage{
@@ -14,7 +15,7 @@ export class CruiseVoyage{
   this.ensurePort();this.save();
  }
  save(){try{this.storage.setItem(VOYAGE_KEY,JSON.stringify(this.value));}catch{}}
- ensurePort(p=voyagePose(this.value,this.clock())){let id=p.phase==='home'?null:this.value.routeId;if(this.value.originId&&p.phase==='outbound')id=p.u<.38?this.value.originId:p.u>.62?this.value.routeId:null;if(this.value.originId&&p.phase==='returning')id=p.homeProgress<.25?(this.value.fromU<.38?this.value.originId:this.value.fromU>.62?this.value.routeId:null):null;if(this.portId===id)return;this.port?.dispose();this.port=null;this.portId=id;if(id){this.port=createPortWorld(this.environment,id);const end=voyagePosition(id,1);this.port.root.position.set(end.x-Math.sin(end.heading)*380,0,end.z-Math.cos(end.heading)*380);this.port.root.rotation.y=end.heading;}}
+ ensurePort(p=voyagePose(this.value,this.clock())){const {id}=harborSceneFor(this.value,p);if(this.portId===id)return;this.port?.dispose();this.port=null;this.portId=id;if(id){this.port=createPortWorld(this.environment,id);const end=voyagePosition(id,1);this.port.root.position.set(end.x-Math.sin(end.heading)*380,0,end.z-Math.cos(end.heading)*380);this.port.root.rotation.y=end.heading;}}
  open(){this.api.pause();this.render(this.clock());if(!this.dialog.open)this.dialog.showModal();}
  depart(id){
   if(!['home','port'].includes(this.value.phase)||this.value.routeId===id&&this.value.phase==='port')return;
@@ -26,17 +27,17 @@ export class CruiseVoyage{
  render(now){
   const p=voyagePose(this.value,now),home=p.phase==='home',returning=p.phase==='returning',atPort=p.phase==='port',origin=this.value.originId;
   document.body.classList.toggle('cruise-at-sea',!home);$('voyage-strip').hidden=home&&this.api.player().room!==3;document.body.classList.toggle('cruise-voyage-hud',!$('voyage-strip').hidden);
-  $('voyage-title').textContent=home?'선장과 떠나는 다섯 항로':`${p.route.name} · ${returning?'귀항 중':p.phase==='port'?'먼 항구 앞바다':Math.round(p.u*100)+'%'}`;
+  $('voyage-title').textContent=home?'선장과 떠나는 열두 항구':`${p.route.name} · ${returning?'귀항 중':p.phase==='port'?'먼 항구 앞바다':Math.round(p.u*100)+'%'}`;
   $('voyage-detail').textContent=home?'선교에서 선장을 만나보세요':p.phase==='port'?'풍경을 둘러보거나 다음 항구를 골라보세요':p.turning?'새 항로를 향해 천천히 선회하고 있어요':`${returning?'모항까지':'항구 풍경까지'} ${time(p.remaining)} · 단축 시연`;
   $('voyage-progress').style.width=(home?0:p.u*100)+'%';$('return-camp').textContent=home?'← 캠핑장 돌아가기':returning?`← 귀항 중 ${time(p.remaining)}`:'← 캠핑장으로 귀항';
   $('voyage-routes').hidden=!(home||atPort);$('voyage-current').hidden=home;$('voyage-choices-title').hidden=!atPort;for(const button of $('voyage-routes').children){const id=button.dataset.sail;button.hidden=atPort&&id===this.value.routeId;button.disabled=!(home||atPort);const line=button.querySelector('span+span>small:last-child');if(line)line.textContent='단축 항해 '+time(departureSeconds(atPort?this.value.routeId:null,id)+(atPort?6:0))+' · 출항 ↗';}
-  $('voyage-greeting').textContent=home?`“자, 이제 떠나볼까. 다섯 바다 중 어디로 가고 싶은가?”`:p.phase==='port'?`“${p.route.name} 앞바다에 도착했네. 다음 항구를 골라 계속 여행해도 좋겠네.”`:returning?'“모항으로 돌아가는 중이네. 바다를 바라보며 기다려 주게.”':`“${p.route.sea} 쪽으로 항해하고 있네. 선수에 서면 풍경이 더 잘 보일 걸세.”`;
-  $('voyage-summary').textContent=home?'':p.phase==='port'?`${p.route.name} 앞바다 · 네 곳의 다음 목적지 중 골라보세요`:p.turning?'선회 중 · 항로를 천천히 바꾸고 있어요.':`${returning?'모항까지':'항구까지'} ${time(p.remaining)} · ${origin?'이번 항로':'모항에서'} ${Math.round(p.u*100)}% ${origin?'진행':'멀어진 곳'}`;
+  $('voyage-greeting').textContent=home?`“자, 이제 떠나볼까. 열두 항구 중 어디로 가고 싶은가?”`:p.phase==='port'?`“${p.route.name} 앞바다에 도착했네. 다음 항구를 골라 계속 여행해도 좋겠네.”`:returning?'“모항으로 돌아가는 중이네. 바다를 바라보며 기다려 주게.”':`“${p.route.sea} 쪽으로 항해하고 있네. 선수에 서면 풍경이 더 잘 보일 걸세.”`;
+  $('voyage-summary').textContent=home?'':p.phase==='port'?`${p.route.name} 앞바다 · 다른 열한 항구 중 다음 목적지를 골라보세요`:p.turning?'선회 중 · 항로를 천천히 바꾸고 있어요.':`${returning?'모항까지':'항구까지'} ${time(p.remaining)} · ${origin?'이번 항로':'모항에서'} ${Math.round(p.u*100)}% ${origin?'진행':'멀어진 곳'}`;
   $('voyage-view').hidden=p.phase!=='port';$('voyage-return').disabled=returning;$('voyage-return').textContent=returning?'귀항하고 있어요':'모항으로 귀항하기';
  }
  frame(dt,elapsed){
   const now=this.clock(),next=updateVoyage(this.value,now);if(next.phase!==this.value.phase){this.value=next;this.save();this.ensurePort();if(next.phase==='port')this.say(`선장 · ${voyagePose(next,now).route.name} 앞바다에 도착했네. 천천히 둘러보게.`,6500);if(next.phase==='home')this.say('선장 · 모항에 무사히 돌아왔네. 이제 캠핑장으로 내려도 좋네.',6500);}
-  const p=voyagePose(this.value,now);this.ensurePort(p);let opacity=1;if(p.phase==='outbound'){opacity=this.value.originId?(p.u<.38?Math.min(1,(.38-p.u)/.1):Math.max(0,Math.min(1,(p.u-.62)/.12))):Math.max(0,Math.min(1,(p.u-.5)/.25));}if(p.phase==='returning')opacity=this.value.originId?Math.max(0,Math.min(1,(.25-p.homeProgress)/.12)):Math.max(0,Math.min(1,(p.u-.45)/.3));if(this.port&&(p.phase==='port'||p.phase==='outbound'&&p.u>.74))this.api.harborWater?.(this.port.state.sea);this.port?.update(elapsed,{night:this.api.night?.()?1:0,opacity});const diff=Math.atan2(Math.sin(p.heading-this.heading),Math.cos(p.heading-this.heading));this.heading+=diff*(1-Math.exp(-dt*1.8));const c=Math.cos(this.heading),s=Math.sin(this.heading);this.environment.rotation.y=-this.heading;this.environment.position.set(-c*p.x+s*p.z,0,-s*p.x-c*p.z);this.pose={...p,heading:this.heading};
+  const p=voyagePose(this.value,now);this.ensurePort(p);const {extra}=harborSceneFor(this.value,p);if(this.port&&(p.phase==='port'||p.phase==='outbound'&&p.u>.74))this.api.harborWater?.(this.port.state.sea,dt);this.port?.update(elapsed,{night:this.api.night?.()?1:0,extra,haze:this.api.horizon?.(),eye:this.api.eye?.()});const diff=Math.atan2(Math.sin(p.heading-this.heading),Math.cos(p.heading-this.heading));this.heading+=diff*(1-Math.exp(-dt*1.8));const c=Math.cos(this.heading),s=Math.sin(this.heading);this.environment.rotation.y=-this.heading;this.environment.position.set(-c*p.x+s*p.z,0,-s*p.x-c*p.z);this.pose={...p,heading:this.heading};
   if(p.phase==='outbound')for(const [u,key,line]of [[.12,'leave','선장 · 방금 머문 해안이 멀어지는군. 다음 풍경을 만나러 가세.'],[.5,'sea','선장 · 사방이 바다로 열렸네. 선미에서 길게 남는 항적을 보게.'],[.83,'land',`선장 · 수평선 너머로 ${p.route.name}의 해안이 보이는군.`]])if(p.u>=u&&!this.milestones.has(key)){this.milestones.add(key);this.say(line,5500);}
   if(Math.floor(now/1000)!==this.lastSecond){this.lastSecond=Math.floor(now/1000);this.render(now);}
   $('captain-caption').hidden=!this.captionText||now>this.captionUntil||!!document.querySelector('dialog[open]');if(!$('captain-caption').hidden)$('captain-caption').textContent=this.captionText;
