@@ -4,6 +4,7 @@ import {createShoreFootprints} from './shore-footprints.js';
 import {createLeafGeometry} from './leaf.js';
 import {tideEdge} from './comfort-state.js';
 import {campHeight,FOREST_TREES,GATHERING_PATH} from './layout.js';
+import {OFFSHORE_ISLANDS} from './offshore-islands.js';
 // Instanced forest, a gently rolling shore and a fixed local footprint pool.
 export function createCampLandscape(parent){
  const root=new T.Group();root.name='coast-and-woodland-walk';parent.add(root);const geometries=[],materials=[],own=g=>(geometries.push(g),g),mat=c=>{const m=new T.MeshLambertMaterial({color:c});materials.push(m);return m;},sandMat=mat('#ccb58f'),wood=mat('#5d4e43'),green=mat('#385c52'),stone=mat('#b9b19b');
@@ -25,8 +26,8 @@ export function createCampLandscape(parent){
  const edgeGeo=own(new T.CylinderGeometry(.09,.12,.45,7)),edgeLightGeo=own(new T.CylinderGeometry(.105,.105,.09,8)),edgePosts=new T.InstancedMesh(edgeGeo,wood,12),edgeLights=new T.InstancedMesh(edgeLightGeo,glowMat,12);let edge=0;for(let i=1;i<4;i++){const a=GATHERING_PATH[i-1],b=GATHERING_PATH[i];for(const t of [.25,.8])for(const side of [-1,1]){const length=Math.hypot(b.x-a.x,b.z-a.z),x=a.x+(b.x-a.x)*t-(b.z-a.z)/length*1.65*side,z=a.z+(b.z-a.z)*t+(b.x-a.x)/length*1.65*side;matrix.makeTranslation(x,.24,z);edgePosts.setMatrixAt(edge,matrix);matrix.makeTranslation(x,.49,z);edgeLights.setMatrixAt(edge++,matrix);}}root.add(edgePosts,edgeLights);
  const canopy=crowns.geometry.attributes.position;for(let i=0;i<canopy.count;i++){const x=canopy.getX(i),y=canopy.getY(i),z=canopy.getZ(i),r=1+.055*Math.sin(x*8+z*6)*Math.sin(y*7);canopy.setXYZ(i,x*r,y*r,z*r);}crowns.geometry.computeVertexNormals();
  // Distant headlands break the horizon; one instanced draw, no reflections or shadows.
- const islandGeo=own(new T.IcosahedronGeometry(1,2)),islandMat=mat('#344d51'),islands=new T.InstancedMesh(islandGeo,islandMat,5),islandPose=new T.Object3D();
- for(let i=0;i<5;i++){islandPose.position.set(-58+i*29,.05,-80-(i%2)*6);islandPose.scale.set(i===2?0:10+(i%3)*3,i===2?0:1.8+(i%2)*1.3,i===2?0:5);islandPose.rotation.y=i*.72;islandPose.updateMatrix();islands.setMatrixAt(i,islandPose.matrix);}root.add(islands);
+ const islandGeo=own(new T.IcosahedronGeometry(1,2)),islandMat=mat('#344d51'),islands=new T.InstancedMesh(islandGeo,islandMat,OFFSHORE_ISLANDS.length),islandPose=new T.Object3D();
+ OFFSHORE_ISLANDS.forEach((o,i)=>{islandPose.position.set(o.x,o.y,o.z);islandPose.scale.set(o.rx,o.ry,o.rz);islandPose.rotation.y=o.yaw;islandPose.updateMatrix();islands.setMatrixAt(i,islandPose.matrix);});root.add(islands);
  const shore=createShoreFootprints(root);
 
  const pathGeometry=own(new T.BufferGeometry()),pv=[];for(let i=0;i<40;i++){const z0=10+i*.5,z1=z0+.5,x0=18+Math.sin((z0-12)/3)*4,x1=18+Math.sin((z1-12)/3)*4;const a=[x0-1,campHeight(x0-1,z0)-.015,z0],b=[x0+1,campHeight(x0+1,z0)-.015,z0],c=[x1+1,campHeight(x1+1,z1)-.015,z1],d=[x1-1,campHeight(x1-1,z1)-.015,z1];pv.push(...a,...c,...b,...a,...d,...c);}pathGeometry.setAttribute('position',new T.Float32BufferAttribute(pv,3));pathGeometry.computeVertexNormals();root.add(new T.Mesh(pathGeometry,mat('#7c8067')));
