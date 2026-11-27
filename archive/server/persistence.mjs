@@ -11,7 +11,8 @@ export function restoreStore(data,clock=()=>Date.now()){
  for(const p of s.clients.values())if(p.room==='scents'&&!validPosition('scents',p.x,p.z))Object.assign(p,{...PORTALS.lobby.find(g=>g.to==='scents').spawn,seat:null,motion:'idle',epoch:(p.epoch||0)+1,correction:(p.correction||0)+1,seq:0,lastMove:clock()});
  // Only relocate a walker actually caught inside a changed camp obstacle.
  // Valid walkers and deliberately seated avatars retain their exact positions.
- for(const p of s.clients.values())if(p.room==='camp'&&!p.seat&&!validPosition('camp',p.x,p.z)){let safe=null;for(let r=.2;r<=2&&!safe;r+=.2)for(let i=0;i<24;i++){const a=i*Math.PI/12,x=p.x+Math.cos(a)*r,z=p.z+Math.sin(a)*r;if(validPosition('camp',x,z)){safe={x,z};break;}}safe??=PORTALS.garden.find(g=>g.to==='camp').spawn;Object.assign(p,{x:safe.x,z:safe.z,motion:'idle',epoch:(p.epoch||0)+1,correction:(p.correction||0)+1,seq:0,lastMove:clock()});}
+ // Server-owned rowboat voyages legitimately travel outside walkable land.
+ for(const p of s.clients.values())if(p.room==='camp'&&!p.seat&&!p.voyage&&!validPosition('camp',p.x,p.z)){let safe=null;for(let r=.2;r<=2&&!safe;r+=.2)for(let i=0;i<24;i++){const a=i*Math.PI/12,x=p.x+Math.cos(a)*r,z=p.z+Math.sin(a)*r;if(validPosition('camp',x,z)){safe={x,z};break;}}safe??=PORTALS.garden.find(g=>g.to==='camp').spawn;Object.assign(p,{x:safe.x,z:safe.z,motion:'idle',epoch:(p.epoch||0)+1,correction:(p.correction||0)+1,seq:0,lastMove:clock()});}
  pruneChatHistory(s);
  return s;
 }
