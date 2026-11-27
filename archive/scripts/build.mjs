@@ -6,7 +6,7 @@ await build({entryPoints:['src/main.js'],outdir:'dist',bundle:true,splitting:tru
 // Load BLUE HORIZON only after boarding; it is not part of the village bundle.
 await mkdir('dist/cruise',{recursive:true});
 await build({entryPoints:['cruise/main.js'],outdir:'dist/cruise',bundle:true,format:'esm',platform:'browser',target:['es2022'],minify:true});
-for(const file of ['index.html','styles.css','reading.css','voyage.css','navigation.css','deck-exploration.css'])await copyFile('cruise/'+file,'dist/cruise/'+file);
+for(const file of ['index.html','styles.css','reading.css','voyage.css','navigation.css','deck-exploration.css','night-sky.css'])await copyFile('cruise/'+file,'dist/cruise/'+file);
 await mkdir('dist/cruise/scenery',{recursive:true});for(const name of ['garden.webp','camp.webp'])await copyFile('cruise/scenery/'+name,'dist/cruise/scenery/'+name);
 await mkdir('dist/cruise/scenery/ports',{recursive:true});for(const {id} of VOYAGE_ROUTES)await copyFile('cruise/scenery/ports/'+id+'-v1.jpg','dist/cruise/scenery/ports/'+id+'-v1.jpg');
 await mkdir('dist/workshop',{recursive:true});
