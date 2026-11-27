@@ -1,0 +1,12 @@
+.cruise-map-dialog{position:fixed;inset:0;margin:auto;width:min(390px,calc(100% - 32px));max-height:calc(100dvh - 36px);overflow:auto;padding:28px 25px 23px;border:1px solid #d4cbb9;border-radius:22px;background:#faf7ee;color:#344640;box-shadow:0 24px 90px #182a2438;text-align:center;box-sizing:border-box}
+.cruise-map-dialog::backdrop{background:#1e302c50;backdrop-filter:blur(4px)}
+.cruise-map-close{position:absolute;right:11px;top:9px;border:0;background:transparent;padding:6px 11px;font-size:25px;color:#6c756b}
+.cruise-map-kicker{margin:10px 0 13px;font-size:10px;letter-spacing:.15em;color:#7c8375}
+.cruise-map-illustration{padding:4px 8px}.cruise-map-illustration svg{display:block;width:100%;height:126px}
+.cruise-map-dialog h2{font-size:23px;line-height:1.4;letter-spacing:-.04em;word-break:keep-all;margin:14px 0}
+.cruise-map-dialog>p:not(.cruise-map-kicker){font-size:15px;line-height:1.85;color:#70776a;margin:12px 0 22px;word-break:keep-all}
+.cruise-map-choices{display:grid;grid-template-columns:1.3fr 1fr;gap:10px}.cruise-map-choices button{margin:0;min-height:46px;font-size:16px;border-radius:12px}.cruise-map-dialog>small{display:block;font-size:11px;line-height:1.65;color:#7f857a;margin-top:16px;word-break:keep-all}
+.cruise-gift-discover{position:fixed;right:15px;bottom:calc(200px + env(safe-area-inset-bottom));z-index:24;border:1px solid #d0c4a7;background:#faf7eeed;color:#485c50;border-radius:16px;padding:11px 15px;font-family:inherit;font-size:14px;font-weight:500;box-shadow:0 5px 20px #35483d1a}.cruise-gift-discover span{color:#a88b4f;font-size:19px;margin-right:5px}
+.cruise-map-cancel{display:block;margin:8px auto 0;padding:4px 10px;border:0;border-radius:9px;background:#ffffff15;color:inherit;font:inherit;font-size:11px}
+.cruise-map-cancel[hidden],.cruise-gift-discover[hidden]{display:none}
+@media(max-height:600px){.cruise-map-dialog{padding:16px 22px}.cruise-map-illustration svg{height:70px}.cruise-map-dialog h2{margin:8px 0;font-size:21px}.cruise-map-dialog>p:not(.cruise-map-kicker){margin:8px 0 13px;font-size:14px;line-height:1.5}.cruise-gift-discover{bottom:165px}}

@@ -1,6 +1,7 @@
 import {NPCS} from './cafe-data.js';
 import {PORTALS} from './protocol.js';
 import {directEntry} from './room-entry.js';
+import {BOAT_PORTS} from '../camp/sea-travel-state.js';
 
 export const WALK_DESTINATIONS=[['garden','햇살 정원'],['lobby','로비'],['scents','향기박물관'],['books','북라운지'],['salon','향기카페'],['camp','별빛 캠핑장'],['shore','해변 산책길'],['forest','숲속 언덕'],['sea-bench','달빛 바다 벤치'],['gathering','별빛 모임 텐트'],['far-fire','멀리서 불멍 벤치']];
 export function roomRoute(from,to){
@@ -9,9 +10,9 @@ export function roomRoute(from,to){
  for(let i=0;i<queue.length;i++){const path=queue[i],last=path.at(-1);if(last===to)return path;for(const gate of PORTALS[last])if(!seen.has(gate.to)){seen.add(gate.to);queue.push([...path,gate.to]);}}
  return null;
 }
-const targetRoom=id=>['cafe-order','cafe-pickup'].includes(id)?'salon':['shore','forest','sea-bench','gathering','far-fire'].includes(id)?'camp':id;
-const targetPoint=id=>['cafe-order','cafe-pickup'].includes(id)?NPCS.salon.reach:id==='far-fire'?{x:6.35,z:6.45}:id==='sea-bench'?{x:21,z:-10.85}:id==='gathering'?{x:-36,z:8}:id==='shore'?{x:-23,z:-12}:id==='forest'?{x:19,z:25}:roomLanding(id);
-const targetLabel=id=>['cafe-order','cafe-pickup'].includes(id)?(id==='cafe-pickup'?'음료 픽업':'카페 주문'):WALK_DESTINATIONS.find(d=>d[0]===id)?.[1]||'';
+const targetRoom=id=>['cafe-order','cafe-pickup'].includes(id)?'salon':['cruise-boat','shore','forest','sea-bench','gathering','far-fire'].includes(id)?'camp':id;
+const targetPoint=id=>id==='cruise-boat'?BOAT_PORTS.shore:['cafe-order','cafe-pickup'].includes(id)?NPCS.salon.reach:id==='far-fire'?{x:6.35,z:6.45}:id==='sea-bench'?{x:21,z:-10.85}:id==='gathering'?{x:-36,z:8}:id==='shore'?{x:-23,z:-12}:id==='forest'?{x:19,z:25}:roomLanding(id);
+const targetLabel=id=>id==='cruise-boat'?'지도 속 조각배':['cafe-order','cafe-pickup'].includes(id)?(id==='cafe-pickup'?'음료 픽업':'카페 주문'):WALK_DESTINATIONS.find(d=>d[0]===id)?.[1]||'';
 export function roomLanding(room){const p=directEntry(room);return p?{x:p.x,z:p.z}:room==='garden'?{x:0,z:5.5}:null;}
 
 export class AutoWalk{
@@ -25,7 +26,7 @@ export class AutoWalk{
  closeMenu(){this.menu.hidden=true;this.button.setAttribute('aria-expanded','false');}
  start(room){
   const s=this.api.state();if(!s.joined||!roomRoute(s.room,targetRoom(room)))return;
-  this.api.stopInputs();this.closeMenu();this.destination=room;this.api.travel?.(room);this.leg=null;this.room=null;this.standing=false;this.started=performance.now();this.progressAt=this.started;this.lastPosition=null;this.paint();
+  this.api.stopInputs();this.closeMenu();this.destination=room;this.api.travel?.(room==='cruise-boat'?'shore':room);this.leg=null;this.room=null;this.standing=false;this.started=performance.now();this.progressAt=this.started;this.lastPosition=null;this.paint();
  }
  cancel(notify=true){const was=this.active;if(was)this.api.travel?.(null);this.destination=null;this.leg=null;this.api.stopWalk();this.cancelButton.hidden=true;if(was&&notify)this.api.toast('자동 달리기를 멈췄어요.');}
  get active(){return this.destination!==null;}
@@ -39,7 +40,7 @@ export class AutoWalk{
   const p=s.position;if(!p)return;
   if(!this.lastPosition||Math.hypot(p.x-this.lastPosition.x,p.z-this.lastPosition.z)>.25){this.progressAt=now;this.lastPosition={x:p.x,z:p.z};}
   if(now-this.progressAt>14000){this.cancel(false);this.api.toast('길이 잠시 막혀 있어요. 열린 바닥에서 다시 선택해주세요.');return;}
-  if(this.leg){const distance=Math.hypot(p.x-this.leg.point.x,p.z-this.leg.point.z);if(this.leg.kind==='final'&&distance<(['sea-bench','far-fire'].includes(this.destination)?.15:.5)){const destination=this.destination,label=targetLabel(destination);this.cancel(false);this.api.toast(label+'에 도착했어요.');if(destination==='cafe-order')this.api.order?.();if(destination==='cafe-pickup')this.api.pickup?.();return;}if(this.leg.kind==='clear'&&s.armed||this.leg.kind==='portal'&&!s.armed)this.leg=null;else if(s.walking||distance<.2||now-this.lastPlan<600)return;else this.leg=null;}
+  if(this.leg){const distance=Math.hypot(p.x-this.leg.point.x,p.z-this.leg.point.z);if(this.leg.kind==='final'&&distance<(['sea-bench','far-fire'].includes(this.destination)?.15:.5)){const destination=this.destination,label=targetLabel(destination);this.cancel(false);this.arrival={destination,at:now};this.api.toast(label+'에 도착했어요.');if(destination==='cafe-order')this.api.order?.();if(destination==='cafe-pickup')this.api.pickup?.();return;}if(this.leg.kind==='clear'&&s.armed||this.leg.kind==='portal'&&!s.armed)this.leg=null;else if(s.walking||distance<.2||now-this.lastPlan<600)return;else this.leg=null;}
   if(this.leg)return;
   const route=roomRoute(s.room,targetRoom(this.destination));if(!route){this.cancel(false);return;}
   const kind=!s.armed?'clear':route.length===1?'final':'portal',point=kind==='portal'?PORTALS[s.room].find(g=>g.to===route[1]):kind==='final'?targetPoint(this.destination):roomLanding(s.room);

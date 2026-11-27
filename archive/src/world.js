@@ -9,6 +9,7 @@ import {campSign} from '../camp/signage.js';
 import {GALLERY} from './gallery-layout.js';
 import {HARVESTS,WOOD_FINDS} from '../camp/snack-data.js';
 import {GARDEN} from './garden-layout.js';
+import {createCruiseGift} from './cruise-gift-art.js';
 import {CAFE_TABLES,SEATS} from './seats.js';
 import * as T from 'three';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
@@ -51,6 +52,7 @@ export class ArchiveWorld {
  const outdoor=room==='garden';
  round(g,outdoor?'#b9cc93':'#c5ad8d',0,-.22,0,outdoor?29:17,.4,outdoor?27:17,.15);mesh(g,box,outdoor?'#d0ddac':room==='books'?'#c8a47d':room==='scents'?'#eee4f1':room==='salon'?'#e6cbd0':'#eee2cb',0,-.005,0,outdoor?28:16,.05,outdoor?26:16);
  if(outdoor){
+  createCruiseGift(g);this.hotspots.push({...GARDEN.cruiseGift,id:'cruise-map',type:'cruise-map',title:'구석에서 발견한 작은 선물상자',reach:2.6});
   // Low, walk-through vegetable beds: no invisible walls on the garden paths.
   round(g,'#b29a76',0,.015,11.25,5.2,.07,2.45,.1);round(g,'#77593c',0,.065,11.25,4.8,.04,2.15,.08);
   for(const z of [10.2,11.25,12.3])round(g,'#c0a47d',0,.09,z,5,.13,.12,.03);
