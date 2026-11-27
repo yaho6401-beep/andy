@@ -8,7 +8,7 @@ export const GUEST_ROOMS=[
 ];
 export const guestRoomAt=p=>p.y<7.6&&p.y>6.5&&p.x< -3.9?GUEST_ROOMS.find(r=>r.open&&p.z>r.minZ&&p.z<r.maxZ)||null:null;
 export const ENTERTAINMENT_STAIR={id:'entertainment',label:'시네마 · 공연 라운지',x:0,fromZ:-9,toZ:-21,w:2.6,fromY:7,toY:ENTERTAINMENT_Y};
-export const ENTERTAINMENT_WALLS=[{x:-12.55,z:0,w:.22,d:48},{x:12.55,z:0,w:.22,d:48},{x:0,z:-24,w:25.1,d:.22},{x:0,z:24,w:25.1,d:.22},...[-1,1].flatMap(side=>[{x:side*1.8,z:-4.2,w:.18,d:39.6},{x:side*1.8,z:22,w:.18,d:4}])];
+export const ENTERTAINMENT_WALLS=[{x:-12.55,z:0,w:.22,d:48},{x:12.55,z:0,w:.22,d:48},{x:0,z:-24,w:25.1,d:.22},{x:0,z:24,w:25.1,d:.22},...[-1,1].flatMap(side=>[{x:side*3.8,z:-16,w:.18,d:16},{x:side*2.8,z:-8,w:2,d:.18},{x:side*1.8,z:3.8,w:.18,d:23.6},{x:side*1.8,z:22,w:.18,d:4}])];
 export const VENUE_SEATS=[...['cinema','theater'].flatMap((venue,k)=>[-10,-5,0,5,10,15].flatMap((z,row)=>(k?[5.2,8.5,11.2]:[-10.2,-7]).map((x,col)=>({id:venue+'-'+row+'-'+col,venue,zone:venue==='cinema'?9:10,x,z,y:ENTERTAINMENT_Y,yaw:Math.PI,w:1.05,label:venue==='cinema'?'시네마 좌석':'공연장 좌석'}))))];
 export const LEISURE_OBSTACLES=[...ENTERTAINMENT_WALLS.map(p=>({...p,y:ENTERTAINMENT_Y})),{x:7,z:-20.8,w:10,d:4.8,y:ENTERTAINMENT_Y},...GUEST_ROOMS.flatMap(r=>[{x:-9.7,z:r.minZ+1.65,w:2.1,d:2.6,y:7},{x:-11.8,z:r.maxZ-1.3,w:.75,d:2.0,y:7},{x:-5.1,z:r.minZ+.8,w:1.5,d:1.2,y:7}])];
 export const RESTAURANT_SEATS=[-9,0,9].flatMap((x,col)=>[-11,-3,5].flatMap((z,row)=>[-1,1].map(side=>({id:`dining-${col}-${row}-${side}`,venue:'dining',zone:4,table:`${col}-${row}`,tableX:x,tableZ:z+34,x:x+side*1.32,z:z+34,y:14.4,yaw:-side*Math.PI/2,w:.68,label:'식당 의자'}))));

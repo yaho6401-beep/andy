@@ -1,0 +1,32 @@
+{
+  "mode": "built-in image_gen",
+  "purpose": "Original fictionalized scenery inspired by the named real harbors; not navigational imagery.",
+  "files": [
+    {
+      "id": "newyork",
+      "path": "archive/cruise/scenery/ports/newyork-v1.jpg",
+      "prompt": "Wide cinematic landscape panorama for a lightweight realistic 3D cruise game environment backdrop. Photorealistic natural daylight, muted elegant blue green and warm stone palette, sea-level perspective from a cruise deck about 12 metres above water, camera level, no foreground ship, no people, no text, no overlays, no watermark. Broad horizontal panorama 3:2. Skyline fills middle horizontal band, pale blue clear sky upper 45%, calm water foreground lower 30%, shoreline at 30% above bottom, atmospheric distant edge silhouettes blending into haze. Credible geography, editorial travel photograph style rather than illustration. This is an original fictionalized scenery inspired by the real place, not a map. New York Upper Harbor seen approaching from the Narrows, Manhattan skyline and One World Trade Center far center, Brooklyn waterfront to the right and green Staten Island edge on the left. Several tiny distant ferries. Do not include any bridge across the front because the game adds a 3D bridge separately."
+    },
+    {
+      "id": "sanfrancisco",
+      "path": "archive/cruise/scenery/ports/sanfrancisco-v1.jpg",
+      "prompt": "Wide cinematic landscape panorama for a lightweight realistic 3D cruise game environment backdrop. Photorealistic natural daylight, muted elegant blue green and warm stone palette, sea-level perspective from a cruise deck about 12 metres above water, camera level, no foreground ship, no people, no text, no overlays, no watermark. Broad horizontal panorama 3:2. Skyline fills middle horizontal band, pale blue clear sky upper 45%, calm water foreground lower 30%, shoreline at 30% above bottom, atmospheric distant edge silhouettes blending into haze. Credible geography, editorial travel photograph style rather than illustration. This is an original fictionalized scenery inspired by the real place, not a map. San Francisco Bay seen approaching through the Golden Gate channel from the Pacific, Marin Headlands green rolling hills on the left, San Francisco peninsula dense pale houses and distant downtown to the right, blue bay receding into center. No bridge in image because the game adds a real 3D suspension bridge separately."
+    },
+    {
+      "id": "rio",
+      "path": "archive/cruise/scenery/ports/rio-v1.jpg",
+      "prompt": "Wide cinematic landscape panorama for a lightweight realistic 3D cruise game environment backdrop. Photorealistic natural daylight, muted elegant blue green and warm stone palette, sea-level perspective from a cruise deck about 12 metres above water, camera level, no foreground ship, no people, no text, no overlays, no watermark. Broad horizontal panorama 3:2. Skyline fills middle horizontal band, pale blue clear sky upper 45%, calm water foreground lower 30%, shoreline at 30% above bottom, atmospheric distant edge silhouettes blending into haze. Credible geography, editorial travel photograph style rather than illustration. This is an original fictionalized scenery inspired by the real place, not a map. Rio de Janeiro Guanabara Bay from a ship entering the bay, Sugarloaf Mountain and Rio waterfront to the left, distant Niteroi shoreline to the right, mountain silhouettes, tropical vegetation, realistic white midrise buildings. Wide navigable open water in center, mountain headlands wrapping toward both edges."
+    },
+    {
+      "id": "buenosaires",
+      "path": "archive/cruise/scenery/ports/buenosaires-v1.jpg",
+      "prompt": "Wide cinematic landscape panorama for a lightweight realistic 3D cruise game environment backdrop. Photorealistic natural daylight, muted elegant blue green and warm stone palette, sea-level perspective from a cruise deck about 12 metres above water, camera level, no foreground ship, no people, no text, no overlays, no watermark. Broad horizontal panorama 3:2. Skyline fills middle horizontal band, pale blue clear sky upper 45%, calm water foreground lower 30%, shoreline at 30% above bottom, atmospheric distant edge silhouettes blending into haze. Credible geography, editorial travel photograph style rather than illustration. This is an original fictionalized scenery inspired by the real place, not a map. Buenos Aires Puerto Nuevo and city skyline from Rio de la Plata, realistic broad flat waterfront, modern towers mixed with historic city, harbor cranes to the right, warm silty gray green river water, low green coast fading toward far sides. No mountains, no invented narrow strait."
+    }
+  ],
+  "sources": [
+    "https://www.nps.gov/gate/planyourvisit/statenislanddirections.htm",
+    "https://presidio.gov/explore/attractions/golden-gate",
+    "https://riotur.rio/wp-content/uploads/2024/08/Riotur_VisitRio_PocketGuide_85x125mm_miolo_SpecialEdition_BAIXA-4.pdf",
+    "https://www.argentina.gob.ar/node/468831"
+  ]
+}

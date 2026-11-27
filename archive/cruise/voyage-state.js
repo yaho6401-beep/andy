@@ -13,7 +13,11 @@ export const VOYAGE_ROUTES=[
  {id:'ningbo',name:'닝보·저우산항',sea:'동아시아 · 중국',seconds:110,x:-520,z:-1070,color:'#a9b9bf',description:'푸른 섬과 대형 크레인, 동중국해의 넓은 항만'},
  {id:'shenzhen',name:'선전·옌톈항',sea:'동아시아 · 중국',seconds:115,x:540,z:-1030,color:'#a5bfae',description:'짙은 녹음의 산 아래 컨테이너 부두가 길게 펼쳐진 해안'},
  {id:'dubai',name:'두바이·라시드항',sea:'중동 · 아랍에미리트',seconds:130,x:-660,z:-1100,color:'#d0c4ab',description:'옅은 모래빛 해안 너머, 아스라이 떠오르는 두바이의 스카이라인'},
- {id:'abudhabi',name:'아부다비·자이드항',sea:'중동 · 아랍에미리트',seconds:135,x:660,z:-1110,color:'#c6cbb8',description:'잔잔한 걸프의 바다와 밝은 터미널, 따뜻한 빛의 해안 도시'}
+ {id:'abudhabi',name:'아부다비·자이드항',sea:'중동 · 아랍에미리트',seconds:135,x:660,z:-1110,color:'#c6cbb8',description:'잔잔한 걸프의 바다와 밝은 터미널, 따뜻한 빛의 해안 도시'},
+ {id:'newyork',name:'뉴욕항',sea:'북아메리카 · 미국',seconds:155,x:680,z:-1190,color:'#a7bbca',description:'내로스의 양쪽 해안과 현수교를 지나 맨해튼 스카이라인으로'},
+ {id:'sanfrancisco',name:'샌프란시스코',sea:'북아메리카 · 미국',seconds:135,x:-710,z:-1200,color:'#a9bfae',description:'골든게이트의 붉은 현수교와 양옆 언덕 사이로 들어가는 만'},
+ {id:'rio',name:'리우데자네이루',sea:'남아메리카 · 브라질',seconds:155,x:720,z:-1230,color:'#9dc7b6',description:'슈거로프와 니테로이 해안을 양옆에 둔 과나바라만 입항'},
+ {id:'buenosaires',name:'부에노스아이레스',sea:'남아메리카 · 아르헨티나',seconds:160,x:-750,z:-1250,color:'#c8c0ab',description:'넓은 라플라타강 하구에서 만나는 도시와 크루즈 부두'}
 ];
 const longestSeaLeg=Math.max(...VOYAGE_ROUTES.map(r=>geographicTrack(r.id).total),...VOYAGE_ROUTES.flatMap(a=>VOYAGE_ROUTES.filter(b=>a!==b).map(b=>geographicLegTrack(a.id,b.id).total)));
 // Playable compressed duration: local passages near one minute, longest sea routes three.

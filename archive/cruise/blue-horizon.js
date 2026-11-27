@@ -7,7 +7,7 @@ import {createShipNightLights} from './night-lights.js';
 import {createMarineLife} from './marine-life.js';
 import {DeckExplorer} from './deck-exploration.js';
 import {buildDeckEquipment} from './ship-equipment.js';
-import {SHIP_ZONES,DECK_Y,UPPER_Y,CABIN_Y,ROOF_Y,SHIP_LENGTH,SHIP_BEAM,CAPTAIN_CONTACT,findShipPath,shipStep,shipZone} from './ship-layout.js';
+import {SHIP_ZONES,DECK_Y,UPPER_Y,CABIN_Y,ROOF_Y,SHIP_LENGTH,SHIP_BEAM,CAPTAIN_CONTACT,findShipPath,shipStep,shipSlide,shipZone} from './ship-layout.js';
 import {buildShipConnections} from './ship-architecture.js';
 import {createAvatar,animateAvatar,disposeAvatar} from '../src/avatar.js';
 import {mergeGeometries} from 'three/addons/utils/BufferGeometryUtils.js';
@@ -279,7 +279,7 @@ export function startBlueHorizon(T, identity={}, ui={}) {
     if(!blocked&&!helm&&!overview&&!harborView&&!exploration.viewing&&!skyView.active&&!life.locked){
       if(wish.lengthSq()>.015){exploration.stand(true);if(destination)$('hint').textContent='조이스틱 또는 방향키로 산책';autoPath=[];arrival=null;destination=null;dx=wish.x*Math.cos(cameraTurn)+wish.y*Math.sin(cameraTurn);dz=-wish.x*Math.sin(cameraTurn)+wish.y*Math.cos(cameraTurn);}
       else if(autoPath.length){let point=autoPath[0];if(Math.hypot(point.x-avatar.position.x,point.z-avatar.position.z)<.012){autoPath.shift();point=autoPath[0];}if(point){const length=Math.hypot(point.x-avatar.position.x,point.z-avatar.position.z),step=Math.min(1,length/Math.max(.001,4.1*dt));dx=(point.x-avatar.position.x)/Math.max(.001,length)*step;dz=(point.z-avatar.position.z)/Math.max(.001,length)*step;}else{const result=arrival;arrival=null;destination=null;if(result?.pose)pose=result.pose;if(result?.seatId)exploration.sit(result.seatId);if(result?.life)life.arrive(result);if(result?.zoom){zoom=true;exploration.open('binocular');}if(result?.helm){helm=true;$('helm').hidden=false;}if(result?.captain)sailing?.open();$('hint').textContent=pose?pose:helm?'조타륜을 천천히 돌려보세요.':zoom?'망원경으로 바다 보기':(floorY<5.4?'도착했어요. 영화와 공연을 즐겨보세요.':floorY<CABIN_Y+.6?'도착했어요. 객실에서 쉬거나 복도를 둘러보세요.':room===4?'도착했어요. 식당 창가에서 항해 풍경을 감상해보세요.':'도착했어요. 바다를 바라보며 쉬어가세요.');}}
-      if(dx||dz){const speed=autoPath.length?4.1:3.3,next=shipStep({x:avatar.position.x,z:avatar.position.z,y:floorY},{x:avatar.position.x+dx*dt*speed,z:avatar.position.z+dz*dt*speed});if(next){pose='';zoom=false;avatar.position.set(next.x,next.y,next.z);floorY=next.y;avatar.rotation.y=Math.atan2(dx,dz);walking=true;}}
+      if(dx||dz){const speed=autoPath.length?4.1:3.3,next=(autoPath.length?shipStep:shipSlide)({x:avatar.position.x,z:avatar.position.z,y:floorY},{x:avatar.position.x+dx*dt*speed,z:avatar.position.z+dz*dt*speed});if(next){pose='';zoom=false;avatar.position.set(next.x,next.y,next.z);floorY=next.y;avatar.rotation.y=Math.atan2(dx,dz);walking=true;}}
     }
     if(life.swimming&&!blocked){const dx=wish.x*Math.cos(cameraTurn)+wish.y*Math.sin(cameraTurn),dz=-wish.x*Math.sin(cameraTurn)+wish.y*Math.cos(cameraTurn);life.moveSwimming(dx,dz,dt);walking=!!(dx||dz);}
     const zone=shipZone({x:avatar.position.x,z:avatar.position.z,y:floorY});if(zone!==room)showZone(zone);

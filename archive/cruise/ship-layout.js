@@ -1,3 +1,4 @@
+import {createShipGuards,guardBlocks} from './ship-guards.js';
 import {CABIN_INTERIOR_WALLS,DINING_INTERIOR_WALLS,INTERIOR_FURNITURE,accommodationFloor} from './interior-layout.js';
 import {DECK_FIXTURES,DECK_SEATS,seatFootprint} from './deck-fixtures.js';
 import {ENTERTAINMENT_Y,ENTERTAINMENT_STAIR,VENUE_SEATS,RESTAURANT_SEATS,LEISURE_OBSTACLES,NPCS} from './leisure-layout.js';
@@ -41,7 +42,9 @@ export const BRIDGE_WALLS=[{x:0,z:-50.45,w:21.6,d:.3},...[-1,1].flatMap(s=>[{x:s
 export const CABIN_WALLS=CABIN_INTERIOR_WALLS.map(p=>({...p,y:CABIN_Y}));
 export const CABIN_FURNITURE=INTERIOR_FURNITURE.filter(p=>p.deck==='cabin').map(p=>({...p,y:CABIN_Y}));
 export const DINING_WALLS=DINING_INTERIOR_WALLS.map(p=>({...p,y:UPPER_Y}));
-const OBSTACLES=[...LEISURE_OBSTACLES,...NPCS.filter(n=>!n.external).map(n=>({...n,w:.7,d:.7})),...[-16.5,-7.5,1.5].map(z=>({x:-4.85,z:z-1.02,w:2.1,d:.075,y:CABIN_Y})),...SHIP_EQUIPMENT,...SHIP_BENCHES.map(seatFootprint),...SHIP_COLUMNS,...BRIDGE_WALLS,...CABIN_WALLS,...CABIN_FURNITURE,...DINING_WALLS,...INTERIOR_FURNITURE.filter(p=>p.deck==='dining').map(p=>({...p,y:UPPER_Y})),{x:4.85,z:4.78,w:2.1,d:.075,y:CABIN_Y},...BRIDGE_CREW.map(p=>({...p,w:.8,d:.8})),{...POOL,w:POOL.w+.8,d:POOL.d+.8,y:DECK_Y},{x:9,z:9,w:1.5,d:7.5,y:DECK_Y},
+export const SHIP_GUARDS=createShipGuards({DECK_Y,UPPER_Y,LOWER_Y,ROOF_Y,stairs:SHIP_STAIRS,hullHalfBeam,stairLanding});
+const guardBuckets=new Map();for(const rail of SHIP_GUARDS)for(let k=Math.floor((Math.min(rail.a.z,rail.b.z)-.4)/4);k<=Math.floor((Math.max(rail.a.z,rail.b.z)+.4)/4);k++){if(!guardBuckets.has(k))guardBuckets.set(k,[]);guardBuckets.get(k).push(rail);}
+const OBSTACLES=[...[-1,1].map(side=>({x:side*15.4,z:-44.5,y:UPPER_Y,w:.9,d:.65})), ...LEISURE_OBSTACLES,...NPCS.filter(n=>!n.external).map(n=>({...n,w:.7,d:.7})),...[-16.5,-7.5,1.5].map(z=>({x:-4.85,z:z-1.02,w:2.1,d:.075,y:CABIN_Y})),...SHIP_EQUIPMENT,...SHIP_BENCHES.map(seatFootprint),...SHIP_COLUMNS,...BRIDGE_WALLS,...CABIN_WALLS,...CABIN_FURNITURE,...DINING_WALLS,...INTERIOR_FURNITURE.filter(p=>p.deck==='dining').map(p=>({...p,y:UPPER_Y})),{x:4.85,z:4.78,w:2.1,d:.075,y:CABIN_Y},...BRIDGE_CREW.map(p=>({...p,w:.8,d:.8})),{...POOL,w:POOL.w+.8,d:POOL.d+.8,y:DECK_Y},{x:9,z:9,w:1.5,d:7.5,y:DECK_Y},
  {x:0,z:-47,w:23,d:1.4,y:UPPER_Y},
  ...DINING_TABLES.map(p=>({x:p.x,z:p.z+34,w:2.1,d:2.1,y:UPPER_Y})),
  ...DECK_LOUNGERS.map(p=>({x:p.x,z:p.z+SHIP_ZONES[p.zone].z,w:.95,d:2,y:SHIP_ZONES[p.zone].y})),
@@ -65,10 +68,11 @@ export function shipSurfaces(x,z){
   if(onFlight){const t=(z-stair.fromZ)/(stair.toZ-stair.fromZ);heights.push(stair.fromY+(stair.toY-stair.fromY)*Math.max(0,Math.min(1,t)));}
   for(const upper of [false,true]){const landing=stairLanding(stair,upper);if(!onFlight&&rect(x,z,landing.x,landing.z,landing.w,landing.d))heights.push(landing.y);}
  }
- return [...new Set(heights)].filter(y=>!(obstacleBuckets.get(Math.floor(z/4))||[]).some(o=>Math.abs(y-o.y)<.3&&rect(x,z,o.x,o.z,o.w+.2,o.d+.2)));
+ return [...new Set(heights)].filter(y=>!(guardBuckets.get(Math.floor(z/4))||[]).some(r=>guardBlocks({x,z,y},r))).filter(y=>!(obstacleBuckets.get(Math.floor(z/4))||[]).some(o=>Math.abs(y-o.y)<.3&&rect(x,z,o.x,o.z,o.w+.2,o.d+.2)));
 }
 export function shipFloor(x,z,previousY){return shipSurfaces(x,z).filter(y=>Math.abs(y-previousY)<.58).sort((a,b)=>Math.abs(a-previousY)-Math.abs(b-previousY))[0]??null;}
 export function shipStep(from,to){const distance=Math.hypot(to.x-from.x,to.z-from.z),samples=Math.max(1,Math.ceil(distance/.035)),rise=distance/samples*.5+.012;let y=from.y;for(let i=1;i<=samples;i++){const options=shipSurfaces(from.x+(to.x-from.x)*i/samples,from.z+(to.z-from.z)*i/samples).filter(next=>Math.abs(next-y)<=rise).sort((a,b)=>Math.abs(a-y)-Math.abs(b-y));if(!options.length)return null;y=options[0];}if(Number.isFinite(to.y)&&Math.abs(y-to.y)>.1)return null;return {x:to.x,z:to.z,y};}
+export function shipSlide(from,to){const direct=shipStep(from,to);if(direct)return direct;return[shipStep(from,{x:to.x,z:from.z}),shipStep(from,{x:from.x,z:to.z})].filter(Boolean).sort((a,b)=>Math.hypot(a.x-to.x,a.z-to.z)-Math.hypot(b.x-to.x,b.z-to.z))[0]||null;}
 export function shipZone(p){if(p.y<5.4)return p.x>1.8?10:9;if(p.y>ROOF_Y-.65)return 7;if(p.y<CABIN_Y+.6)return 8;if(p.y>UPPER_Y-.6&&p.z< -37&&Math.abs(p.x)>10.9)return p.x<0?5:6;if(p.y>(DECK_Y+UPPER_Y)/2)return p.z<0?3:4;return p.z< -31?1:p.z>31?2:0;}
 let graph;
 function navigation(){if(graph)return graph;const nodes=[],cells=new Map(),step=.8;for(let ix=-23;ix<=23;ix++)for(let iz=-83;iz<=83;iz++){const x=ix*step,z=iz*step,cell=[];for(const y of shipSurfaces(x,z)){const n={index:nodes.length,x,z,y,ix,iz,edges:[]};nodes.push(n);cell.push(n);}if(cell.length)cells.set(ix+','+iz,cell);}for(const n of nodes)for(let dx=-1;dx<=1;dx++)for(let dz=-1;dz<=1;dz++){if(!dx&&!dz)continue;for(const q of cells.get((n.ix+dx)+','+(n.iz+dz))||[])if(q.index>n.index&&Math.abs(q.y-n.y)<.56&&shipStep(n,q)&&(Math.abs(q.y-n.y)<.001||shipStep(q,n))){n.edges.push(q.index);q.edges.push(n.index);}}return graph={nodes};}

@@ -38,7 +38,7 @@ export function accommodationFloor(x,z){
 }
 export function passengerRegion(p){
  if(Math.abs(p.x)<1.5&&p.z< -8.8&&p.z> -22.4&&p.y<7.01)return 'entertainment-stair';
- if(p.y<4.3&&p.y>3&&Math.abs(p.x)<12.6&&Math.abs(p.z)<24.1)return Math.abs(p.x)<1.8?'entertainment-foyer':p.x<0?'cinema':'theater';
+ if(p.y<4.3&&p.y>3&&Math.abs(p.x)<12.6&&Math.abs(p.z)<24.1)return p.z< -8&&Math.abs(p.x)<3.8?'entertainment-stair-lobby':Math.abs(p.x)<1.8?'entertainment-foyer':p.x<0?'cinema':'theater';
  const room=guestRoomAt(p);if(room)return 'guest-'+room.id;
  if(p.y<10.25&&p.x> -13.35&&p.x< -10.6&&p.z>=5.7&&p.z<17.3)return 'cabin-stair';
  if(p.y<7.6){if(p.x>3.68&&p.z>0&&p.z<11)return 'suite';return p.z>16.4?'cabin-lobby':'cabin-corridor';}
@@ -49,6 +49,7 @@ export function passengerRegion(p){
 export const CAMERA_COMPARTMENTS={
  ...Object.fromEntries(GUEST_ROOMS.filter(r=>r.open).map(r=>['guest-'+r.id,{minX:-12.1,maxX:-4.12,minZ:r.minZ+.35,maxZ:r.maxZ-.35,ceiling:9.72}])),
  'entertainment-stair':{minX:-1.05,maxX:1.05,minZ:-22.1,maxZ:-8.2,ceiling:9.72},
+ 'entertainment-stair-lobby':{minX:-3.5,maxX:3.5,minZ:-23.5,maxZ:-8.3,ceiling:6.65},
  'entertainment-foyer':{minX:-1.5,maxX:1.5,minZ:-23.5,maxZ:23.5,ceiling:6.65},
  cinema:{minX:-12.1,maxX:-2.1,minZ:-23.5,maxZ:23.5,ceiling:6.65},
  theater:{minX:2.1,maxX:12.1,minZ:-23.5,maxZ:23.5,ceiling:6.65},
