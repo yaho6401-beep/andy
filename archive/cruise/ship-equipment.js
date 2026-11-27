@@ -37,7 +37,7 @@ export function buildDeckEquipment(ship,{box,mesh,cylinder,label}){
    pole(g,white,0,.63,0,.22,1.26);pole(g,steel,0,1.25,0,.42,.16);mesh(g,new T.SphereGeometry(1,12,8),yellow,0,1.43,0,.41,.27,.41);for(const s of[-1,1]){tube(g,steel,[0,1.22,0],[s*.48,1.22,0],.03);mesh(g,new T.SphereGeometry(1,10,7),s<0?0xa65d55:0x5e8575,s*.48,1.22,0,.11,.11,.11);}
   }
  }
- for(const s of SHIP_BENCHES.filter(s=>!s.existing)){const g=new T.Group();g.position.set(s.x,s.y,s.z);g.rotation.y=s.yaw;ship.add(g);for(const x of[-s.w*.36,s.w*.36]){box(g,navy,x,.24,0,.085,.48,.62);tube(g,steel,[x,.38,-.3],[x,.93,-.3],.035);tube(g,steel,[x,.65,-.24],[x,.65,.27],.035);}for(let z=-.25;z<.31;z+=.13)box(g,wood,0,.46,z,s.w,.08,.11);for(let y=.66;y<.95;y+=.14)box(g,wood,0,y,-.3,s.w,.1,.065);}
+ for(const s of SHIP_BENCHES.filter(s=>!s.existing&&!s.venue)){const g=new T.Group();g.position.set(s.x,s.y,s.z);g.rotation.y=s.yaw;ship.add(g);for(const x of[-s.w*.36,s.w*.36]){box(g,navy,x,.24,0,.085,.48,.62);tube(g,steel,[x,.38,-.3],[x,.93,-.3],.035);tube(g,steel,[x,.65,-.24],[x,.65,.27],.035);}for(let z=-.25;z<.31;z+=.13)box(g,wood,0,.46,z,s.w,.08,.11);for(let y=.66;y<.95;y+=.14)box(g,wood,0,y,-.3,s.w,.1,.065);}
  // Narrow cable trays and working-area markings keep visitor aisles free.
  for(const side of[-1,1]){for(let z=-45;z<-38;z+=.34)box(ship,steel,side*9.4,ROOF_Y+.04,z,.3,.045,.045);for(let z=-61.5;z<-54;z+=.65){const m=box(ship,yellow,side*6.1,LOWER_Y+.025,z,.07,.018,.34);m.rotation.y=.5;}}
  label(ship,'ANCHOR · MOORING',0,9.65,-58.1,3.2);label(ship,'EQUIPMENT · KEEP CLEAR',0,20.05,-42,3.1);

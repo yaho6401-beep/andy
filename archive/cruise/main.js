@@ -12,7 +12,7 @@ let app,reader,toastTimer;
 function toast(text){const el=document.getElementById('cruise-reading-status');el.textContent=text;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,3200);}
 try{
  await loadArt();
- app=startBlueHorizon(T,loadIdentity(),{onFrame:()=>reader?.frame()});
+ app=startBlueHorizon(T,loadIdentity(),{onFrame:()=>reader?.frame(),openLibrary:()=>reader?.openCatalog()});
  reader=new TentReading({state:()=>({joined:true,room:'cruise'}),focused:()=>true,stopInputs:()=>app.pauseInputs(),toast});
  globalThis.BlueHorizonDiagnostics={get state(){return app.state;}};
  document.getElementById('loading').hidden=true;

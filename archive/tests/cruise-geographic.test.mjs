@@ -15,7 +15,7 @@ test('chart reports geographic position, reverse course and real nautical distan
  const a=geographicPose({routeId:'singapore',phase:'outbound',progress:.45}),b=geographicPose({routeId:'singapore',phase:'returning',progress:.45});assert.equal(a.lat,b.lat);assert.equal(a.lon,b.lon);assert.ok(Math.abs(((a.course-b.course+360)%360)-180)<1.5);assert.ok(Math.abs(a.remaining+b.remaining-a.total)<.001);assert.ok(Math.abs(nauticalMiles({lat:0,lon:0},{lat:1,lon:0})-60.04)<.1);assert.match(coordinateLabel(-4.6),/4° 36.00′ S/);assert.equal(geographicPose({phase:'home'}).lat,HOME_PORT.lat);
 });
 test('real ship decks, doorway openings and raised/lowered floors agree with movement',()=>{
- assert.equal(SHIP_ZONES.length,9);assert.equal(SHIP_ZONES[1].y,LOWER_Y);assert.equal(SHIP_ZONES[2].y,LOWER_Y);assert.equal(SHIP_ZONES[7].y,ROOF_Y);assert.equal(SHIP_ZONES[8].y,CABIN_Y);assert.equal(SHIP_STAIRS.length,8);
+ assert.equal(SHIP_ZONES.length,11);assert.equal(SHIP_ZONES[1].y,LOWER_Y);assert.equal(SHIP_ZONES[2].y,LOWER_Y);assert.equal(SHIP_ZONES[7].y,ROOF_Y);assert.equal(SHIP_ZONES[8].y,CABIN_Y);assert.equal(SHIP_STAIRS.length,9);
  assert.ok(shipSurfaces(0,-28).includes(UPPER_Y));assert.ok(!shipSurfaces(6,-28).includes(UPPER_Y),'solid aft bulkhead');assert.ok(!shipSurfaces(10.8,-34).includes(UPPER_Y),'wheelhouse side wall');assert.ok(shipSurfaces(10.8,-42).includes(UPPER_Y),'wing door');assert.ok(shipSurfaces(3.8,6).includes(CABIN_Y),'cabin door');assert.ok(!shipSurfaces(3.8,3).includes(CABIN_Y));
  assert.equal(shipStep({x:0,z:4,y:10.2},{x:0,z:4,y:CABIN_Y}),null,'overlapping deck nodes cannot turn into a floor teleport');assert.ok(BRIDGE_WALLS.length>=5&&CABIN_WALLS.length>=4);
 });

@@ -27,5 +27,5 @@ export const DECK_SEATS=[
   {id:`roof-${s}`,zone:7,x:s*7.5,z:-25.3,yaw:0,w:2.25},
  ])
 ];
-export function seatApproach(seat){return{x:seat.x+Math.sin(seat.yaw)*.96,z:seat.z+Math.cos(seat.yaw)*.96,y:seat.y};}
+export function seatApproach(seat){return{x:seat.x+Math.sin(seat.yaw)*.96*(seat.venue==='dining'?-1:1),z:seat.z+Math.cos(seat.yaw)*.96*(seat.venue==='dining'?-1:1),y:seat.y};}
 export function seatFootprint(seat){const sideways=Math.abs(Math.sin(seat.yaw))>.5;return{...seat,w:sideways?.75:seat.w,d:sideways?seat.w:.75};}

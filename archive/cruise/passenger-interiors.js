@@ -19,18 +19,18 @@ export function buildPassengerInteriors(parent,{box,mesh,cylinder}){
  }
  function glow(x,y,z,w=1.4,d=.18){const l=box(root,ivory,x,y,z,w,.045,d);l.material=lampMaterial;return l;}
  // Continuous closed hull-side accommodation, including both end bulkheads.
- box(root,ivory,0,CABIN_Y-.16,0,25.2,.32,42);box(root,0xb6a48f,0,CABIN_Y+.008,0,25,.018,41.8);
+ for(const [x,z,w,d]of [[0,6,25.2,30],[-6.95,-15,11.3,12],[6.95,-15,11.3,12]]){box(root,ivory,x,CABIN_Y-.16,z,w,.32,d);box(root,0xb6a48f,x,CABIN_Y+.008,z,w,.018,d);}
  box(root,ivory,1.2,DECK_Y-.17,0,22.6,.24,42);box(root,ivory,-11.9,DECK_Y-.17,-7.5,3.6,.24,27);box(root,ivory,-11.9,DECK_Y-.17,19.5,3.6,.24,5);
  for(const w of CABIN_INTERIOR_WALLS)wall(w,CABIN_Y,3.05);
  // A broad carpeted passage, connected to an aft stair lobby rather than the sea.
- box(root,carpet,0,CABIN_Y+.026,-2,5.9,.028,37.5);box(root,carpet,-3.7,CABIN_Y+.026,18.55,16.9,.028,3.3);
+ for(const [x,z,w,d]of [[0,4,5.9,25.5],[-2.15,-14.85,1.6,11.7],[2.15,-14.85,1.6,11.7]])box(root,carpet,x,CABIN_Y+.026,z,w,.028,d);box(root,carpet,-3.7,CABIN_Y+.026,18.55,16.9,.028,3.3);
  for(const x of[-3,3])box(root,brass,x,CABIN_Y+.043,-2,.035,.006,37.5);
- for(const x of[-3.65,3.65]){box(root,walnut,x,CABIN_Y+.1,-2,.045,.2,37.2);box(root,wood,x,CABIN_Y+1.0,-2,.035,.065,37.2);}
+ for(const x of[3.65]){box(root,walnut,x,CABIN_Y+.1,-2,.045,.2,37.2);box(root,wood,x,CABIN_Y+1.0,-2,.035,.065,37.2);}
  for(const z of[-18,-10,-2,6,14,19])glow(0,DECK_Y-.33,z,2,.22);
  glow(-8,DECK_Y-.33,18.4,2,.22);glow(8,DECK_Y-.33,6,2.5,.22);
  // Flush doors and numbers are mounted on walls, not floating billboards.
  const signs=[];
- for(const side of[-1,1])for(const[z,n]of[[-16,201],[-7,203],[14,209]]){
+ for(const side of[1])for(const[z,n]of[[-16,201],[-7,203],[14,209]]){
   box(root,wood,side*3.665,CABIN_Y+1.17,z,.065,2.34,1.45);box(root,walnut,side*3.62,CABIN_Y+.08,z,.05,.14,1.5);
   box(root,brass,side*3.61,CABIN_Y+1.05,z+.48,.065,.06,.19);box(root,navy,side*3.60,CABIN_Y+1.32,z+.48,.035,.13,.09);
   signs.push({text:String(n+(side>0?1:0)),x:side*3.59,y:CABIN_Y+2.6,z,yaw:side>0?-Math.PI/2:Math.PI/2,w:.58,h:.22});
