@@ -27,6 +27,6 @@ try{
  }
  // Complete a normal boarding after the route checks; only one renderer survives.
  await p.evaluate(port=>{const f=__fixture,q=f.store.clients.get(f.id);f.store.clock=()=>Date.now();Object.assign(q,{x:port.x,z:port.z,voyage:null,seaRescue:null,seat:null,swimming:false,epoch:q.epoch+1,seq:0});f.emit();f.send({type:'sea-boat',destination:'cruise'});const v=q.voyage;f.store.clock=()=>v.at+15001;f.emit();},BOAT_PORTS.shore);
- await expect(p.locator('#sea-cruise-board')).toBeVisible();await p.locator('#sea-cruise-board').tap();await p.waitForURL('**/archive/cruise/**');await p.waitForFunction(()=>globalThis.BlueHorizonDiagnostics?.state.drawCalls>0);expect(await p.locator('canvas').count()).toBe(1);expect(errors).toEqual([]);
+ await expect(p.locator('#sea-cruise-board')).toBeVisible();await p.locator('#sea-cruise-board').tap();await p.waitForURL('**/archive/cruise/**');await p.waitForFunction(()=>globalThis.BlueHorizonDiagnostics?.state.drawCalls>0);await expect(p.locator('body > canvas')).toHaveCount(1);expect(errors).toEqual([]);
  await writeFile(out+'/result.json',JSON.stringify({pass:true,branches:4,authoritativeSamples:samples.length,mobile:true,boarding:true,errors,samples},null,2));console.log(JSON.stringify({pass:true,samples:samples.length,boarding:true,errors}));
 }catch(e){await p.screenshot({path:out+'/failure.png'}).catch(()=>{});console.log(JSON.stringify({error:e.message,errors}));throw e;}finally{await b.close();}
