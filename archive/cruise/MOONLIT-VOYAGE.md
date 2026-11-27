@@ -10,6 +10,10 @@ The sky camera pauses walking, preserves the seat and previous scenic view, and
 leaves the voyage clock running. Drag or use arrow keys to look around; Escape or
 “갑판으로” restores the previous view. It is available from outdoor decks and the
 scenic/telescope controls. Departure preserves the selected day/night lighting.
+Star highlights upload only when the recognized target changes. The compass HUD
+refreshes at most ten times per second and reuses a Korean-time formatter; diagnostic
+coordinates read three named stars directly instead of copying the entire catalog.
+Captions use balanced wrapping on narrow screens.
 
 Night lighting uses one batched window mesh, six small practical halos, two nearby
 unshadowed lights, and a shared 64px glow texture. A small mask derived locally
