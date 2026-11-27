@@ -1,3 +1,4 @@
+import {CABIN_INTERIOR_WALLS,DINING_INTERIOR_WALLS,INTERIOR_FURNITURE,accommodationFloor} from './interior-layout.js';
 import {DECK_FIXTURES,DECK_SEATS,seatFootprint} from './deck-fixtures.js';
 // Metres, shared by architecture, furniture collisions and pedestrian routing.
 import {SHIP_LENGTH,SHIP_BEAM} from '../camp/cruise-dimensions.js';
@@ -33,9 +34,10 @@ export const SHIP_BENCHES=DECK_SEATS.map(p=>({...p,y:SHIP_ZONES[p.zone].y}));
 export function hullHalfBeam(z){const t=Math.max(0,(-z-44)/26,(z-56)/14);return 14*Math.sqrt(Math.max(0,1-t*t));}
 export function stairLanding(stair,upper){const direction=Math.sign(stair.toZ-stair.fromZ),side=Math.sign(stair.x),external=['bridge','dining'].includes(stair.id);return {x:external?side*13.95:stair.x,z:(upper?stair.toZ:stair.fromZ)+(upper?direction:-direction)*.9,w:external?5.5:3.8,d:1.8,y:upper?stair.toY:stair.fromY};}
 export const BRIDGE_WALLS=[{x:0,z:-50.45,w:21.6,d:.3},...[-1,1].flatMap(s=>[{x:s*6.15,z:-28,w:9.3,d:.28},{x:s*10.8,z:-48.8,w:.25,d:3.4},{x:s*10.8,z:-34.75,w:.25,d:13.5}])].map(p=>({...p,y:UPPER_Y}));
-export const CABIN_WALLS=[{x:8.1,z:0,w:8.6,d:.22},{x:8.1,z:11,w:8.6,d:.22},{x:12.4,z:5.5,w:.22,d:11},...[[2.35,4.7],[9,4]].map(([z,d])=>({x:3.8,z,w:.22,d}))].map(p=>({...p,y:CABIN_Y}));
-export const CABIN_FURNITURE=[{x:9,z:3,w:4.1,d:3.7,y:CABIN_Y},{x:11.4,z:8,w:1,d:3.2,y:CABIN_Y},{x:5.5,z:.8,w:2.3,d:1,y:CABIN_Y}];
-const OBSTACLES=[...SHIP_EQUIPMENT,...SHIP_BENCHES.map(seatFootprint),...SHIP_COLUMNS,...BRIDGE_WALLS,...CABIN_WALLS,...CABIN_FURNITURE,...BRIDGE_CREW.map(p=>({...p,w:.8,d:.8})),{...POOL,w:POOL.w+.8,d:POOL.d+.8,y:DECK_Y},{x:9,z:9,w:1.5,d:7.5,y:DECK_Y},
+export const CABIN_WALLS=CABIN_INTERIOR_WALLS.map(p=>({...p,y:CABIN_Y}));
+export const CABIN_FURNITURE=INTERIOR_FURNITURE.filter(p=>p.deck==='cabin').map(p=>({...p,y:CABIN_Y}));
+export const DINING_WALLS=DINING_INTERIOR_WALLS.map(p=>({...p,y:UPPER_Y}));
+const OBSTACLES=[...SHIP_EQUIPMENT,...SHIP_BENCHES.map(seatFootprint),...SHIP_COLUMNS,...BRIDGE_WALLS,...CABIN_WALLS,...CABIN_FURNITURE,...DINING_WALLS,...INTERIOR_FURNITURE.filter(p=>p.deck==='dining').map(p=>({...p,y:UPPER_Y})),{x:4.85,z:4.78,w:2.1,d:.075,y:CABIN_Y},...BRIDGE_CREW.map(p=>({...p,w:.8,d:.8})),{...POOL,w:POOL.w+.8,d:POOL.d+.8,y:DECK_Y},{x:9,z:9,w:1.5,d:7.5,y:DECK_Y},
  {x:0,z:-47,w:23,d:1.4,y:UPPER_Y},
  ...DINING_TABLES.map(p=>({x:p.x,z:p.z+34,w:2.1,d:2.1,y:UPPER_Y})),
  ...DECK_LOUNGERS.map(p=>({x:p.x,z:p.z+SHIP_ZONES[p.zone].z,w:.95,d:2,y:SHIP_ZONES[p.zone].y})),
@@ -49,7 +51,7 @@ export function shipSurfaces(x,z){
   if(Math.abs(z)<=31&&!rect(x,z,-12,11.5,2.6,11))heights.push(DECK_Y);
   if(Math.abs(z)>=41)heights.push(LOWER_Y);
  }
- if(rect(x,z,0,0,25,42)&&!rect(x,z,-12,11.5,2.6,11))heights.push(CABIN_Y);
+ if(rect(x,z,0,0,25,42)&&accommodationFloor(x,z)&&!rect(x,z,-12,11.5,2.6,11))heights.push(CABIN_Y);
  for(const zone of SHIP_ZONES.slice(3,5))if(rect(x,z,0,zone.z,26.6,34)&&!rect(x,z,11.8,-26.5,2.6,13))heights.push(UPPER_Y);
  if(rect(x,z,0,-36.5,23.6,26)&&!rect(x,z,11.8,-28,2.6,10))heights.push(ROOF_Y);
  for(const s of [-1,1])if(rect(x,z,s*13.8,-42.5,6,7))heights.push(UPPER_Y);
